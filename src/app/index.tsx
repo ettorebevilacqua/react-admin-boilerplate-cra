@@ -3,6 +3,10 @@
  *
  * This is the entry file for the application, only setup and boilerplate
  * code.
+ * 
+ * for route read 
+ * 
+  https://stackoverflow.com/questions/56711663/react-router-v5-0-nested-routes
  */
 
 import 'react-app-polyfill/ie11';
@@ -23,7 +27,7 @@ export function App() {
     <React.Fragment>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/home" component={AppHome} />
+          <Route path="/app" component={AppHome} />
           <Route exact path="/" component={AdminApp} />
           <Route component={NotFoundPage} />
         </Switch>

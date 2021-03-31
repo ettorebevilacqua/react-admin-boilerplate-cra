@@ -13,10 +13,11 @@ import FontFaceObserver from 'fontfaceobserver';
 import 'sanitize.css/sanitize.css';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { GlobalStyle } from '../styles/global-styles';
 
 import { HomePage } from './pages/HomePage/Loadable';
+import { FormsPage } from './pages/forms/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
 
@@ -48,7 +49,13 @@ export function AppHome(props: any) {
         >
           <meta name="description" content="A React Boilerplate application" />
         </Helmet>
-        <Route path="/home" component={HomePage} />
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/app/home" component={HomePage} />
+            <Route exact path="/app/forms" component={FormsPage} />
+            <Redirect from="/app" to="/app/forms" exact />
+          </Switch>
+        </BrowserRouter>
         <GlobalStyle />
       </HelmetProvider>
     </Provider>
