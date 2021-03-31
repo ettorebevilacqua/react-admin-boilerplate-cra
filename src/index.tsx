@@ -10,27 +10,18 @@ import 'react-app-polyfill/stable';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import FontFaceObserver from 'fontfaceobserver';
+
+import { App } from 'app';
 
 // Use consistent styling
 import 'sanitize.css/sanitize.css';
-
-// Import root app
-import { App } from 'app';
-import AdminApp from './app/admin';
-
-import { HelmetProvider } from 'react-helmet-async';
-
-import { configureAppStore } from 'store/configureStore';
-// import { ThemeProvider } from 'styles/theme/ThemeProvider';
 
 import reportWebVitals from 'reportWebVitals';
 
 // Initialize languages
 import './locales/i18n';
 
-const store = configureAppStore();
 const MOUNT_NODE = document.getElementById('root') as HTMLElement;
 
 // Observe loading of Inter (to remove 'Inter', remove the <link> tag in
@@ -42,20 +33,7 @@ openSansObserver.load().then(() => {
   document.body.classList.add('fontLoaded');
 });
 
-const isAdmin = true;
-
-ReactDOM.render(
-  isAdmin ? (
-    <AdminApp />
-  ) : (
-    <Provider store={store}>
-      <HelmetProvider>
-        <App />
-      </HelmetProvider>
-    </Provider>
-  ),
-  MOUNT_NODE,
-);
+ReactDOM.render(<App />, MOUNT_NODE);
 
 // Hot reloadable translation json files
 if (module.hot) {

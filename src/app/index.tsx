@@ -1,38 +1,33 @@
 /**
+ * index.tsx
  *
- * App
- *
- * This component is the skeleton around the actual pages, and should only
- * contain code that should be seen on all pages. (e.g. navigation bar)
+ * This is the entry file for the application, only setup and boilerplate
+ * code.
  */
 
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+
 import * as React from 'react';
-import { Helmet } from 'react-helmet-async';
+
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 
-import { GlobalStyle } from 'styles/global-styles';
-
-import { HomePage } from './pages/HomePage/Loadable';
+import { AppHome } from './app';
+import AdminApp from './admin';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
-import { useTranslation } from 'react-i18next';
+
+// import { ThemeProvider } from 'styles/theme/ThemeProvider';
 
 export function App() {
-  const { i18n } = useTranslation();
   return (
-    <BrowserRouter>
-      <Helmet
-        titleTemplate="%s - React Boilerplate"
-        defaultTitle="React Boilerplate"
-        htmlAttributes={{ lang: i18n.language }}
-      >
-        <meta name="description" content="A React Boilerplate application" />
-      </Helmet>
-
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route component={NotFoundPage} />
-      </Switch>
-      <GlobalStyle />
-    </BrowserRouter>
+    <React.Fragment>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/home" component={AppHome} />
+          <Route exact path="/" component={AdminApp} />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </BrowserRouter>
+    </React.Fragment>
   );
 }
