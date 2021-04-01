@@ -52,7 +52,7 @@ export function AppHome(props: any) {
         <BrowserRouter>
           <Switch>
             <Route exact path="/app/home" component={HomePage} />
-            <Route exact path="/app/forms" component={FormsPage} />
+            <Route path="/app/forms" component={FormsPage} />
             <Redirect from="/app" to="/app/forms" exact />
           </Switch>
         </BrowserRouter>
