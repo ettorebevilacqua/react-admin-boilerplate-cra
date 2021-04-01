@@ -1453,7 +1453,7 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@material-ui/core@^4.11.2":
+"@material-ui/core@4.11.3", "@material-ui/core@^4.11.2":
   version "4.11.3"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.3.tgz#f22e41775b0bd075e36a7a093d43951bf7f63850"
   integrity sha512-Adt40rGW6Uds+cAyk3pVgcErpzU/qxc7KBR94jFHBYretU4AtWZltYcNsbeMn9tXL86jjVL1kuGcIHsgLgFGRw==
@@ -1471,7 +1471,7 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
-"@material-ui/icons@^4.11.2":
+"@material-ui/icons@4.11.2", "@material-ui/icons@^4.11.2":
   version "4.11.2"
   resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.11.2.tgz#b3a7353266519cd743b6461ae9fdfcb1b25eb4c5"
   integrity sha512-fQNsKX2TxBmqIGJCSi3tGTO/gZ+eJgWmMJkgDiOfyNaunNaxcklJQFaFogYcFl0qFuaEz1qaXYXboa/bUXVSOQ==
@@ -1523,6 +1523,16 @@
     "@babel/runtime" "^7.4.4"
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
+
+"@mui-treasury/layout@4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@mui-treasury/layout/-/layout-4.5.0.tgz#17524dfe800018d928a96b1fbb5015aa08da6607"
+  integrity sha512-Jvqu13NaCcim0B0njWOKrwHPogU0xO1Qejgu9oMOkS83Rf+9szDPa8/l2OAlFueaV392dJuaRACFypjG2XRxUw==
+  dependencies:
+    "@types/lodash.mapvalues" "^4.6.6"
+    debounce "^1.2.0"
+    deepmerge "^4.2.2"
+    lodash.mapvalues "^4.6.0"
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
@@ -2036,6 +2046,18 @@
     "@types/interpret" "*"
     "@types/node" "*"
 
+"@types/lodash.mapvalues@^4.6.6":
+  version "4.6.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.mapvalues/-/lodash.mapvalues-4.6.6.tgz#899b6e1d3b9b4e313bc332ec18182f9fce7aec7c"
+  integrity sha512-Mt9eg3AqwAt5HShuOu8taiIYg0sLl4w3vDi0++E0VtiOtj9DqQHaxVr3wicVop0eDEqr5ENbht7vsLJlkMHL+w==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.168"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
+  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
+
 "@types/mdast@^3.0.0":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/mdast/-/mdast-3.0.3.tgz#2d7d671b1cd1ea3deb306ea75036c2a0407d2deb"
@@ -2414,6 +2436,23 @@
   dependencies:
     "@typescript-eslint/types" "4.20.0"
     eslint-visitor-keys "^2.0.0"
+
+"@ui-schema/dictionary@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@ui-schema/dictionary/-/dictionary-0.0.5.tgz#ab587209dbb133ba0d31d1b34fbef975f0c19465"
+  integrity sha512-cbby1SSBaIj1OVBvwnI9V36koMkzPTePWjtu0mJABOdT0ZPENglVl1kjuUNXJ3yCobw/Oabwp6+GfoJggVVglw==
+
+"@ui-schema/ds-material@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@ui-schema/ds-material/-/ds-material-0.2.4.tgz#9830d2034ff35217b19454ff6e3130f425f83ca3"
+  integrity sha512-TVBVYjUI8KjyXTpQJ0g2C0lDnyMcrR0wiRDL5WQV/HGOTavmYC0Kh3AP0F0MZ9cfNYz23wTtOplSVBxkYE5GMw==
+  dependencies:
+    react-uid "^2.2.0"
+
+"@ui-schema/ui-schema@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@ui-schema/ui-schema/-/ui-schema-0.2.1.tgz#e61556ddcd2b2e4365982ee9024de0d180dc8d14"
+  integrity sha512-bRwu4FI6ef8Eftu1ltt5D1kJRUjfX4jvQHZATbV65XKS7wMxcXH9WYxnRbnjyfw+Qo9MypRYn/NavhKdWo2NDQ==
 
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
@@ -4932,6 +4971,11 @@ date-fns@~1.29.0:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.29.0.tgz#12e609cdcb935127311d04d33334e2960a2a54e6"
   integrity sha512-lbTXWZ6M20cWH8N9S6afb0SBm6tMk+uUg6z3MqHPKE9atmsY3kJkTm8vKe93izJ2B2+q5MV990sM2CHgtAZaOw==
 
+debounce@^1.2.0:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.1.tgz#38881d8f4166a5c5848020c11827b834bcb3e0a5"
+  integrity sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==
+
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -7286,7 +7330,7 @@ immer@^7.0.3:
   resolved "https://registry.yarnpkg.com/immer/-/immer-7.0.15.tgz#dc3bc6db87401659d2e737c67a21b227c484a4ad"
   integrity sha512-yM7jo9+hvYgvdCQdqvhCNRRio0SCXc8xDPzA25SvKWa7b1WVPjLwQs1VYU5JPXjcJPTqAa5NP5dqpORGYBQ2AA==
 
-"immutable@^3.8.1 || ^4.0.0-rc.1":
+immutable@4.0.0-rc.12, "immutable@^3.8.1 || ^4.0.0-rc.1":
   version "4.0.0-rc.12"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.0.0-rc.12.tgz#ca59a7e4c19ae8d9bf74a97bdf0f6e2f2a5d0217"
   integrity sha512-0M2XxkZLx/mi3t8NVwIm1g8nHoEmM9p9UBl/G9k4+hm0kBgOVdMV/B3CY5dQ8qG8qc80NN4gDV4HQv6FTJ5q7A==
@@ -8963,6 +9007,11 @@ lodash.isequalwith@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.isequalwith/-/lodash.isequalwith-4.4.0.tgz#266726ddd528f854f21f4ea98a065606e0fbc6b0"
   integrity sha1-Jmcm3dUo+FTyH06pigZWBuD7xrA=
+
+lodash.mapvalues@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz#1bafa5005de9dd6f4f26668c30ca37230cc9689c"
+  integrity sha1-G6+lAF3p3W9PJmaMMMo3IwzJaJw=
 
 lodash.memoize@^4.1.2:
   version "4.1.2"
@@ -11918,6 +11967,13 @@ react-transition-group@^4.4.0, react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-uid@^2.2.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-uid/-/react-uid-2.3.1.tgz#22a75d4a948a4824b9b8078cbf864d55d91ca4be"
+  integrity sha512-6C5pwNYP1udgp5feQ9MTBZBKD4su9nhD2aYCFY1bB0Bpask8wYKYz0ZhAtAJ4lcmTDC5kY1ByGTQMFDHQW6p0w==
+  dependencies:
+    tslib "^1.10.0"
+
 react@^17.0.0:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
@@ -14022,7 +14078,7 @@ tsconfig-paths@^3.9.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@^1.8.1, tslib@^1.9.0:
+tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
