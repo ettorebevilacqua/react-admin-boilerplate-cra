@@ -14,6 +14,7 @@ import { createHashHistory } from 'history';
 // import { routerMiddleware, connectRouter } from 'connected-react-router';
 
 import visitors from './forms/visitors';
+import Enti from './forms/enti';
 
 const i18nProvider = polyglotI18nProvider(locale => {
   if (locale === 'fr') {
@@ -47,6 +48,7 @@ const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
       disableTelemetry
     >
       <Resource name="customers" {...visitors} />
+      <Resource name="enti" {...Enti} />
     </Admin>
   );
 };

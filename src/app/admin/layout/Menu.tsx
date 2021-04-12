@@ -58,6 +58,14 @@ const Menu: FC<MenuProps> = ({ onMenuClick, logout, dense = false }) => {
         sidebarIsOpen={open}
         dense={dense}
       />
+      <MenuItemLink
+        to={`/enti`}
+        primaryText="Enti"
+        leftIcon={<visitors.icon />}
+        onClick={onMenuClick}
+        sidebarIsOpen={open}
+        dense={dense}
+      />
       {/* {identity && identity.group && identity.group === 'admin' && (
 
         <MenuItemLink
