@@ -59,8 +59,16 @@ const Menu: FC<MenuProps> = ({ onMenuClick, logout, dense = false }) => {
         dense={dense}
       />
       <MenuItemLink
-        to={`/enti`}
-        primaryText="Enti"
+        to={`/risorse`}
+        primaryText="Risorse"
+        leftIcon={<visitors.icon />}
+        onClick={onMenuClick}
+        sidebarIsOpen={open}
+        dense={dense}
+      />
+      <MenuItemLink
+        to={`/qualifiche`}
+        primaryText="Qualifiche"
         leftIcon={<visitors.icon />}
         onClick={onMenuClick}
         sidebarIsOpen={open}

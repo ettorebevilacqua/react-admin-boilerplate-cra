@@ -16,6 +16,9 @@ import { createHashHistory } from 'history';
 import visitors from './forms/visitors';
 import Enti from './forms/enti';
 
+import Risorse from './forms/risorse';
+import Qualifiche from './forms/qualifiche';
+
 const i18nProvider = polyglotI18nProvider(locale => {
   if (locale === 'fr') {
     return import('./i18n/fr').then(messages => messages.default);
@@ -49,6 +52,8 @@ const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
     >
       <Resource name="customers" {...visitors} />
       <Resource name="enti" {...Enti} />
+      <Resource name="risorse" {...Risorse} />
+      <Resource name="qualifiche" {...Qualifiche} />
     </Admin>
   );
 };
