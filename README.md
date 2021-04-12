@@ -1,3 +1,14 @@
+log analize
+https://github.com/undici77/LogAnalyzer?fbclid=IwAR1rN0_mzRpCR16JNmQzXhRbuwgq7RjTPXS9OFLC2tPkssDe_Pn7tE3OdUk
+
+materialia layout ui
+https://codesandbox.io/s/7mn9xq3nnj?file=/src/index.js:2380-2405
+
+passing-callbacks-down-with-react-hooks
+https://medium.com/trabe/passing-callbacks-down-with-react-hooks-4723c4652aff
+
+https://dev.to/xnimorz/dealing-with-event-handlers-in-react-540j
+
 <img width="914" alt="React Boilerplate Meets CRA" src="https://user-images.githubusercontent.com/3495307/80274591-2d5daa00-86e4-11ea-8fba-404f1cdba87e.png" align="center">
 <br />
 

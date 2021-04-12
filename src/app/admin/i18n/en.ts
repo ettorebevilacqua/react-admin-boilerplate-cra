@@ -40,6 +40,13 @@ const customEnglishMessages: TranslationMessages = {
     },
   },
   resources: {
+    andress: {
+      andress: 'Indirizzo',
+      city: 'Città',
+      state: 'Stato',
+      cap: 'Cap',
+      pv: 'Pv',
+    },
     docenti: {
       name: 'Docente |||| Docenti',
     },
