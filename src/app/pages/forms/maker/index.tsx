@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useMemo, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async'; // Import UI Generator
 import { Link, Typography } from '@material-ui/core';
 
@@ -15,53 +15,14 @@ import {
 
 import { browserT } from '../t';
 
-// Minimal Schema, transformed from JS-Object into deep immutable
-const schema1 = {
-  type: 'object',
-  title: 'headline',
-  properties: {
-    call_count: {
-      type: 'number',
-      minimum: 2,
-      maximum: 10,
-      view: {
-        sizeMd: 3,
-      },
-    },
-    privacy: {
-      type: 'boolean',
-      default: true,
-      view: {
-        sizeMd: 12,
-      },
-    },
-    spam: {
-      type: 'boolean',
-      view: {
-        sizeMd: 12,
-      },
-    },
-    accepted: {
-      type: 'boolean',
-      view: {
-        sizeMd: 12,
-      },
-    },
-    type: {
-      type: 'string',
-      widget: 'Select',
-      default: 'customer',
-      view: {
-        sizeMd: 3,
-      },
-      enum: ['customer', 'supplier', 'buyer', 'business', 'partner'],
-    },
-  },
-  required: ['call_count', 'type'],
-};
+import userSchema from './schemas/user';
+import { FormMaker } from './components/formMaker';
+
+const makerApi = createContext(null);
 
 const Editor = () => {
   // Create a state with the data, transforming into immutable on first mount
+
   const [store, setStore] = React.useState(() => {
     let data = false;
     try {
@@ -74,47 +35,17 @@ const Editor = () => {
 
   // or create empty store, based on the schema type:
   // const [store, setStore] = React.useState(() => createEmptyStore(schema.get('type'));
-  const [schema /* setSchema */] = React.useState(createOrderedMap(schema1));
+  const [schema /* setSchema */] = React.useState(createOrderedMap(userSchema));
 
-  const onChange = React.useCallback(
-    (storeKeys, scopes, updater, deleteOnEmpty, type) => {
-      setStore(prevStore => {
-        const newStore = storeUpdater(
-          storeKeys,
-          scopes,
-          updater,
-          deleteOnEmpty,
-          type,
-        )(prevStore);
-
-        // if using a big schema this can be performance problematic!
-        // if using strings, throttle the `toJS` operation!
-        window.localStorage.setItem(
-          'user_settings',
-          JSON.stringify(newStore.valuesToJS()),
-        );
-
-        return newStore;
-      });
-    },
-    [setStore],
-  );
+  const onChange = React.useCallback(store => setStore(store), [setStore]);
 
   return (
     <React.Fragment>
-      <UIGenerator
-        schema={schema}
-        store={store}
+      <FormMaker
+        storeName="smart_users"
+        schemaObj={userSchema}
         onChange={onChange}
-        widgets={widgets}
-        showValidity={true}
-        t={browserT}
-      >
-        {/*
-              add children that should be under the schema editor,
-              they can use the context of the editor for working
-          */}
-      </UIGenerator>
+      />
 
       <Typography
         component={'p'}

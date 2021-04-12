@@ -6,10 +6,12 @@ import { Link, Typography } from '@material-ui/core';
 import { Example1 } from './maker';
 import { LayoutForms } from './layout';
 
+import { Editor } from './app/store';
+
 const RouteForms = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path="/app/forms/render" component={Example1} />
+      <Route exact path="/app/forms/render" component={Editor} />
       <Route exact path="/app/forms/dash" component={Example1} />
       <Redirect from="/app/forms" to="/app/forms/render" exact />
     </Switch>
