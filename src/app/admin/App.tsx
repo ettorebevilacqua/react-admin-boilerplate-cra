@@ -18,6 +18,8 @@ import Enti from './forms/enti';
 
 import Risorse from './forms/risorse';
 import Qualifiche from './forms/qualifiche';
+import Corsi from './forms/corsi';
+import Ambiti from './forms/ambiti';
 
 const i18nProvider = polyglotI18nProvider(locale => {
   if (locale === 'fr') {
@@ -54,6 +56,8 @@ const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
       <Resource name="enti" {...Enti} />
       <Resource name="risorse" {...Risorse} />
       <Resource name="qualifiche" {...Qualifiche} />
+      <Resource name="corsi" {...Corsi} />
+      <Resource name="ambiti" {...Ambiti} />
     </Admin>
   );
 };
