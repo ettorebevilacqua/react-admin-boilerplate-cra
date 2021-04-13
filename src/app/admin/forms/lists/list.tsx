@@ -12,6 +12,7 @@ import {
   NullableBooleanInput,
   NumberField,
   SearchInput,
+  FunctionField,
 } from 'react-admin';
 import { useMediaQuery, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,6 +24,7 @@ const typesField = {
   text: TextField,
   date: DateField,
   bool: BooleanField,
+  function: FunctionField,
 };
 
 const CorsiFilter = (props: Omit<FilterProps, 'children'>) => (
@@ -48,6 +50,7 @@ export default function listGridMaker(params) {
   return (props: ListProps): ReactElement => {
     const hideId = params.hideId || false;
     const sourceList = params.sourceList;
+    const resource = params.resource;
     const classes = useStyles();
     const isXsmall = useMediaQuery<Theme>(theme =>
       theme.breakpoints.down('xs'),
@@ -68,14 +71,35 @@ export default function listGridMaker(params) {
               className={classes.nb_commands}
             />
           )}
+          {sourceList.map((fieldOptions, idx) => {
+            const { type, label, source, render } = fieldOptions;
+            if (!type) {
+              throw new Error(' bad type of list param in listGrid');
+            }
 
-          {sourceList.map(fieldOptions => {
-            const { source, label, type } = fieldOptions;
-            const fieldProp = { source, label: label || source };
-            const Field = typesField[type || 'text'];
-            if (!Field)
+            const Field = typesField[type];
+
+            if (!Field) {
               throw new Error(type + ' bad type of list param in listGrid');
-            return <Field {...fieldProp} />;
+            }
+
+            const res =
+              type === 'function' ? (
+                <FunctionField
+                  key={idx}
+                  label={label}
+                  resource={resource}
+                  render={render}
+                />
+              ) : (
+                <Field
+                  key={idx}
+                  label={label}
+                  resource={resource}
+                  source={source}
+                />
+              );
+            return res;
           })}
         </Datagrid>
       </List>
