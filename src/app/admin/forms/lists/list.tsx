@@ -18,6 +18,13 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { ReactElement } from 'react';
 
+const typesField = {
+  number: NumberField,
+  text: TextField,
+  date: DateField,
+  bool: BooleanField,
+};
+
 const CorsiFilter = (props: Omit<FilterProps, 'children'>) => (
   <Filter {...props}>
     <SearchInput source="q" alwaysOn />
@@ -37,29 +44,41 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const VisitorList = (props: ListProps): ReactElement => {
-  const classes = useStyles();
-  const isXsmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('xs'));
-  const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('sm'));
-  return (
-    <List
-      {...props}
-      filters={isSmall ? <CorsiFilter /> : undefined}
-      sort={{ field: 'name', order: 'DESC' }}
-      perPage={25}
-    >
-      <Datagrid optimized rowClick="edit">
-        <NumberField source="id" label="Id" className={classes.nb_commands} />
-        <TextField
-          source="ragsociale"
-          label="resources.enti.fields.ragsociale"
-        />
-        <TextField source="mobile" label="Mobile" />
-        <TextField source="email" label="Email" />
-        <TextField source="status" label="Status" />
-      </Datagrid>
-    </List>
-  );
-};
+export default function listGridMaker(params) {
+  return (props: ListProps): ReactElement => {
+    const hideId = params.hideId || false;
+    const sourceList = params.sourceList;
+    const classes = useStyles();
+    const isXsmall = useMediaQuery<Theme>(theme =>
+      theme.breakpoints.down('xs'),
+    );
+    const isSmall = useMediaQuery<Theme>(theme => theme.breakpoints.down('sm'));
+    return (
+      <List
+        {...props}
+        filters={isSmall ? <CorsiFilter /> : undefined}
+        sort={{ field: 'name', order: 'DESC' }}
+        perPage={25}
+      >
+        <Datagrid optimized rowClick="edit">
+          {!hideId && (
+            <NumberField
+              source="id"
+              label="Id"
+              className={classes.nb_commands}
+            />
+          )}
 
-export default VisitorList;
+          {sourceList.map(fieldOptions => {
+            const { source, label, type } = fieldOptions;
+            const fieldProp = { source, label: label || source };
+            const Field = typesField[type || 'text'];
+            if (!Field)
+              throw new Error(type + ' bad type of list param in listGrid');
+            return <Field {...fieldProp} />;
+          })}
+        </Datagrid>
+      </List>
+    );
+  };
+}

@@ -37,16 +37,35 @@ interface AppProps {
   dataProvider: DataProvider;
 }
 
-const risorsaTipoParam = {
+const risorsaTipoResource = {
   resource: 'risorsaTipo',
   source: 'tipo',
   label: 'Tipologie risorsa',
 };
-const risorsaTipo = {
-  ...lists(risorsaTipoParam),
+
+const fieldsGridRisorsaTipo = {
+  hideId: false,
+  sourceList: [{ type: 'text', ...risorsaTipoResource }],
 };
 
-console.log('xxxxx', risorsaTipo);
+const risorsaTipo = {
+  ...lists(risorsaTipoResource, fieldsGridRisorsaTipo),
+};
+
+const risorsaModqualifica = {
+  resource: 'risorsaTipo',
+  source: 'modalità',
+  label: 'Modalità qualifica',
+};
+
+const fieldsGridModqualifica = {
+  hideId: false,
+  sourceList: [{ type: 'text', ...risorsaModqualifica }],
+};
+
+const modqualifica = {
+  ...lists(risorsaModqualifica, fieldsGridModqualifica),
+};
 
 const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
   useEffect(() => onUnmount, [onUnmount]);
@@ -73,6 +92,7 @@ const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
       <Resource name="ambiti" {...Ambiti} />
       <Resource name="fgiuridiche" {...fgiuridiche} />
       <Resource name="risorsaTipo" {...risorsaTipo} />
+      <Resource name="modqualifica" {...modqualifica} />
     </Admin>
   );
 };
