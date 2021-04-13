@@ -90,6 +90,22 @@ const Menu: FC<MenuProps> = ({ onMenuClick, logout, dense = false }) => {
         sidebarIsOpen={open}
         dense={dense}
       />
+      <MenuItemLink
+        to={`/fgiuridiche`}
+        primaryText="Forma Giuridica"
+        leftIcon={<visitors.icon />}
+        onClick={onMenuClick}
+        sidebarIsOpen={open}
+        dense={dense}
+      />
+      <MenuItemLink
+        to={`/risorsaTipo`}
+        primaryText="Tipologie risorsa"
+        leftIcon={<visitors.icon />}
+        onClick={onMenuClick}
+        sidebarIsOpen={open}
+        dense={dense}
+      />
       {/* {identity && identity.group && identity.group === 'admin' && (
 
         <MenuItemLink

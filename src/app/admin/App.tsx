@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { Admin, Resource, DataProvider } from 'react-admin';
+import { Admin, Resource, DataProvider, ResourceProps } from 'react-admin';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 
 import authProvider from './authProvider';
@@ -20,6 +20,8 @@ import Risorse from './forms/risorse';
 import Qualifiche from './forms/qualifiche';
 import Corsi from './forms/corsi';
 import Ambiti from './forms/ambiti';
+import fgiuridiche from './forms/fgiuridiche';
+import lists from './forms/lists';
 
 const i18nProvider = polyglotI18nProvider(locale => {
   if (locale === 'fr') {
@@ -34,6 +36,17 @@ interface AppProps {
   onUnmount?: () => void;
   dataProvider: DataProvider;
 }
+
+const risorsaTipoParam = {
+  resource: 'risorsaTipo',
+  source: 'tipo',
+  label: 'Tipologie risorsa',
+};
+const risorsaTipo = {
+  ...lists(risorsaTipoParam),
+};
+
+console.log('xxxxx', risorsaTipo);
 
 const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
   useEffect(() => onUnmount, [onUnmount]);
@@ -58,6 +71,8 @@ const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
       <Resource name="qualifiche" {...Qualifiche} />
       <Resource name="corsi" {...Corsi} />
       <Resource name="ambiti" {...Ambiti} />
+      <Resource name="fgiuridiche" {...fgiuridiche} />
+      <Resource name="risorsaTipo" {...risorsaTipo} />
     </Admin>
   );
 };

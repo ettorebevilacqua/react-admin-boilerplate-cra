@@ -138,7 +138,7 @@ const RenderFields = props => (
             invalid={formProps.invalid}
             handleSubmit={formProps.handleSubmit}
             saving={formProps.saving}
-            resource="customers"
+            resource={resourceName}
           />
         </form>
       </Card>
