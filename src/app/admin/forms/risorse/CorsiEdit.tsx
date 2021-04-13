@@ -182,7 +182,7 @@ const rEdit: FC<EditProps> = props => (
 
 const rCreate: FC<EditProps> = props => {
   return (
-    <Create {...props}>
+    <Create {...props} record={{ interna: false }}>
       <RenderFields {...props} />
     </Create>
   );
