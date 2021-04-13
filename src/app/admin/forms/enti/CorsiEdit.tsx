@@ -110,12 +110,15 @@ const RenderFields = props => (
 
             <Box display={{ xs: 'block', sm: 'flex' }}>
               <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <TextInput
-                  source="formagiuridica"
-                  resource="enti"
+                <ReferenceInput
                   label="Forma Giuridica"
+                  source="formagiuridica"
+                  reference="fgiuridiche"
                   fullWidth
-                />
+                  helperText={false}
+                >
+                  <SelectInput optionText="tipologia" />
+                </ReferenceInput>
               </Box>
               <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
                 <TextInput source="sdi" resource="enti" label="Sdi" fullWidth />

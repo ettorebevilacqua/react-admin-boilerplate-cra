@@ -11,7 +11,7 @@ import {
   Create,
   EditProps,
   Edit,
-  SimpleForm,
+  BooleanInput,
   ReferenceInput,
   SelectInput,
   TextInput,
@@ -105,9 +105,9 @@ const RenderFields = props => (
               </Box>
               <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
                 <TextInput
-                  source="cfisc"
+                  source="cv"
                   resource={resourceName}
-                  label="Codice Fiscale"
+                  label="Curriculum"
                   validate={requiredValidate}
                   fullWidth
                 />
@@ -116,27 +116,28 @@ const RenderFields = props => (
 
             <Box display={{ xs: 'block', sm: 'flex' }}>
               <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <TextInput
-                  source="tipologia"
-                  resource={resourceName}
+                <ReferenceInput
                   label="Tipologia"
-                  validate={requiredValidate}
+                  source="tipologia"
+                  reference="risorsaTipo"
                   fullWidth
-                />
+                  helperText={false}
+                >
+                  <SelectInput optionText="tipo" />
+                </ReferenceInput>
               </Box>
               <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <TextInput
+                <BooleanInput
                   source="interna"
                   resource={resourceName}
                   label="Interna / Esterna"
-                  validate={requiredValidate}
                   fullWidth
                 />
               </Box>
             </Box>
 
             <Typography variant="h6" gutterBottom>
-              Materierisorse
+              Materie risorse
             </Typography>
 
             <Box display={{ xs: 'block', sm: 'flex' }}>
