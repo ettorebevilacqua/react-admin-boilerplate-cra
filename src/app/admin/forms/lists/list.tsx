@@ -13,6 +13,7 @@ import {
   NumberField,
   SearchInput,
   FunctionField,
+  ReferenceField,
 } from 'react-admin';
 import { useMediaQuery, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,6 +26,7 @@ const typesField = {
   date: DateField,
   bool: BooleanField,
   function: FunctionField,
+  reference: ReferenceField,
 };
 
 const CorsiFilter = (props: Omit<FilterProps, 'children'>) => (
@@ -72,7 +74,14 @@ export default function listGridMaker(params) {
             />
           )}
           {sourceList.map((fieldOptions, idx) => {
-            const { type, label, source, render } = fieldOptions;
+            const {
+              type,
+              label,
+              source,
+              render,
+              reference,
+              sourceRef,
+            } = fieldOptions;
             if (!type) {
               throw new Error(' bad type of list param in listGrid');
             }
@@ -91,6 +100,14 @@ export default function listGridMaker(params) {
                   resource={resource}
                   render={render}
                 />
+              ) : type === 'reference' ? (
+                <ReferenceField
+                  label={label}
+                  source={source}
+                  reference={reference}
+                >
+                  <TextField source={sourceRef} />
+                </ReferenceField>
               ) : (
                 <Field
                   key={idx}
