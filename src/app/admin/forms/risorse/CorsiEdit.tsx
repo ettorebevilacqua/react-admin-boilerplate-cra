@@ -120,7 +120,6 @@ const RenderFields = props => {
       {...props}
       render={(formProps: any) => (
         <Card>
-          <h3>{props.record.id}</h3>
           <form onChange={autoFillAddress}>
             <CardContent>
               <Box>

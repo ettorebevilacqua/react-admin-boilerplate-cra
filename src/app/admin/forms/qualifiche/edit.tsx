@@ -41,12 +41,6 @@ CREATE TABLE `Qualifica`
 );
 
 */
-const choicesQualifica = [
-  { id: 1, desc: 'a' },
-  { id: 2, desc: 'b' },
-  { id: 3, desc: 'c' },
-  { id: 4, desc: 'd' },
-];
 
 const getSource = txt => txt;
 const resourceName = 'risorse';
