@@ -22,6 +22,8 @@ import Corsi from './forms/corsi';
 import Ambiti from './forms/ambiti';
 import lists from './forms/lists';
 
+import {} from '../../mock';
+
 const i18nProvider = polyglotI18nProvider(locale => {
   if (locale === 'fr') {
     return import('./i18n/fr').then(messages => messages.default);
