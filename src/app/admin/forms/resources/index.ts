@@ -17,7 +17,7 @@ const risorsaTipo = {
 
 const risorsaModqualifica = {
   resource: 'risorsaTipo',
-  source: 'modalità',
+  source: 'modalita',
   label: 'Modalità qualifica',
 };
 

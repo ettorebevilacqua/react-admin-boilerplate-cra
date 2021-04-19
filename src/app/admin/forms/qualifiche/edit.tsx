@@ -26,16 +26,17 @@ import {
 // import AnagFields from '../common/anagFields';
 import AndressFields from '../common/andress';
 import ContactFields from '../common/contatti';
+import RelatedInputAddList from '../lists/relatedInputAddList';
 
 /*
 CREATE TABLE `Qualifica`
  (
-	`ID`			int, 
-	`Ente`			int, 
-	`Risorsa`			int, 
-	`Data qualifica iniziale`			datetime, 
-	`Modalità di qualifica`			type 0012, 
-	`Note esplicative qualifica`			text (255), 
+	`ID`			int,
+	`Ente`			int,
+	`Risorsa`			int,
+	`Data qualifica iniziale`			datetime,
+	`Modalità di qualifica`			type 0012,
+	`Note esplicative qualifica`			text (255),
 	`Responsabile qualifica`			varchar (510)
 );
 
@@ -93,14 +94,13 @@ const RenderFields = props => (
                   />
                 </Box>
                 <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                  <AutocompleteInput
-                    choices={choicesQualifica}
-                    optionText="desc"
-                    optionValue="desc"
-                    source={getSource('modalita')}
-                    resource={resourceName}
+                  <RelatedInputAddList
                     label={'Modalità qualifica'}
-                    fullWidth
+                    source={getSource('modalita')}
+                    reference="modqualifica"
+                    resource={resourceName}
+                    optionText="modalita"
+                    labelCreate="Nuova qualifica"
                     helperText={false}
                   />
                 </Box>
