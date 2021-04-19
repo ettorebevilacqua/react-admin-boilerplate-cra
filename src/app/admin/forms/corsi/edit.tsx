@@ -110,13 +110,15 @@ const RenderFields = props => (
                   />
                 </Box>
                 <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                  <TextInput
-                    source={getSource('ambito')}
-                    resource={resourceName}
-                    label={'ambito'}
-                    fullWidth
+                  <ReferenceInput
+                    label="Ambito"
+                    source="ambito"
+                    reference="ambiti"
                     helperText={false}
-                  />
+                  >
+                    <SelectInput optionText="ambito" />
+                  </ReferenceInput>
+                  ;
                 </Box>
               </Box>
 
