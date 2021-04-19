@@ -20,6 +20,7 @@ import Risorse from './forms/risorse';
 import Qualifiche from './forms/qualifiche';
 import Corsi from './forms/corsi';
 import Ambiti from './forms/ambiti';
+import Indagini from './forms/indagini';
 import lists from './forms/lists';
 
 import {} from '../../mock';
@@ -105,6 +106,7 @@ const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
       <Resource name="risorse" {...Risorse} />
       <Resource name="qualifiche" {...Qualifiche} />
       <Resource name="corsi" {...Corsi} />
+      <Resource name="indagini" {...Indagini} />
       <Resource name="ambiti" {...Ambiti} />
       <Resource name="fgiuridiche" {...risorsaFgiuridiche} />
       <Resource name="risorsaTipo" {...risorsaTipo} />
