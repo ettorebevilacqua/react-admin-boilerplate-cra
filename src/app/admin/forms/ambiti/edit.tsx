@@ -32,6 +32,7 @@ import {
   ChipField,
   DateField,
   SimpleFormIterator,
+  ArrayInput,
 } from 'react-admin';
 
 // import AnagFields from '../common/anagFields';
@@ -46,15 +47,7 @@ CREATE TABLE `Materie`
 	`Ambito`			int
 );
 
-
-
 */
-const choicesQualifica = [
-  { id: 1, desc: 'a' },
-  { id: 2, desc: 'b' },
-  { id: 3, desc: 'c' },
-  { id: 4, desc: 'd' },
-];
 
 const getSource = txt => txt;
 const resourceName = 'risorse';
@@ -70,31 +63,29 @@ const RenderFields = props => (
               <Box display={{ xs: 'block', sm: 'flex' }}>
                 <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
                   <TextInput
-                    label="Titolo"
-                    source="titolo"
+                    label="Ambito"
+                    source="ambito"
                     fullWidth
                     resource={'ambiti'}
                     helperText={false}
                   />
                 </Box>
               </Box>
-
+              <Typography variant="h6" gutterBottom>
+                {'Materie'}
+              </Typography>
               <Box display={{ xs: 'block', sm: 'flex' }}>
                 <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                  <SelectArrayInput
-                    label="Materie"
-                    source="materie"
-                    reference={resourceName}
-                    resource={resourceName}
-                    fullWidth
-                    choices={[
-                      { id: 'music', name: 'Music' },
-                      { id: 'photography', name: 'Photo' },
-                      { id: 'programming', name: 'Code' },
-                      { id: 'tech', name: 'Technology' },
-                      { id: 'sport', name: 'Sport' },
-                    ]}
-                  />
+                  <ArrayInput source="materie" label="">
+                    <SimpleFormIterator>
+                      <TextInput
+                        source="materia"
+                        resource={'ambiti'}
+                        label="materia"
+                        fullWidth
+                      />
+                    </SimpleFormIterator>
+                  </ArrayInput>
                 </Box>
               </Box>
             </Box>

@@ -50,13 +50,8 @@ const VisitorList = (props: ListProps): ReactElement => {
     >
       <Datagrid optimized rowClick="edit">
         <NumberField source="id" label="Id" className={classes.nb_commands} />
-        <TextField
-          source="ragsociale"
-          label="resources.enti.fields.ragsociale"
-        />
-        <TextField source="mobile" label="Mobile" />
-        <TextField source="email" label="Email" />
-        <TextField source="status" label="Status" />
+
+        <TextField source="ambito" label="Ambito" />
       </Datagrid>
     </List>
   );

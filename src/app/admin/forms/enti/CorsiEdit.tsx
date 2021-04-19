@@ -118,7 +118,7 @@ const RenderFields = props => {
 
               <Box display={{ xs: 'block', sm: 'flex' }}>
                 <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                  <RelatedInputAddList
+                  {/*        <RelatedInputAddList
                     label="Forma Giuridica"
                     source="formagiuridica"
                     reference="fgiuridiche"
@@ -127,7 +127,7 @@ const RenderFields = props => {
                     labelCreate="Nuova tipologia risorsa"
                     helperText={false}
                   />
-
+           */}
                   <ReferenceInput
                     label="Forma Giuridica"
                     source="formagiuridica"
@@ -135,7 +135,7 @@ const RenderFields = props => {
                     fullWidth
                     helperText={false}
                   >
-                    <SelectInput optionText="tipologia" />
+                    <SelectInput optionText="tipo" />
                   </ReferenceInput>
                 </Box>
                 <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>

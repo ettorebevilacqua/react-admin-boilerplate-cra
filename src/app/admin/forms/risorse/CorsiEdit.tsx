@@ -1,5 +1,5 @@
 // in src/Corsi.js
-import { Box, Card, CardContent, Typography } from '@material-ui/core';
+import { Box, Card, CardContent, Paper, Typography } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
 import { PinDropSharp } from '@material-ui/icons';
 import { waitForDebugger } from 'inspector';
@@ -25,6 +25,9 @@ import {
   SelectArrayInput,
   useGetOne,
   useGetMany,
+  FormDataConsumer,
+  ArrayInput,
+  SimpleFormIterator,
 } from 'react-admin';
 import { useFormState } from 'react-final-form';
 
@@ -53,15 +56,21 @@ const spySubscription = { values: true };
 
 const MaterieAmbiti = ({ id }) => {
   const { values } = useFormState({ subscription: spySubscription });
-
-  const { data } = useGetOne('ambiti', values.ambito);
+  const { data } = useGetOne('ambiti', id || -1);
   return (
     <>
       {data &&
         data.materie &&
-        data.materie.map((materia, idx) => (
-          <Chip key={idx} label={materia} style={{ marginRight: '5px' }} />
-        ))}
+        data.materie.map((materia, idx) => {
+          console.log('xxxxxxxxxxxxx', materia);
+          return (
+            <Chip
+              key={idx}
+              label={materia.materia}
+              style={{ marginRight: '5px' }}
+            />
+          );
+        })}
     </>
   );
 };
@@ -208,7 +217,15 @@ const RenderFields = props => {
                   />
                 </Box>
               </Box>
+              <br />
+              <Card>
+                <Typography variant="h6" gutterBottom>
+                  Qualifiche enti
+                </Typography>
 
+                <QualificaEnti id={props.record.id} />
+              </Card>
+              <br />
               <Typography variant="h6" gutterBottom>
                 Materie risorse
               </Typography>
@@ -221,38 +238,30 @@ const RenderFields = props => {
                     reference="ambiti"
                     helperText={false}
                   >
-                    <SelectInput optionText="titolo" />
+                    <SelectInput optionText="ambito" />
                   </ReferenceInput>
                 </Box>
-                <MaterieAmbiti id={props.record.ambito} />
+                <FormDataConsumer>
+                  {({ formData, ...rest }) =>
+                    formData.ambito && <MaterieAmbiti id={formData.ambito} />
+                  }
+                </FormDataConsumer>
               </Box>
-
-              <Box display={{ xs: 'block', sm: 'flex' }}>
-                <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                  <SelectArrayInput
-                    label="Materie"
-                    source="materie"
-                    reference={resourceName}
-                    resource={resourceName}
-                    fullWidth
-                    choices={[
-                      { id: 'music', name: 'Music' },
-                      { id: 'photography', name: 'Photo' },
-                      { id: 'programming', name: 'Code' },
-                      { id: 'tech', name: 'Technology' },
-                      { id: 'sport', name: 'Sport' },
-                    ]}
-                  />
-                </Box>
-              </Box>
-
+              <br />
               <Typography variant="h6" gutterBottom>
-                Qualiiche enti
+                Materie fuori ambito
               </Typography>
 
-              <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <QualificaEnti id={props.record.id} />
-              </Box>
+              <ArrayInput source="materie" label="">
+                <SimpleFormIterator>
+                  <TextInput
+                    source="materia"
+                    resource={resourceName}
+                    label="materia"
+                    fullWidth
+                  />
+                </SimpleFormIterator>
+              </ArrayInput>
             </CardContent>
             <Toolbar
               record={formProps.record}
