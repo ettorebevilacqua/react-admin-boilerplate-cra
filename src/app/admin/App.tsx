@@ -20,7 +20,6 @@ import Risorse from './forms/risorse';
 import Qualifiche from './forms/qualifiche';
 import Corsi from './forms/corsi';
 import Ambiti from './forms/ambiti';
-import fgiuridiche from './forms/fgiuridiche';
 import lists from './forms/lists';
 
 const i18nProvider = polyglotI18nProvider(locale => {
@@ -50,6 +49,21 @@ const fieldsGridRisorsaTipo = {
 
 const risorsaTipo = {
   ...lists(risorsaTipoResource, fieldsGridRisorsaTipo),
+};
+
+const risorsaTipoFgiuridiche = {
+  resource: 'fgiuridiche',
+  source: 'tipo',
+  label: 'Forme Giuridiche',
+};
+
+const fieldsGridFgiuridiche = {
+  hideId: false,
+  sourceList: [{ type: 'text', ...risorsaTipoFgiuridiche }],
+};
+
+const risorsaFgiuridiche = {
+  ...lists(risorsaTipoResource, fieldsGridFgiuridiche),
 };
 
 const risorsaModqualifica = {
@@ -90,7 +104,7 @@ const AdminApp = ({ onUnmount, dataProvider }: AppProps) => {
       <Resource name="qualifiche" {...Qualifiche} />
       <Resource name="corsi" {...Corsi} />
       <Resource name="ambiti" {...Ambiti} />
-      <Resource name="fgiuridiche" {...fgiuridiche} />
+      <Resource name="fgiuridiche" {...risorsaFgiuridiche} />
       <Resource name="risorsaTipo" {...risorsaTipo} />
       <Resource name="modqualifica" {...modqualifica} />
     </Admin>
