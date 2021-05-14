@@ -190,7 +190,7 @@ Login.propTypes = {
 // Because otherwise the useStyles() hook used in Login won't get
 // the right theme
 const LoginWithTheme = (props: any) => (
-  <ThemeProvider theme={createMuiTheme(lightTheme)}>
+  <ThemeProvider theme={createMuiTheme(lightTheme as any)}>
     <Login {...props} />
   </ThemeProvider>
 );

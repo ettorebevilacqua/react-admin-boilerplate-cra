@@ -16,14 +16,18 @@ import 'sanitize.css/sanitize.css';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { GlobalStyle } from '../styles/global-styles';
 
-import { HomePage } from './pages/HomePage/Loadable';
-import { FormsPage } from './pages/forms/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
 
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { configureAppStore } from '../store/configureStore';
+
+import { HomePage } from './pages/HomePage/Loadable';
+import { FormsPage } from './pages/forms/Loadable';
+
+import { UserPage } from './pages/User/Loadable';
+import { UserMenu } from './pages/UserMenu/Loadable';
 // import { ThemeProvider } from 'styles/theme/ThemeProvider';
 
 const store = configureAppStore();
@@ -52,8 +56,10 @@ export function AppHome(props: any) {
         <BrowserRouter>
           <Switch>
             <Route exact path="/app/home" component={HomePage} />
+            <Route exact path="/app/user" component={UserPage} />
+            <Route exact path="/app/userMenu" component={UserMenu} />
             <Route path="/app/forms" component={FormsPage} />
-            <Redirect from="/app" to="/app/forms" exact />
+            <Redirect from="/app" to="/app/userMenu" exact />
           </Switch>
         </BrowserRouter>
         <GlobalStyle />
