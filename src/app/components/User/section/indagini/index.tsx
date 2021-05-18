@@ -14,15 +14,15 @@ import { Helmet } from 'react-helmet-async';
 const data = [
   {
     name: 'Apri una nuova indagine',
-    link: '/user/indagine',
+    link: '/app/user/indagine',
   },
   {
     name: "Visualizza l'elenco delle indagini aperte",
-    link: '/user/lindagini',
+    link: '/app//user/lindagini',
   },
   {
     name: 'Genera repost annuale',
-    link: '/user/repoAnno',
+    link: '/app/user/repoAnno',
   },
 ];
 

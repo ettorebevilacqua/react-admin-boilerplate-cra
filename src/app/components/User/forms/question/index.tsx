@@ -40,7 +40,7 @@ const schema = createOrderedMap({
 const values = {};
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
-function Indagine(props) {
+function Question(props) {
   var classes = useStyles();
   // Create a state with the data, transforming into immutable on first mount
   const [store, setStore] = React.useState(() =>
@@ -67,4 +67,4 @@ function Indagine(props) {
   );
 }
 
-export default Indagine;
+export default Question;

@@ -11,7 +11,9 @@ import Layout from './Layout';
 import MenuCard from './menuCard';
 import Plane from './section/plane';
 import Indagini from './section/indagini';
-// import Indagine from './section/indagine';
+import Indagine from './section/indagine';
+
+import Forms from './forms';
 
 const buttonData = [
   { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
@@ -42,6 +44,12 @@ export default function UserComp() {
                 path="/app/user/indagini"
                 component={() => <Indagini />}
               />
+              <Route
+                exact
+                path="/app/user/indagine"
+                component={() => <Indagine />}
+              />
+              <Route path="/app/user/forms" component={() => <Forms />} />
               <Route
                 exact
                 path="/app/user/verifyr"
