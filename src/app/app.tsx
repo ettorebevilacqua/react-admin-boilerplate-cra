@@ -56,8 +56,7 @@ export function AppHome(props: any) {
         <BrowserRouter>
           <Switch>
             <Route exact path="/app/home" component={HomePage} />
-            <Route exact path="/app/user" component={UserPage} />
-            <Route exact path="/app/userMenu" component={UserMenu} />
+            <Route path="/app/user" component={UserPage} />
             <Route path="/app/forms" component={FormsPage} />
             <Redirect from="/app" to="/app/userMenu" exact />
           </Switch>

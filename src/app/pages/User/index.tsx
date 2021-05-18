@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async'; // Import UI Generator
 import { Link, Typography } from '@material-ui/core';
 
 import UserComp from '../../components/User/';
-import MenuCard from '../../components/User/menuCard';
 
 export function UserPage() {
   return (
@@ -26,9 +25,7 @@ export function UserPage() {
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
         />
       </Helmet>
-      <UserComp>
-        <MenuCard />
-      </UserComp>
+      <UserComp />
     </>
   );
 }

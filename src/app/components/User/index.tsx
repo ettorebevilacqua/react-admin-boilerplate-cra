@@ -8,13 +8,45 @@ import { LayoutProvider } from './LayoutContext';
 import Themes from './themes';
 import Layout from './Layout';
 
-export default function UserComp({ children }) {
+import MenuCard from './menuCard';
+import Plane from './section/plane';
+import Indagini from './section/indagini';
+
+const buttonData = [
+  { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
+  { name: 'Customer satisfaction', link: '/app/user/indagini' },
+  { name: 'gestione docenti e professionisti' /*, link: '/app/crm'*/ },
+  { name: 'Servizio 4' /*, link: ''*/ },
+];
+
+export default function UserComp() {
   return (
     <>
       <LayoutProvider>
         <ThemeProvider theme={Themes.default}>
           <CssBaseline />
-          <Layout>{children}</Layout>
+
+          <Layout>
+            <Switch>
+              <Route
+                exact
+                path="/app/user/home"
+                component={() => <MenuCard items={buttonData} />}
+              />
+              <Route
+                exact
+                path="/app/user/indagini"
+                component={() => <Indagini />}
+              />
+              <Route
+                exact
+                path="/app/user/verifyr"
+                component={() => <MenuCard items={buttonData} />}
+              />
+              <Route exact path="/app/user/plane" component={() => <Plane />} />
+              <Redirect from="/app/user" to="/app/user/home" exact />
+            </Switch>
+          </Layout>
         </ThemeProvider>
       </LayoutProvider>
 

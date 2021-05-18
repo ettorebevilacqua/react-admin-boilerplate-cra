@@ -61,7 +61,7 @@ const useStyles = makeStyles({
     width: 131,
     height: 131,
     borderRadius: '50%',
-    background: '#411010',
+    background: '#e9dada',
     border: (props: any) => {
       const { bgColor } = bgColors[props.bgSelectorIndex];
       return `2px solid ${bgColor}`;
@@ -99,7 +99,7 @@ const useStyles = makeStyles({
     height: 116,
     zIndex: 0,
     position: 'absolute',
-    background: props => bgColors[props.bgSelectorIndex].bgColor,
+    // background: props => bgColors[props.bgSelectorIndex].bgColor,
     transition: 'transform 0.3s ease-out',
     borderRadius: '50%',
   },
@@ -291,13 +291,6 @@ function SimpleCard(props) {
   );
 }
 
-const buttonData = [
-  { name: 'Verifica degli apprendiimenti', link: '/catalogo/linee' },
-  { name: 'Customer satisfaction', link: '/users' },
-  { name: 'gestione docenti e professionisti' /*, link: '/app/crm'*/ },
-  { name: 'Setup' /*, link: ''*/ },
-];
-
 const useTStyles = makeStyles({
   link: {
     textDecoration: 'unset',
@@ -320,7 +313,7 @@ export default function AnalyticsCards(props) {
         {/* <img src={Logo} style={{ maxWidth: '100%' }} /> */}
       </Box>
       <Grid container item spacing={4} justify="center">
-        {buttonData.map((item, i) => {
+        {props.items.map((item, i) => {
           return (
             <Link key={i} to={item.link || ''} className={classes.link}>
               <SimpleCard bgSelectorIndex={i} item={item} />
