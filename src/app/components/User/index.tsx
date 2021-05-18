@@ -11,6 +11,7 @@ import Layout from './Layout';
 import MenuCard from './menuCard';
 import Plane from './section/plane';
 import Indagini from './section/indagini';
+// import Indagine from './section/indagine';
 
 const buttonData = [
   { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
@@ -22,6 +23,9 @@ const buttonData = [
 export default function UserComp() {
   return (
     <>
+      <Helmet titleTemplate="%s - React Boilerplate" defaultTitle="Smart">
+        <meta name="description" content="Smart service" />
+      </Helmet>
       <LayoutProvider>
         <ThemeProvider theme={Themes.default}>
           <CssBaseline />

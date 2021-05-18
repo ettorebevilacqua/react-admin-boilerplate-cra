@@ -41,17 +41,18 @@ openSansObserver.load().then(() => {
   document.body.classList.add('fontLoaded');
 });
 
+const helmetContext = {};
 export function AppHome(props: any) {
   const { i18n } = useTranslation();
   return (
     <Provider store={store}>
-      <HelmetProvider>
+      <HelmetProvider context={helmetContext}>
         <Helmet
           titleTemplate="%s - React Boilerplate"
-          defaultTitle="React Boilerplate"
+          defaultTitle="Smart"
           htmlAttributes={{ lang: i18n.language }}
         >
-          <meta name="description" content="A React Boilerplate application" />
+          <meta name="description" content="Smart service" />
         </Helmet>
         <BrowserRouter>
           <Switch>

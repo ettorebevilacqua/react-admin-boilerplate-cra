@@ -9,25 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import useStyles from './styles';
 
 import MenuCard from '../../menuCard';
-import { Helmet } from 'react-helmet-async';
-
-const data = [
-  {
-    name: 'Apri una nuova indagine',
-    link: '/user/indagine',
-  },
-  {
-    name: "Visualizza l'elenco delle indagini aperte",
-    link: '/user/lindagini',
-  },
-  {
-    name: 'Genera repost annuale',
-    link: '/user/repoAnno',
-  },
-];
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
-function Indagini(props) {
+function Indagine(props) {
   var classes = useStyles();
   const commonStyle = {
     background: 'rgb(173 182 235)',
@@ -39,16 +23,10 @@ function Indagini(props) {
   };
 
   return (
-    <>
-      <Helmet>
-        <title>404 Page Not Found</title>
-        <meta name="description" content="Page not found" />
-      </Helmet>
-      <div className={classes.root}>
-        <MenuCard items={data} />
-      </div>
-    </>
+    <div className={classes.root}>
+      <h3>Indagine</h3>
+    </div>
   );
 }
 
-export default withRouter(Indagini);
+export default Indagine;
