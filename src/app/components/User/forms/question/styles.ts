@@ -6,6 +6,11 @@ export default makeStyles((theme: Theme) => ({
     maxWidth: '100vw',
     overflow: 'hidden',
     height: '100%',
+    flexDirection: 'column',
+  },
+  card: {
+    margin: '12px',
+    padding: '8px',
   },
   content: {
     flexGrow: 1,
