@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@data-provider/axios": "3.0.1",
+    "@data-provider/browser-storage": "3.0.1",
+    "@data-provider/core": "3.0.0",
+    "@data-provider/react": "1.5.1",
     "@material-ui/core": "4.11.3",
     "@material-ui/icons": "4.11.2",
     "@mui-treasury/layout": "4.5.0",
@@ -50,6 +54,7 @@
     "plop": "2.7.4",
     "prettier": "2.1.1",
     "prop-types": "15.7.2",
+    "query-string": "7.0.0",
     "ra-data-json-server": "3.14.1",
     "ra-data-local-storage": "3.14.0",
     "ra-language-french": "3.14.1",
@@ -85,6 +90,8 @@
     "web-vitals": "0.2.4"
   },
   "scripts": {
+    "json-server": "json-server --watch ./db/db.json --port=3100",
+    "json-server-dev": "json-server --watch ./db/dev.json --port=3100",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -146,5 +153,8 @@
         "statements": 90
       }
     }
+  },
+  "devDependencies": {
+    "json-server": "0.16.3"
   }
 }
