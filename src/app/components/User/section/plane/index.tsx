@@ -11,12 +11,14 @@ import useStyles from './styles';
 import MenuCard from '../../menuCard';
 import CardInfo from '../../components/CardInfo';
 import { Typography } from '@material-ui/core';
+
 const planeButton = [
   { name: 'Gold ', link: '/catalogo/linee' },
   { name: 'Silver', link: '/users' },
   { name: 'Base' /*, link: '/app/crm'*/ },
   { name: 'Prova gratuita' /*, link: ''*/ },
 ];
+
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
 function Plane(props) {
   var classes = useStyles();
@@ -44,7 +46,7 @@ function Plane(props) {
       text: 'Paga ogni singola indagine',
     },
     {
-      title: 'Prava gratuita',
+      title: 'Prova gratuita',
       text: 'Paga ogni singola indagine',
     },
   ];
@@ -69,9 +71,11 @@ function Plane(props) {
       >
         <Grid item xs={6}>
           <Card style={{ margin: '22px' }}>
-            <h2 style={{ marginTop: '46px' }}>
-              Sceglio il tuo profilo di servizio
-            </h2>
+            <Box style={{ padding: '8px' }}>
+              <h2 style={{ marginTop: '46px' }}>
+                Sceglio il tuo profilo di servizio
+              </h2>
+            </Box>
           </Card>
         </Grid>
         <Grid item xs={6}>
