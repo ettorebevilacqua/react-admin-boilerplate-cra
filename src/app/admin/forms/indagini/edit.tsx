@@ -76,123 +76,31 @@ const RenderFields = props => (
             <Box>
               <Box display={{ xs: 'block', sm: 'flex' }}>
                 <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                  <ReferenceInput
-                    source="idcorso"
-                    label={'Corso'}
-                    reference="corsi"
-                  >
-                    <SelectInput optionText="titolo" />
+                  <TextInput
+                    label="Indagine"
+                    source="indagine"
+                    fullWidth
+                    helperText={false}
+                  />
+                </Box>
 
-                    {/*   <AutocompleteInput
-                      optionText={(choice?) =>
-                        choice?.id // the empty choice is { id: '' }
-                          ? `${choice.titolo} ${choice.data_inizio}`
-                          : ''
-                      }
-                    />*/}
-                  </ReferenceInput>
+                <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
+                  <TextInput
+                    source="dataopen"
+                    label="Data Apertura"
+                    fullWidth
+                    helperText={false}
+                  />
                 </Box>
               </Box>
 
               <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
                 <TextInput
-                  label="Titolo"
-                  source="titolo"
+                  label="Redeption"
+                  source="redeption"
                   fullWidth
                   helperText={false}
                 />
-              </Box>
-            </Box>
-
-            <Box display={{ xs: 'block', sm: 'flex' }}>
-              <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <ReferenceInput
-                  source="idmodulo"
-                  label={'Modulo'}
-                  reference="moduli"
-                >
-                  <AutocompleteInput
-                    optionText={(choice?) =>
-                      choice?.id // the empty choice is { id: '' }
-                        ? `${choice.titolo}`
-                        : ''
-                    }
-                  />
-                </ReferenceInput>
-
-                <TextInput
-                  label="Titolo modulo"
-                  source="titoloModulo"
-                  fullWidth
-                  helperText={false}
-                />
-              </Box>
-            </Box>
-            <br />
-            <Typography variant="h6" gutterBottom>
-              Docenti
-            </Typography>
-
-            <Box display={{ xs: 'block', sm: 'flex' }}>
-              <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <ArrayInput source="docenti" label="">
-                  <SimpleFormIterator>
-                    <ReferenceInput
-                      source="docenti"
-                      label={'Docenti'}
-                      reference="risorse"
-                    >
-                      <AutocompleteInput
-                        optionText={(choice?) =>
-                          choice?.id // the empty choice is { id: '' }
-                            ? `${choice.cognome} ${choice.nome}`
-                            : ''
-                        }
-                      />
-                    </ReferenceInput>
-                  </SimpleFormIterator>
-                </ArrayInput>
-              </Box>
-            </Box>
-
-            <Box display={{ xs: 'block', sm: 'flex' }}>
-              <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <TextInput
-                  label="NumPartecipanti "
-                  source="num_partecipanti"
-                  fullWidth
-                  helperText={false}
-                />
-              </Box>
-            </Box>
-            <br />
-            <Typography variant="h6" gutterBottom>
-              Contatti partecipanti
-            </Typography>
-            <Box display={{ xs: 'block', sm: 'flex' }}>
-              <Box flex={2} mr={{ xs: 0, sm: '0.5em' }}>
-                <ArrayInput source="partecipanti" label="">
-                  <SimpleFormIterator>
-                    <TextInput
-                      label="Nome "
-                      source="nome"
-                      fullWidth
-                      helperText={false}
-                    />
-                    <TextInput
-                      label="Telefono "
-                      source="tel"
-                      fullWidth
-                      helperText={false}
-                    />
-                    <TextInput
-                      label="Mail "
-                      source="Mail"
-                      fullWidth
-                      helperText={false}
-                    />
-                  </SimpleFormIterator>
-                </ArrayInput>
               </Box>
             </Box>
           </CardContent>

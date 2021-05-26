@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter, Link } from 'react-router-dom';
 import classnames from 'classnames';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
@@ -30,22 +30,26 @@ function Plane(props) {
     marginLeft: '15%',
     paddind: '8px',
   };
-
+  const linkToRoute = '/app/user/home';
   const data = [
     {
+      link: linkToRoute,
       title: 'Gold',
       text:
         'Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale',
     },
     {
+      link: linkToRoute,
       title: 'Silver',
       text: 'Paga pacchetto indagini',
     },
     {
+      link: linkToRoute,
       title: 'Base',
       text: 'Paga ogni singola indagine',
     },
     {
+      link: linkToRoute,
       title: 'Prova gratuita',
       text: 'Paga ogni singola indagine',
     },
@@ -53,11 +57,13 @@ function Plane(props) {
 
   const renderBox = data => (
     <Card style={commonStyle}>
-      <div style={{ width: '100%', padding: '8px' }}>
-        <p style={{ fontSize: '18px', alignItems: 'center' }}>{data.title}</p>
+      <Link to={data.link || ''}>
+        <div style={{ width: '100%', padding: '8px' }}>
+          <p style={{ fontSize: '18px', alignItems: 'center' }}>{data.title}</p>
 
-        <p style={{ fontSize: '14px', alignItems: 'center' }}>{data.text}</p>
-      </div>
+          <p style={{ fontSize: '14px', alignItems: 'center' }}>{data.text}</p>
+        </div>
+      </Link>
     </Card>
   );
 

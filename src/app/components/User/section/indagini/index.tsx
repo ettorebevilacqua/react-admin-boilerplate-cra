@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 import classnames from 'classnames';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
@@ -14,11 +15,12 @@ import { Helmet } from 'react-helmet-async';
 const data = [
   {
     name: 'Apri una nuova indagine',
-    link: '/app/user/indagine',
+    link: '/app/user/forms/question',
   },
   {
-    name: "Visualizza l'elenco delle indagini aperte",
-    link: '/app//user/lindagini',
+    name: 'Indagini aperte',
+    link: '/#/indagini',
+    hardLink: true,
   },
   {
     name: 'Genera repost annuale',
@@ -28,7 +30,20 @@ const data = [
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
 function Indagini(props) {
-  var classes = useStyles();
+  const classes = useStyles();
+  const [menu, setMenu] = useState(data);
+
+  useEffect(() => {
+    const params = queryString.parse(props.location.search);
+
+    const AddLink = {
+      name: 'Crea Indagine',
+      link: '/app/user/forms/question',
+    };
+
+    'isAdmin' in params && setMenu([AddLink, ...data]);
+  }, []);
+
   const commonStyle = {
     background: 'rgb(173 182 235)',
     height: '120px',
@@ -45,7 +60,7 @@ function Indagini(props) {
         <meta name="description" content="Page not found" />
       </Helmet>
       <div className={classes.root}>
-        <MenuCard items={data} />
+        <MenuCard items={menu} />
       </div>
     </>
   );

@@ -8,6 +8,29 @@ import { LayoutProvider } from './LayoutContext';
 import Themes from './themes';
 import Layout from './Layout';
 
+import { ConnectedRouter } from 'connected-react-router';
+import { Provider } from 'react-redux';
+// import configureStore, { history } from './store/configureStore';
+
+import {
+  AuthContext,
+  DataProviderContext,
+  TranslationProvider,
+  Notification,
+  Admin,
+  Resource,
+  DataProvider,
+} from 'react-admin';
+
+import createAdminStore from './store/creatAdminStore';
+// import restProvider from 'ra-data-simple-rest';
+import localStorageDataProvider from 'ra-data-local-storage';
+import { LocalStorageDataProviderParams } from 'ra-data-local-storage';
+import { createHashHistory } from 'history';
+
+import authProvider from '../../admin/authProvider'; // '../../ /admin/authProvider.ts';
+import { Login } from '../../admin/layout';
+
 import MenuCard from './menuCard';
 import Plane from './section/plane';
 import Indagini from './section/indagini';
@@ -15,52 +38,91 @@ import Indagine from './section/indagine';
 
 import Forms from './forms';
 
+const genData: any = []; // generateData();
+const data = { defaultData: genData } as LocalStorageDataProviderParams;
+const dataProvider = localStorageDataProvider(data);
+const history = createHashHistory();
+
+// const store = configureStore();
+const store = createAdminStore({
+  authProvider,
+  dataProvider,
+  history,
+});
+
 const buttonData = [
   { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
   { name: 'Customer satisfaction', link: '/app/user/indagini' },
-  { name: 'gestione docenti e professionisti' /*, link: '/app/crm'*/ },
+  {
+    name: 'gestione docenti e professionisti',
+    link: '/#/risorse',
+    hardLink: true,
+  },
   { name: 'Servizio 4' /*, link: ''*/ },
 ];
 
+const helmetRender = () => (
+  <Helmet titleTemplate="%s - React Boilerplate" defaultTitle="Smart">
+    <meta name="description" content="Smart service" />
+  </Helmet>
+);
+
 export default function UserComp() {
+  // authProvider
+
+  //  if (!authProvider.checkAuth({})) {
+  if (!localStorage.getItem('username')) {
+    return (
+      <>
+        {helmetRender()}
+        <Login />
+      </>
+    );
+  }
   return (
     <>
-      <Helmet titleTemplate="%s - React Boilerplate" defaultTitle="Smart">
-        <meta name="description" content="Smart service" />
-      </Helmet>
-      <LayoutProvider>
-        <ThemeProvider theme={Themes.default}>
-          <CssBaseline />
+      {helmetRender()}
+      <Provider store={store}>
+        <LayoutProvider>
+          <ThemeProvider theme={Themes.default}>
+            <CssBaseline />
 
-          <Layout>
-            <Switch>
-              <Route
-                exact
-                path="/app/user/home"
-                component={() => <MenuCard items={buttonData} />}
-              />
-              <Route
-                exact
-                path="/app/user/indagini"
-                component={() => <Indagini />}
-              />
-              <Route
-                exact
-                path="/app/user/indagine"
-                component={() => <Indagine />}
-              />
-              <Route path="/app/user/forms" component={() => <Forms />} />
-              <Route
-                exact
-                path="/app/user/verifyr"
-                component={() => <MenuCard items={buttonData} />}
-              />
-              <Route exact path="/app/user/plane" component={() => <Plane />} />
-              <Redirect from="/app/user" to="/app/user/home" exact />
-            </Switch>
-          </Layout>
-        </ThemeProvider>
-      </LayoutProvider>
+            <Layout>
+              {' '}
+              {/* place ConnectedRouter under Provider */}
+              <Switch>
+                <Route
+                  exact
+                  path="/app/user/home"
+                  component={() => <MenuCard items={buttonData} />}
+                />
+                <Route
+                  exact
+                  path="/app/user/indagini"
+                  component={() => <Indagini />}
+                />
+                <Route
+                  exact
+                  path="/app/user/indagine"
+                  component={() => <Indagine />}
+                />
+                <Route path="/app/user/forms" component={() => <Forms />} />
+                <Route
+                  exact
+                  path="/app/user/verifyr"
+                  component={() => <MenuCard items={buttonData} />}
+                />
+                <Route
+                  exact
+                  path="/app/user/plane"
+                  component={() => <Plane />}
+                />
+                <Redirect from="/app/user" to="/app/user/home" exact />
+              </Switch>
+            </Layout>
+          </ThemeProvider>
+        </LayoutProvider>
+      </Provider>
 
       {/* data.content && <ContentEx /> */}
     </>

@@ -299,6 +299,7 @@ const useTStyles = makeStyles({
 
 export default function AnalyticsCards(props) {
   const classes = useTStyles(props);
+  const isHardLink = props.hardLink;
 
   return (
     <React.Fragment>
@@ -315,8 +316,25 @@ export default function AnalyticsCards(props) {
       <Grid container item spacing={4} justify="center">
         {props.items.map((item, i) => {
           return (
-            <Link key={i} to={item.link || ''} className={classes.link}>
-              <SimpleCard bgSelectorIndex={i} item={item} />
+            <Link
+              onClick={() => {
+                item.hardLink &&
+                  item.link &&
+                  window.location.assign(item.link || '');
+              }}
+              key={i}
+              to={item.link || ''}
+              className={classes.link}
+            >
+              <SimpleCard
+                bgSelectorIndex={i}
+                item={item}
+                onClick={() => {
+                  item.hardLink &&
+                    item.link &&
+                    window.location.assign(item.link || '');
+                }}
+              />
             </Link>
           );
         })}

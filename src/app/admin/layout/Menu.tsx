@@ -25,6 +25,8 @@ import { AppState } from '../types';
 
 type MenuName = 'menuCatalog' | 'menuSales' | 'menuCustomers';
 
+const isAdmin = false;
+
 const Menu: FC<MenuProps> = ({ onMenuClick, logout, dense = false }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, setState] = useState({
@@ -49,79 +51,109 @@ const Menu: FC<MenuProps> = ({ onMenuClick, logout, dense = false }) => {
   return (
     <Box mt={1}>
       {' '}
-      <DashboardMenuItem onClick={onMenuClick} sidebarIsOpen={open} />
-      <MenuItemLink
-        to={`/enti`}
-        primaryText="Enti"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/risorse`}
-        primaryText="Risorse"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/qualifiche`}
-        primaryText="Qualifiche"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/corsi`}
-        primaryText="Corsi"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/indagini`}
-        primaryText="Indagini"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/ambiti`}
-        primaryText="Ambiti"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/fgiuridiche`}
-        primaryText="Forma Giuridica"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/risorsaTipo`}
-        primaryText="Tipologie risorsa"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
-      <MenuItemLink
-        to={`/modqualifica`}
-        primaryText="Modalità Qualifica"
-        leftIcon={<visitors.icon />}
-        onClick={onMenuClick}
-        sidebarIsOpen={open}
-        dense={dense}
-      />
+      {isAdmin && (
+        <DashboardMenuItem onClick={onMenuClick} sidebarIsOpen={open} />
+      )}
+      {!isAdmin && (
+        <MenuItemLink
+          to={`/app/user/home`}
+          primaryText="Home"
+          leftIcon={<visitors.icon />}
+          onClick={() => window.location.assign('/app/user/home')}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      )}
+      {isAdmin && (
+        <MenuItemLink
+          to={`/enti`}
+          primaryText="Enti"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      )}
+      {
+        <MenuItemLink
+          to={`/risorse`}
+          primaryText="Risorse"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      }
+      {isAdmin && (
+        <MenuItemLink
+          to={`/qualifiche`}
+          primaryText="Qualifiche"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      )}
+      {
+        <MenuItemLink
+          to={`/corsi`}
+          primaryText="Corsi"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      }
+      {
+        <MenuItemLink
+          to={`/indagini`}
+          primaryText="Indagini"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      }
+      {isAdmin && (
+        <MenuItemLink
+          to={`/ambiti`}
+          primaryText="Ambiti"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      )}
+      {isAdmin && (
+        <MenuItemLink
+          to={`/fgiuridiche`}
+          primaryText="Forma Giuridica"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      )}
+      {isAdmin && (
+        <MenuItemLink
+          to={`/risorsaTipo`}
+          primaryText="Tipologie risorsa"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      )}
+      {isAdmin && (
+        <MenuItemLink
+          to={`/modqualifica`}
+          primaryText="Modalità Qualifica"
+          leftIcon={<visitors.icon />}
+          onClick={onMenuClick}
+          sidebarIsOpen={open}
+          dense={dense}
+        />
+      )}
       {/* {identity && identity.group && identity.group === 'admin' && (
 
         <MenuItemLink

@@ -16,7 +16,7 @@ const genData: any = generateData();
 genData.risorse = [{ id: 1 }];
 
 const data = { defaultData: genData } as LocalStorageDataProviderParams;
-console.log('xxxxxxxxxxxxx', data);
+// console.log('xxxxxxxxxxxxx', data);
 
 // const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com');
 const dataProvider = localStorageDataProvider(data);

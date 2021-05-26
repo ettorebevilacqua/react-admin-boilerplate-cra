@@ -49,9 +49,9 @@ const VisitorList = (props: ListProps): ReactElement => {
       perPage={25}
     >
       <Datagrid optimized rowClick="edit">
-        <NumberField source="id" label="Id" className={classes.nb_commands} />
-
-        <TextField source="ambito" label="Ambito" />
+        <TextField source="indagine" label="Indagine" />
+        <TextField source="dataopen" label="Aperrtura" />
+        <TextField source="redeption" label="Redeption" />
       </Datagrid>
     </List>
   );

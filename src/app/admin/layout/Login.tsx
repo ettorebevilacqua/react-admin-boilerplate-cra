@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Field, withTypes } from 'react-final-form';
-import { useLocation } from 'react-router-dom';
 
 import {
   Avatar,
@@ -16,6 +15,8 @@ import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
 import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
+import { useLocation, useHistory } from 'react-router-dom';
+import authProvider from '../authProvider';
 
 import { lightTheme } from './themes';
 
@@ -87,11 +88,34 @@ const Login = () => {
   const notify = useNotify();
   const login = useLogin();
   const location = useLocation<{ nextPathname: string } | null>();
+  const history = useHistory();
 
   const handleSubmit = (auth: FormValues) => {
     setLoading(true);
-    login(auth, location.state ? location.state.nextPathname : '/').catch(
-      (error: Error) => {
+    const username = { ...auth }.username;
+    const pushLogin = () => {
+      authProvider.login(auth);
+    };
+    login(
+      auth,
+      location.pathname,
+      // location.state ? location.state.nextPathname : '/app/user',
+    )
+      .then(dataLogin => {
+        const userPlane = localStorage.getItem('userPlane');
+        if (!userPlane) {
+          pushLogin();
+          localStorage.setItem('userPlane', 'gold');
+          history.push('/app/user/plane/');
+          window.location.assign('/app/user/plane#/');
+          return true;
+        }
+        pushLogin();
+        //  if (localStorage.setItem('userPlane', username);
+        history.push(location.pathname);
+        window.location.assign(location.pathname);
+      })
+      .catch((error: Error) => {
         setLoading(false);
         notify(
           typeof error === 'string'
@@ -109,17 +133,16 @@ const Login = () => {
                 : undefined,
           },
         );
-      },
-    );
+      });
   };
 
   const validate = (values: FormValues) => {
     const errors: FormValues = {};
     if (!values.username) {
-      errors.username = translate('ra.validation.required');
+      errors.username = 'richiesto' || translate('ra.validation.required');
     }
     if (!values.password) {
-      errors.password = translate('ra.validation.required');
+      errors.password = 'richiesto' || translate('ra.validation.required');
     }
     return errors;
   };
@@ -145,7 +168,7 @@ const Login = () => {
                     name="username"
                     // @ts-ignore
                     component={renderInput}
-                    label={translate('ra.auth.username')}
+                    label={'User' || translate('ra.auth.username')}
                     disabled={loading}
                   />
                 </div>
@@ -154,7 +177,7 @@ const Login = () => {
                     name="password"
                     // @ts-ignore
                     component={renderInput}
-                    label={translate('ra.auth.password')}
+                    label={'password' || translate('ra.auth.password')}
                     type="password"
                     disabled={loading}
                   />
@@ -169,11 +192,10 @@ const Login = () => {
                   fullWidth
                 >
                   {loading && <CircularProgress size={25} thickness={2} />}
-                  {translate('ra.auth.sign_in')}
+                  {'login' || translate('ra.auth.sign_in')}
                 </Button>
               </CardActions>
             </Card>
-            <Notification />
           </div>
         </form>
       )}

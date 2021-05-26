@@ -11,7 +11,7 @@ function Forms(props) {
         <Route
           exact
           path="/app/user/forms/question"
-          component={() => <Question />}
+          component={() => <Question {...props} />}
         />
         <Redirect from="/app/user/forms" to="/app/user/forms/question" exact />
       </Switch>

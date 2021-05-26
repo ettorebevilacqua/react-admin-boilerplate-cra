@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { widgets } from '@ui-schema/ds-material';
+import useStyles from './styles';
 
 // Import UI Generator
 import {
@@ -13,8 +14,9 @@ import {
 } from '@ui-schema/ui-schema';
 import { storeUpdater } from '@ui-schema/ui-schema/UIStore/storeUpdater';
 
-// styles
-import useStyles from './styles';
+import { useData, useLoaded } from '@data-provider/react';
+
+// import { todosFiltered } from './../../data/db';
 
 const schema = createOrderedMap({
   type: 'object',
@@ -47,6 +49,10 @@ function Indagine(props) {
     createStore(createOrderedMap(values)),
   );
 
+  // const todosProvider = todosFiltered.query({ completed: showCompleted });
+  // const todos = useData(todosProvider);
+  const loaded = true; //useLoaded(todosProvider);
+
   // or create empty store, based on the schema type:
   // const [store, setStore] = React.useState(() => createEmptyStore(schema.get('type'));
 
@@ -57,13 +63,22 @@ function Indagine(props) {
     [setStore],
   );
 
+  if (!loaded) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <UIGenerator
-      schema={schema}
-      store={store}
-      onChange={onChange}
-      widgets={widgets}
-    />
+    <>
+      <div>
+        <pre>{JSON.stringify(values)}</pre>
+      </div>
+      <UIGenerator
+        schema={schema}
+        store={store}
+        onChange={onChange}
+        widgets={widgets}
+      />
+    </>
   );
 }
 
