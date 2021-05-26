@@ -3,6 +3,7 @@ import { AuthProvider } from 'react-admin';
 const authProvider: AuthProvider = {
   login: ({ username }) => {
     localStorage.setItem('username', username);
+
     // accept all username/password combinations
     return Promise.resolve();
   },
