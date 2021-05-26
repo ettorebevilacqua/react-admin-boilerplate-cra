@@ -38,10 +38,11 @@ function Indagini(props) {
 
     const AddLink = {
       name: 'Crea Indagine',
-      link: '/app/user/forms/question',
+      link: '/app/user/forms/question?isCustomer',
     };
 
-    'isAdmin' in params && setMenu([AddLink, ...data]);
+    // 'isAdmin' in params && setMenu([AddLink, ...data]);
+    setMenu([AddLink, ...data]);
   }, []);
 
   const commonStyle = {
