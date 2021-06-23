@@ -29,7 +29,8 @@ import queryString from 'query-string';
 
 import getResource from '../../data/adminProvider';
 import { withRouter } from 'react-router';
-import { FormikTest } from './formik';
+
+import Forms from './forms';
 
 // getResource('corsi').then(resp => console.log('ss', resp));
 
@@ -87,9 +88,65 @@ function Question(props) {
   }
 */
 
+  const onChangeForms = React.useCallback(
+    (storeKeys, scopes, updater, deleteOnEmpty, type) => {
+      setStore(prevStore => {
+        const newStore = storeUpdater(
+          storeKeys,
+          scopes,
+          updater,
+          deleteOnEmpty,
+          type,
+        )(prevStore);
+        const newValue = newStore.getIn(prependKey(storeKeys, 'values'));
+        //  const newValue = newStore.getIn(prependKey(storeKeys, 'toJS'));
+        console.log('xxxx', storeKeys, store.valuesToJS());
+        /*const newValue = newStore.getIn(prependKey(storeKeys, 'values'))
+        const prevValue = prevStore.getIn(prependKey(storeKeys, 'values'))
+        console.log(
+            isImmutable(newValue) ? newValue.toJS() : newValue,
+            isImmutable(prevValue) ? prevValue.toJS() : prevValue,
+            storeKeys.toJS(),
+            deleteOnEmpty, type,
+        )*/
+        return newStore;
+      });
+    },
+    [setStore],
+  );
+
   return (
     <div className={classes.root}>
-      <FormikTest />
+      <Forms store={store} onChange={onChangeForms} />
+
+      <Card className={classes.card}>
+        <button
+          disabled={!!isInvalid(store.getValidity())}
+          onClick={() => {
+            const str = JSON.stringify(store.valuesToJS());
+            localStorage.setItem('formQuestion', str);
+
+            /* if (!isInvalid(store.getValidity())) {
+              // when not invalid, post to an API
+              fetch('https://httpbin.org/post', {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                // here the immutable store is converted back to JS-Object and then to JSON
+                body: JSON.stringify(store.valuesToJS()),
+              })
+                .then(r => r.json())
+                .then(answer => console.log(answer))
+                .catch(err => console.error(err));
+
+            } */
+          }}
+        >
+          Salva
+        </button>
+      </Card>
     </div>
   );
 }
