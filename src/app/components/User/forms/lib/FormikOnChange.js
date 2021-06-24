@@ -29,7 +29,7 @@ const FormikOnChange = ({ delay, onChange }) => {
     } else {
       onChange(values, isFirstRun.current);
     }
-  }, [values]);
+  }, [values || {}]);
 
   return null;
 };

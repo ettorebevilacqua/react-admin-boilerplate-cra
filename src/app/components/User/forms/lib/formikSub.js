@@ -9,22 +9,24 @@ export const withSubForm = (Component, validationSchema) => ({
   fieldProps,
 }) => {
   const initialValues = field.value;
-
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      enableReinitialize
       onSubmit={onSubmit}
-      children={props => (
-        <Component
-          {...props}
-          setFieldValue={form.setFieldValue}
-          setFieldError={form.setFieldError}
-          setErrors={form.setErrors}
-          name={field.name}
-          fieldProps={fieldProps}
-        />
-      )}
+      children={props => {
+        return (
+          <Component
+            {...props}
+            setFieldValue={form.setFieldValue}
+            setFieldError={form.setFieldError}
+            setErrors={form.setErrors}
+            name={field.name}
+            fieldProps={fieldProps}
+            onChange={field.onChange}
+          />
+        );
+      }}
     />
   );
 };

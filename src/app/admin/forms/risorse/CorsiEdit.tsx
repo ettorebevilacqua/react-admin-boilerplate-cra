@@ -106,7 +106,6 @@ const QualificaEnti = ({ id }) => {
 
   useEffect(() => {
     if (data) {
-      debugger;
       const list = Object.keys(data)
         .filter(key => data[key].id_ente || data[key].id_ente === 0)
         .map(key => data[key].id_ente);

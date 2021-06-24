@@ -36,15 +36,6 @@ export const FormikTest = props => {
   return (
     <div>
       <Domande onSubmit={onDomanda} />
-
-      <Button
-        color="primary"
-        variant="contained"
-        fullWidth
-        onClick={addDomanda}
-      >
-        Nuova domanda
-      </Button>
     </div>
   );
 };
