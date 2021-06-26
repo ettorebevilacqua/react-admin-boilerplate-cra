@@ -42,6 +42,28 @@ const newDomanda = {
   risposte: [],
 };
 
+const CompTrueFalse = ({
+  value,
+  title,
+  compProps,
+  color,
+  key,
+  onClickOptions,
+  ...props
+}) => {
+  const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
+  const propComp = {
+    color,
+    onClick: onClickOptions,
+    ...compProps,
+  };
+  return (
+    <Box {...props}>
+      <Comp {...propComp} /> <span> {title}</span>
+    </Box>
+  );
+};
+
 const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
   const arrayManager = fieldProps.arrayManager;
   const index = fieldProps.index;
@@ -56,44 +78,23 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
 
   React.useEffect(() => setTipo(fieldProps.tipo), [fieldProps.tipo]);
 
+  const onClickOptions = () =>
+    fieldProps.onChange && fieldProps.onChange(name, !values.val);
+
   const getChecked = () => values.val;
 
-  const onClickOptions = () => {
-    const newVal = !values.val;
-    // setFieldValue('val', newVal);
-    fieldProps.onChange && fieldProps.onChange(name, newVal);
-  };
-
-  const getRadioChecked = () =>
-    getChecked() ? (
-      <>
-        <Box>
-          <RadioButtonChecked color="primary" onClick={onClickOptions} />
-          <span> Vero</span>
-        </Box>
-        <Box>
-          <RadioButtonUnchecked color="primary" onClick={onClickOptions} />
-          <span> Falso</span>
-        </Box>
-      </>
-    ) : (
-      <>
-        <Box>
-          <RadioButtonUnchecked color="primary" onClick={onClickOptions} />
-          <span> Vero</span>
-        </Box>
-        <Box>
-          <RadioButtonChecked color="primary" onClick={onClickOptions} />
-          <span> Falso</span>
-        </Box>
-      </>
-    );
-
-  const TrueOrFalse = () => {
-    <GridChilds view={[8, 4]}>
-      getChecked() ? <RadioButtonChecked onClick={onClickOptions} />
-    </GridChilds>;
-  };
+  const radioTrueFalse = val => (
+    <>
+      {['Vero', 'Falso'].map((title, index) => (
+        <CompTrueFalse
+          value={!index ? val : !val}
+          title={title}
+          color={!index ? 'primary' : 'secondary'}
+          onClickOptions={onClickOptions}
+        />
+      ))}
+    </>
+  );
 
   const addCorrelata = () => {
     setFieldValue('correlata', newDomanda);
@@ -119,12 +120,12 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       <Box component="fieldset" mb={3} borderColor="transparent"></Box>
     ) : tipo === 4 ? (
       <Field component={RadioGroup} aria-label="gender" name="gender1">
-        {getRadioChecked()}
+        {radioTrueFalse(getChecked(), [true, false])}
       </Field>
     ) : tipo === 5 ? (
       <span></span>
     ) : (
-      <span>dd</span>
+      <span></span>
     );
 
   const renderRisposte = () => (

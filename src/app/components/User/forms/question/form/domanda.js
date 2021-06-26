@@ -238,7 +238,7 @@ const MDomandaForm = ({
         {values.tipo === 1 && renderScala()}
       </Card>
 
-      {values.tipo !== TipoQuestionName.scalable && (
+      {values.tipo !== TipoQuestionName.scala && (
         <>
           {values.risposte && (
             <ToFieldArray
