@@ -31,6 +31,10 @@ import GridChilds from '../comp/gridChilds';
 import { ToFieldArray } from '../../lib/formikWithField';
 import { RispostaForm } from './risposta';
 
+// util Function for
+const toNumberOr = (val, orVal) =>
+  isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
+
 const nameSchema = Yup.object().shape({
   // first: Yup.string().required('Required'),
   // last: Yup.string().required('Required'),
@@ -39,9 +43,16 @@ const nameSchema = Yup.object().shape({
 /*
 add Field <Field name="bval" component={Bform} />
 */
+const TipoQuestionName = {
+  scala: 1,
+  unica: 2,
+  multipla: 3,
+  veroFalso: 4,
+  aperta: 5,
+};
 
 const TipoQuestion = [
-  { id: 1, tipo: 'Scala' },
+  { id: 1, tipo: 'Scala', param: { ratingMin: 2, ratingDefault: 5 } },
   { id: 2, tipo: 'Opzione unica' },
   { id: 3, tipo: 'Opzione multipla' },
   { id: 4, tipo: 'vero/falso' },
@@ -65,10 +76,9 @@ const MDomandaForm = ({
   ...props
 }) => {
   // useValues(name, props);
-  const { values } = useFormikContext();
+  const { values, setFieldValue: setSubFieldValue } = useFormikContext();
 
   const onChangeForm = (newValues, isFirstTime) => {
-    debugger;
     console.log('domanda onChangeForm ', values);
 
     fieldProps &&
@@ -80,7 +90,6 @@ const MDomandaForm = ({
       fieldProps.onCorrelataFormChange(newValues);
     // fieldProps.onSubFormChange(values);
   };
-  const [risposte, setRisposte] = useState(values.risposte);
 
   const setOptionsTipoUnico = (replace, val, index) =>
     setFieldValue(
@@ -92,11 +101,12 @@ const MDomandaForm = ({
     );
 
   const onClickOption = (replace, index) => (field, val) => {
-    values.tipo === 2
+    values.tipo === TipoQuestionName.unica
       ? setOptionsTipoUnico(replace, val, index)
       : replace(index, { ...values.risposte[index], val });
     setFieldValue(name + '._tmp', index);
   };
+
   const onSubFormChange = (replace, index) => subValue => {
     replace(index, subValue);
   };
@@ -110,19 +120,19 @@ const MDomandaForm = ({
     const numValue = parseInt(value);
     const numValValid = numValue < 2 ? 2 : numValue;
     e.target.value = numValValid;
-    setFieldValue(`ratingMax`, numValValid);
+    setSubFieldValue(`ratingMax`, numValValid);
   };
 
   const onSetRating = e => {
     const value = e.target.value;
     const numValue = parseInt(value);
-    setFieldValue(`rating`, numValue);
+    setSubFieldValue(`rating`, numValue);
   };
 
   const renderScala = () => (
-    <Box fullWidth component="fieldset" mb={3} borderColor="transparent">
+    <Box component="fieldset" mb={3} borderColor="transparent">
       <GridChilds view={[12]}>
-        {values.tipo === 1 && (
+        {values.tipo === TipoQuestionName.scala && (
           <GridChilds view={[5, 5, 2]}>
             <Field
               component={TextField}
@@ -165,8 +175,8 @@ const MDomandaForm = ({
         <Box style={{ marginLeft: '16px', marginRight: '16px' }}>
           <Rating
             name="rating"
-            max={values.ratingMax}
-            value={values.rating || ''}
+            max={toNumberOr(values.ratingMax, 2)}
+            value={toNumberOr(values.rating, 0)}
             onChange={(event, newValue) => {
               onSetRating(event);
             }}
@@ -179,7 +189,7 @@ const MDomandaForm = ({
   );
 
   const renderAddRisposta = ({ arrayHelper }) =>
-    values.tipo !== 5 && (
+    values.tipo !== TipoQuestionName.aperta && (
       <Box
         style={{ width: '100%', margin: '16px' }}
         alignContent="flex-end"
@@ -227,13 +237,14 @@ const MDomandaForm = ({
         </GridChilds>
         {values.tipo === 1 && renderScala()}
       </Card>
-      {values.tipo !== 1 && (
+
+      {values.tipo !== TipoQuestionName.scalable && (
         <>
-          {risposte && (
+          {values.risposte && (
             <ToFieldArray
               name={'risposte'}
-              renderMaxElem={values.tipo === 5 ? 1 : 0}
-              values={risposte}
+              renderMaxElem={values.tipo === TipoQuestionName.aperta ? 1 : 0}
+              values={values.risposte}
               fieldProps={({ index, arrayHelper }) => {
                 return {
                   onChange: onClickOption(arrayHelper.replace, index),
