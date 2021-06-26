@@ -8,6 +8,7 @@ export const ToFieldArray = ({
   name,
   renderHeader,
   renderFooter,
+  renderMaxElem,
   ...props
 }) => {
   const { values } = useFormikContext();
@@ -16,6 +17,8 @@ export const ToFieldArray = ({
     const fieldProps = props.fieldProps
       ? props.fieldProps({ index, arrayHelper })
       : {};
+    if (renderMaxElem && index + 1 > renderMaxElem) return '';
+
     return (
       <div key={index}>
         <Field

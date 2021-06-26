@@ -57,7 +57,6 @@ export const Domande = () => {
   };
 
   const onSubFormChange = (arrayHelper, index) => subValue => {
-    debugger;
     arrayHelper.replace(index, subValue);
   };
 

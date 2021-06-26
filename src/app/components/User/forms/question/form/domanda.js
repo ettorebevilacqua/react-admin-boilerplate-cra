@@ -71,7 +71,13 @@ const MDomandaForm = ({
     debugger;
     console.log('domanda onChangeForm ', values);
 
-    fieldProps.onSubFormChange && fieldProps.onSubFormChange(newValues);
+    fieldProps &&
+      fieldProps.onSubFormChange &&
+      fieldProps.onSubFormChange(newValues);
+
+    fieldProps &&
+      fieldProps.onCorrelataFormChange &&
+      fieldProps.onCorrelataFormChange(newValues);
     // fieldProps.onSubFormChange(values);
   };
   const [risposte, setRisposte] = useState(values.risposte);
@@ -226,6 +232,7 @@ const MDomandaForm = ({
           {risposte && (
             <ToFieldArray
               name={'risposte'}
+              renderMaxElem={values.tipo === 5 ? 1 : 0}
               values={risposte}
               fieldProps={({ index, arrayHelper }) => {
                 return {

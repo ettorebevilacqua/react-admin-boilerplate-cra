@@ -36,6 +36,12 @@ const nameSchema = Yup.object().shape({
   //  last: Yup.string().required('Required'),
 });
 
+const newDomanda = {
+  domanda: '',
+  tipo: 1,
+  risposte: [],
+};
+
 const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
   const arrayManager = fieldProps.arrayManager;
   const index = fieldProps.index;
@@ -90,8 +96,14 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
   };
 
   const addCorrelata = () => {
-    setFieldValue('correlata', {});
-    fieldProps.onSubFormChange({ ...values, correlata: {} });
+    setFieldValue('correlata', newDomanda);
+    //  fieldProps.onSubFormChange({ ...values, correlata: newDomanda });
+  };
+
+  const onCorrelataFormChange = subValue => {
+    debugger;
+    setFieldValue('correlata', subValue);
+    // fieldProps.onSubFormChange({ ...values, correlata: subValue });
   };
 
   const renderTipo = () =>
@@ -134,26 +146,33 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
           label="Risposta"
         />
 
-        <GridChilds key="1aag" view={[4, 1, 1, 4, 1]}>
-          <div>{renderTipo()}</div>
-          <Box>
-            <ArrowDownward color="primary" onClick={event => alert('ddd')} />
-          </Box>
-          <Box>
-            <ArrowUpward color="primary" onClick={event => alert('ddd')} />
-          </Box>
-          <Box style={{ width: '100%' }}>
-            <Button variant="contained" color="primary" onClick={addCorrelata}>
-              <span style={{ fontSize: '11px' }}> Correlata</span>
-            </Button>
-          </Box>
-          <Box>
-            <DeleteIcon
-              color="primary"
-              onClick={event => arrayManager('delete')}
-            />
-          </Box>
-        </GridChilds>
+        {tipo !== 5 && (
+          <GridChilds key="1aag" view={[4, 1, 1, 4, 1]}>
+            <div>{renderTipo()}</div>
+            <Box>
+              <ArrowDownward color="primary" onClick={event => alert('ddd')} />
+            </Box>
+            <Box>
+              <ArrowUpward color="primary" onClick={event => alert('ddd')} />
+            </Box>
+            <Box style={{ width: '100%' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={addCorrelata}
+              >
+                <span style={{ fontSize: '11px' }}> Correlata</span>
+              </Button>
+            </Box>
+
+            <Box>
+              <DeleteIcon
+                color="primary"
+                onClick={event => arrayManager('delete')}
+              />
+            </Box>
+          </GridChilds>
+        )}
       </GridChilds>
       {values.correlata && (
         <GridChilds key="ss04" view={[1, 11]}>
@@ -180,6 +199,10 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
             fullWidth
             name="correlata"
             label="Correlata"
+            fieldProps={{
+              onCorrelataFormChange: onCorrelataFormChange,
+              tipo: tipo,
+            }}
           />
         </GridChilds>
       )}
