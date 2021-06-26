@@ -235,7 +235,6 @@ export const Domande = props => {
 
   const onSetResponce = (risposte, setFieldValue, index) => {
     if (!risposte && !risposte[index]) return false;
-    debugger;
     if (tipo === 'Opzione unica') {
       const allFalse = risposte.map(elem => {
         elem.val = false;
@@ -289,7 +288,6 @@ export const Domande = props => {
                     e.target.value && typeof e.target.value === 'string'
                       ? e.target.value
                       : '';
-                  debugger;
                   formikProps.setFieldValue(
                     `domande[${idxDomanda}].tipo`,
                     e.target.value,

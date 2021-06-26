@@ -37,33 +37,25 @@ const nameSchema = Yup.object().shape({
 });
 
 const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
-  const aRipo = props.ref;
   const arrayManager = fieldProps.arrayManager;
   const index = fieldProps.index;
-
   const [tipo, setTipo] = useState(fieldProps.tipo);
   const { values, setFieldValue } = useFormikContext();
 
   const onChangeForm = (values, isFirstTime) => {
-    console.log('values risposta sssss', isFirstTime, values);
-    // setTipo('Opzione unica');
-    // console.log('values risposta sssss', isFirstTime, values);
+    !isFirstTime &&
+      fieldProps.onSubFormChange &&
+      fieldProps.onSubFormChange(values);
   };
+
+  React.useEffect(() => setTipo(fieldProps.tipo), [fieldProps.tipo]);
 
   const getChecked = () => values.val;
 
   const onClickOptions = () => {
     const newVal = !values.val;
-    setFieldValue('val', newVal);
+    // setFieldValue('val', newVal);
     fieldProps.onChange && fieldProps.onChange(name, newVal);
-    // props.onClickOption('val', values.val);
-  };
-
-  const onClickTrueFalse = _isTrue => () => {
-    const newVal = !values.val;
-    setFieldValue('val', newVal);
-    fieldProps.onChange && fieldProps.onChange(name, newVal);
-    // props.onClickOption('val', values.val);
   };
 
   const getRadioChecked = () =>
@@ -112,13 +104,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
     ) : tipo === 3 ? (
       <Field component={Checkbox} name="val" type="checkbox" />
     ) : tipo === 1 ? (
-      <Box component="fieldset" mb={3} borderColor="transparent">
-        <GridChilds view={[2, 8, 2]}>
-          <span>ssss</span>
-          <span>ssss</span>
-          <span>ssss</span>
-        </GridChilds>
-      </Box>
+      <Box component="fieldset" mb={3} borderColor="transparent"></Box>
     ) : tipo === 4 ? (
       <Field component={RadioGroup} aria-label="gender" name="gender1">
         {getRadioChecked()}

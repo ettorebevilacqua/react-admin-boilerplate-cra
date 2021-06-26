@@ -28,7 +28,7 @@ import {
 } from '@material-ui/core';
 
 import GridChilds from '../comp/gridChilds';
-import { withField } from '../../lib/formikWithField';
+import { ToFieldArray } from '../../lib/formikWithField';
 import { RispostaForm } from './risposta';
 
 const nameSchema = Yup.object().shape({
@@ -56,34 +56,47 @@ const styles = ({ spacing }) =>
     },
   });
 
-const MDomandaForm = ({ name, errors, touched, fieldProps, ...props }) => {
-  useValues(name, props);
-  const { values, setFieldValue } = useFormikContext();
+const MDomandaForm = ({
+  name,
+  errors,
+  touched,
+  fieldProps,
+  setFieldValue,
+  ...props
+}) => {
+  // useValues(name, props);
+  const { values } = useFormikContext();
 
-  const onChangeForm = (values, isFirstTime) => {
+  const onChangeForm = (newValues, isFirstTime) => {
+    debugger;
+    console.log('domanda onChangeForm ', values);
+
+    fieldProps.onSubFormChange && fieldProps.onSubFormChange(newValues);
     // fieldProps.onSubFormChange(values);
   };
+  const [risposte, setRisposte] = useState(values.risposte);
 
   const setOptionsTipoUnico = (replace, val, index) =>
-    values.risposte.map((ris, iRis) => {
-      ris.val = iRis === index ? val : false;
-      replace(iRis, ris);
-      return ris;
-    });
+    setFieldValue(
+      name + '.risposte',
+      values.risposte.map((ris, iRis) => {
+        ris.val = iRis === index ? val : false;
+        return ris;
+      }),
+    );
 
   const onClickOption = (replace, index) => (field, val) => {
-    values.tipo === 2 && setOptionsTipoUnico(replace, val, index);
+    values.tipo === 2
+      ? setOptionsTipoUnico(replace, val, index)
+      : replace(index, { ...values.risposte[index], val });
+    setFieldValue(name + '._tmp', index);
   };
-  const onSubFormChange = (replace, index) => val => {
-    replace(index, val);
+  const onSubFormChange = (replace, index) => subValue => {
+    replace(index, subValue);
   };
 
   const arrayManager = (arrayHelper, index) => op => {
     return op === 'delete' ? arrayHelper.remove(index) : () => 1;
-  };
-
-  const getComp = index => fieldProps => {
-    return <RispostaForm id={index} key={index} {...fieldProps} />;
   };
 
   const onChangeRatingMax = e => {
@@ -159,59 +172,22 @@ const MDomandaForm = ({ name, errors, touched, fieldProps, ...props }) => {
     </Box>
   );
 
-  const FormRisposte = arrayHelper => {
-    const {
-      replace,
-      move,
-      swap,
-      push,
-      insert,
-      unshift,
-      remove,
-      pop,
-      form,
-    } = arrayHelper;
-
-    return (
-      <div>
-        {form.values &&
-          form.values.risposte &&
-          form.values.risposte.map((risposta, index) => (
-            <div id={'iutr' + index} key={index}>
-              <Field
-                component={getComp(index)}
-                fullWidth
-                name={`risposte.${index}`}
-                label="Risposte"
-                fieldProps={{
-                  onChange: onClickOption(replace, index),
-                  onSubFormChange: onSubFormChange(replace, index),
-                  arrayManager: arrayManager(arrayHelper, index),
-                  index,
-                  tipo: form.values.tipo,
-                }}
-              />
-            </div>
-          ))}
-
-        {values.tipo !== 5 && (
-          <Box
-            style={{ width: '100%', margin: '16px' }}
-            alignContent="flex-end"
-            justifyContent="flex-end"
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={e => push({ risposta: '', val: false })}
-            >
-              <span style={{ fontSize: '11px' }}>Nuova Risposta</span>
-            </Button>
-          </Box>
-        )}
-      </div>
+  const renderAddRisposta = ({ arrayHelper }) =>
+    values.tipo !== 5 && (
+      <Box
+        style={{ width: '100%', margin: '16px' }}
+        alignContent="flex-end"
+        justifyContent="flex-end"
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={e => arrayHelper.push({ risposta: '', val: false })}
+        >
+          <span style={{ fontSize: '11px' }}>Nuova Risposta</span>
+        </Button>
+      </Box>
     );
-  };
 
   return (
     <div>
@@ -246,10 +222,24 @@ const MDomandaForm = ({ name, errors, touched, fieldProps, ...props }) => {
         {values.tipo === 1 && renderScala()}
       </Card>
       {values.tipo !== 1 && (
-        <FieldArray
-          name="risposte"
-          render={formikProps => <FormRisposte {...formikProps} />}
-        />
+        <>
+          {risposte && (
+            <ToFieldArray
+              name={'risposte'}
+              values={risposte}
+              fieldProps={({ index, arrayHelper }) => {
+                return {
+                  onChange: onClickOption(arrayHelper.replace, index),
+                  onSubFormChange: onSubFormChange(arrayHelper.replace, index),
+                  arrayManager: arrayManager(arrayHelper, index),
+                  tipo: values.tipo,
+                };
+              }}
+              renderFooter={renderAddRisposta}
+              component={RispostaForm}
+            />
+          )}
+        </>
       )}
     </div>
   );

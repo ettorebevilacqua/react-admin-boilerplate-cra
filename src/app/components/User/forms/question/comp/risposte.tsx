@@ -18,6 +18,8 @@ import {
 } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 
+import { ToFieldArray, withField } from '../../lib/formikWithField';
+
 import GridChilds from './gridChilds';
 
 const validationSchema = yup.object({

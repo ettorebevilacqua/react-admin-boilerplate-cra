@@ -1,29 +1,38 @@
 import React from 'react';
-import { Formik, Form, Field, useFormikContext } from 'formik';
+import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 
 import Button from '@material-ui/core/Button';
 import FormikOnChange from '../../lib/FormikOnChange';
 import { DomandaForm } from './domanda';
 import GridChilds from '../comp/gridChilds';
+import { withSubForm } from '../../lib/formikSub';
+import { ToFieldArray, withField } from '../../lib/formikWithField';
+
+import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
+import { values } from 'lodash';
 
 const initialValues = {
-  domanda: {
-    domanda: 'domada 1 ',
-    tipo: 4,
-    risposte: [
-      {
-        risposta: 'ddd ss',
-        val: true,
-      },
-      { risposta: 'yyy22', val: false },
-    ],
-  },
+  modulo: '',
+  test: 'test ff',
+  domande: [
+    {
+      domanda: '',
+      tipo: 4,
+      risposte: [
+        {
+          risposta: 'ddd ss',
+          val: true,
+        },
+        { risposta: 'yyy22', val: false },
+      ],
+    },
+  ],
 };
 
 const newDomanda = {
   domanda: {
-    domanda: '',
+    domanda: 'dd',
     tipo: 1,
     risposte: [],
   },
@@ -41,31 +50,15 @@ export const Domande = () => {
   const [domande, setDomande] = React.useState([newDomanda]);
   const onChangeForm = (values, isFirstTime) => {
     console.log('main change', isFirstTime, values);
-    // setTipo('Opzione unica');
-    // console.log('values risposta sssss', isFirstTime, values);
   };
 
-  const NameForm = ({ handleSubmit, setFieldValue, ...props }) => {
-    const onSubFormChange = val => {
-      console.log('values kk', val);
-      setFieldValue('domanda', val);
-    };
+  const arrayManager = (arrayHelper, index) => op => {
+    return op === 'delete' ? arrayHelper.remove(index) : () => 1;
+  };
 
-    return (
-      <Form>
-        <FormikOnChange delay={500} onChange={onChangeForm} />
-        <Field
-          name="domanda"
-          component={DomandaForm}
-          fieldProps={{
-            onSubFormChange: onSubFormChange,
-          }}
-        />
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Submit
-        </Button>
-      </Form>
-    );
+  const onSubFormChange = (arrayHelper, index) => subValue => {
+    debugger;
+    arrayHelper.replace(index, subValue);
   };
 
   return (
@@ -80,14 +73,32 @@ export const Domande = () => {
           <span style={{ fontSize: '11px' }}>Nuova Domanda</span>
         </Button>
       </GridChilds>
-      {domande.map(domanda => (
-        <Formik
-          initialValues={initialValues}
-          enableReinitialize
-          onSubmit={handleSubmit}
-          children={NameForm}
-        />
-      ))}
+
+      <Formik
+        initialValues={initialValues}
+        enableReinitialize
+        onSubmit={handleSubmit}
+        render={props => (
+          <Form>
+            <FormikOnChange delay={500} onChange={onChangeForm} />
+            <Field name={'modulo'} component={TextField} label="Modulo" />
+            <ToFieldArray
+              name="domande"
+              component={DomandaForm}
+              fieldProps={({ index, arrayHelper }) => {
+                return {
+                  onSubFormChange: onSubFormChange(arrayHelper, index),
+                  arrayManager: arrayManager(arrayHelper, index),
+                  tipo: values.tipo,
+                };
+              }}
+            />
+            <Button color="primary" variant="contained" fullWidth type="submit">
+              Submit
+            </Button>
+          </Form>
+        )}
+      />
     </div>
   );
 };

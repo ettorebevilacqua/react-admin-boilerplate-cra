@@ -16,15 +16,17 @@ export const withSubForm = (Component, validationSchema) => ({
       onSubmit={onSubmit}
       children={props => {
         return (
-          <Component
-            {...props}
-            setFieldValue={form.setFieldValue}
-            setFieldError={form.setFieldError}
-            setErrors={form.setErrors}
-            name={field.name}
-            fieldProps={fieldProps}
-            onChange={field.onChange}
-          />
+          <>
+            <Component
+              {...props}
+              setFieldValue={form.setFieldValue}
+              setFieldError={form.setFieldError}
+              setErrors={form.setErrors}
+              name={field.name}
+              fieldProps={fieldProps}
+              onChange={form.handleChange}
+            />
+          </>
         );
       }}
     />
