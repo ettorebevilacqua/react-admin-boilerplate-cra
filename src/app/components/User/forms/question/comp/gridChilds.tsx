@@ -4,7 +4,7 @@ import { Box, MenuItem } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 
 const GridLayout = props => {
-  const { children, view } = props;
+  const { children, view, style, ...cardProps } = props;
 
   const render = (child, i) =>
     child && (
@@ -14,9 +14,10 @@ const GridLayout = props => {
     );
 
   const childs = children && children.map ? children : [children];
+  const styleTo = style || { height: '100%' };
   return (
     children && (
-      <Grid container style={{ height: '100%' }} spacing={3}>
+      <Grid container style={styleTo} {...cardProps} spacing={3}>
         {childs.map(render)}
       </Grid>
     )
