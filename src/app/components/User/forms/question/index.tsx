@@ -27,7 +27,7 @@ import { Card } from '@material-ui/core';
 import { isImmutable } from 'immutable';
 import queryString from 'query-string';
 
-import getResource from '../../data/adminProvider';
+import getResource from '../../../../data/adminProvider';
 import { withRouter } from 'react-router';
 import { FormikTest } from './formik';
 

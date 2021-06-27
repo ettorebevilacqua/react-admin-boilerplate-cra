@@ -68,6 +68,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
   const arrayManager = fieldProps.arrayManager;
   const index = fieldProps.index;
   const [tipo, setTipo] = useState(fieldProps.tipo);
+  const [valValue, setValValue] = useState(false);
   const { values, setFieldValue } = useFormikContext();
 
   const onChangeForm = (values, isFirstTime) => {
@@ -76,12 +77,19 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       fieldProps.onSubFormChange(values);
   };
 
-  React.useEffect(() => setTipo(fieldProps.tipo), [fieldProps.tipo]);
+  React.useEffect(() => {
+    setValValue(values.val);
+  }, [values.val]);
 
-  const onClickOptions = () =>
-    fieldProps.onChange && fieldProps.onChange(name, !values.val);
+  React.useEffect(() => {
+    setTipo(fieldProps.tipo);
+  }, [fieldProps.tipo]);
 
-  const getChecked = () => values.val;
+  const onClickOptions = () => {
+    const newVal = !valValue;
+    setValValue(newVal);
+    fieldProps.onChange && fieldProps.onChange(name, newVal);
+  };
 
   const radioTrueFalse = val => (
     <>
@@ -107,12 +115,15 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
     // fieldProps.onSubFormChange({ ...values, correlata: subValue });
   };
 
-  const renderTipo = () =>
+  const renderTipoInner = () =>
     tipo === 2 ? (
-      getChecked() ? (
-        <RadioButtonChecked onClick={onClickOptions} />
+      valValue ? (
+        <RadioButtonChecked
+          color={valValue ? 'primary' : 'secondary'}
+          onClick={onClickOptions}
+        />
       ) : (
-        <RadioButtonUnchecked onClick={onClickOptions} />
+        <RadioButtonUnchecked color="secondary" onClick={onClickOptions} />
       )
     ) : tipo === 3 ? (
       <Field component={Checkbox} name="val" type="checkbox" />
@@ -120,7 +131,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       <Box component="fieldset" mb={3} borderColor="transparent"></Box>
     ) : tipo === 4 ? (
       <Field component={RadioGroup} aria-label="gender" name="gender1">
-        {radioTrueFalse(getChecked(), [true, false])}
+        {radioTrueFalse(valValue, [true, false])}
       </Field>
     ) : tipo === 5 ? (
       <span></span>
@@ -128,7 +139,36 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       <span></span>
     );
 
-  const renderRisposte = () => (
+  const renderTipo = val =>
+    tipo !== 5 && (
+      <GridChilds key="1aag" view={[5, 7]}>
+        <div>{renderTipoInner()}</div>
+        <GridChilds key="1aag" view={[2, 1, 4, 1, 1]}>
+          <Box>
+            <DeleteIcon
+              color="secondary"
+              onClick={event => arrayManager('delete')}
+            />
+          </Box>
+          <div> </div>
+          <Box style={{ width: '100%' }}>
+            <Button variant="contained" color="primary" onClick={addCorrelata}>
+              <span style={{ fontSize: '11px' }}>Add</span>
+            </Button>
+          </Box>
+          <Box style={{ float: 'left', marginRight: '6px' }}>
+            <box>
+              <ArrowUpward color="primary" onClick={event => alert('ddd')} />
+            </box>
+            <box>
+              <ArrowDownward color="primary" onClick={event => alert('ddd')} />
+            </box>
+          </Box>
+        </GridChilds>
+      </GridChilds>
+    );
+
+  return (
     <Card
       style={{
         marginTop: '18px',
@@ -147,33 +187,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
           label="Risposta"
         />
 
-        {tipo !== 5 && (
-          <GridChilds key="1aag" view={[4, 1, 1, 4, 1]}>
-            <div>{renderTipo()}</div>
-            <Box>
-              <ArrowDownward color="primary" onClick={event => alert('ddd')} />
-            </Box>
-            <Box>
-              <ArrowUpward color="primary" onClick={event => alert('ddd')} />
-            </Box>
-            <Box style={{ width: '100%' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={addCorrelata}
-              >
-                <span style={{ fontSize: '11px' }}> Correlata</span>
-              </Button>
-            </Box>
-
-            <Box>
-              <DeleteIcon
-                color="primary"
-                onClick={event => arrayManager('delete')}
-              />
-            </Box>
-          </GridChilds>
-        )}
+        {renderTipo()}
       </GridChilds>
       {values.correlata && (
         <GridChilds key="ss04" view={[1, 11]}>
@@ -209,8 +223,6 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       )}
     </Card>
   );
-
-  return <div>{renderRisposte()}</div>;
 };
 
 export const RispostaForm = withSubForm(MRispostaForm, nameSchema);
