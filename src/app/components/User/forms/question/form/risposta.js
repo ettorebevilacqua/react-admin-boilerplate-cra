@@ -110,7 +110,6 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
   };
 
   const onCorrelataFormChange = subValue => {
-    debugger;
     setFieldValue('correlata', subValue);
     // fieldProps.onSubFormChange({ ...values, correlata: subValue });
   };
