@@ -52,9 +52,12 @@ export const Domande = () => {
     console.log('main change', isFirstTime, values);
   };
 
-  const arrayManager = (arrayHelper, index) => op => {
-    return op === 'delete' ? arrayHelper.remove(index) : () => 1;
-  };
+  const arrayManager = (arrayHelper, index) => (op, val) =>
+    op === 'delete'
+      ? arrayHelper.remove(index)
+      : op === 'clone'
+      ? arrayHelper.push(val)
+      : () => 1;
 
   const onSubFormChange = (arrayHelper, index) => subValue => {
     arrayHelper.replace(index, subValue);

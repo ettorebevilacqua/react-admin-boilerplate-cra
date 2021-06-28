@@ -15,6 +15,11 @@ import Rating from '@material-ui/lab/Rating';
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core';
 import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
 import FormikOnChange from '../../lib/FormikOnChange';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import CardContent from '@material-ui/core/CardContent';
 import {
@@ -75,8 +80,9 @@ const MDomandaForm = ({
   setFieldValue,
   ...props
 }) => {
-  // useValues(name, props);
+  // useValues(name, props)
   const { values, setFieldValue: setSubFieldValue } = useFormikContext();
+  const [expanded, setExpanded] = React.useState(false);
 
   const onChangeForm = (newValues, isFirstTime) => {
     console.log('domanda onChangeForm ', values);
@@ -111,8 +117,20 @@ const MDomandaForm = ({
     replace(index, subValue);
   };
 
+  const moveRisposta = (op, arrayHelper, index) => {
+    op === 'movedown'
+      ? index < values.risposte.length - 1 && arrayHelper.move(index, index + 1)
+      : op === 'moveup' && index > 0 && arrayHelper.move(index, index - 1);
+  };
+
+  const clonaDomanda = e => fieldProps.arrayManager('clone', values);
+
   const arrayManager = (arrayHelper, index) => op => {
-    return op === 'delete' ? arrayHelper.remove(index) : () => 1;
+    return op === 'delete'
+      ? arrayHelper.remove(index)
+      : op === 'moveup' || op === 'movedown'
+      ? moveRisposta(op, arrayHelper, index)
+      : () => 1;
   };
 
   const onChangeRatingMax = e => {
@@ -128,6 +146,8 @@ const MDomandaForm = ({
     const numValue = parseInt(value);
     setSubFieldValue(`rating`, numValue);
   };
+
+  const onChangeAccordion = e => setExpanded(!expanded);
 
   const renderScala = () => (
     <Box component="fieldset" mb={3} borderColor="transparent">
@@ -191,7 +211,7 @@ const MDomandaForm = ({
   const renderAddRisposta = ({ arrayHelper }) =>
     values.tipo !== TipoQuestionName.aperta && (
       <Box
-        style={{ width: '100%', margin: '16px' }}
+        style={{ width: '100%', margin: '16px', marginLeft: '60px' }}
         alignContent="flex-end"
         justifyContent="flex-end"
       >
@@ -208,57 +228,105 @@ const MDomandaForm = ({
   return (
     <div>
       <FormikOnChange delay={500} onChange={onChangeForm} />
-      <Card
+
+      <Accordion
+        expanded={expanded}
+        onClick={e => e.stopPropagation()}
         style={{
-          marginTop: '18px',
-          marginLeft: '8px',
-          marginRight: '8px',
-          padding: '8px',
           height: '100%',
+          width: '100&',
+          backgroundColor: 'transparent',
         }}
       >
-        <GridChilds view={[8, 4]} width="100%">
-          <Field
-            component={TextField}
-            fullWidth
-            name="domanda"
-            label="Domanda"
-          />
-          <FormControl fullWidth>
-            <InputLabel>Tipo Domanda</InputLabel>
-            <Field name="tipo" component={Select}>
-              {TipoQuestion.map(el => (
-                <MenuItem key={el.id} value={el.id}>
-                  {el.tipo}
-                </MenuItem>
-              ))}
-            </Field>
-          </FormControl>
-        </GridChilds>
-        {values.tipo === 1 && renderScala()}
-      </Card>
-
-      {values.tipo !== TipoQuestionName.scala && (
-        <>
-          {values.risposte && (
-            <ToFieldArray
-              name={'risposte'}
-              renderMaxElem={values.tipo === TipoQuestionName.aperta ? 1 : 0}
-              values={values.risposte}
-              fieldProps={({ index, arrayHelper }) => {
-                return {
-                  onChange: onClickOption(arrayHelper.replace, index),
-                  onSubFormChange: onSubFormChange(arrayHelper.replace, index),
-                  arrayManager: arrayManager(arrayHelper, index),
-                  tipo: values.tipo,
-                };
-              }}
-              renderFooter={renderAddRisposta}
-              component={RispostaForm}
-            />
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon onClick={onChangeAccordion} />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+          style={{
+            height: '100%',
+            width: '100&',
+            backgroundColor: 'transparent',
+          }}
+        >
+          <Card
+            style={{
+              marginTop: '18px',
+              marginLeft: '8px',
+              marginRight: '8px',
+              padding: '8px',
+              height: '100%',
+              width: '100%',
+            }}
+          >
+            <GridChilds
+              view={[8, 2, 1, 1]}
+              style={{ alignItems: 'center' }}
+              width="100%"
+            >
+              <Field
+                component={TextField}
+                fullWidth
+                name="domanda"
+                label="Domanda"
+              />
+              <FormControl fullWidth>
+                <InputLabel>Tipo Domanda</InputLabel>
+                <Field name="tipo" component={Select}>
+                  {TipoQuestion.map(el => (
+                    <MenuItem key={el.id} value={el.id}>
+                      {el.tipo}
+                    </MenuItem>
+                  ))}
+                </Field>
+              </FormControl>
+              <Box style={{ marginBottom: '6px' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={clonaDomanda}
+                >
+                  <span style={{ fontSize: '11px' }}>Clona</span>
+                </Button>
+              </Box>
+              <Box>
+                <DeleteIcon
+                  color="secondary"
+                  onClick={event => fieldProps.arrayManager('delete')}
+                />
+              </Box>
+            </GridChilds>
+            {values.tipo === 1 && renderScala()}
+          </Card>
+        </AccordionSummary>
+        <AccordionDetails style={{ flexDirection: 'column' }}>
+          {values.tipo !== TipoQuestionName.scala && (
+            <>
+              {values.risposte && (
+                <ToFieldArray
+                  name={'risposte'}
+                  renderMaxElem={
+                    values.tipo === TipoQuestionName.aperta ? 1 : 0
+                  }
+                  values={values.risposte}
+                  fieldProps={({ index, arrayHelper }) => {
+                    return {
+                      onChange: onClickOption(arrayHelper.replace, index),
+                      onSubFormChange: onSubFormChange(
+                        arrayHelper.replace,
+                        index,
+                      ),
+                      arrayManager: arrayManager(arrayHelper, index),
+                      tipo: values.tipo,
+                    };
+                  }}
+                  renderFooter={renderAddRisposta}
+                  component={RispostaForm}
+                />
+              )}
+            </>
           )}
-        </>
-      )}
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 };

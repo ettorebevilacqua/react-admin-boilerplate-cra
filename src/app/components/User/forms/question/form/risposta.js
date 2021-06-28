@@ -141,7 +141,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
 
   const renderTipo = val =>
     tipo !== 5 && (
-      <GridChilds key="1aag" view={[5, 7]}>
+      <GridChilds key="1aag" style={{ alignItems: 'center' }} view={[5, 7]}>
         <div>{renderTipoInner()}</div>
         <GridChilds key="1aag" view={[2, 1, 4, 1, 1]}>
           <Box>
@@ -158,10 +158,16 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
           </Box>
           <Box style={{ float: 'left', marginRight: '6px' }}>
             <box>
-              <ArrowUpward color="primary" onClick={event => alert('ddd')} />
+              <ArrowUpward
+                color="primary"
+                onClick={event => arrayManager('moveup')}
+              />
             </box>
             <box>
-              <ArrowDownward color="primary" onClick={event => alert('ddd')} />
+              <ArrowDownward
+                color="primary"
+                onClick={event => arrayManager('movedown')}
+              />
             </box>
           </Box>
         </GridChilds>
@@ -170,12 +176,14 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
 
   return (
     <Card
+      fullWidth
       style={{
         marginTop: '18px',
         marginLeft: '60px',
         marginRight: '8px',
         padding: '8px',
         height: '100%',
+        width: '95%',
       }}
     >
       <FormikOnChange delay={500} onChange={onChangeForm} />
@@ -190,7 +198,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
         {renderTipo()}
       </GridChilds>
       {values.correlata && (
-        <GridChilds key="ss04" view={[1, 11]}>
+        <GridChilds key="ss04" style={{ alignItems: 'center' }} view={[1, 11]}>
           <Grid
             container
             spacing={3}
