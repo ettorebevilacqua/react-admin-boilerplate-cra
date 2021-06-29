@@ -9,8 +9,11 @@ import {
   Checkbox,
 } from '@material-ui/core';
 
+import Rating from '@material-ui/lab/Rating';
+
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Button from '@material-ui/core/Button';
 
 import RadioButtonChecked from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
@@ -20,6 +23,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import GridChilds from '../comp/gridChilds';
 
 import TextField from '@material-ui/core/TextField';
+
+const toNumberOr = (val, orVal) =>
+  !val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
 
 const CompTrueFalse = ({
   value,
@@ -55,7 +61,15 @@ const useStyles = makeStyles(theme => ({
     },
   },
   cardDomanda: {
+    padding: '1px',
+  },
+  boxDomanda: {
+    background: 'white',
     padding: '8px',
+    backGround: 'white',
+    borderRadius: '6px',
+    boxShadow:
+      '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
   },
   main: props => ({
     overflow: 'inherit',
@@ -71,8 +85,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const resetListVal = (list, index, val) => {
+  const ris = list.reduce((acc, elem, iRis) => {
+    acc.push(iRis === index ? val : false);
+    return acc;
+  }, []);
+
   debugger;
-  const ris = list.map((elem, iRis) => (iRis === index ? val : false));
   return ris;
 };
 
@@ -80,6 +98,19 @@ export function ShowQuestion(props) {
   const { values } = props;
   const classes = useStyles();
   const [risposte, setRisposte] = React.useState(props.risposte);
+
+  const renderScala = (idxDomanda, scalaVal) => (
+    <Box style={{ marginLeft: '16px', marginRight: '16px' }}>
+      <Rating
+        name="rating"
+        max={toNumberOr(scalaVal && scalaVal.ratingMax, 2)}
+        value={toNumberOr(risposte[idxDomanda][0])}
+        onChange={(event, newValue) => {
+          // onSetRating(event);
+        }}
+      />
+    </Box>
+  );
 
   const changeRisposte = (idxDomanda, idxRisposta, val) => {
     const newRisposte = [...risposte];
@@ -95,12 +126,12 @@ export function ShowQuestion(props) {
     const _risposte = [...risposte];
     const _rispostaOption =
       tipo === 2
-        ? resetListVal(_risposte[idxDomanda], idxRisposta, valBefore)
+        ? resetListVal(_risposte[idxDomanda], idxRisposta, valBool)
         : _risposte[idxDomanda];
     _risposte[idxDomanda] = _rispostaOption;
 
     return tipo === 2
-      ? setRisposte([_risposte])
+      ? setRisposte(_risposte)
       : isBool && changeRisposte(idxDomanda, idxRisposta, valBool);
   };
 
@@ -113,6 +144,7 @@ export function ShowQuestion(props) {
     <>
       {['Vero', 'Falso'].map((title, index) => (
         <CompTrueFalse
+          key={index}
           value={!index ? val : !val}
           title={title}
           color={!index ? 'primary' : 'secondary'}
@@ -123,20 +155,29 @@ export function ShowQuestion(props) {
   );
 
   const getValueRiposta = (idxDomanda, idxRisposta) =>
-    risposte[idxDomanda][idxRisposta];
+    risposte && risposte[idxDomanda] && risposte[idxDomanda][idxRisposta];
 
   const renderTipoInner = (idxDomanda, idxRisposta, tipo) => {
+    if (
+      !risposte ||
+      !risposte[idxDomanda] ||
+      !risposte[idxDomanda].hasOwnProperty(0)
+    )
+      return <span></span>;
+
     const val = risposte[idxDomanda][idxRisposta];
     const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
     // console.log('vals', val);
+    debugger;
     return tipo === 2 ? (
       val ? (
-        <RadioButtonChecked
-          color={val ? 'primary' : 'secondary'}
-          onClick={onClickInner}
-        />
+        <Button onClick={onClickInner}>
+          <RadioButtonChecked color={val ? 'primary' : 'secondary'} />
+        </Button>
       ) : (
-        <RadioButtonUnchecked color="secondary" onClick={onClickInner} />
+        <Button onClick={onClickInner}>
+          <RadioButtonUnchecked color="secondary" />
+        </Button>
       )
     ) : tipo === 3 ? (
       <Checkbox checked={val} onClick={onClickInner} />
@@ -153,48 +194,89 @@ export function ShowQuestion(props) {
     );
   };
 
-  const renderRisposte = (tipo, idxDomanda) => (risposta, idxRisposta) => (
-    <GridChilds
-      view={[1, 11]}
-      className={classes.cardDomanda}
-      style={{ marginTop: '12px' }}
-    >
-      <span> </span>
-      <Paper className={classes.cardDomanda}>
+  const renderRisposte = (tipo, idxDomanda) => (risposta, idxRisposta) =>
+    risposta &&
+    risposta.risposta && (
+      <GridChilds
+        key={idxRisposta}
+        view={[1, 11]}
+        className={classes.cardDomanda}
+        style={{ marginTop: '-1px', marginBotton: '-1px' }}
+      >
+        <span> </span>
+
         <GridChilds view={[10, 2]} style={{ alignItems: 'center' }}>
-          {risposta.risposta}
-          {tipo === 5 ? (
-            <TextField onChange={onChangeRiposta(idxDomanda, idxRisposta)} />
-          ) : (
-            renderTipoInner(
-              idxDomanda,
-              idxRisposta,
-              tipo,
-              getValueRiposta(idxDomanda, idxRisposta),
-            )
+          <Box className={classes.boxDomanda}>{risposta.risposta}</Box>
+          {renderTipoInner(
+            idxDomanda,
+            idxRisposta,
+            tipo,
+            getValueRiposta(idxDomanda, idxRisposta),
           )}
         </GridChilds>
-      </Paper>
-    </GridChilds>
-  );
 
-  const renderDomanda = (domanda, idx) => (
-    <>
-      <Paper className={classes.cardDomanda}>
-        <GridChilds view={[12]} style={{}}>
-          <Typography className={classes.domandaTxt} color="textSecondary">
-            {domanda.domanda}
-          </Typography>
-        </GridChilds>
-      </Paper>
-      {domanda.risposte &&
-        domanda.risposte.map &&
-        domanda.risposte.map(renderRisposte(domanda.tipo, idx))}
-    </>
-  );
+        {tipo === 5 ? (
+          <TextField
+            value={risposte[idxDomanda][idxRisposta]}
+            onChange={onClickOptions(tipo, idxDomanda, idxRisposta)}
+          />
+        ) : tipo === 1 ? (
+          renderScala(idxDomanda, values[idxDomanda])
+        ) : (
+          <span></span>
+        )}
+
+        {risposta.correlata && renderDomanda(risposta.correlata, 0)}
+      </GridChilds>
+    );
+
+  const renderDomanda = (domanda, idx) =>
+    !(
+      domanda &&
+      domanda.domanda &&
+      domanda.domanda.trim &&
+      domanda.domanda.trim()
+    ) ? (
+      <></>
+    ) : domanda.tipo === 6 ? (
+      <Box key={idx} style={{ marginBotton: '22px', marginTop: '22px' }}>
+        <Typography
+          variant={domanda.tipo === 6 ? 'h3' : 'div'}
+          className={classes.domandaTxt}
+          color="textSecondary"
+        >
+          {domanda.domanda}
+        </Typography>
+      </Box>
+    ) : (
+      <div key={idx}>
+        <Paper
+          className={classes.cardDomanda}
+          style={{ marginTop: '26px', marginBottom: '12px' }}
+        >
+          <GridChilds view={[12]} style={{ height: '48px' }}>
+            <Typography
+              variant={domanda.tipo === 6 ? 'h3' : 'body1'}
+              className={classes.domandaTxt}
+              color="textSecondary"
+            >
+              {domanda.domanda}
+            </Typography>
+          </GridChilds>
+        </Paper>
+        {domanda.tipo !== 6 &&
+          domanda.risposte &&
+          domanda.risposte.map &&
+          domanda.risposte.map(renderRisposte(domanda.tipo, idx))}
+      </div>
+    );
 
   return (
-    <GridChilds view={[1, 10, 1]} style={{ marginTop: '16px', width: '100%' }}>
+    <GridChilds
+      key="gridChildShowMain2"
+      view={[1, 10, 1]}
+      style={{ marginTop: '16px', width: '100%' }}
+    >
       <span> </span>
       {values.domande.map(renderDomanda)}
       <span> </span>

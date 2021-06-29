@@ -132,103 +132,143 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       <Field component={RadioGroup} aria-label="gender" name="gender1">
         {radioTrueFalse(valValue, [true, false])}
       </Field>
-    ) : tipo === 5 ? (
+    ) : tipo === 5 || tipo === 6 ? (
       <span></span>
     ) : (
       <span></span>
     );
 
+  const renderButtonRisposta = e => (
+    <GridChilds
+      key="1aag"
+      justify="space-between"
+      alignItems="center"
+      spacing={2}
+      view={[2, 4, 1, 1, 1]}
+    >
+      <Box>
+        <DeleteIcon
+          color="secondary"
+          onClick={event => arrayManager('delete')}
+        />
+      </Box>
+
+      <Box style={{ width: '100%' }}>
+        {!values.correlata && (
+          <Button variant="contained" color="primary" onClick={addCorrelata}>
+            <span style={{ fontSize: '11px' }}>Add</span>
+          </Button>
+        )}
+      </Box>
+      <Box style={{ float: 'left', marginRight: '6px' }}>
+        <Box style={{ float: 'left' }}>
+          <ArrowUpward
+            color="primary"
+            onClick={event => arrayManager('moveup')}
+          />
+        </Box>
+        <Box>
+          <ArrowDownward
+            color="primary"
+            onClick={event => arrayManager('movedown')}
+          />
+        </Box>
+      </Box>
+      <span> </span>
+    </GridChilds>
+  );
+
   const renderTipo = val =>
-    tipo !== 5 && (
-      <GridChilds key="1aag" style={{ alignItems: 'center' }} view={[5, 7]}>
+    tipo !== 5 && tipo !== 1 ? (
+      <GridChilds
+        key="1aag"
+        style={{ alignItems: 'center' }}
+        justify="space-between"
+        view={[5, 7]}
+        spacing={5}
+      >
         <div>{renderTipoInner()}</div>
-        <GridChilds key="1aag" view={[2, 1, 4, 1, 1]}>
-          <Box>
-            <DeleteIcon
-              color="secondary"
-              onClick={event => arrayManager('delete')}
-            />
-          </Box>
-          <div> </div>
-          <Box style={{ width: '100%' }}>
-            <Button variant="contained" color="primary" onClick={addCorrelata}>
-              <span style={{ fontSize: '11px' }}>Add</span>
-            </Button>
-          </Box>
-          <Box style={{ float: 'left', marginRight: '6px' }}>
-            <box>
-              <ArrowUpward
-                color="primary"
-                onClick={event => arrayManager('moveup')}
-              />
-            </box>
-            <box>
-              <ArrowDownward
-                color="primary"
-                onClick={event => arrayManager('movedown')}
-              />
-            </box>
-          </Box>
-        </GridChilds>
+        {renderButtonRisposta()}
       </GridChilds>
+    ) : (
+      <span></span>
     );
 
   return (
-    <Card
-      fullWidth
-      style={{
-        marginTop: '18px',
-        marginLeft: '60px',
-        marginRight: '8px',
-        padding: '8px',
-        height: '100%',
-        width: '95%',
-      }}
-    >
-      <FormikOnChange delay={500} onChange={onChangeForm} />
-      <GridChilds key="ss0" view={[8, 4]}>
-        <Field
-          component={TextField}
-          fullWidth
-          name={`risposta`}
-          label="Risposta"
-        />
-
-        {renderTipo()}
-      </GridChilds>
-      {values.correlata && (
-        <GridChilds key="ss04" style={{ alignItems: 'center' }} view={[1, 11]}>
-          <Grid
-            container
-            spacing={3}
-            style={{
-              height: '100%',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: '16px',
-            }}
+    <GridChilds key="gg01" style={{ alignItems: 'center' }} view={[1, 11]}>
+      <span> </span>
+      <Card
+        style={{
+          marginTop: '18px',
+          padding: '8px',
+          height: '100%',
+          width: '95%',
+        }}
+      >
+        <FormikOnChange delay={500} onChange={onChangeForm} />
+        {tipo === 1 ? (
+          <GridChilds key="gg01" style={{ alignItems: 'center' }} view={[8, 4]}>
+            {fieldProps.renderScala()}
+            {renderButtonRisposta()}
+          </GridChilds>
+        ) : (
+          <GridChilds
+            justify="space-between"
+            alignItems="center"
+            spacing={2}
+            key="ss0"
+            view={[8, 4]}
           >
-            <DeleteIcon
-              style={{ fontSize: '28px' }}
-              onClick={e => {
-                setFieldValue('correlata', false);
-                fieldProps.onSubFormChange({ ...values, correlata: false });
+            <div>
+              <Field
+                component={TextField}
+                fullWidth
+                name={`risposta`}
+                label="Risposta"
+              />
+            </div>
+
+            <div style={{ marginLeft: '8px' }}>{renderTipo()}</div>
+          </GridChilds>
+        )}
+        {values.correlata && (
+          <GridChilds
+            key="ss04"
+            style={{ alignItems: 'center' }}
+            view={[1, 11]}
+          >
+            <Grid
+              container
+              spacing={3}
+              style={{
+                height: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: '16px',
+              }}
+            >
+              <DeleteIcon
+                style={{ fontSize: '28px' }}
+                onClick={e => {
+                  setFieldValue('correlata', false);
+                  fieldProps.onSubFormChange({ ...values, correlata: false });
+                }}
+              />
+            </Grid>
+            <Field
+              component={DomandaForm}
+              name="correlata"
+              label="Correlata"
+              fieldProps={{
+                onCorrelataFormChange: onCorrelataFormChange,
+                expanded: true,
+                tipo: tipo,
               }}
             />
-          </Grid>
-          <Field
-            component={DomandaForm}
-            fullWidth
-            name="correlata"
-            label="Correlata"
-            fieldProps={{
-              onCorrelataFormChange: onCorrelataFormChange,
-              tipo: tipo,
-            }}
-          />
-        </GridChilds>
-      )}
-    </Card>
+          </GridChilds>
+        )}
+      </Card>
+    </GridChilds>
   );
 };
 

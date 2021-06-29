@@ -47,15 +47,14 @@ const empityValues = {
 };
 
 const newDomanda = {
-  domanda: {
-    domanda: 'dd',
-    tipo: 1,
-    risposte: [],
-  },
+  domanda: '',
+  tipo: 0,
+  risposte: [{}],
 };
 const storeValuesTxt = localStorage.getItem(MODULO_DATA_KEY);
-const storeValues = storeValuesTxt && JSON.parse(storeValuesTxt);
-const initialValues = storeValues || empityValues;
+const storeValues = storeValuesTxt ? JSON.parse(storeValuesTxt) : empityValues;
+const initialValues =
+  !storeValues.domande || !storeValues.domande[0] ? empityValues : storeValues;
 
 const nameSchema = Yup.object().shape({
   // name: Yup.string().required('Required'),
@@ -66,34 +65,55 @@ const handleSubmit = values => {
 };
 
 const getRisposte = domande =>
-  domande.map(domanda => domanda.risposte.map(risp => null));
+  !domande || !domande.map
+    ? []
+    : domande.map(domanda => domanda.risposte.map(risp => null));
 
 export const Domande = () => {
   const [values, setValues] = React.useState(initialValues);
   const [domande, setDomande] = React.useState([newDomanda]);
+  const [arManagerDomande, setArManagerDomande] = React.useState();
+
   const onChangeForm = (values, isFirstTime) => {
     setValues(values);
     localStorage.setItem(MODULO_DATA_KEY, JSON.stringify(values));
     console.log('main change', values);
   };
 
-  const arrayManager = (arrayHelper, index) => (op, val) =>
-    op === 'delete'
+  const onDeleteDomanda = (arrayHelper, index) => {
+    debugger;
+    return values.domande && values.domande[1]
       ? arrayHelper.remove(index)
+      : !values.domande[0]
+      ? arrayHelper.push(newDomanda)
+      : arrayHelper.replace(0, newDomanda);
+  };
+
+  const arrayManager = (arrayHelper, index) => (op, val) => {
+    return op === 'delete'
+      ? onDeleteDomanda(arrayHelper, index)
       : op === 'clone'
       ? arrayHelper.push(val)
+      : op === 'add'
+      ? arrayHelper.push(newDomanda)
       : () => 1;
+  };
 
   const onSubFormChange = (arrayHelper, index) => subValue => {
     arrayHelper.replace(index, subValue);
   };
 
-  const renderNewDomanda = () => (
+  const renderNewDomanda = formikProps => (
     <Button
       variant="contained"
       color="primary"
       style={{ height: '42px', width: '120px' }}
-      onClick={e => setDomande([...domande, newDomanda])}
+      onClick={e => {
+        debugger;
+        const lenDomande = values.domande.length;
+        console.log('', formikProps);
+        formikProps.setFieldValue('domande.' + lenDomande, newDomanda);
+      }}
     >
       <span style={{ fontSize: '11px' }}>Nuova Domanda</span>
     </Button>
@@ -109,34 +129,40 @@ export const Domande = () => {
         initialValues={initialValues}
         enableReinitialize
         onSubmit={handleSubmit}
-        render={props => (
+        children={propsFormik => (
           <Form>
             <FormikOnChange delay={500} onChange={onChangeForm} />
 
             <GridChilds
-              view={[8, 1]}
+              view={[8, 1, 1]}
               style={{ marginTop: '16px', width: '100%' }}
             >
               <Field
                 name={'modulo'}
-                style={{ width: '220px' }}
+                style={{ width: '100%' }}
                 component={TextField}
                 label="Modulo nome"
               />
-              {renderNewDomanda()}
+              <span> </span>
+              {renderNewDomanda(propsFormik)}
             </GridChilds>
+            <div style={{ marginTop: '22px' }}>
+              <ToFieldArray
+                name="domande"
+                component={DomandaForm}
+                fieldProps={({ index, arrayHelper }) => {
+                  if (values.domande && !values.domande[0]) {
+                    arrayHelper.push(newDomanda);
+                  }
 
-            <ToFieldArray
-              name="domande"
-              component={DomandaForm}
-              fieldProps={({ index, arrayHelper }) => {
-                return {
-                  onSubFormChange: onSubFormChange(arrayHelper, index),
-                  arrayManager: arrayManager(arrayHelper, index),
-                  tipo: values.tipo,
-                };
-              }}
-            />
+                  return {
+                    onSubFormChange: onSubFormChange(arrayHelper, index),
+                    arrayManager: arrayManager(arrayHelper, index),
+                    tipo: values.tipo,
+                  };
+                }}
+              />
+            </div>
             <div
               style={{
                 marginTop: '16px',
@@ -145,16 +171,17 @@ export const Domande = () => {
               }}
             >
               <span> </span>
-              {renderNewDomanda()}
+              {renderNewDomanda(propsFormik)}
             </div>
             <div>
               <h3>Anteprima</h3>
             </div>
             <ShowQuestion
+              key="mainShoeQuestion1"
               values={values}
               risposte={getRisposte(values.domande || [])}
             />
-            {1 === 0 && (
+            {1 === 1 && (
               <Button
                 color="primary"
                 variant="contained"

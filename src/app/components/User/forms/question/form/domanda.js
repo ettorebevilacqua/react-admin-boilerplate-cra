@@ -8,6 +8,7 @@ import { useValues } from '../../lib/useValues';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 import Rating from '@material-ui/lab/Rating';
@@ -54,6 +55,7 @@ const TipoQuestionName = {
   multipla: 3,
   veroFalso: 4,
   aperta: 5,
+  titolo: 6,
 };
 
 const TipoQuestion = [
@@ -62,6 +64,7 @@ const TipoQuestion = [
   { id: 3, tipo: 'Opzione multipla' },
   { id: 4, tipo: 'vero/falso' },
   { id: 5, tipo: 'Aperta' },
+  { id: 6, tipo: 'Titolo' },
 ];
 
 const styles = ({ spacing }) =>
@@ -82,7 +85,13 @@ const MDomandaForm = ({
 }) => {
   // useValues(name, props)
   const { values, setFieldValue: setSubFieldValue } = useFormikContext();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(
+    fieldProps.expanded || values.tipo === 0 || false,
+  );
+
+  React.useEffect(() => {
+    setExpanded(true);
+  }, [values.tipo]);
 
   const onChangeForm = (newValues, isFirstTime) => {
     console.log('domanda onChangeForm ', values);
@@ -156,18 +165,15 @@ const MDomandaForm = ({
           <GridChilds view={[5, 5, 2]}>
             <Field
               component={TextField}
-              fullWidth
               name="ratingStart"
               label="Descrizione Minimo"
             />
             <Field
-              fullWidth
               component={TextField}
               name="ratingEnd"
               label="Descrizione Massimo"
             />
             <Field
-              fullWidth
               component={TextField}
               name="ratingMax"
               type="number"
@@ -231,21 +237,33 @@ const MDomandaForm = ({
 
       <Accordion
         expanded={expanded}
+        id="accordionRoot"
         onClick={e => e.stopPropagation()}
         style={{
           height: '100%',
           width: '100&',
           backgroundColor: 'transparent',
+          position: 'inherit',
+          boxShadow: 'none',
         }}
       >
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon onClick={onChangeAccordion} />}
+          expandIcon={
+            <IconButton aria-label="expand">
+              <ExpandMoreIcon />
+            </IconButton>
+          }
+          IconButtonProps={{ onClick: onChangeAccordion }}
           aria-controls="panel1a-content"
           id="panel1a-header"
           style={{
             height: '100%',
             width: '100&',
             backgroundColor: 'transparent',
+            position: 'inherit',
+            boxShadow: 'none',
+            padding: '0px',
+            marginTop: '-22px',
           }}
         >
           <Card
@@ -264,12 +282,13 @@ const MDomandaForm = ({
               width="100%"
             >
               <Field
+                style={{ width: '100%' }}
                 component={TextField}
-                fullWidth
                 name="domanda"
                 label="Domanda"
               />
-              <FormControl fullWidth>
+
+              <FormControl style={{ width: '100%' }}>
                 <InputLabel>Tipo Domanda</InputLabel>
                 <Field name="tipo" component={Select}>
                   {TipoQuestion.map(el => (
@@ -279,52 +298,59 @@ const MDomandaForm = ({
                   ))}
                 </Field>
               </FormControl>
+
               <Box style={{ marginBottom: '6px' }}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={clonaDomanda}
+                  style={{ width: '77px' }}
                 >
                   <span style={{ fontSize: '11px' }}>Clona</span>
                 </Button>
               </Box>
+
               <Box>
-                <DeleteIcon
-                  color="secondary"
-                  onClick={event => fieldProps.arrayManager('delete')}
-                />
+                <Button onClick={event => fieldProps.arrayManager('delete')}>
+                  <DeleteIcon color="secondary" />
+                </Button>
               </Box>
             </GridChilds>
-            {values.tipo === 1 && renderScala()}
+
+            {/* values.tipo === 1 && renderScala() */}
           </Card>
         </AccordionSummary>
         <AccordionDetails style={{ flexDirection: 'column' }}>
-          {values.tipo !== TipoQuestionName.scala && (
-            <>
-              {values.risposte && (
-                <ToFieldArray
-                  name={'risposte'}
-                  renderMaxElem={
-                    values.tipo === TipoQuestionName.aperta ? 1 : 0
-                  }
-                  values={values.risposte}
-                  fieldProps={({ index, arrayHelper }) => {
-                    return {
-                      onChange: onClickOption(arrayHelper.replace, index),
-                      onSubFormChange: onSubFormChange(
-                        arrayHelper.replace,
-                        index,
-                      ),
-                      arrayManager: arrayManager(arrayHelper, index),
-                      tipo: values.tipo,
-                    };
-                  }}
-                  renderFooter={renderAddRisposta}
-                  component={RispostaForm}
-                />
-              )}
-            </>
-          )}
+          <>
+            {values.risposte && values.tipo !== TipoQuestionName.titolo && (
+              <ToFieldArray
+                name={'risposte'}
+                renderMaxElem={
+                  values.tipo === TipoQuestionName.aperta ||
+                  values.tipo === TipoQuestionName.scala
+                    ? 1
+                    : 0
+                }
+                values={
+                  values.risposte && values.risposte[0] ? values.risposte : [{}]
+                }
+                fieldProps={({ index, arrayHelper }) => {
+                  return {
+                    renderScala,
+                    onChange: onClickOption(arrayHelper.replace, index),
+                    onSubFormChange: onSubFormChange(
+                      arrayHelper.replace,
+                      index,
+                    ),
+                    arrayManager: arrayManager(arrayHelper, index),
+                    tipo: values.tipo,
+                  };
+                }}
+                renderFooter={renderAddRisposta}
+                component={RispostaForm}
+              />
+            )}
+          </>
         </AccordionDetails>
       </Accordion>
     </div>
