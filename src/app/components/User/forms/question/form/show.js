@@ -109,6 +109,16 @@ export function ShowQuestion(props) {
   const classes = useStyles();
   const [risposte, setRisposte] = React.useState(props.risposte);
 
+  const getValueRiposta = (idxDomanda, idxRisposta) =>
+    risposte && risposte[idxDomanda] && risposte[idxDomanda][idxRisposta];
+
+  const onChangeRating = (idxDomanda, idxRisposta) => e => {
+    const val = e.target.value;
+    const valRisp = risposte[idxDomanda];
+    const _risposte = [...risposte];
+    console.log('click risposta', idxDomanda, idxRisposta, valRisp);
+  };
+
   const renderScala = (idxDomanda, scalaVal) => (
     <Box
       style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}
@@ -119,11 +129,14 @@ export function ShowQuestion(props) {
 
       <Rating
         style={{ marginLeft: '26px', marginRight: '26px' }}
-        name="rating"
+        name="ratingRisposta"
         max={toNumberOr(scalaVal && scalaVal.ratingMax, 2)}
-        value={toNumberOr(scalaVal)}
+        value={toNumberOr(risposte[idxDomanda], 0)}
         onChange={(event, newValue) => {
-          // onSetRating(event);
+          console.log('risposta rating ', scalaVal, newValue);
+          const _risposte = [...risposte];
+          _risposte[idxDomanda] = newValue;
+          setRisposte(_risposte);
         }}
       />
       <Typography variant={'span'} className={classes.domandaTxt}>
@@ -155,11 +168,6 @@ export function ShowQuestion(props) {
       : isBool && changeRisposte(idxDomanda, idxRisposta, valBool);
   };
 
-  const onChangeRiposta = (idxDomanda, idxRisposta) => e => {
-    const val = e.target.value;
-    console.log('click risposta', idxDomanda, idxRisposta, val);
-  };
-
   const radioTrueFalse = val => (
     <>
       {['Vero', 'Falso'].map((title, index) => (
@@ -173,9 +181,6 @@ export function ShowQuestion(props) {
       ))}
     </>
   );
-
-  const getValueRiposta = (idxDomanda, idxRisposta) =>
-    risposte && risposte[idxDomanda] && risposte[idxDomanda][idxRisposta];
 
   const renderTipoInner = (risposta, idxDomanda, idxRisposta, tipo) => {
     if (!risposta || !risposte[idxRisposta] || !('0' in risposte[idxDomanda]))
@@ -243,12 +248,20 @@ export function ShowQuestion(props) {
 
   const renderDomandaAperta = idxDomanda => {
     const risposta = risposte[idxDomanda];
-    debugger;
     return (
       <>
         <GridChilds view={[1, 10]}>
           <span> </span>
-          <TextField label="Risposta" value={'ss'} onChange={onChangeRiposta} />
+          <TextField
+            style={{ width: '100%' }}
+            label="Risposta"
+            value={risposte[idxDomanda][0] || ''}
+            onChange={e => {
+              const _risposte = [...risposte];
+              _risposte[idxDomanda][0] = e.currentTarget.value;
+              setRisposte(_risposte);
+            }}
+          />
         </GridChilds>
       </>
     );
@@ -302,14 +315,18 @@ export function ShowQuestion(props) {
     );
 
   return (
-    <GridChilds
-      key="gridChildShowMain2"
-      view={[1, 10, 1]}
-      style={{ marginTop: '16px', width: '100%' }}
-    >
-      <span> </span>
-      {values.domande.map(renderDomanda)}
-      <span> </span>
-    </GridChilds>
+    <>
+      <GridChilds
+        key="gridChildShowMain2"
+        view={[1, 10, 1]}
+        style={{ marginTop: '16px', width: '100%' }}
+      >
+        <span> </span>
+        {values.domande.map(renderDomanda)}
+        <span> </span>
+      </GridChilds>
+      <p> </p>
+      <p> </p>
+    </>
   );
 }
