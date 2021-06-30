@@ -178,9 +178,6 @@ const MDomandaForm = ({
               name="ratingMax"
               type="number"
               label="N. Stelle"
-              onChange={e => {
-                onChangeRatingMax(e);
-              }}
             />
           </GridChilds>
         )}
@@ -215,7 +212,8 @@ const MDomandaForm = ({
   );
 
   const renderAddRisposta = ({ arrayHelper }) =>
-    values.tipo !== TipoQuestionName.aperta && (
+    values.tipo !== TipoQuestionName.aperta &&
+    values.tipo !== TipoQuestionName.scala && (
       <Box
         style={{ width: '100%', margin: '16px', marginLeft: '60px' }}
         alignContent="flex-end"
@@ -322,34 +320,38 @@ const MDomandaForm = ({
         </AccordionSummary>
         <AccordionDetails style={{ flexDirection: 'column' }}>
           <>
-            {values.risposte && values.tipo !== TipoQuestionName.titolo && (
-              <ToFieldArray
-                name={'risposte'}
-                renderMaxElem={
-                  values.tipo === TipoQuestionName.aperta ||
-                  values.tipo === TipoQuestionName.scala
-                    ? 1
-                    : 0
-                }
-                values={
-                  values.risposte && values.risposte[0] ? values.risposte : [{}]
-                }
-                fieldProps={({ index, arrayHelper }) => {
-                  return {
-                    renderScala,
-                    onChange: onClickOption(arrayHelper.replace, index),
-                    onSubFormChange: onSubFormChange(
-                      arrayHelper.replace,
-                      index,
-                    ),
-                    arrayManager: arrayManager(arrayHelper, index),
-                    tipo: values.tipo,
-                  };
-                }}
-                renderFooter={renderAddRisposta}
-                component={RispostaForm}
-              />
-            )}
+            {values.risposte &&
+              values.tipo !== TipoQuestionName.titolo &&
+              values.tipo !== TipoQuestionName.aperta && (
+                <ToFieldArray
+                  name={'risposte'}
+                  renderMaxElem={
+                    values.tipo === TipoQuestionName.aperta ||
+                    values.tipo === TipoQuestionName.scala
+                      ? 1
+                      : 0
+                  }
+                  values={
+                    values.risposte && values.risposte[0]
+                      ? values.risposte
+                      : [{}]
+                  }
+                  fieldProps={({ index, arrayHelper }) => {
+                    return {
+                      renderScala,
+                      onChange: onClickOption(arrayHelper.replace, index),
+                      onSubFormChange: onSubFormChange(
+                        arrayHelper.replace,
+                        index,
+                      ),
+                      arrayManager: arrayManager(arrayHelper, index),
+                      tipo: values.tipo,
+                    };
+                  }}
+                  renderFooter={renderAddRisposta}
+                  component={RispostaForm}
+                />
+              )}
           </>
         </AccordionDetails>
       </Accordion>

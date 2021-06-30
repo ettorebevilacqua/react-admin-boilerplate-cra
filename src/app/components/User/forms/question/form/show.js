@@ -24,6 +24,11 @@ import GridChilds from '../comp/gridChilds';
 
 import TextField from '@material-ui/core/TextField';
 
+const log = (msg, val) => {
+  console.log(msg, val);
+  return true;
+};
+
 const toNumberOr = (val, orVal) =>
   !val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
 
@@ -61,7 +66,10 @@ const useStyles = makeStyles(theme => ({
     },
   },
   cardDomanda: {
-    padding: '1px',
+    padding: '4px',
+    paddingLeft: '8px',
+    alignItems: 'center',
+    display: 'flex',
   },
   boxDomanda: {
     background: 'white',
@@ -81,7 +89,10 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.type === 'dark' ? 'inherit' : '#dc2440',
     },
   }),
-  domandaTxt: {},
+  domandaTxt: {
+    fontSize: '16px',
+    fontWeight: '500',
+  },
 }));
 
 const resetListVal = (list, index, val) => {
@@ -90,7 +101,6 @@ const resetListVal = (list, index, val) => {
     return acc;
   }, []);
 
-  debugger;
   return ris;
 };
 
@@ -100,15 +110,25 @@ export function ShowQuestion(props) {
   const [risposte, setRisposte] = React.useState(props.risposte);
 
   const renderScala = (idxDomanda, scalaVal) => (
-    <Box style={{ marginLeft: '16px', marginRight: '16px' }}>
+    <Box
+      style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}
+    >
+      <Typography variant={'span'} className={classes.domandaTxt}>
+        {scalaVal && scalaVal.ratingStart}
+      </Typography>
+
       <Rating
+        style={{ marginLeft: '26px', marginRight: '26px' }}
         name="rating"
         max={toNumberOr(scalaVal && scalaVal.ratingMax, 2)}
-        value={toNumberOr(risposte[idxDomanda][0])}
+        value={toNumberOr(scalaVal)}
         onChange={(event, newValue) => {
           // onSetRating(event);
         }}
       />
+      <Typography variant={'span'} className={classes.domandaTxt}>
+        {scalaVal && scalaVal.ratingEnd}
+      </Typography>
     </Box>
   );
 
@@ -157,46 +177,42 @@ export function ShowQuestion(props) {
   const getValueRiposta = (idxDomanda, idxRisposta) =>
     risposte && risposte[idxDomanda] && risposte[idxDomanda][idxRisposta];
 
-  const renderTipoInner = (idxDomanda, idxRisposta, tipo) => {
-    if (
-      !risposte ||
-      !risposte[idxDomanda] ||
-      !risposte[idxDomanda].hasOwnProperty(0)
-    )
+  const renderTipoInner = (risposta, idxDomanda, idxRisposta, tipo) => {
+    if (!risposta || !risposte[idxRisposta] || !('0' in risposte[idxDomanda]))
       return <span></span>;
 
     const val = risposte[idxDomanda][idxRisposta];
     const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
-    // console.log('vals', val);
-    debugger;
-    return tipo === 2 ? (
-      val ? (
-        <Button onClick={onClickInner}>
-          <RadioButtonChecked color={val ? 'primary' : 'secondary'} />
-        </Button>
-      ) : (
-        <Button onClick={onClickInner}>
-          <RadioButtonUnchecked color="secondary" />
-        </Button>
-      )
-    ) : tipo === 3 ? (
-      <Checkbox checked={val} onClick={onClickInner} />
-    ) : tipo === 1 ? (
-      <Box component="fieldset" mb={3} borderColor="transparent"></Box>
-    ) : tipo === 4 ? (
-      <RadioGroup aria-label="gender" name="gender1">
-        {radioTrueFalse(val, [true, false])}
-      </RadioGroup>
-    ) : tipo === 5 ? (
-      <TextField value={val} onChange={onClickInner} />
-    ) : (
-      <span></span>
+    console.log('vals', val);
+    return (
+      <div key={idxRisposta}>
+        {tipo === 2 ? (
+          val ? (
+            <Button onClick={onClickInner}>
+              <RadioButtonChecked color={val ? 'primary' : 'secondary'} />
+            </Button>
+          ) : (
+            <Button onClick={onClickInner}>
+              <RadioButtonUnchecked color="secondary" />
+            </Button>
+          )
+        ) : tipo === 3 ? (
+          <Checkbox checked={val} onClick={onClickInner} />
+        ) : tipo === 4 ? (
+          <RadioGroup aria-label="gender" name="gender1">
+            {radioTrueFalse(val, [true, false])}
+          </RadioGroup>
+        ) : tipo === 5 ? (
+          <TextField value={val} onChange={onClickInner} />
+        ) : (
+          <span></span>
+        )}{' '}
+      </div>
     );
   };
 
   const renderRisposte = (tipo, idxDomanda) => (risposta, idxRisposta) =>
-    risposta &&
-    risposta.risposta && (
+    risposta && (
       <GridChilds
         key={idxRisposta}
         view={[1, 11]}
@@ -204,24 +220,19 @@ export function ShowQuestion(props) {
         style={{ marginTop: '-1px', marginBotton: '-1px' }}
       >
         <span> </span>
-
-        <GridChilds view={[10, 2]} style={{ alignItems: 'center' }}>
-          <Box className={classes.boxDomanda}>{risposta.risposta}</Box>
-          {renderTipoInner(
-            idxDomanda,
-            idxRisposta,
-            tipo,
-            getValueRiposta(idxDomanda, idxRisposta),
-          )}
-        </GridChilds>
-
-        {tipo === 5 ? (
-          <TextField
-            value={risposte[idxDomanda][idxRisposta]}
-            onChange={onClickOptions(tipo, idxDomanda, idxRisposta)}
-          />
+        {[1].indexOf(tipo) < 0 ? (
+          <GridChilds view={[10, 2]} style={{ alignItems: 'center' }}>
+            <Box className={classes.boxDomanda}>{risposta.risposta || ''}</Box>
+            {renderTipoInner(
+              risposta,
+              idxDomanda,
+              idxRisposta,
+              tipo,
+              getValueRiposta(idxDomanda, idxRisposta),
+            )}
+          </GridChilds>
         ) : tipo === 1 ? (
-          renderScala(idxDomanda, values[idxDomanda])
+          renderScala(idxDomanda, risposta)
         ) : (
           <span></span>
         )}
@@ -229,6 +240,19 @@ export function ShowQuestion(props) {
         {risposta.correlata && renderDomanda(risposta.correlata, 0)}
       </GridChilds>
     );
+
+  const renderDomandaAperta = idxDomanda => {
+    const risposta = risposte[idxDomanda];
+    debugger;
+    return (
+      <>
+        <GridChilds view={[1, 10]}>
+          <span> </span>
+          <TextField label="Risposta" value={'ss'} onChange={onChangeRiposta} />
+        </GridChilds>
+      </>
+    );
+  };
 
   const renderDomanda = (domanda, idx) =>
     !(
@@ -239,22 +263,27 @@ export function ShowQuestion(props) {
     ) ? (
       <></>
     ) : domanda.tipo === 6 ? (
-      <Box key={idx} style={{ marginBotton: '22px', marginTop: '22px' }}>
+      <div
+        key={idx}
+        className={classes.cardDomanda}
+        style={{ marginBotton: '22px', marginTop: '22px' }}
+      >
         <Typography
-          variant={domanda.tipo === 6 ? 'h3' : 'div'}
+          variant={domanda.tipo === 6 ? 'h3' : 'span'}
           className={classes.domandaTxt}
           color="textSecondary"
         >
           {domanda.domanda}
         </Typography>
-      </Box>
+      </div>
     ) : (
       <div key={idx}>
-        <Paper
-          className={classes.cardDomanda}
-          style={{ marginTop: '26px', marginBottom: '12px' }}
-        >
-          <GridChilds view={[12]} style={{ height: '48px' }}>
+        <Paper style={{ marginTop: '26px', marginBottom: '12px' }}>
+          <GridChilds
+            className={classes.cardDomanda}
+            view={[12]}
+            style={{ height: '48px' }}
+          >
             <Typography
               variant={domanda.tipo === 6 ? 'h3' : 'body1'}
               className={classes.domandaTxt}
@@ -264,10 +293,11 @@ export function ShowQuestion(props) {
             </Typography>
           </GridChilds>
         </Paper>
-        {domanda.tipo !== 6 &&
-          domanda.risposte &&
-          domanda.risposte.map &&
-          domanda.risposte.map(renderRisposte(domanda.tipo, idx))}
+        {domanda.tipo !== 6 && domanda.tipo === 5
+          ? renderDomandaAperta(idx)
+          : domanda.risposte &&
+            domanda.risposte.map &&
+            domanda.risposte.map(renderRisposte(domanda.tipo, idx))}
       </div>
     );
 

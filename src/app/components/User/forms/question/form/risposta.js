@@ -47,7 +47,6 @@ const CompTrueFalse = ({
   title,
   compProps,
   color,
-  key,
   onClickOptions,
   ...props
 }) => {
@@ -94,12 +93,15 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
   const radioTrueFalse = val => (
     <>
       {['Vero', 'Falso'].map((title, index) => (
-        <CompTrueFalse
-          value={!index ? val : !val}
-          title={title}
-          color={!index ? 'primary' : 'secondary'}
-          onClickOptions={onClickOptions}
-        />
+        <div key={index}>
+          <CompTrueFalse
+            key={index}
+            value={!index ? val : !val}
+            title={title}
+            color={!index ? 'primary' : 'secondary'}
+            onClickOptions={onClickOptions}
+          />
+        </div>
       ))}
     </>
   );
