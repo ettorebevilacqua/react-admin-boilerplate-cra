@@ -112,6 +112,47 @@ export function ShowQuestion(props) {
   const getValueRiposta = (idxDomanda, idxRisposta) =>
     risposte && risposte[idxDomanda] && risposte[idxDomanda][idxRisposta];
 
+  const getDomanda = idx =>
+    values &&
+    values.domande &&
+    values.domande[idx] &&
+    values.domande[idx].domanda.trim &&
+    values.domande[idx].domanda.trim()
+      ? values.domande[idx]
+      : null;
+
+  const getRispostaOfValues = (idxDomanda, idxRisposta) => {
+    const domanda = getDomanda(idxDomanda);
+    return !domanda || !domanda.risposte || !domanda.risposte[idxRisposta]
+      ? null
+      : domanda.risposte[idxRisposta];
+  };
+
+  const getCorrelata = (idxDomanda, idxRisposta) => {
+    const domanda = getDomanda(idxDomanda);
+    if ([5, 6].indexOf(domanda.tipo) > -1) return null;
+    const risposta = getRispostaOfValues(idxDomanda, idxRisposta);
+    return risposta && risposta.correlata ? risposta.correlata : null;
+  };
+
+  const getUserValCorrelata = (idxDomanda, idxRisposta) => {
+    const valRisposta = getValueRiposta(idxDomanda, idxRisposta);
+    return valRisposta && valRisposta.correlata ? valRisposta.val : null;
+  };
+  const getUserVal = (idxDomanda, idxRisposta) => {
+    const valRisposta = getValueRiposta(idxDomanda, idxRisposta);
+    return valRisposta && valRisposta.correlata ? valRisposta.val : valRisposta;
+  };
+
+  const isCorrelata = (idxDomanda, idxRisposta, val) => {
+    const correlata = getCorrelata(idxDomanda, idxRisposta);
+    if (!correlata) return false;
+    debugger;
+    const userVal = getUserVal(idxDomanda, idxRisposta);
+    const valCur = val === undefined ? userVal : val;
+    return correlata && valCur;
+  };
+
   const onChangeRating = (idxDomanda, idxRisposta) => e => {
     const val = e.target.value;
     const valRisp = risposte[idxDomanda];
@@ -153,14 +194,20 @@ export function ShowQuestion(props) {
 
   const onClickOptions = (tipo, idxDomanda, idxRisposta) => e => {
     console.log('click risposta', idxDomanda, idxRisposta);
-    const valBefore = risposte[idxDomanda][idxRisposta];
+    const valBefore = getUserVal(idxDomanda, idxRisposta);
     const isBool = [2, 3, 4].indexOf(tipo) > -1;
-    const valBool = isBool ? !valBefore : valBefore;
+    const valBoolTmp = isBool ? !valBefore : valBefore;
+    debugger;
+    const correlata = getCorrelata(idxDomanda, idxRisposta);
+
+    const valBool = correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
+
     const _risposte = [...risposte];
     const _rispostaOption =
       tipo === 2
         ? resetListVal(_risposte[idxDomanda], idxRisposta, valBool)
         : _risposte[idxDomanda];
+
     _risposte[idxDomanda] = _rispostaOption;
 
     return tipo === 2
@@ -183,10 +230,10 @@ export function ShowQuestion(props) {
   );
 
   const renderTipoInner = (risposta, idxDomanda, idxRisposta, tipo) => {
-    if (!risposta || !risposte[idxRisposta] || !('0' in risposte[idxDomanda]))
+    if (!risposta || !risposte[idxDomanda] || !('0' in risposte[idxDomanda]))
       return <span></span>;
-
-    const val = risposte[idxDomanda][idxRisposta];
+    debugger;
+    const val = getUserVal(idxDomanda, idxRisposta);
     const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
     console.log('vals', val);
     return (
@@ -211,7 +258,7 @@ export function ShowQuestion(props) {
           <TextField value={val} onChange={onClickInner} />
         ) : (
           <span></span>
-        )}{' '}
+        )}
       </div>
     );
   };
@@ -235,14 +282,14 @@ export function ShowQuestion(props) {
               tipo,
               getValueRiposta(idxDomanda, idxRisposta),
             )}
+            {isCorrelata(idxDomanda, idxRisposta) &&
+              renderDomanda(risposta.correlata, 0, '32px')}
           </GridChilds>
         ) : tipo === 1 ? (
           renderScala(idxDomanda, risposta)
         ) : (
           <span></span>
         )}
-
-        {risposta.correlata && renderDomanda(risposta.correlata, 0)}
       </GridChilds>
     );
 
@@ -267,19 +314,18 @@ export function ShowQuestion(props) {
     );
   };
 
-  const renderDomanda = (domanda, idx) =>
-    !(
-      domanda &&
-      domanda.domanda &&
-      domanda.domanda.trim &&
-      domanda.domanda.trim()
-    ) ? (
+  const renderDomanda = (domanda, idx, margin) =>
+    !getDomanda(idx) || !domanda || !domanda.tipo ? (
       <></>
     ) : domanda.tipo === 6 ? (
       <div
         key={idx}
         className={classes.cardDomanda}
-        style={{ marginBotton: '22px', marginTop: '22px' }}
+        style={{
+          marginLeft: margin || '0px',
+          marginBotton: '22px',
+          marginTop: '22px',
+        }}
       >
         <Typography
           variant={domanda.tipo === 6 ? 'h3' : 'span'}

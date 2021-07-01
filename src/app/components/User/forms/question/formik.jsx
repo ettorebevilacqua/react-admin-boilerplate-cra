@@ -13,15 +13,6 @@ const domandeInit = [];
 
 export const FormikTest = props => {
   const [domande, setDomande] = React.useState(domandeInit);
-  const formik = useFormik({
-    initialValues: {
-      email: 'foobar@example.com',
-      password: 'foobar',
-    },
-    onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
 
   const onDomanda = (index, value) => {
     if (!domande[index]) return false;
