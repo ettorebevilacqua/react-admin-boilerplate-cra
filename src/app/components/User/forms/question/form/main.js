@@ -41,14 +41,14 @@ const empityValues = {
     {
       domanda: '',
       tipo: 4,
-      risposte: [],
+      risposte: [{}],
     },
   ],
 };
 
 const newDomanda = {
   domanda: '',
-  tipo: 0,
+  tipo: 2,
   risposte: [{}],
 };
 const storeValuesTxt = localStorage.getItem(MODULO_DATA_KEY);
@@ -67,7 +67,12 @@ const handleSubmit = values => {
 const getRisposte = domande =>
   !domande || !domande.map
     ? []
-    : domande.map(domanda => domanda.risposte.map(risp => null));
+    : domande.map(domanda =>
+        (!domanda.risposte || domanda.risposte.length === 0
+          ? [null]
+          : domanda.risposte
+        ).map(risp => null),
+      );
 
 export const Domande = () => {
   const [values, setValues] = React.useState(initialValues);

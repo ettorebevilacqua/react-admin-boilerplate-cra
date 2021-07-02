@@ -153,10 +153,16 @@ const MDomandaForm = ({
   const onSetRating = e => {
     const value = e.target.value;
     const numValue = parseInt(value);
-    setSubFieldValue(`rating`, numValue);
+    setSubFieldValue(`risposte.0.rating`, numValue);
   };
 
   const onChangeAccordion = e => setExpanded(!expanded);
+  const getRatingVals = key =>
+    values &&
+    values.risposte &&
+    values.risposte[0] &&
+    values.risposte[0][key] &&
+    values.risposte[0][key];
 
   const renderScala = () => (
     <Box component="fieldset" mb={3} borderColor="transparent">
@@ -193,20 +199,24 @@ const MDomandaForm = ({
           marginTop: '16px',
         }}
       >
-        <Typography variant="subtitle2">{values.ratingStart || ''}</Typography>
+        <Typography variant="subtitle2">
+          {getRatingVals('ratingStart') || ''}
+        </Typography>
         <span> </span>
         <Box style={{ marginLeft: '16px', marginRight: '16px' }}>
           <Rating
             name="rating"
-            max={toNumberOr(values.ratingMax, 2)}
-            value={toNumberOr(values.rating, 0)}
+            max={toNumberOr(getRatingVals('ratingMax'), 2)}
+            value={toNumberOr(getRatingVals('rating'), 0)}
             onChange={(event, newValue) => {
               onSetRating(event);
             }}
           />
         </Box>
         <span> </span>
-        <Typography variant="subtitle2">{values.ratingEnd || ''}</Typography>
+        <Typography variant="subtitle2">
+          {getRatingVals('ratingEnd') || ''}
+        </Typography>
       </Grid>
     </Box>
   );

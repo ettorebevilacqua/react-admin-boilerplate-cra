@@ -96,7 +96,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const resetListVal = (list, index, val) => {
-  const ris = list.reduce((acc, elem, iRis) => {
+  const ris = list.reduce((acc, elem, iRis, olist) => {
     acc.push(iRis === index ? val : false);
     return acc;
   }, []);
@@ -104,10 +104,22 @@ const resetListVal = (list, index, val) => {
   return ris;
 };
 
+const getRisposte = domande =>
+  !domande || !domande.map
+    ? []
+    : domande.map(domanda =>
+        (!domanda.risposte || domanda.risposte.length === 0
+          ? [null]
+          : domanda.risposte
+        ).map(risp => null),
+      );
+
 export function ShowQuestion(props) {
   const { values } = props;
   const classes = useStyles();
-  const [risposte, setRisposte] = React.useState(props.risposte);
+  const risposteProps = getRisposte(values.domande);
+
+  const [risposte, setRisposte] = React.useState(risposteProps);
 
   const getValueRiposta = (idxDomanda, idxRisposta) =>
     risposte && risposte[idxDomanda] && risposte[idxDomanda][idxRisposta];
@@ -150,7 +162,11 @@ export function ShowQuestion(props) {
     debugger;
     const userVal = getUserVal(idxDomanda, idxRisposta);
     const valCur = val === undefined ? userVal : val;
-    return correlata && valCur;
+    const valValuesTmp = getRispostaOfValues(idxDomanda, idxRisposta);
+    const domanda = getDomanda(idxDomanda);
+    const tipo = domanda && domanda.tipo;
+    const valValues = tipo === 1 ? valValuesTmp.rating : valValuesTmp.val;
+    return correlata && valCur === valValues;
   };
 
   const onChangeRating = (idxDomanda, idxRisposta) => e => {
@@ -176,7 +192,7 @@ export function ShowQuestion(props) {
         onChange={(event, newValue) => {
           console.log('risposta rating ', scalaVal, newValue);
           const _risposte = [...risposte];
-          _risposte[idxDomanda] = newValue;
+          _risposte[idxDomanda][0] = newValue;
           setRisposte(_risposte);
         }}
       />
@@ -215,7 +231,7 @@ export function ShowQuestion(props) {
       : isBool && changeRisposte(idxDomanda, idxRisposta, valBool);
   };
 
-  const radioTrueFalse = val => (
+  const radioTrueFalse = (val, onClickInner) => (
     <>
       {['Vero', 'Falso'].map((title, index) => (
         <CompTrueFalse
@@ -223,15 +239,14 @@ export function ShowQuestion(props) {
           value={!index ? val : !val}
           title={title}
           color={!index ? 'primary' : 'secondary'}
-          onClickOptions={onClickOptions}
+          onClickOptions={onClickInner}
         />
       ))}
     </>
   );
 
   const renderTipoInner = (risposta, idxDomanda, idxRisposta, tipo) => {
-    if (!risposta || !risposte[idxDomanda] || !('0' in risposte[idxDomanda]))
-      return <span></span>;
+    if (!risposta) return <span></span>;
     debugger;
     const val = getUserVal(idxDomanda, idxRisposta);
     const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
@@ -252,7 +267,7 @@ export function ShowQuestion(props) {
           <Checkbox checked={val} onClick={onClickInner} />
         ) : tipo === 4 ? (
           <RadioGroup aria-label="gender" name="gender1">
-            {radioTrueFalse(val, [true, false])}
+            {radioTrueFalse(val, onClickInner)}
           </RadioGroup>
         ) : tipo === 5 ? (
           <TextField value={val} onChange={onClickInner} />
@@ -264,7 +279,8 @@ export function ShowQuestion(props) {
   };
 
   const renderRisposte = (tipo, idxDomanda) => (risposta, idxRisposta) =>
-    risposta && (
+    risposta &&
+    (tipo !== 1 ? risposta.risposta : idxRisposta === 0) && (
       <GridChilds
         key={idxRisposta}
         view={[1, 11]}
@@ -286,7 +302,14 @@ export function ShowQuestion(props) {
               renderDomanda(risposta.correlata, 0, '32px')}
           </GridChilds>
         ) : tipo === 1 ? (
-          renderScala(idxDomanda, risposta)
+          <>
+            {renderScala(idxDomanda, risposta)}
+            {isCorrelata(idxDomanda, idxRisposta) && (
+              <ShowQuestion
+                values={{ domande: [getCorrelata(idxDomanda, idxRisposta)] }}
+              />
+            )}
+          </>
         ) : (
           <span></span>
         )}
@@ -305,7 +328,12 @@ export function ShowQuestion(props) {
             value={risposte[idxDomanda][0] || ''}
             onChange={e => {
               const _risposte = [...risposte];
-              _risposte[idxDomanda][0] = e.currentTarget.value;
+              const valEvent = e.currentTarget.value;
+              const correlata = getCorrelata(idxDomanda, 0);
+              const val = correlata
+                ? { val: valEvent, correlata: {} }
+                : valEvent;
+              _risposte[idxDomanda][0] = val;
               setRisposte(_risposte);
             }}
           />

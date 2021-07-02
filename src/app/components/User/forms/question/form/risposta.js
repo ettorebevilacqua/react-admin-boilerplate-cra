@@ -39,7 +39,7 @@ const nameSchema = Yup.object().shape({
 const newDomanda = {
   domanda: '',
   tipo: 1,
-  risposte: [],
+  risposte: [{}],
 };
 
 const CompTrueFalse = ({
