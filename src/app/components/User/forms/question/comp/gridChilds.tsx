@@ -4,11 +4,16 @@ import { Box, MenuItem } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 
 const GridLayout = props => {
-  const { children, view, style, spacing, ...cardProps } = props;
+  const { children, view, style, spacing, childProps, ...cardProps } = props;
 
   const render = (child, i) =>
     child && (
-      <Grid key={'subGridLay' + i} item xs={view && view[i] ? view[i] : 12}>
+      <Grid
+        key={'subGridLay' + i}
+        {...childProps}
+        item
+        xs={view && view[i] ? view[i] : 12}
+      >
         {child}
       </Grid>
     );

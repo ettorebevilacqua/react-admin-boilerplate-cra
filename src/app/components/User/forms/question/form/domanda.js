@@ -136,7 +136,9 @@ const MDomandaForm = ({
 
   const arrayManager = (arrayHelper, index) => op => {
     return op === 'delete'
-      ? arrayHelper.remove(index)
+      ? index === 0
+        ? arrayHelper.replace(index, {})
+        : arrayHelper.remove(index)
       : op === 'moveup' || op === 'movedown'
       ? moveRisposta(op, arrayHelper, index)
       : () => 1;
@@ -285,7 +287,7 @@ const MDomandaForm = ({
             }}
           >
             <GridChilds
-              view={[8, 2, 1, 1]}
+              view={[8, 2, 2]}
               style={{ alignItems: 'center' }}
               width="100%"
             >
@@ -306,25 +308,36 @@ const MDomandaForm = ({
                   ))}
                 </Field>
               </FormControl>
-
-              <Box style={{ marginBottom: '6px' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={clonaDomanda}
-                  style={{ width: '77px' }}
+              {(!fieldProps || !fieldProps.parentValues) && (
+                <GridChilds
+                  spacing={1}
+                  view={[6, 6]}
+                  style={{ alignItems: 'center', marginLeft: '12px' }}
                 >
-                  <span style={{ fontSize: '11px' }}>Clona</span>
-                </Button>
-              </Box>
+                  <Box style={{ marginBottom: '1px' }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={clonaDomanda}
+                      style={{ width: '77px' }}
+                    >
+                      <span style={{ fontSize: '11px' }}>Clona</span>
+                    </Button>
+                  </Box>
 
-              <Box>
-                <Button onClick={event => fieldProps.arrayManager('delete')}>
-                  <DeleteIcon color="secondary" />
-                </Button>
-              </Box>
+                  <Box>
+                    <Button
+                      onClick={event => fieldProps.arrayManager('delete')}
+                    >
+                      <DeleteIcon
+                        color="secondary"
+                        style={{ fontSize: '36px' }}
+                      />
+                    </Button>
+                  </Box>
+                </GridChilds>
+              )}
             </GridChilds>
-
             {/* values.tipo === 1 && renderScala() */}
           </Card>
         </AccordionSummary>
@@ -356,6 +369,7 @@ const MDomandaForm = ({
                       ),
                       arrayManager: arrayManager(arrayHelper, index),
                       tipo: values.tipo,
+                      isCorrelata: fieldProps && fieldProps.parentValues,
                     };
                   }}
                   renderFooter={renderAddRisposta}

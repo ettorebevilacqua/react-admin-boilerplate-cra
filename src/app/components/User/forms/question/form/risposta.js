@@ -148,20 +148,6 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       spacing={2}
       view={[2, 4, 1, 1, 1]}
     >
-      <Box>
-        <DeleteIcon
-          color="secondary"
-          onClick={event => arrayManager('delete')}
-        />
-      </Box>
-
-      <Box style={{ width: '100%' }}>
-        {!values.correlata && (
-          <Button variant="contained" color="primary" onClick={addCorrelata}>
-            <span style={{ fontSize: '11px' }}>Add</span>
-          </Button>
-        )}
-      </Box>
       <Box style={{ float: 'left', marginRight: '6px' }}>
         <Box style={{ float: 'left' }}>
           <ArrowUpward
@@ -176,6 +162,23 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
           />
         </Box>
       </Box>
+      <Box style={{ width: '100%' }}>
+        {!values.correlata && !fieldProps.isCorrelata && (
+          <Button variant="contained" color="primary" onClick={addCorrelata}>
+            <span style={{ fontSize: '11px' }}>Add</span>
+          </Button>
+        )}
+      </Box>
+      <Box>
+        {!(fieldProps.index === 0) && (
+          <DeleteIcon
+            style={{ fontSize: '36px' }}
+            color="secondary"
+            onClick={event => arrayManager('delete')}
+          />
+        )}
+      </Box>
+
       <span> </span>
     </GridChilds>
   );
@@ -237,26 +240,8 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
           <GridChilds
             key="ss04"
             style={{ alignItems: 'center' }}
-            view={[1, 11]}
+            view={[11, 1]}
           >
-            <Grid
-              container
-              spacing={3}
-              style={{
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: '16px',
-              }}
-            >
-              <DeleteIcon
-                style={{ fontSize: '28px' }}
-                onClick={e => {
-                  setFieldValue('correlata', false);
-                  fieldProps.onSubFormChange({ ...values, correlata: false });
-                }}
-              />
-            </Grid>
             <Field
               component={DomandaForm}
               name="correlata"
@@ -265,6 +250,17 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
                 onCorrelataFormChange: onCorrelataFormChange,
                 expanded: true,
                 tipo: tipo,
+                parentValues: values,
+              }}
+            />
+
+            <DeleteIcon
+              childProps={{ style: { height: '100%' } }}
+              style={{ fontSize: '38px' }}
+              color="secondary"
+              onClick={e => {
+                setFieldValue('correlata', false);
+                fieldProps.onSubFormChange({ ...values, correlata: false });
               }}
             />
           </GridChilds>

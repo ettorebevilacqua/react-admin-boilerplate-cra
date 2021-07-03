@@ -24,6 +24,13 @@ import GridChilds from '../comp/gridChilds';
 
 import TextField from '@material-ui/core/TextField';
 
+function resize(arr, newSize, defaultValue) {
+  return [
+    ...arr,
+    ...Array(Math.max(newSize - arr.length, 0)).fill(defaultValue),
+  ];
+}
+
 const log = (msg, val) => {
   console.log(msg, val);
   return true;
@@ -213,18 +220,16 @@ export function ShowQuestion(props) {
     const valBefore = getUserVal(idxDomanda, idxRisposta);
     const isBool = [2, 3, 4].indexOf(tipo) > -1;
     const valBoolTmp = isBool ? !valBefore : valBefore;
-    debugger;
     const correlata = getCorrelata(idxDomanda, idxRisposta);
 
     const valBool = correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
-
     const _risposte = [...risposte];
-    const _rispostaOption =
-      tipo === 2
-        ? resetListVal(_risposte[idxDomanda], idxRisposta, valBool)
-        : _risposte[idxDomanda];
+    const _rispostaOptionTmp = !risposte[idxDomanda][idxRisposta]
+      ? resize([], idxRisposta + 1, null)
+      : [...risposte[idxDomanda]];
 
-    _risposte[idxDomanda] = _rispostaOption;
+    _rispostaOptionTmp[idxRisposta] = valBool;
+    _risposte[idxDomanda] = _rispostaOptionTmp;
 
     return tipo === 2
       ? setRisposte(_risposte)
