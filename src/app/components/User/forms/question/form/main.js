@@ -3,8 +3,13 @@ import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Card';
+
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import FormikOnChange from '../../lib/FormikOnChange';
 import GridChilds from '../comp/gridChilds';
@@ -15,6 +20,7 @@ import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
 
 import { DomandaForm } from './domanda';
 import { ShowQuestion } from './show';
+import { Moduli } from './moduli';
 
 const MODULO_DATA_KEY = 'smart_modulo';
 
@@ -36,7 +42,8 @@ const testValues = {
 };
 
 const empityValues = {
-  modulo: '',
+  id: null,
+  title: '',
   domande: [
     {
       domanda: '',
@@ -51,6 +58,17 @@ const newDomanda = {
   tipo: 2,
   risposte: [{}],
 };
+
+const newModulo = {
+  id: null,
+  title: '',
+};
+
+const dataModuliInit = [
+  // { id: 1, title: 'mod1', domande: [] },
+  // { id: 2, title: 'mod2', domande: [] },
+];
+
 const storeValuesTxt = localStorage.getItem(MODULO_DATA_KEY);
 const storeValues = storeValuesTxt ? JSON.parse(storeValuesTxt) : empityValues;
 const initialValues =
@@ -75,13 +93,38 @@ const getRisposte = domande =>
       );
 
 export const Domande = () => {
-  const [values, setValues] = React.useState(initialValues);
+  const [values, setValues] = React.useState(dataModuliInit[0] || empityValues);
   const [domande, setDomande] = React.useState([newDomanda]);
+  const [isAnteprima, setIsAnteprima] = React.useState([false]);
+  const [isModuli, setIsModuli] = React.useState([true]);
   const [arManagerDomande, setArManagerDomande] = React.useState();
+  const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
+  const [dataModuli, setDataModuli] = React.useState(dataModuliInit);
+  const [timeOutAutoSave, setTimeOutAutoSave] = React.useState(null);
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
 
-  const onChangeForm = (values, isFirstTime) => {
-    setValues(values);
-    localStorage.setItem(MODULO_DATA_KEY, JSON.stringify(values));
+  const saveData = valuesNew => {
+    if (!dataModuli[currentIdxModule]) return false;
+    const dataModuliTmp = [...dataModuli];
+    dataModuliTmp[currentIdxModule] = valuesNew;
+    setDataModuli(dataModuliTmp);
+    localStorage.setItem(MODULO_DATA_KEY, JSON.stringify(valuesNew));
+    console.log('saveModuli', dataModuliTmp);
+  };
+
+  const onChangeForm = (valuesNew, isFirstTime) => {
+    // if (isFirstTime) return setIsFirstTime(false);
+
+    setValues(valuesNew);
+    clearTimeout(timeOutAutoSave);
+    const timeSave = !timeOutAutoSave
+      ? setTimeout(() => {
+          clearTimeout(timeOutAutoSave);
+          setTimeOutAutoSave(null);
+          saveData(valuesNew);
+        }, 5000)
+      : null;
+    timeSave && setTimeOutAutoSave(timeSave);
     console.log('main change', values);
   };
 
@@ -108,6 +151,24 @@ export const Domande = () => {
     arrayHelper.replace(index, subValue);
   };
 
+  const editModulo = idx => {
+    setCurrentIdxModule(idx);
+    setIsModuli(true);
+  };
+
+  const commandModuli = (cmd, payload) => {
+    const add = () => {
+      const newModuli = [...dataModuli, empityValues];
+      setIsModuli(false);
+      setCurrentIdxModule(newModuli.length - 1);
+      setValues(empityValues);
+      setDataModuli(newModuli);
+      setIsAnteprima(false);
+    };
+    const cmds = { add };
+    cmds[cmd] && cmds[cmd](payload);
+  };
+
   const renderNewDomanda = formikProps => (
     <Button
       variant="contained"
@@ -124,81 +185,131 @@ export const Domande = () => {
     </Button>
   );
 
+  const header = () => (
+    <GridChilds
+      view={[8, 2, 2]}
+      style={{ marginTop: '16px', width: '100%', alignItems: 'center' }}
+    >
+      <div>
+        <h2>Moduli</h2>
+      </div>
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ height: '42px', width: '120px' }}
+        onClick={e => setIsAnteprima(!isAnteprima)}
+      >
+        {isAnteprima ? 'Compila' : 'Anteprima'}
+      </Button>
+      {!isModuli ? (
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ height: '42px', width: '120px' }}
+          onClick={e => setIsModuli(true)}
+        >
+          {'moduli'}
+        </Button>
+      ) : (
+        <span> </span>
+      )}
+    </GridChilds>
+  );
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
   return (
     <div>
-      <GridChilds view={[8, 4]} style={{ marginTop: '16px', width: '100%' }}>
-        <h3>Questionario</h3>
-      </GridChilds>
+      {isModuli ? (
+        <Moduli
+          values={dataModuli}
+          command={commandModuli}
+          onEdit={editModulo}
+        />
+      ) : (
+        <>
+          {header()}
+          {!isAnteprima && (
+            <Formik
+              initialValues={values}
+              enableReinitialize
+              onSubmit={handleSubmit}
+              children={propsFormik => (
+                <Form>
+                  <FormikOnChange delay={500} onChange={onChangeForm} />
 
-      <Formik
-        initialValues={initialValues}
-        enableReinitialize
-        onSubmit={handleSubmit}
-        children={propsFormik => (
-          <Form>
-            <FormikOnChange delay={500} onChange={onChangeForm} />
+                  <GridChilds
+                    view={[8, 1, 1]}
+                    style={{ marginTop: '16px', width: '100%' }}
+                  >
+                    <Field
+                      name={'title'}
+                      style={{ width: '100%' }}
+                      component={TextField}
+                      label="Modulo nome"
+                    />
+                    <span> </span>
+                    {renderNewDomanda(propsFormik)}
+                  </GridChilds>
+                  <div style={{ marginTop: '22px' }}>
+                    <ToFieldArray
+                      name="domande"
+                      component={DomandaForm}
+                      fieldProps={({ index, arrayHelper }) => {
+                        if (values.domande && !values.domande[0]) {
+                          arrayHelper.push(newDomanda);
+                        }
 
-            <GridChilds
-              view={[8, 1, 1]}
-              style={{ marginTop: '16px', width: '100%' }}
-            >
-              <Field
-                name={'modulo'}
-                style={{ width: '100%' }}
-                component={TextField}
-                label="Modulo nome"
-              />
-              <span> </span>
-              {renderNewDomanda(propsFormik)}
-            </GridChilds>
-            <div style={{ marginTop: '22px' }}>
-              <ToFieldArray
-                name="domande"
-                component={DomandaForm}
-                fieldProps={({ index, arrayHelper }) => {
-                  if (values.domande && !values.domande[0]) {
-                    arrayHelper.push(newDomanda);
-                  }
-
-                  return {
-                    onSubFormChange: onSubFormChange(arrayHelper, index),
-                    arrayManager: arrayManager(arrayHelper, index),
-                    tipo: values.tipo,
-                  };
-                }}
-              />
-            </div>
-            <div
-              style={{
-                marginTop: '16px',
-                marginLeft: '36px',
-                marginRight: '36px',
-              }}
-            >
-              <span> </span>
-              {renderNewDomanda(propsFormik)}
-            </div>
-            <div>
-              <h3>Anteprima</h3>
-            </div>
-            <ShowQuestion
-              key="mainShoeQuestion1"
-              values={values}
-              risposte={getRisposte(values.domande || [])}
+                        return {
+                          onSubFormChange: onSubFormChange(arrayHelper, index),
+                          arrayManager: arrayManager(arrayHelper, index),
+                          tipo: values.tipo,
+                        };
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      marginTop: '16px',
+                      marginLeft: '36px',
+                      marginRight: '36px',
+                    }}
+                  >
+                    <span> </span>
+                    {renderNewDomanda(propsFormik)}
+                  </div>
+                  {1 === 0 && (
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      fullWidth
+                      type="submit"
+                    >
+                      Submit
+                    </Button>
+                  )}
+                  <Divider style={{ marginTop: '22px' }} />
+                </Form>
+              )}
             />
-            {1 === 1 && (
-              <Button
-                color="primary"
-                variant="contained"
-                fullWidth
-                type="submit"
-              >
-                Submit
-              </Button>
-            )}
-          </Form>
-        )}
-      />
+          )}
+        </>
+      )}
+      {isAnteprima && !isModuli && (
+        <>
+          <div>
+            <h3>Anteprima</h3>
+          </div>
+          <ShowQuestion
+            key="mainShoeQuestion1"
+            values={values}
+            risposte={getRisposte(values.domande || [])}
+          />
+        </>
+      )}
     </div>
   );
 };
