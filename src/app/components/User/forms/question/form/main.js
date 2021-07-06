@@ -13,6 +13,7 @@ import Tab from '@material-ui/core/Tab';
 
 import FormikOnChange from '../../lib/FormikOnChange';
 import GridChilds from '../comp/gridChilds';
+import TagsInput from '../comp/tagInput';
 import { withSubForm } from '../../lib/formikSub';
 import { ToFieldArray, withField } from '../../lib/formikWithField';
 
@@ -72,7 +73,7 @@ const dataModuliInit = [
 const storeValuesTxt = localStorage.getItem(MODULO_DATA_KEY);
 const storeValues = storeValuesTxt ? JSON.parse(storeValuesTxt) : empityValues;
 const initialValues =
-  !storeValues.domande || !storeValues.domande[0] ? empityValues : storeValues;
+  !storeValues || !storeValues[0] ? dataModuliInit : storeValues;
 
 const nameSchema = Yup.object().shape({
   // name: Yup.string().required('Required'),
@@ -153,6 +154,13 @@ export const Domande = () => {
 
   const editModulo = idx => {
     setCurrentIdxModule(idx);
+    setValues(dataModuli[idx]);
+    setIsModuli(false);
+    setIsAnteprima(false);
+  };
+
+  const showModuli = () => {
+    saveData(values);
     setIsModuli(true);
   };
 
@@ -206,7 +214,7 @@ export const Domande = () => {
           variant="contained"
           color="primary"
           style={{ height: '42px', width: '120px' }}
-          onClick={e => setIsModuli(true)}
+          onClick={e => showModuli()}
         >
           {'moduli'}
         </Button>
@@ -221,6 +229,8 @@ export const Domande = () => {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
+  const handleSelecetedTags = () => {};
+
   return (
     <div>
       {isModuli ? (
@@ -242,7 +252,8 @@ export const Domande = () => {
                   <FormikOnChange delay={500} onChange={onChangeForm} />
 
                   <GridChilds
-                    view={[8, 1, 1]}
+                    view={[8, 4]}
+                    spacing={3}
                     style={{ marginTop: '16px', width: '100%' }}
                   >
                     <Field
@@ -251,7 +262,16 @@ export const Domande = () => {
                       component={TextField}
                       label="Modulo nome"
                     />
-                    <span> </span>
+                    <TagsInput
+                      selectedTags={handleSelecetedTags}
+                      fullWidth
+                      variant="outlined"
+                      id="tags"
+                      name="tags"
+                      placeholder="add Tags"
+                      label="tags"
+                    />
+
                     {renderNewDomanda(propsFormik)}
                   </GridChilds>
                   <div style={{ marginTop: '22px' }}>
