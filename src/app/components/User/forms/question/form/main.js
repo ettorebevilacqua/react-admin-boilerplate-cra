@@ -71,7 +71,12 @@ const dataModuliInit = [
 ];
 
 const storeValuesTxt = localStorage.getItem(MODULO_DATA_KEY);
-const storeValues = storeValuesTxt ? JSON.parse(storeValuesTxt) : empityValues;
+const storeValuesTmp = storeValuesTxt
+  ? JSON.parse(storeValuesTxt)
+  : empityValues;
+
+!storeValuesTmp[0] && localStorage.setItem(MODULO_DATA_KEY, JSON.stringify([]));
+const storeValues = !storeValuesTmp[0] ? [] : storeValuesTmp;
 const initialValues =
   !storeValues || !storeValues[0] ? dataModuliInit : storeValues;
 
@@ -94,13 +99,13 @@ const getRisposte = domande =>
       );
 
 export const Domande = () => {
-  const [values, setValues] = React.useState(dataModuliInit[0] || empityValues);
+  const [values, setValues] = React.useState(initialValues[0] || empityValues);
   const [domande, setDomande] = React.useState([newDomanda]);
   const [isAnteprima, setIsAnteprima] = React.useState([false]);
   const [isModuli, setIsModuli] = React.useState([true]);
   const [arManagerDomande, setArManagerDomande] = React.useState();
   const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
-  const [dataModuli, setDataModuli] = React.useState(dataModuliInit);
+  const [dataModuli, setDataModuli] = React.useState(initialValues);
   const [timeOutAutoSave, setTimeOutAutoSave] = React.useState(null);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
 
@@ -109,7 +114,7 @@ export const Domande = () => {
     const dataModuliTmp = [...dataModuli];
     dataModuliTmp[currentIdxModule] = valuesNew;
     setDataModuli(dataModuliTmp);
-    localStorage.setItem(MODULO_DATA_KEY, JSON.stringify(valuesNew));
+    localStorage.setItem(MODULO_DATA_KEY, JSON.stringify(dataModuliTmp));
     console.log('saveModuli', dataModuliTmp);
   };
 
