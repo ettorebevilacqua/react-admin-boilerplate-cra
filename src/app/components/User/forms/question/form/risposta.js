@@ -39,7 +39,7 @@ const nameSchema = Yup.object().shape({
 const newDomanda = {
   domanda: '',
   tipo: 1,
-  risposte: [{}],
+  risposte: [{ val: null }],
 };
 
 const CompTrueFalse = ({
@@ -96,7 +96,9 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
         <div key={index}>
           <CompTrueFalse
             key={index}
-            value={!index ? val : !val}
+            value={
+              val === null || val === undefined ? false : !index ? val : !val
+            }
             title={title}
             color={!index ? 'primary' : 'secondary'}
             onClickOptions={onClickOptions}
