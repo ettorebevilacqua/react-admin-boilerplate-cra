@@ -94,7 +94,7 @@ const MDomandaForm = ({
   }, [values.tipo]);
 
   const onChangeForm = (newValues, isFirstTime) => {
-    console.log('domanda onChangeForm ', values);
+    console.log('domanda onChangeForm ', newValues);
 
     fieldProps &&
       fieldProps.onSubFormChange &&
@@ -234,7 +234,7 @@ const MDomandaForm = ({
         <Button
           variant="contained"
           color="primary"
-          onClick={e => arrayHelper.push({ risposta: '', val: false })}
+          onClick={e => arrayHelper.push({ risposta: '', val: null })}
         >
           <span style={{ fontSize: '11px' }}>Nuova Risposta</span>
         </Button>

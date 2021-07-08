@@ -10,25 +10,116 @@ import GridChilds from './comp/gridChilds';
 // import { Domande } from './comp/question';
 
 import { Domande } from './form/main';
-
-const domandeInit = [];
+import { Moduli } from './form/moduli';
+import { ShowQuestion } from './form/show';
+import {
+  getValues,
+  saveValues,
+  empityModulo,
+  getRisposte,
+} from 'app/services/question/moduliModel';
 
 export const FormikTest = props => {
-  const [domande, setDomande] = React.useState(domandeInit);
+  const [isModuli, setIsModuli] = React.useState([true]);
+  const [isAnteprima, setIsAnteprima] = React.useState([false]);
+  const [values, setValues] = React.useState(getValues());
+  const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
 
-  const onDomanda = (index, value) => {
-    if (!domande[index]) return false;
-    domande[index] = value;
-    setDomande(domande);
-
-    console.log('onDomanda');
+  const onSaveData = index => domanda => {
+    if (!values[index]) return false;
+    const dataModuliTmp = [...values];
+    dataModuliTmp[index] = domanda;
+    setValues(dataModuliTmp);
+    saveValues(dataModuliTmp);
   };
 
-  const addDomanda = e => setDomande([...domande, {}]);
+  const commandModuli = (cmd, payload) => {
+    const add = () => {
+      const newModuli = [...values, empityModulo];
+      setIsModuli(false);
+      setCurrentIdxModule(newModuli.length - 1);
+      setIsAnteprima(false);
+      setValues(newModuli);
+    };
+    const remove = () => {
+      const newValues = payload === 0 ? [empityModulo] : [...values];
+      payload > 0 && newValues.splice(payload, 1);
+      setValues(newValues);
+      saveValues(newValues);
+      setCurrentIdxModule(0);
+    };
+
+    const cmds = { add, remove };
+    cmds[cmd] && cmds[cmd](payload);
+  };
+
+  const cmdDomanda = (cmd, payload) => {
+    const cmds = { list: () => setIsModuli(true) };
+    cmds[cmd] && cmds[cmd](payload);
+  };
+
+  const editModulo = idx => {
+    setCurrentIdxModule(idx);
+    setIsAnteprima(false);
+    setIsModuli(false);
+  };
+
+  const showModuli = () => {
+    onSaveData(values);
+    setIsModuli(true);
+  };
+
+  const getCurrentModulo = () => values[currentIdxModule] || empityModulo;
+
+  const HeaderModuli = props => (
+    <GridChilds
+      view={[8, 2, 2]}
+      style={{ marginTop: '16px', width: '100%', alignItems: 'center' }}
+    >
+      <div>
+        <h2>Moduli</h2>
+      </div>
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ height: '42px', width: '120px' }}
+        onClick={e => setIsAnteprima(!isAnteprima)}
+      >
+        {isAnteprima ? 'Compila' : 'Anteprima'}
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ height: '42px', width: '120px' }}
+        onClick={e => setIsModuli(true)}
+      >
+        {'moduli'}
+      </Button>
+    </GridChilds>
+  );
 
   return (
     <div>
-      <Domande onSubmit={onDomanda} />
+      {isModuli ? (
+        <Moduli values={values} command={commandModuli} onEdit={editModulo} />
+      ) : isAnteprima ? (
+        <>
+          <HeaderModuli />
+          <ShowQuestion
+            values={getCurrentModulo()}
+            risposte={getRisposte(values.domande || [])}
+          />
+        </>
+      ) : (
+        <>
+          <HeaderModuli />
+          <Domande
+            initialValues={getCurrentModulo()}
+            command={cmdDomanda}
+            onSaveData={onSaveData(currentIdxModule)}
+          />
+        </>
+      )}
     </div>
   );
 };

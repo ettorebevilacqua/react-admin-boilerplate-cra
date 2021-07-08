@@ -6,8 +6,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
 import GridChilds from '../comp/gridChilds';
 
@@ -81,20 +83,34 @@ export function Moduli({ onEdit, values, command, ...props }) {
                 </ListItemIcon>
                 <ListItemText id={labelId} primary={`${value.title}`} />
                 <ListItemSecondaryAction>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    fullWidth
-                    type="submit"
-                    onClick={e => handleEditBt(idxModulo)}
+                  <GridChilds
+                    spacing={1}
+                    view={[4, 4, 4]}
+                    style={{ alignItems: 'center', marginLeft: '12px' }}
                   >
-                    Edit
-                  </Button>
-                  {icon && (
-                    <IconButton edge="end" aria-label="comments">
-                      <CommentIcon />
-                    </IconButton>
-                  )}
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      fullWidth
+                      type="submit"
+                      onClick={e => handleEditBt(idxModulo)}
+                    >
+                      Edit
+                    </Button>
+                    <Box>
+                      <Button onClick={event => command('remove', idxModulo)}>
+                        <DeleteIcon
+                          color="secondary"
+                          style={{ fontSize: '36px' }}
+                        />
+                      </Button>
+                    </Box>
+                    {icon && (
+                      <IconButton edge="end" aria-label="comments">
+                        <CommentIcon />
+                      </IconButton>
+                    )}
+                  </GridChilds>
                 </ListItemSecondaryAction>
               </ListItem>
             );
