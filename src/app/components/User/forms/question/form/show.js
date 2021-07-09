@@ -241,7 +241,9 @@ export function ShowQuestion(props) {
       {['Vero', 'Falso'].map((title, index) => (
         <CompTrueFalse
           key={index}
-          value={!index ? val : !val}
+          value={
+            val === null || val === undefined ? false : !index ? val : !val
+          }
           title={title}
           color={!index ? 'primary' : 'secondary'}
           onClickOptions={onClickInner}
@@ -394,18 +396,31 @@ export function ShowQuestion(props) {
     );
 
   return (
-    <>
+    <div style={{ marginTop: '16px', marginLeft: '8px', width: '80%' }}>
+      <h2>{values.title}</h2>
       <GridChilds
         key="gridChildShowMain2"
-        view={[1, 10, 1]}
+        view={[12]}
         style={{ marginTop: '16px', width: '100%' }}
       >
-        <span> </span>
         {values.domande.map(renderDomanda)}
-        <span> </span>
       </GridChilds>
-      <p> </p>
-      <p> </p>
-    </>
+
+      <GridChilds
+        key="gridChildShowMain2"
+        view={[1, 4]}
+        style={{ marginTop: '16px', width: '100%' }}
+      >
+        <p> </p>
+        <Button
+          color="primary"
+          variant="contained"
+          style={{ fontSize: '11px', width: '200px', maxHeight: '22px' }}
+          onClick={e => {}}
+        >
+          Salva Questionario
+        </Button>
+      </GridChilds>
+    </div>
   );
 }

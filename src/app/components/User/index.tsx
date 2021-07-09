@@ -34,6 +34,8 @@ import { Login } from '../../admin/layout';
 import MenuCard from './menuCard';
 import Plane from './section/plane';
 import Indagini from './section/indagini';
+import IndaginiMenu from './section/indagini/menuIndagini';
+import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
 
 import Forms from './forms';
@@ -52,7 +54,7 @@ const store = createAdminStore({
 
 const buttonData = [
   { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
-  { name: 'Customer satisfaction', link: '/app/user/indagini' },
+  { name: 'Customer satisfaction', link: '/app/user/indaginiMenu' },
   {
     name: 'gestione docenti e professionisti',
     link: '/#/risorse',
@@ -94,12 +96,22 @@ export default function UserComp() {
                 <Route
                   exact
                   path="/app/user/home"
-                  component={() => <MenuCard items={buttonData} />}
+                  component={() => <IndaginiMenu />}
                 />
                 <Route
                   exact
                   path="/app/user/indagini"
                   component={() => <Indagini />}
+                />
+                <Route
+                  exact
+                  path="/app/user/indaginiMenu"
+                  component={() => <IndaginiMenu />}
+                />
+                <Route
+                  exact
+                  path="/app/user/indagini_question/:id"
+                  component={() => <IndaginiQuestion />}
                 />
                 <Route
                   exact

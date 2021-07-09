@@ -45,3 +45,12 @@ export const getValues = () => {
 export const saveValues = values => {
   localStorage.setItem(MODULO_DATA_KEY, JSON.stringify(values));
 };
+
+export const getIndaginiAperte = values => {
+  return getValues();
+};
+
+export const getModulo = idx => {
+  const vals = getValues();
+  return vals && vals[idx] ? vals[idx] : null;
+};
