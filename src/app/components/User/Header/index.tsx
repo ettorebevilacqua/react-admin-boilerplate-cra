@@ -15,6 +15,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MailIcon from '@material-ui/icons/Mail';
 import SendIcon from '@material-ui/icons/Send';
 
+import { withRouter } from 'react-router-dom';
+
 import classNames from 'classnames';
 import Notification from '../components/Notification';
 
@@ -85,7 +87,7 @@ const notifications = [
   },
 ];
 
-export default function Header(props) {
+function Header(props) {
   var classes = useStyles();
 
   // global
@@ -108,37 +110,54 @@ export default function Header(props) {
     setOpen(!open);
   };
 
+  const isMenu = false;
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
         <IconButton
           color="inherit"
-          onClick={() => toggleSidebar(layoutDispatch)}
+          onClick={() => props.history.goBack()}
           className={classNames(
             classes.headerMenuButton,
             classes.headerMenuButtonCollapse,
           )}
         >
-          {layoutState.isSidebarOpened ? (
-            <ArrowBackIcon
-              classes={{
-                root: classNames(
-                  classes.headerIcon,
-                  classes.headerIconCollapse,
-                ),
-              }}
-            />
-          ) : (
-            <MenuIcon
-              classes={{
-                root: classNames(
-                  classes.headerIcon,
-                  classes.headerIconCollapse,
-                ),
-              }}
-            />
-          )}
+          <ArrowBackIcon
+            classes={{
+              root: classNames(classes.headerIcon, classes.headerIconCollapse),
+            }}
+          />
         </IconButton>
+        {isMenu && (
+          <IconButton
+            color="inherit"
+            onClick={() => toggleSidebar(layoutDispatch)}
+            className={classNames(
+              classes.headerMenuButton,
+              classes.headerMenuButtonCollapse,
+            )}
+          >
+            {layoutState.isSidebarOpened ? (
+              <ArrowBackIcon
+                classes={{
+                  root: classNames(
+                    classes.headerIcon,
+                    classes.headerIconCollapse,
+                  ),
+                }}
+              />
+            ) : (
+              <MenuIcon
+                classes={{
+                  root: classNames(
+                    classes.headerIcon,
+                    classes.headerIconCollapse,
+                  ),
+                }}
+              />
+            )}
+          </IconButton>
+        )}
         <Typography className={classes.logotype}>Smart</Typography>
         <div className={classes.grow} />
         {props.toolbar}
@@ -308,3 +327,5 @@ export default function Header(props) {
     </AppBar>
   );
 }
+
+export default withRouter(Header);
