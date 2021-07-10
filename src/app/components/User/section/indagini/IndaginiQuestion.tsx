@@ -15,7 +15,8 @@ import { Helmet } from 'react-helmet-async';
 import {
   getIndaginiAperte,
   getModulo,
-  getRisposte,
+  makeRisposte,
+  saveRisposte,
 } from 'app/services/question/moduliModel';
 
 const commonStyle = {
@@ -34,9 +35,9 @@ function IndaginiQuestion(props) {
   const classes = useStyles();
   const [indagini, setIndagini] = useState(getIndaginiAperte());
   const paramsQuery = queryString.parse(props.location.search);
-  debugger;
-  useEffect(() => {}, []);
 
+  useEffect(() => {}, []);
+  const onSendRisposte = risposte => saveRisposte(id, values);
   return (
     <>
       <Helmet>
@@ -44,7 +45,11 @@ function IndaginiQuestion(props) {
         <meta name="description" content="Indagini" />
       </Helmet>
       <div className={classes.root}>
-        <ShowQuestion values={values} risposte={getRisposte(values || [])} />
+        <ShowQuestion
+          values={values}
+          onSend={onSendRisposte}
+          risposte={makeRisposte(values || [])}
+        />
       </div>
     </>
   );

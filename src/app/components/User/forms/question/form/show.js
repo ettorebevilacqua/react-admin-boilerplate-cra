@@ -23,6 +23,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import GridChilds from '../comp/gridChilds';
 
 import TextField from '@material-ui/core/TextField';
+import {
+  getValues,
+  saveValues,
+  empityModulo,
+  makeRisposte,
+} from 'app/services/question/moduliModel';
 
 function resize(arr, newSize, defaultValue) {
   return [
@@ -102,29 +108,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const resetListVal = (list, index, val) => {
-  const ris = list.reduce((acc, elem, iRis, olist) => {
-    acc.push(iRis === index ? val : false);
-    return acc;
-  }, []);
-
-  return ris;
-};
-
-const getRisposte = domande =>
-  !domande || !domande.map
-    ? []
-    : domande.map(domanda =>
-        (!domanda.risposte || domanda.risposte.length === 0
-          ? [null]
-          : domanda.risposte
-        ).map(risp => null),
-      );
-
 export function ShowQuestion(props) {
-  const { values } = props;
+  const { values, onSend } = props;
   const classes = useStyles();
-  const risposteProps = getRisposte(values.domande);
+  const risposteProps = makeRisposte(values.domande);
 
   const [risposte, setRisposte] = React.useState(risposteProps);
 
@@ -416,7 +403,7 @@ export function ShowQuestion(props) {
           color="primary"
           variant="contained"
           style={{ fontSize: '11px', width: '200px', maxHeight: '22px' }}
-          onClick={e => {}}
+          onClick={e => onSend && onSend(risposte)}
         >
           Salva Questionario
         </Button>

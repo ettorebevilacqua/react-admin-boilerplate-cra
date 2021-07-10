@@ -16,7 +16,7 @@ import {
   getValues,
   saveValues,
   empityModulo,
-  getRisposte,
+  makeRisposte,
 } from 'app/services/question/moduliModel';
 
 export const FormikTest = props => {
@@ -107,7 +107,7 @@ export const FormikTest = props => {
           <HeaderModuli />
           <ShowQuestion
             values={getCurrentModulo()}
-            risposte={getRisposte(values.domande || [])}
+            risposte={makeRisposte(values.domande || [])}
           />
         </>
       ) : (

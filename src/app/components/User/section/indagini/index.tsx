@@ -12,10 +12,7 @@ import useStyles from './styles';
 import MenuCard from '../../menuCard';
 import { Helmet } from 'react-helmet-async';
 
-import {
-  getIndaginiAperte,
-  getRisposte,
-} from 'app/services/question/moduliModel';
+import { getIndaginiAperte } from 'app/services/question/moduliModel';
 
 const commonStyle = {
   background: 'rgb(173 182 235)',
