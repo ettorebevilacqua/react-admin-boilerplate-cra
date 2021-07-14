@@ -3,7 +3,7 @@ import { RootState } from 'types';
 import { RepoErrorType } from '../types';
 import { initialState } from '..';
 import { Repo } from 'types/Repo';
-
+/*
 describe('GithubRepoForm selectors', () => {
   let state: RootState = {};
 
@@ -47,3 +47,4 @@ describe('GithubRepoForm selectors', () => {
     expect(selectors.selectLoading(state)).toEqual(loading);
   });
 });
+*/

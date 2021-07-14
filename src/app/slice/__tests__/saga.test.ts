@@ -1,6 +1,6 @@
 import { put, takeLatest } from 'redux-saga/effects';
 import * as slice from '..';
-
+/*
 import { githubRepoFormSaga, getRepos } from '../saga';
 import { RepoErrorType } from '../types';
 
@@ -114,3 +114,4 @@ describe('githubRepoFormSaga Saga', () => {
     );
   });
 });
+*/

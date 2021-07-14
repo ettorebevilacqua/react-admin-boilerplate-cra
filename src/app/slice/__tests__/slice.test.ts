@@ -1,7 +1,7 @@
 import * as slice from '..';
 import { ContainerState, RepoErrorType } from '../types';
 import { Repo } from 'types/Repo';
-
+/*
 describe('GithubRepoForm slice', () => {
   let state: ContainerState;
 
@@ -55,3 +55,4 @@ describe('GithubRepoForm slice', () => {
     });
   });
 });
+*/

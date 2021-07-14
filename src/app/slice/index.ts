@@ -38,7 +38,7 @@ const slice = createSlice({
 
 export const { actions: userAuthActions, reducer } = slice;
 
-export const useGithubRepoFormSlice = () => {
+export const useUserAuthSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
   useInjectSaga({ key: slice.name, saga: userAuthSaga });
   return { actions: slice.actions };
