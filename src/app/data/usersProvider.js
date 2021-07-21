@@ -22,16 +22,18 @@ const userProvider = new Axios({
 }); */
 const is401 = error => error && error.code && error.code === 401;
 
-const configWithAuth = data => {
-  const token =
-    data && data.tokens && data.tokens.access && data.tokens.access.token;
-  const idUser = data && data.user && data.user.id;
-
+export const authBear = token =>
   providers.getByTag('axios').config({
     headers: {
       Authorization: 'Bearer ' + token,
     },
   });
+
+export const configWithAuth = data => {
+  const token =
+    data && data.tokens && data.tokens.access && data.tokens.access.token;
+  const idUser = data && data.user && data.user.id;
+  authBear(token);
   return data;
 };
 
@@ -57,16 +59,14 @@ export const login = (user, password) =>
     configWithAuth,
   );
 
-export const getUser = id =>
-  userProvider
-    .query({ urlParams: { id } })
-    .read()
-    .then(data => {
+export const getUser = id => userProvider.query({ urlParams: { id } }).read();
+/* .then(data => {
       console.log('user result', data);
     })
     .catch(error => {
       console.log('Reading user was rejected with error', error);
     });
+    */
 
 export const refreshToken = refreshToken =>
   new Axios({

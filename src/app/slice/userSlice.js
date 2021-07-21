@@ -26,32 +26,57 @@ import dataApi from '../data';
   },
 );
 */
+const getInfoUser = data => {
+  const userId = data && data.user && data.user.id;
+  const token =
+    data && data.tokens && data.tokens.access && data.tokens.access.token;
+  return { userId, token };
+};
+
 export const loginUser = createAsyncThunk(
   'users/login',
   async (payload, thunkAPI) => {
     const { username, password } = payload;
     try {
       let data = await dataApi.userProvider.login(username, password);
-      console.log('response', data);
-      //  localStorage.setItem('token', data.token);
+      const userId = data && data.user && data.user.id;
+      const token =
+        data && data.tokens && data.tokens.access && data.tokens.access.token;
+      if (!userId || !token) {
+        return thunkAPI.rejectWithValue({ message: 'bad data' });
+      }
+      localStorage.setItem('token', token);
+      localStorage.setItem('userId', userId);
+
       return { ...data };
     } catch (e) {
-      console.log('Error', e);
       return thunkAPI.rejectWithValue(e);
     }
   },
 );
 
-export const fetchUserBytoken = createAsyncThunk(
-  'users/fetchUserByToken',
+export const fetchUserById = createAsyncThunk(
+  'users/fetchUserById',
   async (payload, thunkAPI) => {
     const { id } = payload;
+    debugger;
+    const tokenLocal = localStorage.getItem('token');
+    const userIdLocal = localStorage.getItem('userId');
+    tokenLocal && dataApi.userProvider.authBear(tokenLocal);
+
     try {
       let data = await dataApi.userProvider.getUser(id);
-      console.log('data', data);
+      debugger;
+
+      if (!tokenLocal || !userIdLocal) {
+        const { userId, token } = getInfoUser(data);
+        localStorage.setItem('token', token);
+        localStorage.setItem('userId', userId);
+        dataApi.userProvider.configWithAuth(data);
+      }
+
       return { ...data };
     } catch (e) {
-      console.log('Error', e);
       return thunkAPI.rejectWithValue(e);
     }
   },
@@ -66,6 +91,18 @@ const initialState = {
   isSuccess: false,
   isError: false,
   errorMessage: '',
+};
+
+const setUserState = (state, payload) => {
+  const user = payload.user || payload;
+  state.email = user.email;
+  state.username = user.username;
+  state.id = user.id;
+  state.user = user;
+  // state.tokens = payload.tokens || null;
+  state.isFetching = false;
+  state.isSuccess = true;
+  return state;
 };
 
 export const userSlice = createSlice({
@@ -91,16 +128,9 @@ export const userSlice = createSlice({
       state.isError = true;
       state.errorMessage = payload.message;
     },*/
-    builder.addCase(loginUser.fulfilled, (state, { payload }) => {
-      state.email = payload.email;
-      state.username = payload.username;
-      state.id = payload.user.id;
-      state.user = payload.user;
-      state.tokens = payload.tokens;
-      state.isFetching = false;
-      state.isSuccess = true;
-      return state;
-    });
+    builder.addCase(loginUser.fulfilled, (state, { payload }) =>
+      setUserState(state, payload),
+    );
 
     builder.addCase(loginUser.rejected, (state, { payload }) => {
       console.log('payload', payload);
@@ -113,6 +143,24 @@ export const userSlice = createSlice({
       console.log('payload', payload);
       state.isFetching = true;
     });
+
+    builder.addCase(fetchUserById.pending, (state, { payload }) => {
+      state.isFetching = true;
+      state.isSuccess = false;
+    });
+    builder.addCase(fetchUserById.fulfilled, (state, { payload }) =>
+      setUserState(state, payload),
+    );
+    builder.addCase(fetchUserById.rejected, (state, { payload }) => {
+      state.isFetching = false;
+      state.isError = true;
+      state.errorMessage = payload.message;
+    });
+
+    /* builder.addCase(fetchUserById.pending, (state, { payload }) => {
+      
+    }); */
+
     /* [fetchUserBytoken.pending as any]: state => {
       state.isFetching = true;
     },
@@ -130,6 +178,15 @@ export const userSlice = createSlice({
     }, */
   },
 });
+
+export function initUser(store) {
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
+
+  if (token && userId) {
+    store.dispatch(fetchUserById({ id: userId }));
+  }
+}
 
 export const { clearState } = userSlice.actions;
 

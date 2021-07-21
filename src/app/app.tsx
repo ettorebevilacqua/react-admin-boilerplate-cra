@@ -24,7 +24,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { configureAppStore } from '../store/configureStore';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { loginUser, userSelector, clearState } from 'app/slice/userSlice';
+import { initUser, userSelector, clearState } from 'app/slice/userSlice';
 
 import { HomePage } from './pages/HomePage/Loadable';
 import { FormsPage } from './pages/forms/Loadable';
@@ -38,6 +38,7 @@ import dataApi from './data';
 // dataApi.userProvider.login('ettore@bevilacqua.com1', 'password1').then(data=>alert(data));
 
 const store = configureAppStore();
+initUser(store); // check if user is logged with present token
 
 // Observe loading of Inter (to remove 'Inter', remove the <link> tag in
 // the index.html file and this observer)
@@ -52,7 +53,9 @@ const helmetContext = {};
 
 function AppBody(props: any) {
   const { isFetching, isSuccess, isError } = useSelector(userSelector);
-  return isFetching || !isSuccess ? (
+  return isFetching ? (
+    <h2>Loading</h2>
+  ) : !isSuccess ? (
     <Login />
   ) : (
     <BrowserRouter>

@@ -107,7 +107,7 @@ const Login = () => {
     const username = { ...auth }.username;
     const fakeAuth = { username: 'fake@example.com', password: 'password1' };
     const pushLogin = () => {
-      authProvider.login(fakeAuth);
+      authProvider.login(auth);
     };
     dispatch(loginUser(auth));
     /*  login(
@@ -160,7 +160,6 @@ const Login = () => {
     }
     return errors;
   };
-  debugger;
   return (
     <Form
       onSubmit={handleSubmit}
