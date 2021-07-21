@@ -10,7 +10,7 @@ export const selectUsername = createSelector(
   [selectDomain],
   userAuthState => userAuthState.username,
 );
-
+/*
 export const selectLoading = createSelector(
   [selectDomain],
   userAuthState => userAuthState.loading,
@@ -25,3 +25,4 @@ export const selectRepos = createSelector(
   [selectDomain],
   userAuthState => userAuthState.repositories,
 );
+*/

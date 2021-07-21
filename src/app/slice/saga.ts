@@ -7,7 +7,7 @@ import { RepoErrorType } from './types';
 
 /**
  * Github repos request/response handler
- */
+
 export function* getRepos() {
   yield delay(500);
   // Select username from store
@@ -36,10 +36,10 @@ export function* getRepos() {
     }
   }
 }
-
+ */
 /**
  * Root saga manages watcher lifecycle
- */
+
 export function* userAuthSaga() {
   // Watches for loadRepos actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
@@ -47,3 +47,4 @@ export function* userAuthSaga() {
   // It will be cancelled automatically on component unmount
   yield takeLatest(actions.loadRepos.type, getRepos);
 }
+ */

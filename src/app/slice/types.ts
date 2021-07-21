@@ -3,9 +3,13 @@ import { Repo } from 'types/Repo';
 /* --- STATE --- */
 export interface UserAuthState {
   username: string;
-  loading: boolean;
-  error?: RepoErrorType | null;
-  repositories: Repo[];
+  email: string;
+  id: string;
+  isFetching: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  errorMessage: string;
+  user: any;
 }
 
 export enum RepoErrorType {
