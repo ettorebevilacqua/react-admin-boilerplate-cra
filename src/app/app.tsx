@@ -23,12 +23,19 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import { configureAppStore } from '../store/configureStore';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser, userSelector, clearState } from 'app/slice/userSlice';
+
 import { HomePage } from './pages/HomePage/Loadable';
 import { FormsPage } from './pages/forms/Loadable';
 
 import { UserPage } from './pages/User/Loadable';
 import { UserMenu } from './pages/UserMenu/Loadable';
 // import { ThemeProvider } from 'styles/theme/ThemeProvider';
+import { Login } from 'app/admin/layout';
+import dataApi from './data';
+
+// dataApi.userProvider.login('ettore@bevilacqua.com1', 'password1').then(data=>alert(data));
 
 const store = configureAppStore();
 
@@ -42,6 +49,23 @@ openSansObserver.load().then(() => {
 });
 
 const helmetContext = {};
+
+function AppBody(props: any) {
+  const { isFetching, isSuccess, isError } = useSelector(userSelector);
+  return isFetching || !isSuccess ? (
+    <Login />
+  ) : (
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/app/home" component={HomePage} />
+        <Route path="/app/user" component={UserPage} />
+        <Route path="/app/forms" component={FormsPage} />
+        <Redirect from="/app" to="/app/userMenu" exact />
+      </Switch>
+    </BrowserRouter>
+  );
+}
+
 export function AppHome(props: any) {
   const { i18n } = useTranslation();
   return (
@@ -54,14 +78,7 @@ export function AppHome(props: any) {
         >
           <meta name="description" content="Smart service" />
         </Helmet>
-        <BrowserRouter>
-          <Switch>
-            <Route exact path="/app/home" component={HomePage} />
-            <Route path="/app/user" component={UserPage} />
-            <Route path="/app/forms" component={FormsPage} />
-            <Redirect from="/app" to="/app/userMenu" exact />
-          </Switch>
-        </BrowserRouter>
+        <AppBody {...props} />
         <GlobalStyle />
       </HelmetProvider>
     </Provider>

@@ -54,7 +54,6 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   };
 
   const onDeleteDomanda = (arrayHelper, index) => {
-    debugger;
     return values.domande && values.domande[1]
       ? arrayHelper.remove(index)
       : !values.domande[0]
@@ -82,7 +81,6 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
       color="primary"
       style={{ height: '42px', width: '120px' }}
       onClick={e => {
-        debugger;
         const lenDomande = values.domande.length;
         console.log('', formikProps);
         formikProps.setFieldValue('domande.' + lenDomande, newDomanda);

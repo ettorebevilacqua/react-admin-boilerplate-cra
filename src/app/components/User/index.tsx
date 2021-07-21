@@ -28,7 +28,6 @@ import localStorageDataProvider from 'ra-data-local-storage';
 import { LocalStorageDataProviderParams } from 'ra-data-local-storage';
 import { createHashHistory } from 'history';
 
-import authProvider from '../../admin/authProvider'; // '../../ /admin/authProvider.ts';
 import { Login } from '../../admin/layout';
 
 import MenuCard from './menuCard';
@@ -44,13 +43,6 @@ const genData: any = []; // generateData();
 const data = { defaultData: genData } as LocalStorageDataProviderParams;
 const dataProvider = localStorageDataProvider(data);
 const history = createHashHistory();
-
-// const store = configureStore();
-const store = createAdminStore({
-  authProvider,
-  dataProvider,
-  history,
-});
 
 const buttonData = [
   { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
@@ -70,71 +62,54 @@ const helmetRender = () => (
 );
 
 export default function UserComp() {
-  // authProvider
-
-  //  if (!authProvider.checkAuth({})) {
-  if (!localStorage.getItem('username')) {
-    return (
-      <>
-        {helmetRender()}
-        <Login />
-      </>
-    );
-  }
   return (
     <>
       {helmetRender()}
-      <Provider store={store}>
-        <LayoutProvider>
-          <ThemeProvider theme={Themes.default}>
-            <CssBaseline />
+      <LayoutProvider>
+        <ThemeProvider theme={Themes.default}>
+          <CssBaseline />
 
-            <Layout>
-              {' '}
-              {/* place ConnectedRouter under Provider */}
-              <Switch>
-                <Route
-                  exact
-                  path="/app/user/home"
-                  component={() => <IndaginiMenu />}
-                />
-                <Route
-                  exact
-                  path="/app/user/indagini"
-                  component={() => <Indagini />}
-                />
-                <Route
-                  exact
-                  path="/app/user/indaginiMenu"
-                  component={() => <IndaginiMenu />}
-                />
-                <Route
-                  exact
-                  path="/app/user/indagini_question/:id"
-                  component={() => <IndaginiQuestion />}
-                />
-                <Route
-                  exact
-                  path="/app/user/indagine"
-                  component={() => <Indagine />}
-                />
-                <Route path="/app/user/forms" component={() => <Forms />} />
-                <Route
-                  exact
-                  path="/app/user/verifyr"
-                  component={() => <MenuCard items={buttonData} />}
-                />
-                <Route
-                  exact
-                  path="/app/user/plane"
-                  component={() => <Plane />}
-                />
-                <Redirect from="/app/user" to="/app/user/home" exact />
-              </Switch>
-            </Layout>
-          </ThemeProvider>
-        </LayoutProvider>
-      </Provider>
+          <Layout>
+            {' '}
+            {/* place ConnectedRouter under Provider */}
+            <Switch>
+              <Route
+                exact
+                path="/app/user/home"
+                component={() => <IndaginiMenu />}
+              />
+              <Route
+                exact
+                path="/app/user/indagini"
+                component={() => <Indagini />}
+              />
+              <Route
+                exact
+                path="/app/user/indaginiMenu"
+                component={() => <IndaginiMenu />}
+              />
+              <Route
+                exact
+                path="/app/user/indagini_question/:id"
+                component={() => <IndaginiQuestion />}
+              />
+              <Route
+                exact
+                path="/app/user/indagine"
+                component={() => <Indagine />}
+              />
+              <Route path="/app/user/forms" component={() => <Forms />} />
+              <Route
+                exact
+                path="/app/user/verifyr"
+                component={() => <MenuCard items={buttonData} />}
+              />
+              <Route exact path="/app/user/plane" component={() => <Plane />} />
+              <Redirect from="/app/user" to="/app/user/home" exact />
+            </Switch>
+          </Layout>
+        </ThemeProvider>
+      </LayoutProvider>
 
       {/* data.content && <ContentEx /> */}
     </>

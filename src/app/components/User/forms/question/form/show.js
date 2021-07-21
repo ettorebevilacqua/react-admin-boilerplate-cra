@@ -153,7 +153,6 @@ export function ShowQuestion(props) {
   const isCorrelata = (idxDomanda, idxRisposta, val) => {
     const correlata = getCorrelata(idxDomanda, idxRisposta);
     if (!correlata) return false;
-    debugger;
     const userVal = getUserVal(idxDomanda, idxRisposta);
     const valCur = val === undefined ? userVal : val;
     const valValuesTmp = getRispostaOfValues(idxDomanda, idxRisposta);
@@ -241,7 +240,6 @@ export function ShowQuestion(props) {
 
   const renderTipoInner = (risposta, idxDomanda, idxRisposta, tipo) => {
     if (!risposta) return <span></span>;
-    debugger;
     const val = getUserVal(idxDomanda, idxRisposta);
     const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
     console.log('vals', val);

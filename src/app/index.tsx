@@ -14,7 +14,7 @@ import 'react-app-polyfill/stable';
 
 import * as React from 'react';
 
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 
 import { AppHome } from './app';
 import AdminApp from './admin';
@@ -28,7 +28,8 @@ export function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/app" component={AppHome} />
-          <Route exact path="/" component={AdminApp} />
+          <Route exact path="/admin" component={AdminApp} />
+          <Redirect from="/" to="/app/home" exact />
           <Route component={NotFoundPage} />
         </Switch>
       </BrowserRouter>

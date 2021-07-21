@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Field, withTypes } from 'react-final-form';
+
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
   Avatar,
@@ -16,8 +18,11 @@ import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
 import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
 import { useLocation, useHistory } from 'react-router-dom';
-import authProvider from '../authProvider';
 
+import authProvider from '../authProvider';
+import { useUserAuthSlice } from 'app/slice';
+import { selectUsername } from 'app/slice/selectors';
+import { loginUser, userSelector, clearState } from 'app/slice/userSlice';
 import { lightTheme } from './themes';
 
 const useStyles = makeStyles(theme => ({
@@ -74,70 +79,79 @@ const renderInput = ({
   />
 );
 
-interface FormValues {
-  username?: string;
-  password?: string;
-}
-
-const { Form } = withTypes<FormValues>();
+const { Form } = withTypes();
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const { isFetching, isError } = useSelector(userSelector);
+
+  const { actions } = useUserAuthSlice();
   const [loading, setLoading] = useState(false);
+
   const translate = useTranslate();
   const classes = useStyles();
   const notify = useNotify();
   const login = useLogin();
-  const location = useLocation<{ nextPathname: string } | null>();
+  const location = useLocation();
   const history = useHistory();
 
-  const handleSubmit = (auth: FormValues) => {
+  useEffect(() => {
+    if (isError) {
+      dispatch(clearState());
+      // history.push('/login');
+    }
+  }, [dispatch, history, isError]);
+
+  const handleSubmit = auth => {
     setLoading(true);
     const username = { ...auth }.username;
+    const fakeAuth = { username: 'fake@example.com', password: 'password1' };
     const pushLogin = () => {
-      authProvider.login(auth);
+      authProvider.login(fakeAuth);
     };
-    login(
-      auth,
-      location.pathname,
-      // location.state ? location.state.nextPathname : '/app/user',
-    )
-      .then(dataLogin => {
-        const userPlane = localStorage.getItem('userPlane');
-        if (!userPlane) {
+    dispatch(loginUser(auth));
+    /*  login(
+        auth,
+        location.pathname,
+        // location.state ? location.state.nextPathname : '/app/user',
+      )
+        .then(dataLogin => {
+          const userPlane = localStorage.getItem('userPlane');
+          if (!userPlane) {
+            pushLogin();
+            localStorage.setItem('userPlane', 'gold');
+            history.push('/app/user/plane/');
+            window.location.assign('/app/user/plane#/');
+            return true;
+          }
           pushLogin();
-          localStorage.setItem('userPlane', 'gold');
-          history.push('/app/user/plane/');
-          window.location.assign('/app/user/plane#/');
-          return true;
-        }
-        pushLogin();
-        //  if (localStorage.setItem('userPlane', username);
-        history.push(location.pathname);
-        window.location.assign(location.pathname);
-      })
-      .catch((error: Error) => {
-        setLoading(false);
-        notify(
-          typeof error === 'string'
-            ? error
-            : typeof error === 'undefined' || !error.message
-            ? 'ra.auth.sign_in_error'
-            : error.message,
-          'warning',
-          {
-            _:
-              typeof error === 'string'
-                ? error
-                : error && error.message
-                ? error.message
-                : undefined,
-          },
-        );
-      });
+          //  if (localStorage.setItem('userPlane', username);
+          history.push(location.pathname);
+          window.location.assign(location.pathname);
+        })
+        .catch((error: Error) => {
+          setLoading(false);
+          notify(
+            typeof error === 'string'
+              ? error
+              : typeof error === 'undefined' || !error.message
+              ? 'ra.auth.sign_in_error'
+              : error.message,
+            'warning',
+            {
+              _:
+                typeof error === 'string'
+                  ? error
+                  : error && error.message
+                  ? error.message
+                  : undefined,
+            },
+          );
+        }); */
   };
 
-  const validate = (values: FormValues) => {
-    const errors: FormValues = {};
+  const validate = values => {
+    const errors = {};
     if (!values.username) {
       errors.username = 'richiesto' || translate('ra.validation.required');
     }
@@ -146,7 +160,7 @@ const Login = () => {
     }
     return errors;
   };
-
+  debugger;
   return (
     <Form
       onSubmit={handleSubmit}
@@ -169,7 +183,7 @@ const Login = () => {
                     // @ts-ignore
                     component={renderInput}
                     label={'User' || translate('ra.auth.username')}
-                    disabled={loading}
+                    disabled={isFetching}
                   />
                 </div>
                 <div className={classes.input}>
@@ -179,7 +193,7 @@ const Login = () => {
                     component={renderInput}
                     label={'password' || translate('ra.auth.password')}
                     type="password"
-                    disabled={loading}
+                    disabled={isFetching}
                   />
                 </div>
               </div>
@@ -188,12 +202,14 @@ const Login = () => {
                   variant="contained"
                   type="submit"
                   color="primary"
-                  disabled={loading}
+                  disabled={isFetching}
                   fullWidth
                 >
                   {loading && <CircularProgress size={25} thickness={2} />}
                   {'login' || translate('ra.auth.sign_in')}
                 </Button>
+                {isError && <p>Error</p>}
+                {isFetching && <p>loading</p>}
               </CardActions>
             </Card>
           </div>
@@ -211,8 +227,8 @@ Login.propTypes = {
 // We need to put the ThemeProvider decoration in another component
 // Because otherwise the useStyles() hook used in Login won't get
 // the right theme
-const LoginWithTheme = (props: any) => (
-  <ThemeProvider theme={createMuiTheme(lightTheme as any)}>
+const LoginWithTheme = props => (
+  <ThemeProvider theme={createMuiTheme(lightTheme)}>
     <Login {...props} />
   </ThemeProvider>
 );
