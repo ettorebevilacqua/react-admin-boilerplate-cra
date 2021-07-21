@@ -178,14 +178,21 @@ export const userSlice = createSlice({
     }, */
   },
 });
-
+let _GlobalStore = null;
 export function initUser(store) {
+  _GlobalStore = store;
   const token = localStorage.getItem('token');
   const userId = localStorage.getItem('userId');
 
   if (token && userId) {
     store.dispatch(fetchUserById({ id: userId }));
   }
+}
+
+export function logOut() {
+  _GlobalStore.dispatch(userSlice.actions.clearState());
+  localStorage.removeItem('token');
+  localStorage.removeItem('userId');
 }
 
 export const { clearState } = userSlice.actions;

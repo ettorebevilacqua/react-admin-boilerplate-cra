@@ -21,7 +21,6 @@ import { useLocation, useHistory } from 'react-router-dom';
 
 import authProvider from '../authProvider';
 import { useUserAuthSlice } from 'app/slice';
-import { selectUsername } from 'app/slice/selectors';
 import { loginUser, userSelector, clearState } from 'app/slice/userSlice';
 import { lightTheme } from './themes';
 

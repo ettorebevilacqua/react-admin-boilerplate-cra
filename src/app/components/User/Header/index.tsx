@@ -29,7 +29,8 @@ import {
   useLayoutDispatch,
   useLayoutState,
 } from '../LayoutContext';
-import { signOut, useUserDispatch } from '../UserContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { logOut, userSelector, clearState } from 'app/slice/userSlice';
 // styles
 import useStyles from './styles';
 import UserAvatar from '../components/UserAvatar';
@@ -91,9 +92,11 @@ function Header(props) {
   var classes = useStyles();
 
   // global
+  const { username, email, isFetching, isError } = useSelector(userSelector);
+  debugger;
+
   var layoutState = useLayoutState();
   var layoutDispatch = useLayoutDispatch();
-  var userDispatch = useUserDispatch();
 
   // local
   var [mailMenu, setMailMenu] = useState<any>(null);
@@ -279,14 +282,14 @@ function Header(props) {
           disableAutoFocusItem
         >
           <div className={classes.profileMenuUser}>
-            <Typography>John Smith</Typography>
+            <Typography>{username || email}</Typography>
             <Typography
               className={classes.profileMenuLink}
               component="a"
               color="primary"
               href="https://flatlogic.com"
             >
-              Flalogic.com
+              {}
             </Typography>
           </div>
           <MenuItem
@@ -317,7 +320,7 @@ function Header(props) {
             <Typography
               className={classes.profileMenuLink}
               color="primary"
-              onClick={() => signOut(userDispatch, props.history)}
+              onClick={() => logOut()}
             >
               Sign Out
             </Typography>
