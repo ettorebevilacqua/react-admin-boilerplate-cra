@@ -13,17 +13,18 @@ providers.getByTag('axios').config({
   Set auth headers for all providers containing tag "need-auth",
   which has been added using options to each desired instance
   */
-providers.getByTag('axios').config({
+/* providers.getByTag('axios').config({
   headers: {
     Authorization: 'Bearer ',
   },
 });
+*/
 
 /*
   Clean the cache of all selectors
   */
-providers.getByTag('selector').cleanDependenciesCache();
+// providers.getByTag('selector').cleanDependenciesCache();
 
 providers.getByTag('axios').onNewProvider(provider => {
-  console.log(`Added new api provider with id: ${provider.id}`);
+  // console.log(`Added new api provider with id: ${provider.id}`);
 });
