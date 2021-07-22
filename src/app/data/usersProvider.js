@@ -9,7 +9,7 @@ const loginProvider = new Axios({
 });
 
 const userProvider = new Axios({
-  id: 'getUser',
+  id: 'user/get',
   url: '/users/:id',
   tags: ['users', 'need-auth'],
 });
@@ -21,13 +21,15 @@ const userProvider = new Axios({
   },
 }); */
 const is401 = error => error && error.code && error.code === 401;
+const getAuthHeader = token => ({
+  headers: {
+    Authorization: 'Bearer ' + token,
+  },
+});
 
-export const authBear = token =>
-  providers.getByTag('axios').config({
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  });
+export const authBear = token => {
+  providers.getByTag('axios').config(getAuthHeader(token));
+};
 
 export const configWithAuth = data => {
   const token =

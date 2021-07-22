@@ -28,13 +28,13 @@ export function configureAppStore() {
 
   const store = configureStore({
     reducer: createReducer({
-      [DATA_PROVIDER_NAMESPACE]: storeManager.reducer,
+      //  [DATA_PROVIDER_NAMESPACE]: storeManager.reducer,
     } as any),
     middleware: [...getDefaultMiddleware(), ...middlewares],
     devTools: process.env.NODE_ENV !== 'production',
     enhancers,
   });
 
-  storeManager.setStore(store);
+  // storeManager.setStore(store, DATA_PROVIDER_NAMESPACE);
   return store;
 }
