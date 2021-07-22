@@ -66,7 +66,7 @@ export function Moduli({ onEdit, values, command, ...props }) {
 
             return (
               <ListItem
-                key={value}
+                key={idxModulo}
                 role={undefined}
                 dense
                 button
