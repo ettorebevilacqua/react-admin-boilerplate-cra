@@ -3,8 +3,8 @@ https://cloudnweb.dev/2021/02/modern-react-redux-tutotials-redux-toolkit-login-u
 */
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { userProvider } from '../data';
 import dataApi from '../data';
-
 /* export const signupUser = createAsyncThunk(
   'users/signupUser',
   async ({ email, password }, thunkAPI) => {
@@ -47,7 +47,7 @@ export const loginUser = createAsyncThunk(
       }
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
-
+      userProvider.authBear(token);
       return { ...data };
     } catch (e) {
       return thunkAPI.rejectWithValue(e);
@@ -59,20 +59,17 @@ export const fetchUserById = createAsyncThunk(
   'users/fetchUserById',
   async (payload, thunkAPI) => {
     const { id } = payload;
-    debugger;
     const tokenLocal = localStorage.getItem('token');
     const userIdLocal = localStorage.getItem('userId');
     tokenLocal && dataApi.userProvider.authBear(tokenLocal);
 
     try {
       let data = await dataApi.userProvider.getUser(id);
-      debugger;
 
       if (!tokenLocal || !userIdLocal) {
         const { userId, token } = getInfoUser(data);
         localStorage.setItem('token', token);
         localStorage.setItem('userId', userId);
-        dataApi.userProvider.configWithAuth(data);
       }
 
       return { ...data };
@@ -158,7 +155,7 @@ export const userSlice = createSlice({
     });
 
     /* builder.addCase(fetchUserById.pending, (state, { payload }) => {
-      
+
     }); */
 
     /* [fetchUserBytoken.pending as any]: state => {
@@ -197,4 +194,6 @@ export function logOut() {
 
 export const { clearState } = userSlice.actions;
 
-export const userSelector = state => state.userAuth || initialState;
+export const userSelector = state =>
+  !state || !state.userAuth ? initialState : state.userAuth;
+export const authToken = localStorage.getItem('token');
