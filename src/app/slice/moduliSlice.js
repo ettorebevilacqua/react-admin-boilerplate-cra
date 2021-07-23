@@ -23,9 +23,11 @@ export const saveModulo = createAsyncThunk(
   async (payload, thunkAPI) => {
     const id = payload.id;
     try {
-      let data = id
-        ? await moduliProvider.save(id, payload)
-        : await moduliProvider.create(payload);
+      let data = !id
+        ? await moduliProvider.create(payload)
+        : payload._deleted
+        ? await moduliProvider.delete(id)
+        : await moduliProvider.save(id, payload);
 
       return { ...data };
     } catch (e) {

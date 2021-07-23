@@ -71,7 +71,9 @@ export const FormikTest = props => {
     };
     const remove = () => {
       const newValues = payload === 0 ? [empityModulo] : [...values];
+      const id = newValues[payload].id;
       payload > 0 && newValues.splice(payload, 1);
+      id && dispatch(saveModulo({ id, _deleted: true }));
       setValues(newValues);
       saveValues(newValues);
       setCurrentIdxModule(0);
