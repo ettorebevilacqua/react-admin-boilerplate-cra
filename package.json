@@ -168,6 +168,7 @@
     }
   },
   "devDependencies": {
+    "http-proxy-middleware": "2.0.1",
     "json-server": "0.16.3"
   }
 }

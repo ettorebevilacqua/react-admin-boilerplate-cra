@@ -6,7 +6,7 @@ which automatically adds the "axios" tag to all instances.
 setta tutti i providers di tag axio con quel url
 */
 providers.getByTag('axios').config({
-  baseUrl: 'http://localhost:3010/v1',
+  baseUrl: 'http://vps-fe612251.vps.ovh.net:3000/v1',
 });
 
 /*
