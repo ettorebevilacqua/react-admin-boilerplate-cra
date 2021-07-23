@@ -3,9 +3,14 @@ import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async'; // Import UI Generator
 import { Link, Typography } from '@material-ui/core';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { readModuli, dataSelector } from 'app/slice/moduliSlice';
+
 import UserComp from '../../components/User/';
 
 export function UserPage() {
+  const dispatch = useDispatch();
+  dispatch(readModuli());
   return (
     <>
       <Helmet>

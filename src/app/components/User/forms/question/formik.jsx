@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
@@ -19,11 +19,25 @@ import {
   makeRisposte,
 } from 'app/services/question/moduliModel';
 
+import { providers, Selector } from '@data-provider/core';
+import { readModuli, dataSelector } from 'app/slice/moduliSlice';
+
+// const moduliProvider = moduliProvider;
+
 export const FormikTest = props => {
+  const { data, isFetching, isError } = useSelector(dataSelector);
   const [isModuli, setIsModuli] = React.useState([true]);
   const [isAnteprima, setIsAnteprima] = React.useState([false]);
-  const [values, setValues] = React.useState(getValues());
+  const [values, setValues] = React.useState(
+    data && data.results ? data.results : [],
+  );
   const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    data && isFetching && setValues(data.results);
+  }, [data]);
 
   const onSaveData = index => domanda => {
     if (!values[index]) return false;
@@ -100,6 +114,7 @@ export const FormikTest = props => {
 
   return (
     <div>
+      xxx{JSON.stringify(data)} load {JSON.stringify(isFetching)}
       {isModuli ? (
         <Moduli values={values} command={commandModuli} onEdit={editModulo} />
       ) : isAnteprima ? (
@@ -123,3 +138,10 @@ export const FormikTest = props => {
     </div>
   );
 };
+/*
+providers.getByTag('axios').cleanCache();
+
+export const FormikTest = withDataLoadingError(moduliProvider.provider)(
+  _FormikTest,
+);
+*/

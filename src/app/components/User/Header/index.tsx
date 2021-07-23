@@ -93,7 +93,6 @@ function Header(props) {
 
   // global
   const { username, email, isFetching, isError } = useSelector(userSelector);
-  debugger;
 
   var layoutState = useLayoutState();
   var layoutDispatch = useLayoutDispatch();

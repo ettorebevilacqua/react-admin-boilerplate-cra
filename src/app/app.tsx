@@ -35,6 +35,8 @@ import { UserMenu } from './pages/UserMenu/Loadable';
 import { Login } from 'app/admin/layout';
 import dataApi from './data';
 
+import dataStore from '../store/dataStore';
+
 // dataApi.userProvider.login('ettore@bevilacqua.com1', 'password1').then(data=>alert(data));
 
 const store = configureAppStore();
@@ -81,7 +83,9 @@ export function AppHome(props: any) {
         >
           <meta name="description" content="Smart service" />
         </Helmet>
+
         <AppBody {...props} />
+
         <GlobalStyle />
       </HelmetProvider>
     </Provider>
