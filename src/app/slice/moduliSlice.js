@@ -18,27 +18,49 @@ export const readModuli = createAsyncThunk(
   },
 );
 
+export const saveModulo = createAsyncThunk(
+  'moduli/save',
+  async (payload, thunkAPI) => {
+    const id = payload.id;
+    try {
+      let data = id
+        ? await moduliProvider.save(id, payload)
+        : await moduliProvider.create(payload);
+
+      return { ...data };
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e);
+    }
+  },
+);
+
 const initialState = {
   data: null,
+  saved: {},
   isFetching: false,
   isSuccess: false,
   isError: false,
   errorMessage: '',
 };
 
-const buildCaseDefault = builder => thunk => {
+const buildCaseDefault = builder => (thunk, { dataname, storeKey } = {}) => {
   builder.addCase(thunk.fulfilled, (state, { payload }) => {
-    state.isFetching = false;
-    state.isSuccess = true;
-    state.data = payload;
+    const stateKey = storeKey ? state[storeKey] : state;
+    stateKey.isFetching = false;
+    stateKey.isSuccess = true;
+    if (dataname) {
+      stateKey[dataname || 'data'] = payload;
+    }
   });
   builder.addCase(thunk.rejected, (state, { payload }) => {
-    state.isFetching = false;
-    state.isError = true;
-    state.errorMessage = payload.message;
+    const stateKey = storeKey ? state[storeKey] : state;
+    stateKey.isFetching = false;
+    stateKey.isError = true;
+    stateKey.errorMessage = payload.message;
   });
   builder.addCase(thunk.pending, (state, { payload }) => {
-    state.isFetching = true;
+    const stateKey = storeKey ? state[storeKey] : state;
+    stateKey.isFetching = true;
   });
 };
 
@@ -50,14 +72,14 @@ export const moduliSlice = createSlice({
   },
   extraReducers: builder => {
     const autoBuild = buildCaseDefault(builder);
-    autoBuild(readModuli);
+    autoBuild(readModuli, { dataname: 'data' });
+    autoBuild(saveModulo, { storeKey: 'saved' });
   },
 });
 
 export const { clearState } = moduliSlice.actions;
 
 export const dataSelector = state => {
-  debugger;
   const cond = !state || !state.moduliSlice ? initialState : state.moduliSlice;
   return cond;
 };

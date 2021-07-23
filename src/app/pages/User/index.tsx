@@ -7,8 +7,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { readModuli, dataSelector } from 'app/slice/moduliSlice';
 
 import UserComp from '../../components/User/';
+import { useUserCompSlice } from './slice/userCompSlice';
 
 export function UserPage() {
+  useUserCompSlice();
   const dispatch = useDispatch();
   dispatch(readModuli());
   return (

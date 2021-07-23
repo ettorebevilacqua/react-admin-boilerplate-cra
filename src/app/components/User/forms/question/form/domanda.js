@@ -89,11 +89,16 @@ const MDomandaForm = ({
     fieldProps.expanded || values.tipo === 0 || false,
   );
 
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
+
   React.useEffect(() => {
     setExpanded(true);
   }, [values.tipo]);
 
   const onChangeForm = (newValues, isFirstTime) => {
+    if (isFirstTime) {
+      return setIsFirstTime(false);
+    }
     console.log('domanda onChangeForm ', newValues);
 
     fieldProps &&

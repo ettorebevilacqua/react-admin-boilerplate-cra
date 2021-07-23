@@ -36,6 +36,7 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   const [timeOutAutoSave, setTimeOutAutoSave] = React.useState(null);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
 
+  debugger;
   const onSave = () => {
     onSaveData(values);
     console.log('main change', values);

@@ -21,7 +21,7 @@ export const moduloProvider = new Axios({
   url: '/moduli/:id',
   tags: ['moduli', 'need-auth'],
 });
-debugger;
+
 export const moduliQuery = new Selector(
   moduliProvider,
   (queryValue, reesults) =>

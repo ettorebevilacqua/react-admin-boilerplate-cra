@@ -16,16 +16,25 @@ import {
   getValues,
   saveValues,
   empityModulo,
+  newDomanda,
   makeRisposte,
 } from 'app/services/question/moduliModel';
 
 import { providers, Selector } from '@data-provider/core';
-import { readModuli, dataSelector } from 'app/slice/moduliSlice';
+import { saveModulo, dataSelector } from 'app/slice/moduliSlice';
+import {
+  userCompSlice,
+  userCompSelector,
+  toggleModuliShow,
+} from 'app/pages/User/slice/userCompSlice';
 
 // const moduliProvider = moduliProvider;
 
-export const FormikTest = ({ data }) => {
-  const [isModuli, setIsModuli] = React.useState([true]);
+export const FormikTest = props => {
+  const { data, isFetching, isError } = useSelector(dataSelector);
+  const isModuliState = useSelector(userCompSelector);
+  const [isModuli, setIsModuli] = React.useState(isModuliState);
+
   const [isAnteprima, setIsAnteprima] = React.useState([false]);
   const [values, setValues] = React.useState(() =>
     data && data.results ? data.results : [],
@@ -38,10 +47,16 @@ export const FormikTest = ({ data }) => {
     //  data && setValues(data.results);
   }, []);
 
+  const changeView = val => {
+    setIsModuli(val);
+    dispatch(toggleModuliShow(val));
+  };
+
   const onSaveData = index => domanda => {
     if (!values[index]) return false;
     const dataModuliTmp = [...values];
     dataModuliTmp[index] = domanda;
+    dispatch(saveModulo(domanda));
     setValues(dataModuliTmp);
     saveValues(dataModuliTmp);
   };
@@ -49,7 +64,7 @@ export const FormikTest = ({ data }) => {
   const commandModuli = (cmd, payload) => {
     const add = () => {
       const newModuli = [...values, empityModulo];
-      setIsModuli(false);
+      changeView(false);
       setCurrentIdxModule(newModuli.length - 1);
       setIsAnteprima(false);
       setValues(newModuli);
@@ -67,22 +82,34 @@ export const FormikTest = ({ data }) => {
   };
 
   const cmdDomanda = (cmd, payload) => {
-    const cmds = { list: () => setIsModuli(true) };
+    const cmds = { list: () => changeView(true) };
     cmds[cmd] && cmds[cmd](payload);
   };
 
   const editModulo = idx => {
     setCurrentIdxModule(idx);
     setIsAnteprima(false);
-    setIsModuli(false);
+    changeView(false);
   };
 
   const showModuli = () => {
     onSaveData(values);
-    setIsModuli(true);
+    changeView(true);
   };
 
-  const getCurrentModulo = () => values[currentIdxModule] || empityModulo;
+  const initDomande = moduloFrom => {
+    const domande =
+      moduloFrom.domande && moduloFrom.domande[0]
+        ? moduloFrom.domande
+        : [newDomanda];
+    const modulo = { ...moduloFrom, domande };
+    return modulo;
+  };
+
+  const getCurrentModulo = () =>
+    values[currentIdxModule]
+      ? initDomande(values[currentIdxModule])
+      : empityModulo;
 
   const HeaderModuli = props => (
     <GridChilds
@@ -104,7 +131,7 @@ export const FormikTest = ({ data }) => {
         variant="contained"
         color="primary"
         style={{ height: '42px', width: '120px' }}
-        onClick={e => setIsModuli(true)}
+        onClick={e => changeView(true)}
       >
         {'moduli'}
       </Button>

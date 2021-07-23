@@ -67,7 +67,7 @@ function Question(props) {
 
   return (
     <div className={classes.root}>
-      {isFetching ? <h2>Loading</h2> : <FormikTest data={data} />}
+      {isFetching ? <h2>Loading</h2> : <FormikTest />}
     </div>
   );
 }
