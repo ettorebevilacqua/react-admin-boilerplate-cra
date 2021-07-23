@@ -30,7 +30,7 @@ function Plane(props) {
     marginLeft: '15%',
     paddind: '8px',
   };
-  const linkToRoute = '/app/user/home';
+  const linkToRoute = '/app/user/';
   const data = [
     {
       link: linkToRoute,

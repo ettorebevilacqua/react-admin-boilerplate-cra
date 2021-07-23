@@ -56,10 +56,10 @@ const Menu: FC<MenuProps> = ({ onMenuClick, logout, dense = false }) => {
       )}
       {!isAdmin && (
         <MenuItemLink
-          to={`/app/user/home`}
+          to={`/app/user`}
           primaryText="Home"
           leftIcon={<visitors.icon />}
-          onClick={() => window.location.assign('/app/user/home')}
+          onClick={() => window.location.assign('/app/user')}
           sidebarIsOpen={open}
           dense={dense}
         />

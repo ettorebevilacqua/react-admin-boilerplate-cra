@@ -76,7 +76,7 @@ export default function UserComp() {
             <Switch>
               <Route
                 exact
-                path="/app/user/home"
+                path="/app/user/"
                 component={() => <IndaginiMenu />}
               />
               <Route
@@ -111,7 +111,7 @@ export default function UserComp() {
                 component={() => <MenuCard items={buttonData} />}
               />
               <Route exact path="/app/user/plane" component={() => <Plane />} />
-              <Redirect from="/app/user" to="/app/user/home" exact />
+              <Redirect from="/app/user" to="/app/user" exact />
             </Switch>
           </Layout>
         </ThemeProvider>

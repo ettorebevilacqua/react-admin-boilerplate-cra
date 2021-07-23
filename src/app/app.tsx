@@ -62,10 +62,10 @@ function AppBody(props: any) {
   ) : (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/app/home" component={HomePage} />
+        <Route exact path="/app/user" component={HomePage} />
         <Route path="/app/user" component={UserPage} />
-        <Route path="/app/forms" component={FormsPage} />
-        <Redirect from="/app" to="/app/userMenu" exact />
+        <Route path="/app/user" component={FormsPage} />
+        <Redirect from="/app" to="/app/user" exact />
       </Switch>
     </BrowserRouter>
   );

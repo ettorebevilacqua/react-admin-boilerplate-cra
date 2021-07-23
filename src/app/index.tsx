@@ -29,7 +29,7 @@ export function App() {
         <Switch>
           <Route path="/app" component={AppHome} />
           <Route exact path="/admin" component={AdminApp} />
-          <Redirect from="/" to="/app/home" exact />
+          <Redirect from="/" to="/app/user" exact />
           <Route component={NotFoundPage} />
         </Switch>
       </BrowserRouter>
