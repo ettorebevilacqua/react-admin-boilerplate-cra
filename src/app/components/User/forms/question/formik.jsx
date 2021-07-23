@@ -24,11 +24,10 @@ import { readModuli, dataSelector } from 'app/slice/moduliSlice';
 
 // const moduliProvider = moduliProvider;
 
-export const FormikTest = props => {
-  const { data, isFetching, isError } = useSelector(dataSelector);
+export const FormikTest = ({ data }) => {
   const [isModuli, setIsModuli] = React.useState([true]);
   const [isAnteprima, setIsAnteprima] = React.useState([false]);
-  const [values, setValues] = React.useState(
+  const [values, setValues] = React.useState(() =>
     data && data.results ? data.results : [],
   );
   const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
@@ -36,8 +35,8 @@ export const FormikTest = props => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    data && isFetching && setValues(data.results);
-  }, [data]);
+    //  data && setValues(data.results);
+  }, []);
 
   const onSaveData = index => domanda => {
     if (!values[index]) return false;
@@ -114,7 +113,6 @@ export const FormikTest = props => {
 
   return (
     <div>
-      xxx{JSON.stringify(data)} load {JSON.stringify(isFetching)}
       {isModuli ? (
         <Moduli values={values} command={commandModuli} onEdit={editModulo} />
       ) : isAnteprima ? (

@@ -30,7 +30,8 @@ import queryString from 'query-string';
 import getResource from '../../../../data/adminProvider';
 import { withRouter } from 'react-router';
 import { FormikTest } from './formik';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { readModuli, dataSelector } from 'app/slice/moduliSlice';
 // getResource('corsi').then(resp => console.log('ss', resp));
 
 const values = {};
@@ -39,6 +40,7 @@ const listValues = [];
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
 function Question(props) {
   var classes = useStyles();
+  const { data, isFetching, isError } = useSelector(dataSelector);
   const [store, setStore] = React.useState(() => createEmptyStore('object'));
   const [storeQ, setStoreQ] = React.useState(() =>
     createStore(createOrderedMap(listValues)),
@@ -63,33 +65,9 @@ function Question(props) {
     [setStore],
   );
 
-  /* SLIDE
-
-  {
-    "type": "number",
-    "widget": "NumberSlider",
-    "minimum": 1,
-    "maximum": 10,
-    "view": {
-      "marks": [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "marksLabel": "",
-      "tooltip": "on",
-      "sizeXs": 8,
-      "sizeMd": 6
-    }
-  }
-*/
-
   return (
     <div className={classes.root}>
-      <FormikTest />
+      {isFetching ? <h2>Loading</h2> : <FormikTest data={data} />}
     </div>
   );
 }
