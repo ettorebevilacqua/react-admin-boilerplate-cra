@@ -2,7 +2,6 @@
   "name": "smart",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3010",
   "dependencies": {
     "@data-provider/axios": "3.0.1",
     "@data-provider/browser-storage": "3.0.1",
