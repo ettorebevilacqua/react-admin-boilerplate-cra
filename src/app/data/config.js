@@ -6,7 +6,7 @@ which automatically adds the "axios" tag to all instances.
 setta tutti i providers di tag axio con quel url
 */
 providers.getByTag('axios').config({
-  baseUrl: 'http://localhost/v1',
+  baseUrl: '/v1',
 });
 /*
   Set auth headers for all providers containing tag "need-auth",
