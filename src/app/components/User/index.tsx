@@ -36,6 +36,7 @@ import Indagini from './section/indagini';
 import IndaginiMenu from './section/indagini/menuIndagini';
 import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
+import { QuestionTo } from '../User/forms/question/form/questionTo'; //' // '' /forms/question/ /questionTo';
 
 import Forms from './forms';
 
@@ -56,7 +57,7 @@ const buttonData = [
 ];
 
 const helmetRender = () => (
-  <Helmet titleTemplate="%s - React Boilerplate" defaultTitle="Smart">
+  <Helmet titleTemplate="%s - Smart" defaultTitle="Smart">
     <meta name="description" content="Smart service" />
   </Helmet>
 );
@@ -92,6 +93,11 @@ export default function UserComp() {
                 exact
                 path="/app/user/indagini_question/:id"
                 component={() => <IndaginiQuestion />}
+              />
+              <Route
+                exact
+                path="/app/user/indagini_invio/:id"
+                component={QuestionTo}
               />
               <Route
                 exact

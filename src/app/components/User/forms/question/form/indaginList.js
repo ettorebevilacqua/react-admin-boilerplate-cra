@@ -21,7 +21,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const routeToBase = id => `/app/user/indagini_question/${id}`;
+const routeToBase = id => `/app/user/indagini_invio/${id}`;
+// const routeToBase = id => `/app/user/indagini_question/${id}`;
 
 function IndaginiList(props) {
   const { values, history } = props;
@@ -85,7 +86,7 @@ function IndaginiList(props) {
                       variant="contained"
                       fullWidth
                       type="submit"
-                      onClick={e => history.push(routeToBase(idxModulo), value)}
+                      onClick={e => history.push(routeToBase(value.id), value)}
                     >
                       Apri
                     </Button>

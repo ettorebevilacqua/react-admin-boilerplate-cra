@@ -85,3 +85,20 @@ export const dataSelector = state => {
   const cond = !state || !state.moduliSlice ? initialState : state.moduliSlice;
   return cond;
 };
+export const dataGetSelector = id => state => {
+  const cond =
+    !state ||
+    !state.moduliSlice ||
+    !state.moduliSlice.data ||
+    !state.moduliSlice.data.results
+      ? null
+      : id
+      ? state.moduliSlice.data.results
+      : state.moduliSlice.data.results.filter(item => item.id === id);
+  const isFetching =
+    !state || !state.moduliSlice || !state.moduliSlice.isFetching
+      ? false
+      : state.moduliSlice.isFetching;
+
+  return { isFetching, data: cond };
+};
