@@ -24,6 +24,9 @@ import { ShowQuestion } from './show';
 import { Moduli } from './moduli';
 
 import { newDomanda } from 'app/services/question/moduliModel';
+import { AdjustingInterval } from 'app/services/helper';
+
+const ticker = new AdjustingInterval(null, 3000);
 
 export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   const [values, setValues] = React.useState(initialValues);
@@ -33,6 +36,14 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   const [timeOutAutoSave, setTimeOutAutoSave] = React.useState(null);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
 
+  const onSave = () => {
+    onSaveData(values);
+    console.log('main change', values);
+    ticker.stop();
+  };
+
+  ticker.workFunc = onSave;
+
   const handleSubmit = vals => {
     console.log('form values ', vals);
   };
@@ -41,7 +52,11 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
     // if (isFirstTime) return setIsFirstTime(false);
 
     setValues(valuesNew);
-    clearTimeout(timeOutAutoSave);
+    ticker.stop();
+    !isFirstTime && ticker.start();
+    setIsFirstTime(false);
+
+    /* clearTimeout(timeOutAutoSave);
     const timeSave = !timeOutAutoSave
       ? setTimeout(() => {
           clearTimeout(timeOutAutoSave);
@@ -51,6 +66,7 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
         }, 5000)
       : null;
     timeSave && setTimeOutAutoSave(timeSave);
+    */
   };
 
   const onDeleteDomanda = (arrayHelper, index) => {
