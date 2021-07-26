@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
-import GridChilds from '../comp/gridChilds';
+import GridChilds from '../../component/gridChilds';
 
 const useStyles = makeStyles(theme => ({
   root: {

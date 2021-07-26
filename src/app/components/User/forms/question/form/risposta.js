@@ -24,7 +24,7 @@ import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 import * as Yup from 'yup';
 import { withSubForm } from '../../lib/formikSub';
 import { useValues } from '../../lib/useValues';
-import GridChilds from '../comp/gridChilds';
+import GridChilds from '../../component/gridChilds';
 import { withField } from '../../lib/formikWithField';
 import FormikOnChange from '../../lib/FormikOnChange';
 import { TextField, Checkbox, RadioGroup } from 'formik-material-ui';

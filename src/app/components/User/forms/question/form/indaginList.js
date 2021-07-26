@@ -9,7 +9,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import GridChilds from '../comp/gridChilds';
+import GridChilds from '../../component/gridChilds';
 // import { withRouter } from 'react-router';
 import { withRouter, Switch, Route, Link, useParams } from 'react-router-dom';
 
@@ -68,7 +68,7 @@ function IndaginiList(props) {
 
             return (
               <ListItem
-                key={value}
+                key={idxModulo}
                 role={undefined}
                 dense
                 button

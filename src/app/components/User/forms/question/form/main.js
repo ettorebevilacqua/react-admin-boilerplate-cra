@@ -12,7 +12,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 import FormikOnChange from '../../lib/FormikOnChange';
-import GridChilds from '../comp/gridChilds';
+import GridChilds from '../../component/gridChilds';
 import TagsInput from '../comp/tagInput';
 import { withSubForm } from '../../lib/formikSub';
 import { ToFieldArray, withField } from '../../lib/formikWithField';

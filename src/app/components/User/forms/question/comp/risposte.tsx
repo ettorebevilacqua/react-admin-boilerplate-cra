@@ -16,11 +16,9 @@ import {
   Select as MuiSelect,
   Checkbox,
 } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
 
 import { ToFieldArray, withField } from '../../lib/formikWithField';
-
-import GridChilds from './gridChilds';
+import GridChilds from '../../component/gridChilds';
 
 const validationSchema = yup.object({
   email: yup

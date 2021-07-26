@@ -24,7 +24,7 @@ import {
 
 import Grid from '@material-ui/core/Grid';
 
-import GridChilds from './gridChilds';
+import GridChilds from '../../component/gridChilds';
 import Risposte from './risposte';
 
 const validationSchema = yup.object({

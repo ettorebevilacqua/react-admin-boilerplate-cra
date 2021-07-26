@@ -33,7 +33,7 @@ import {
   Select as MuiSelect,
 } from '@material-ui/core';
 
-import GridChilds from '../comp/gridChilds';
+import GridChilds from '../../component/gridChilds';
 import { ToFieldArray } from '../../lib/formikWithField';
 import { RispostaForm } from './risposta';
 

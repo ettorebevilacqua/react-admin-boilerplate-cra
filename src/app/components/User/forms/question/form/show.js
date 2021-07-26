@@ -20,7 +20,7 @@ import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import GridChilds from '../comp/gridChilds';
+import GridChilds from '../../component/gridChilds';
 
 import TextField from '@material-ui/core/TextField';
 import {
