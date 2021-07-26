@@ -20,7 +20,6 @@ import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import authProvider from '../authProvider';
-import { useUserAuthSlice } from 'app/slice';
 import { loginUser, userSelector, clearState } from 'app/slice/userSlice';
 import { lightTheme } from './themes';
 
@@ -84,7 +83,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const { isFetching, isError } = useSelector(userSelector);
 
-  const { actions } = useUserAuthSlice();
   const [loading, setLoading] = useState(false);
 
   const translate = useTranslate();

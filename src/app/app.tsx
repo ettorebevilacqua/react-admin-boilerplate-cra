@@ -36,6 +36,7 @@ import { Login } from 'app/admin/layout';
 import dataApi from './data';
 
 import dataStore from '../store/dataStore';
+import { useUserAuthSlice } from 'app/slice';
 
 // dataApi.userProvider.login('ettore@bevilacqua.com1', 'password1').then(data=>alert(data));
 
@@ -54,10 +55,11 @@ openSansObserver.load().then(() => {
 const helmetContext = {};
 
 function AppBody(props: any) {
-  const { isFetching, isSuccess, isError } = useSelector(userSelector);
+  const { actions } = useUserAuthSlice(); // start up slices
+  const { id, isFetching, isSuccess, isError } = useSelector(userSelector);
   return isFetching ? (
     <h2>Loading</h2>
-  ) : !isSuccess ? (
+  ) : !id ? (
     <Login />
   ) : (
     <BrowserRouter>
