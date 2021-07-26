@@ -4,10 +4,16 @@ import { providers, Selector } from '@data-provider/core';
 import * as userProviderFrom from './usersProvider';
 import { defaultProvider } from './defaultProvider';
 
-export const moduliProvider = defaultProvider('moduli/all', '/moduli', [
+export const moduliProvider = defaultProvider('moduli', '/moduli', [
   'axios',
   'moduli',
 ]);
+
+export const questionProvider = defaultProvider('questions', '/questions', [
+  'axios',
+  'questions',
+]);
+
 /*
 
 export const moduliProvider = new Axios({

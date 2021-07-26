@@ -1,7 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
-
 import { RootState } from 'types';
-import { initialState } from '.';
+
+export const initialState = {
+  username: '',
+  email: '',
+  isFetching: false,
+  isSuccess: false,
+  isError: false,
+  errorMessage: '',
+};
 
 // First select the relevant part from the state
 const selectDomain = (state: RootState) => state.userAuth || initialState;
