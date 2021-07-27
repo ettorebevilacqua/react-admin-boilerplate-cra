@@ -1,3 +1,4 @@
+// DEBUG: root Slice
 import * as React from 'react';
 // import { Repo } from 'types/Repo';
 import { createSlice } from 'utils/@reduxjs/toolkit';
@@ -22,14 +23,16 @@ const indagineEmpity = {
   partecipanti: [empityParteipante],
 };
 
-const questionSlice = createCrudSlice('question', questionProvider);
-
+export const questionSlice = createCrudSlice('question', questionProvider);
 export const { actions: userAuthActions, reducer } = userSlice;
 
 export const useUserAuthSlice = () => {
   useInjectReducer({ key: userSlice.name, reducer: userSlice.reducer });
   useInjectReducer({ key: moduliSlice.name, reducer: moduliSlice.reducer });
-  useInjectReducer({ key: moduliSlice.name, reducer: moduliSlice.reducer });
+  /* useInjectReducer({
+    key: questionSlice.providerSlice.name,
+    reducer: questionSlice.providerSlice.reducer,
+  }); */
   //  useInjectSaga({ key: userSlice.name, saga: userAuthSaga });
   return { actions: userSlice.actions };
 };

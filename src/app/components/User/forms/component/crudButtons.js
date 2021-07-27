@@ -13,7 +13,8 @@ function makeEnum(arr) {
 
 export const ButtonnType = makeEnum(['add', 'delete', 'blue']);
 
-export const CrudButton = ({ onClick, show, hides, disableds, children }) => {
+export const CrudButton = props => {
+  const { onClick, show, hides, disableds, children } = props;
   const isFoundInList = (list, val) => list && list.indexOf(val) > -1;
   const isFound = val =>
     (!show ? true : isFoundInList(show, val)) && !isFoundInList(hides, val);
@@ -33,7 +34,7 @@ export const CrudButton = ({ onClick, show, hides, disableds, children }) => {
             <Button
               variant="contained"
               color="primary"
-              onClick={onClick(ButtonnType.add)}
+              onClick={onClick && onClick(ButtonnType.add)}
             >
               <span style={{ fontSize: '11px' }}>Add</span>
             </Button>
@@ -44,7 +45,7 @@ export const CrudButton = ({ onClick, show, hides, disableds, children }) => {
             <DeleteIcon
               style={{ fontSize: '36px' }}
               color="secondary"
-              onClick={event => onClick(ButtonnType.delete)}
+              onClick={event => onClick && onClick(ButtonnType.delete)}
             />
           </Box>
         )}

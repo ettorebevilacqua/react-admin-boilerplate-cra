@@ -37,9 +37,8 @@ import Indagini from './section/indagini';
 import IndaginiMenu from './section/indagini/menuIndagini';
 import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
-import { QuestionTo } from '../User/forms/question/form/questionTo'; //' // '' /forms/question/ /questionTo';
-
-import Forms from './forms';
+import Question from './forms/question';
+import { QuestionToForm } from './forms/';
 
 const genData: any = []; // generateData();
 const data = { defaultData: genData } as LocalStorageDataProviderParams;
@@ -92,20 +91,24 @@ export default function UserComp() {
               />
               <Route
                 exact
+                path="/app/user/question"
+                component={() => <Question />}
+              />
+              <Route
+                exact
                 path="/app/user/indagini_question/:id"
                 component={() => <IndaginiQuestion />}
               />
               <Route
                 exact
                 path="/app/user/indagini_invio/:id"
-                component={QuestionTo}
+                component={QuestionToForm}
               />
               <Route
                 exact
                 path="/app/user/indagine"
                 component={() => <Indagine />}
               />
-              <Route path="/app/user/forms" component={() => <Forms />} />
               <Route
                 exact
                 path="/app/user/verifyr"
