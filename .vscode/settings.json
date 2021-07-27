@@ -16,7 +16,7 @@
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.fontSize": 12,
+  "editor.fontSize": 11.5,
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -24,5 +24,23 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/node_modules": false
+  },
+  "todo.colors.tags.foreground": ["#000000", "#000000", "#000000", "#000000"],
+  "todo.colors.types": {
+    "TODO": "#ffcc00",
+    "FIXME": "#cc0000",
+    "FIX": "#cc0000",
+    "BUG": "#cc0000",
+    "UGLY": "#cc0000",
+    "DEBUG": "#cc0000",
+    "HACK": "#cc0000",
+    "REVIEW": "#00ccff",
+    "OPTIMIZE": "#00ccff",
+    "TSC": "#00ccff",
+    "NOTE": "#cc00cc",
+    "IDEA": "#cc00cc",
+    "BOOK:": "#cc0000",
+    "BOOKROOT:": "#00ccff",
+    "BOOKDOC:": "#cc00cc"
   }
 }

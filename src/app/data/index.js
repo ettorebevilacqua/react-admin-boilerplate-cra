@@ -1,3 +1,4 @@
+// DEBUG: index /app/data
 import './config';
 import { Axios } from '@data-provider/axios';
 import { providers, Selector } from '@data-provider/core';

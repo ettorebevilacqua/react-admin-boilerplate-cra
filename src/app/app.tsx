@@ -4,7 +4,7 @@
  * This is the entry file for the application, only setup and boilerplate
  * code.
  */
-
+// DEBUG: App Root
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import FontFaceObserver from 'fontfaceobserver';
@@ -35,6 +35,7 @@ import { UserMenu } from './pages/UserMenu/Loadable';
 import { Login } from 'app/admin/layout';
 import dataApi from './data';
 
+// BOOKROOT: ROOT App
 import dataStore from '../store/dataStore';
 import { useUserAuthSlice } from 'app/slice';
 

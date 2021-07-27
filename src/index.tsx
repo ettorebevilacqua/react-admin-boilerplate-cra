@@ -4,7 +4,7 @@
  * This is the entry file for the application, only setup and boilerplate
  * code.
  */
-
+// REVIEW: TODO|FIXME|FIX|BUG|UGLY|HACK|NOTE|IDEA|REVIEW|DEBUG|OPTIMIZE
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 
