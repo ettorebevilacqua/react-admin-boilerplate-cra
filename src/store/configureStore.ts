@@ -38,3 +38,7 @@ export function configureAppStore() {
   // storeManager.setStore(store, DATA_PROVIDER_NAMESPACE);
   return store;
 }
+
+const store = configureAppStore();
+
+export default store;
