@@ -10,7 +10,6 @@ export const userCompSlice = createSlice({
   initialState,
   reducers: {
     toggleModuliShow: (state, { payload }) => {
-      debugger;
       state.isModuliShow = payload;
       return state;
     },
