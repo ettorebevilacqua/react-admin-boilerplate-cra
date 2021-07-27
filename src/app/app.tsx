@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-import { configureAppStore } from '../store/configureStore';
+import store from '../store/configureStore';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { initUser, userSelector } from 'app/slice/userSlice';
@@ -41,7 +41,6 @@ import { useUserAuthSlice } from 'app/slice';
 
 // dataApi.userProvider.login('ettore@bevilacqua.com1', 'password1').then(data=>alert(data));
 
-const store = configureAppStore();
 initUser(store); // check if user is logged with present token
 
 // Observe loading of Inter (to remove 'Inter', remove the <link> tag in

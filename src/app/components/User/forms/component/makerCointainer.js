@@ -3,6 +3,7 @@ import { shallowEqual, connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import Button from '@material-ui/core/Button';
+import store from 'store/configureStore';
 
 export function makeContainer(
   Component,
@@ -14,7 +15,7 @@ export function makeContainer(
   const Container = props => {
     const { data, saved, stateLoad, actions } = { ...props };
     const id = props?.match?.params?.id;
-    !data && !stateLoad.isFetching && !stateLoad.isErrror && actions.load(id);
+    // !data && !stateLoad.isFetching && !stateLoad.isErrror && actions.load(id);
     const renderLoading = msg => <h2>Loading</h2>;
     const rendereError = () => (
       <>
@@ -43,6 +44,8 @@ export function makeContainer(
 
   const Loader = props => {
     useInjectReducer({ key: slice.name, reducer: slice.reducer });
+    const id = props?.match?.params?.id;
+    store.dispatch(load(id));
     return <NewContainer {...props} />;
   };
 
