@@ -24,7 +24,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { configureAppStore } from '../store/configureStore';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { initUser, userSelector, clearState } from 'app/slice/userSlice';
+import { initUser, userSelector } from 'app/slice/userSlice';
 
 import { HomePage } from './pages/HomePage/Loadable';
 import { FormsPage } from './pages/forms/Loadable';

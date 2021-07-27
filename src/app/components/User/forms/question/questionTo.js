@@ -19,7 +19,7 @@ import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { CrudButton, ButtonnType } from '../component/CrudButtons';
+import { CrudButton, ButtonnType } from '../component/crudButtons';
 
 import {
   Box,
