@@ -12,14 +12,15 @@ export const stateAsyncNameReducer = dataname => (
   { isFetching, isSuccess, isError, errorMessage, payload },
 ) => {
   const stateKey = state;
-  const setState = (key, value) => (stateKey[key] = value);
-
+  const setState = (key, value) => {
+    stateKey[key] = value;
+  };
   isFetching !== undefined && setState('isFetching', isFetching);
   isSuccess !== undefined && setState('isSuccess', isSuccess);
   isError !== undefined && setState('isError', isError);
   errorMessage !== undefined && setState('errorMessage', errorMessage);
   payload !== undefined && setState(dataname || 'data', payload);
-  return stateKey;
+  // return stateKey;
 };
 
 export const asyncStateReducer = builder => (thunk, param = {}) => {
@@ -32,15 +33,15 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
     statReducer(getState(state), param);
   });
 
-  builder.addCase(thunk.rejected, (state, { payload }) =>
+  builder.addCase(thunk.rejected, (state, { payload }) => {
     statReducer(getState(state), {
       isFetching: false,
       isError: true,
-      errorMessage: payload.message,
-    }),
-  );
+      errorMessage: payload?.message,
+    });
+  });
 
-  builder.addCase(thunk.pending, (state, { payload }) =>
-    statReducer(getState(state), { ...initialState, isFetching: true }),
-  );
+  builder.addCase(thunk.pending, (state, { payload }) => {
+    statReducer(getState(state), { ...initialState, isFetching: true });
+  });
 };
