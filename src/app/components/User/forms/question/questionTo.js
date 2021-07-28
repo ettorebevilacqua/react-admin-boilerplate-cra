@@ -47,7 +47,11 @@ const empityQuestion = {
   partecipanti: [empityParteipante],
 };
 
-const MquestionTo = ({ id, data, saved, stateLoad, actions, ...props }) => {
+const MquestionTo = ({
+  formProp: { id, data, saved, stateLoad, meta },
+  actions,
+  ...props
+}) => {
   const classes = elemStyle();
   const modulo = props.location.state;
   const dataValue = (data?.data && !data.data[0]) || empityQuestion;
@@ -59,13 +63,27 @@ const MquestionTo = ({ id, data, saved, stateLoad, actions, ...props }) => {
     return <span> </span>;
   }
 
-  console.log('xxxxx', data, stateLoad);
+  const onSubmit = async (
+    values,
+    { setSubmitting, setErrors, setStatus, resetForm },
+  ) => {
+    try {
+      const data = await actions.save(values);
 
-  const handleSubmit = val => {
-    console.log('xxxx ', val);
-    actions.save(val);
-    // setValue(val);
+      resetForm(saved && saved.data);
+      await actions.get(id);
+
+      setStatus({ success: true });
+    } catch (error) {
+      setStatus({ success: false });
+      setSubmitting(false);
+      setErrors({ submit: error.message });
+      console.log('error xxxx', error);
+      resetForm(values);
+      setValue(values);
+    }
   };
+
   /*
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -136,10 +154,16 @@ const MquestionTo = ({ id, data, saved, stateLoad, actions, ...props }) => {
       </Paper>
       <Formik
         initialValues={value}
+        onSubmit={onSubmit}
+        validationSchema={meta.schema}
         enableReinitialize
-        onSubmit={handleSubmit}
         children={propsFormik => (
-          <Form>
+          <Form
+            loading={propsFormik.isSubmitting}
+            success={!!propsFormik.status && !!propsFormik.status.success}
+            error={!!propsFormik.errors.submit}
+            onSubmit={propsFormik.handleSubmit}
+          >
             <Paper
               style={{
                 marginTop: '18px',
@@ -246,10 +270,12 @@ const MquestionTo = ({ id, data, saved, stateLoad, actions, ...props }) => {
                 color="primary"
                 variant="contained"
                 fullWidth
+                disabled={!(propsFormik.dirty && propsFormik.isValid)}
                 type="submit"
               >
                 Salva e invia le email
               </Button>
+              {propsFormik.errors.submit}
             </GridChilds>
           </Form>
         )}

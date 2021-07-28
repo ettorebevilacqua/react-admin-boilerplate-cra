@@ -14,7 +14,7 @@ import { makeContainer } from './component/makerCointainer';
 export const QuestionToForm = makeContainer(
   QuestionTo,
   questionSlice.slice,
-  questionSlice.providers.readProvider,
+  questionSlice.actions.get,
   questionSlice.mapToProps.state,
   questionSlice.mapToProps.dispatch,
 );

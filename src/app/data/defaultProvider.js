@@ -1,7 +1,7 @@
 import { Axios } from '@data-provider/axios';
 import { providers, Selector } from '@data-provider/core';
 
-export function defaultProvider(id, url, tags) {
+export function defaultProvider(id, url, schemas, tags) {
   const myProvider = new Axios({
     id: id + '/list',
     url,
@@ -40,11 +40,12 @@ export function defaultProvider(id, url, tags) {
   };
 
   return {
+    schemas,
     provider: myProvider,
     create: data => myProvider.create(data),
     save: (id, data) => updateTodo(id, data),
     list: funzFilt => mySelector,
-    get: id => myProvider.query({ urlParams: { id } }).read(),
+    get: id => idProvider.query({ urlParams: { id } }).read(),
     delete: id => idProvider.query({ urlParams: { id } }).delete(),
   };
 }

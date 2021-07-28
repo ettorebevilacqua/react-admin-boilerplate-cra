@@ -14,8 +14,10 @@ export function makeContainer(
 ) {
   const Container = props => {
     const { data, saved, stateLoad, actions } = { ...props };
-    const id = props?.match?.params?.id;
-    // !data && !stateLoad.isFetching && !stateLoad.isErrror && actions.load(id);
+    React.useEffect(() => {
+      const id = props?.match?.params?.id;
+      load(id);
+    }, []);
     const renderLoading = msg => <h2>Loading</h2>;
     const rendereError = () => (
       <>
@@ -33,11 +35,11 @@ export function makeContainer(
       </>
     );
     const renderComp = () => <Component {...props} />;
-    return props.stateLoad.isFetching
+    return props.formProp.stateLoad.isFetching
       ? renderLoading()
-      : props.stateLoad.isError
+      : props.formProp.stateLoad.isError
       ? rendereError()
-      : props.stateLoad.isSuccess && renderComp();
+      : props.formProp.stateLoad.isSuccess && renderComp();
   };
   const withConnect = connect(mapStateToProps, mapDispatchToProps);
   const NewContainer = compose(withConnect)(Container);
@@ -45,7 +47,7 @@ export function makeContainer(
   const Loader = props => {
     useInjectReducer({ key: slice.name, reducer: slice.reducer });
     const id = props?.match?.params?.id;
-    store.dispatch(load(id));
+
     return <NewContainer {...props} />;
   };
 

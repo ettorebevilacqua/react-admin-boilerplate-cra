@@ -4,16 +4,21 @@ import { Axios } from '@data-provider/axios';
 import { providers, Selector } from '@data-provider/core';
 import * as userProviderFrom from './usersProvider';
 import { defaultProvider } from './defaultProvider';
+import schemas from './schema';
 
-export const moduliProvider = defaultProvider('moduli', '/moduli', [
-  'axios',
+export const moduliProvider = defaultProvider(
   'moduli',
-]);
+  '/moduli',
+  schemas.moduli,
+  ['axios', 'moduli'],
+);
 
-export const questionProvider = defaultProvider('questions', '/questions', [
-  'axios',
+export const questionProvider = defaultProvider(
   'questions',
-]);
+  '/questions',
+  schemas.questionSchemas,
+  ['axios', 'questions'],
+);
 
 /*
 
