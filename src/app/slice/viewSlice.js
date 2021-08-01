@@ -7,7 +7,7 @@ import {
   initialState,
   asyncStateReducer,
   handlePromise,
-  mapStateToProps,
+  mapStateToPropsCreator,
   mapDispatchToPropsCreator,
 } from './helperSlice';
 
@@ -20,7 +20,6 @@ const init = store =>
     const gueryProvider = createAsyncThunk(
       name + '/query',
       async (payload, thunkAPI) => {
-        debugger;
         const [data, error] = await handlePromise(
           provider.query({ queryString: payload }).read(),
         );
@@ -51,6 +50,8 @@ const init = store =>
     const selectData = createSelector([dataSelector], dataState => dataState);
     // const selectItem = createSelector([dataGetSelector], state => state);
 
+    debugger;
+    const mapStateToProps = mapStateToPropsCreator(selectData, {});
     const mapDispatchToProps = mapDispatchToPropsCreator(
       store.dispatch,
       clearState,

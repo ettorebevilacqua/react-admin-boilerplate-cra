@@ -51,11 +51,11 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
   });
 };
 
-export const mapStateToProps = (select, meta, state, ownProps) => {
+export const mapStateToPropsCreator = (select, meta) => (state, ownProps) => {
   // ownProps would look like { "id" : 123 }
   const { id } = ownProps || {};
   // const select = id ? selectItem(id)(state) : selectData(state);
-  const { data, saved, ...stateLoad } = select;
+  const { data, saved, ...stateLoad } = select(state);
   return {
     formProp: {
       id,
