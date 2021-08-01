@@ -5,18 +5,14 @@ import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import Button from '@material-ui/core/Button';
 import store from 'store/configureStore';
 
-export function makeContainer(
-  Component,
-  slice,
-  load,
-  mapStateToProps,
-  mapDispatchToProps,
-) {
+export function makeContainer(Component, sliceProvider, loadCallBack) {
+  const { slice, mapToProps } = sliceProvider;
+  const { state: mapStateToProps, dispatch: mapDispatchToProps } = mapToProps;
+
   const Container = props => {
-    const { data, saved, stateLoad, actions } = { ...props };
+    const stateLoad = props.formProp.stateLoad;
     React.useEffect(() => {
-      const id = props?.match?.params?.id;
-      load(id);
+      loadCallBack(props?.match.params);
     }, []);
     const renderLoading = msg => <h2>Loading</h2>;
     const rendereError = () => (
@@ -34,12 +30,16 @@ export function makeContainer(
         </Button>
       </>
     );
-    const renderComp = () => <Component {...props} />;
+    const renderComp = () => (
+      <Component queryValue={props?.match.params} {...props} />
+    );
     return props.formProp.stateLoad.isFetching
       ? renderLoading()
       : props.formProp.stateLoad.isError
       ? rendereError()
-      : props.formProp.stateLoad.isSuccess && renderComp();
+      : (props.formProp.stateLoad.isSuccess && renderComp()) || (
+          <div> init x {JSON.stringify(stateLoad)} </div>
+        );
   };
   const withConnect = connect(mapStateToProps, mapDispatchToProps);
   const NewContainer = compose(withConnect)(Container);
