@@ -8,20 +8,16 @@ import { userAuthSaga } from './saga';
 
 import createCrudSlice from './crudSlice';
 import { userSlice } from './userSlice';
+import createViewSlice from './viewSlice';
 import { moduliSlice } from './moduliSlice';
 
-import { questionProvider } from '../data';
+import providers from '../data';
+const { questionProvider, providersView } = providers;
 
-const empityParteipante = { nome: '', email: '', telefono: '' };
-const indagineEmpity = {
-  titolo: '',
-  idcorso: '',
-  titoloModulo: '',
-  idmodulo: '',
-  docenti: '',
-  NumPartecipanti: '',
-  partecipanti: [empityParteipante],
-};
+export const questionViewSlice = createViewSlice(
+  'getQuestion',
+  providersView.getQuestion,
+);
 
 export const questionSlice = createCrudSlice('question', questionProvider);
 export const { actions: userAuthActions, reducer } = userSlice;

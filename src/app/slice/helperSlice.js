@@ -7,6 +7,11 @@ export const initialState = {
   errorMessage: '',
 };
 
+export const handlePromise = promise =>
+  promise
+    .then(data => [data, undefined])
+    .catch(error => Promise.resolve([undefined, error]));
+
 export const stateAsyncNameReducer = dataname => (
   state,
   { isFetching, isSuccess, isError, errorMessage, payload },
@@ -44,4 +49,44 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
   builder.addCase(thunk.pending, (state, { payload }) => {
     statReducer(getState(state), { ...initialState, isFetching: true });
   });
+};
+
+export const mapStateToProps = (select, meta, state, ownProps) => {
+  // ownProps would look like { "id" : 123 }
+  const { id } = ownProps || {};
+  // const select = id ? selectItem(id)(state) : selectData(state);
+  const { data, saved, ...stateLoad } = select;
+  return {
+    formProp: {
+      id,
+      data,
+      saved,
+      stateLoad,
+      meta,
+    },
+  };
+};
+
+export const mapDispatchToPropsCreator = (
+  dispatch,
+  clearState,
+  { readProvider, saveProvider, getProvider, gueryProvider },
+) => {
+  return {
+    actions: {
+      clearState: () => clearState && dispatch(clearState),
+      load: id => {
+        readProvider && dispatch(readProvider(id));
+      },
+      save: id => {
+        saveProvider && dispatch(saveProvider(id));
+      },
+      get: id => {
+        getProvider && dispatch(getProvider(id));
+      },
+      query: parm => {
+        gueryProvider && dispatch(gueryProvider(parm));
+      },
+    },
+  };
 };

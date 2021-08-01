@@ -8,13 +8,8 @@ import {
   createAsyncThunk,
   createSelector,
 } from '@reduxjs/toolkit';
-import { initialState, asyncStateReducer } from './helperSlice';
+import { initialState, asyncStateReducer, handlePromise } from './helperSlice';
 import store from 'store/configureStore';
-
-const handlePromise = promise =>
-  promise
-    .then(data => [data, undefined])
-    .catch(error => Promise.resolve([undefined, error]));
 
 const init = store =>
   function createCrudSlice(name, provider) {
