@@ -50,7 +50,6 @@ const init = store =>
     const selectData = createSelector([dataSelector], dataState => dataState);
     // const selectItem = createSelector([dataGetSelector], state => state);
 
-    debugger;
     const mapStateToProps = mapStateToPropsCreator(selectData, {});
     const mapDispatchToProps = mapDispatchToPropsCreator(
       store.dispatch,
