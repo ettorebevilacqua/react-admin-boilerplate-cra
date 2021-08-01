@@ -4,6 +4,7 @@ import { Axios } from '@data-provider/axios';
 import { providers, Selector } from '@data-provider/core';
 import * as userProviderFrom from './usersProvider';
 import { defaultProvider } from './defaultProvider';
+import { queryViews, providersView } from './viewProvider';
 import schemas from './schema';
 
 export const moduliProvider = defaultProvider(
@@ -52,6 +53,12 @@ export const moduliQuery = new Selector(
   },
 );
 */
-const dataApi = { userProvider: userProviderFrom, moduliProvider };
+const dataApi = {
+  userProvider: userProviderFrom,
+  moduliProvider,
+  providersView,
+  queryViews,
+  questionProvider,
+};
 export const userProvider = userProviderFrom;
 export default dataApi;
