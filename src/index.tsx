@@ -26,12 +26,12 @@ const MOUNT_NODE = document.getElementById('root') as HTMLElement;
 
 // Observe loading of Inter (to remove 'Inter', remove the <link> tag in
 // the index.html file and this observer)
-const openSansObserver = new FontFaceObserver('Inter', {});
+// const openSansObserver = new FontFaceObserver('Inter', {});
 
 // When Inter is loaded, add a font-family using Inter to the body
-openSansObserver.load().then(() => {
+/* openSansObserver.load().then(() => {
   document.body.classList.add('fontLoaded');
-});
+}); */
 
 ReactDOM.render(<App />, MOUNT_NODE);
 
