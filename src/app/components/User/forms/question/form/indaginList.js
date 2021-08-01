@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const routeToBase = id => `/app/user/indagini_invio/${id}`;
+const routeToBase = id => `/app/user/indagini_invio/${id}/0`;
 // const routeToBase = id => `/app/user/indagini_question/${id}`;
 
 function IndaginiList(props) {

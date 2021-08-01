@@ -49,14 +49,15 @@ const empityQuestion = {
 
 const MquestionTo = ({
   formProp: { id, data, saved, stateLoad, meta },
+  queryValue,
   actions,
   ...props
 }) => {
-  const classes = elemStyle();
-  const modulo = props.location.state;
-  const dataValue = (data?.data && !data.data[0]) || empityQuestion;
-  dataValue.idmodulo = modulo?.id;
+  const { modulo, questions } = data;
+  const dataValue = (questions && !questions[0]) || empityQuestion;
+  dataValue.idmodulo = modulo && modulo.id;
   const [value, setValue] = React.useState(dataValue || empityQuestion);
+  const classes = elemStyle();
 
   if (!modulo) {
     props.history.push('/app/user/indagini');

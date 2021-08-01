@@ -12,7 +12,10 @@ import { useUserCompSlice } from './slice/userCompSlice';
 export function UserPage() {
   useUserCompSlice();
   const dispatch = useDispatch();
-  dispatch(readModuli());
+  React.useEffect(() => {
+    dispatch(readModuli());
+  }, []);
+
   return (
     <>
       <Helmet>
