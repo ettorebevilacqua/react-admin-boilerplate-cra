@@ -44,7 +44,7 @@ function Indagini(props) {
         {isFetching && !data ? (
           <h2>Loading...</h2>
         ) : (
-          <IndaginiList values={data.results} />
+          <IndaginiList values={(data && data.results) || []} />
         )}
       </div>
     </>
