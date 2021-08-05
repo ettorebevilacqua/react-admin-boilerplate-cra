@@ -56,4 +56,14 @@ export const elemStyle = makeStyles(theme => ({
     fontSize: '16px',
     fontWeight: '500',
   },
+  paperBox: {
+    marginTop: '22px',
+    marginLeft: '8px',
+    marginRight: '8px',
+    padding: '8px',
+    width: '95%',
+  },
+  width95: {
+    width: '95%',
+  },
 }));
