@@ -55,7 +55,6 @@ const getPartecipantiByNum = (list, valNum) => {
   // const valNum = isNaN(val) ? 1 : Number(val);
   const newVal = valNum > 99 ? 99 : valNum < 1 ? 1 : valNum;
   const partecipanti = !list ? [empityParteipante] : [...list];
-  debugger;
   const empityList =
     partecipanti.length < newVal
       ? Array(newVal - partecipanti.length).fill(
@@ -78,7 +77,6 @@ const getPartecipantiByNum = (list, valNum) => {
 const QuestionUsersFields = ({
   propsFormik,
   numPartecipanti,
-  value,
   addPartecipante,
   parentValue,
 }) => {
@@ -87,16 +85,16 @@ const QuestionUsersFields = ({
 
   const getPartecipanti = values =>
     getPartecipantiByNum(values, numPartecipanti || 1);
-
+  const propValue = propsFormik.values;
   const [partecipanti, setPartecipanti] = React.useState(
     getPartecipanti(propsFormik?.values?.partecipanti || [empityParteipante]),
   );
 
   const init = () => {
-    // setPartecipanti(getPartecipanti());
+    // setPartecip anti(getPartecipanti());
   };
 
-  // React.useEffect(init, []);
+  React.useEffect(init, []);
   React.useEffect(() => {
     partecipanti && setPartecipanti(getPartecipanti(partecipanti));
   }, [numPartecipanti]);
@@ -104,7 +102,7 @@ const QuestionUsersFields = ({
   const PartecipanteForm = index => {
     return (
       <Paper className={`${classes.paperTitle} ${classes.width95}`} key={index}>
-        <GridChilds view={[4, 4, 3, 1]} spacing={3} style={{ width: '100%' }}>
+        <GridChilds view={[4, 4, 4]} spacing={3} style={{ width: '100%' }}>
           {renderField({}, `partecipanti.${index}.nome`, TextField, 'Nome')}
           {renderField({}, `partecipanti.${index}.email`, TextField, 'Email')}
           {renderField(
@@ -113,7 +111,7 @@ const QuestionUsersFields = ({
             TextField,
             'Telefono',
           )}
-          <CrudButton />
+          {/* <CrudButton /> */}
         </GridChilds>
       </Paper>
     );
@@ -136,26 +134,24 @@ const QuestionUsersFields = ({
           style={{ marginTop: '16px', width: '100%' }}
         >
           {renderField({}, 'titolo', TextField, 'Titolo')}
+        </GridChilds>
 
+        <GridChilds
+          view={[4, 4, 4]}
+          spacing={3}
+          style={{ marginTop: '16px', width: '100%' }}
+        >
+          <Typography variant="h6" style={{ textAlign: 'center' }}>
+            <b>Id modolo</b> <br /> {propValue?.idmodulo || ''}{' '}
+          </Typography>
+          {renderField({}, 'idcorso', TextField, 'Id Corso')}
           {renderField(
-            { max: 99, min: 1, onKeyUp: () => 1 },
+            { max: 99, min: 1, onKeyUp: e => e },
             'numPartecipanti',
             TextField,
             'Num. Partecipanti',
             'number',
           )}
-        </GridChilds>
-
-        <GridChilds
-          view={[8, 4]}
-          spacing={3}
-          style={{ marginTop: '16px', width: '100%' }}
-        >
-          {renderField({}, 'titoloModulo', TextField, 'Titolo modulo')}
-          <Typography variant="h6" style={{ textAlign: 'center' }}>
-            <b>Id modolo</b> <br /> {parentValue?.idmodulo}
-          </Typography>
-          {renderField({}, 'idcorso', TextField, 'Id Corso')}
         </GridChilds>
 
         <GridChilds
@@ -201,7 +197,8 @@ const QuestionUsersFields = ({
                 spacing={3}
                 style={{ marginTop: '16px', width: '100%' }}
               >
-                <Button
+                <span> </span>
+                {/* <Button
                   color="primary"
                   variant="contained"
                   fullWidth
@@ -210,7 +207,7 @@ const QuestionUsersFields = ({
                   }
                 >
                   Aggiungi Partecipante
-                </Button>
+                </Button> */}
               </GridChilds>
             </>
           )}
