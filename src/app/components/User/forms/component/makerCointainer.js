@@ -2,23 +2,71 @@ import React from 'react';
 import { shallowEqual, connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
+import { Link, useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import store from 'store/configureStore';
+import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
+import { handlePromise } from '../../helper';
 
 export function makeContainer(Component, sliceProvider, loadCallBack) {
   const { slice, mapToProps } = sliceProvider;
   const { state: mapStateToProps, dispatch: mapDispatchToProps } = mapToProps;
 
   const Container = props => {
-    const stateLoad = props.formProp.stateLoad;
+    const toProps = { ...props };
+    const {
+      formProp: { stateLoad, saved, data },
+      actions,
+    } = props;
+    const history = useHistory();
     React.useEffect(() => {
-      loadCallBack(props?.match.params);
+      loadCallBack(props?.match?.params, history, props?.location);
     }, []);
-    const renderLoading = msg => <h2>Loading</h2>;
+
+    React.useEffect(() => {
+      saved &&
+        saved.isSuccess &&
+        loadCallBack(props?.match?.params, history, props?.location, saved);
+    }, [saved]);
+
+    const onSubmit = async (
+      values,
+      { setSubmitting, setErrors, setStatus, resetForm, ...subMitMethods },
+    ) => {
+      debugger;
+      const [saved, error] = await handlePromise(actions.save(values));
+      console.log('form is  submitted', saved);
+      if (error) {
+        setStatus({ success: false });
+        setSubmitting(false);
+        setErrors({ submit: error.message });
+        resetForm(values);
+        return;
+      }
+      setSubmitting(true);
+      setTimeout(async () => {
+        // it will set formik.isDirty to false // it will also keep new values
+        resetForm({ values });
+      }, 100);
+
+      setStatus({ success: true });
+    };
+
+    const linkToErrorOnLoad = () => (
+      <div>
+        <h2>Errrore nel Caricamento</h2>
+        <p>
+          <Link to="/">Ricarica qui </Link>
+        </p>
+      </div>
+    );
+
     const rendereError = () => (
       <>
         <div>
           <h2>Errrore nel Caricamento</h2>
+          <p>
+            <Link to="/" />
+          </p>
         </div>
         <Button
           color="primary"
@@ -30,17 +78,25 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
         </Button>
       </>
     );
-    const renderComp = () => (
-      <Component queryValue={props?.match.params} {...props} />
+    const renderComp = state => (
+      <Component
+        queryValue={props?.match.params}
+        onSubmit={onSubmit}
+        {...toProps}
+      />
     );
-    return props.formProp.stateLoad.isFetching
-      ? renderLoading()
-      : props.formProp.stateLoad.isError
-      ? rendereError()
-      : (props.formProp.stateLoad.isSuccess && renderComp()) || (
-          <div> init x {JSON.stringify(stateLoad)} </div>
-        );
+
+    return stateLoad.isError ? (
+      rendereError()
+    ) : (
+      <div>
+        <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
+          {!stateLoad.isFetching && !data ? rendereError() : renderComp()}
+        </LoadingOverlay>
+      </div>
+    );
   };
+
   const withConnect = connect(mapStateToProps, mapDispatchToProps);
   const NewContainer = compose(withConnect)(Container);
 

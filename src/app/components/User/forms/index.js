@@ -13,12 +13,17 @@ import { makeContainer } from './component/makerCointainer';
 
 export const QuestionToForm = makeContainer(
   QuestionTo,
-  questionViewSlice,
-  matchParam =>
-    questionViewSlice.actions.query({
-      idmodulo: matchParam.idmodulo,
-      idcorso: matchParam.idcorso || 0,
-    }),
+  questionSlice,
+  (matchParam, history, location, saved) => {
+    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    questionSlice.actions.query(
+      {
+        idmodulo: matchParam.idmodulo,
+        idcorso: matchParam.idcorso || 0,
+      },
+      true,
+    );
+  },
 );
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
