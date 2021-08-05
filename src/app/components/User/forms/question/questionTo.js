@@ -2,24 +2,20 @@ import React from 'react';
 import { useState } from 'react';
 
 import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
-import * as Yup from 'yup';
-import queryString from 'query-string';
+import FormikOnChange from '../lib/FormikOnChange';
 
 import Paper from '@material-ui/core/Paper';
-import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
-import Rating from '@material-ui/lab/Rating';
-
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core';
-import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-import { CrudButton, ButtonnType } from '../component/crudButtons';
+import QuestionUsersFields from './form/questionUser';
+import {
+  empityParteipante,
+  empityQuestion,
+  schema,
+} from 'app/data/schema/questionSchema';
 
 import {
   Box,
@@ -34,56 +30,42 @@ import {
 import TagsInput from './comp/tagInput';
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
-
-const empityParteipante = { nome: '', email: '', telefono: '' };
-
-const empityQuestion = {
-  titolo: '',
-  idcorso: '',
-  titoloModulo: '',
-  idmodulo: '',
-  docenti: '',
-  NumPartecipanti: '',
-  partecipanti: [empityParteipante],
-};
+import { CrudButton, ButtonnType } from '../component/crudButtons';
 
 const MquestionTo = ({
   formProp: { id, data, saved, stateLoad, meta },
   queryValue,
+  onSubmit,
   actions,
   ...props
 }) => {
-  const { modulo, questions } = data;
-  const dataValue = (questions && !questions[0]) || empityQuestion;
-  dataValue.idmodulo = modulo && modulo.id;
-  const [value, setValue] = React.useState(dataValue || empityQuestion);
+  const { modulo, questions } = data || {};
+  const dataValue = {
+    ...((questions && questions.results && questions.results[0]) ||
+      empityQuestion),
+  };
+  const dataToValue = dataValue || empityQuestion;
+  dataToValue.idmodulo =
+    modulo && modulo.id ? modulo.id : dataToValue?.idmodulo || '';
+
+  const [value, setValue] = React.useState(dataToValue);
+  const [numPartecipanti, setNumPartecipanti] = React.useState(
+    dataToValue.numPartecipanti,
+  );
   const classes = elemStyle();
 
-  if (!modulo) {
+  const init = () => {
+    !value && setValue(dataValue || empityQuestion);
+  };
+  React.useEffect(init, []);
+
+  if (data && !modulo) {
     props.history.push('/app/user/indagini');
     return <span> </span>;
   }
 
-  const onSubmit = async (
-    values,
-    { setSubmitting, setErrors, setStatus, resetForm },
-  ) => {
-    try {
-      const data = await actions.save(values);
-
-      resetForm(saved && saved.data);
-      await actions.get(id);
-
-      setStatus({ success: true });
-    } catch (error) {
-      setStatus({ success: false });
-      setSubmitting(false);
-      setErrors({ submit: error.message });
-      console.log('error xxxx', error);
-      resetForm(values);
-      setValue(values);
-    }
-  };
+  const addPartecipante = (propsFormik, arrayHelper, value) =>
+    arrayHelper.push(empityParteipante);
 
   /*
   const handleChange = (e) => {
@@ -91,177 +73,70 @@ const MquestionTo = ({
     setFormValue({ ...formValue, [name]: value });
   };
 */
-  const PartecipanteForm = index => {
-    return (
-      <Card
-        key={index}
-        style={{
-          marginTop: '22px',
-          marginLeft: '8px',
-          marginRight: '8px',
-          padding: '8px',
-          width: '95%',
-        }}
-      >
-        <GridChilds
-          view={[4, 4]}
-          spacing={3}
-          style={{ marginTop: '16px', width: '100%' }}
-        >
-          <Field
-            name={`partecipanti.${index}.nome`}
-            style={{ width: '100%' }}
-            component={TextField}
-            label="Nome"
-          />
-          <Field
-            name={`partecipanti.${index}.email`}
-            style={{ width: '100%' }}
-            component={TextField}
-            label="Email"
-          />
-          <Field
-            name={`partecipanti.${index}.email`}
-            style={{ width: '100%' }}
-            component={TextField}
-            label="Telefono"
-          />
-          <CrudButton />
-        </GridChilds>
-      </Card>
-    );
+
+  const onSubmitBefore = (values, actions) => {
+    console.log(actions);
+    onSubmit(values, actions);
   };
 
-  const handleSelecetedTags = () => {};
+  const onChangeForm = propsFormik => (valuesNew, isFirstTime) => {
+    if (isFirstTime) return;
+    const numPart = valuesNew.numPartecipanti || 1;
+    numPartecipanti !== numPart && setNumPartecipanti(numPart);
+    // valuesNew.partecipanti.length !== numPart && onChangeNumPartecipanti(propsFormik, numPart);
+  };
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paperTitle}>
-        <GridChilds style={{ alignItems: 'center' }} view={[10, 4]}>
-          <Typography
-            variant="h2"
-            className={classes.domandaTxt}
-            color="textSecondary"
+      <div className={classes.paperTitle}>
+        <GridChilds
+          justify="space-between"
+          style={{ alignItems: 'center' }}
+          view={[9, 3]}
+        >
+          <div>
+            <Typography variant="h3" color="textSecondary">
+              Indagine : {modulo?.title}
+            </Typography>
+            <Typography variant="h4" color="error">
+              {saved?.isError && saved?.errorMessage}
+            </Typography>
+          </div>
+          <GridChilds
+            justify="space-between"
+            style={{ alignItems: 'center' }}
+            view={[6, 6]}
           >
-            Indagine {modulo?.title}
-          </Typography>
-          <Box style={{ width: '100%' }}>
             <Button variant="contained" color="primary" onClick={e => 1}>
-              <span style={{ fontSize: '11px' }}>Save</span>
+              <span style={{ fontSize: '11px' }}>Salva</span>
             </Button>
-          </Box>
-          y
+            <Button variant="contained" color="primary" onClick={e => 1}>
+              <span style={{ fontSize: '11px' }}>Invia mail</span>
+            </Button>
+          </GridChilds>
         </GridChilds>
-      </Paper>
+      </div>
       <Formik
         initialValues={value}
-        onSubmit={onSubmit}
-        validationSchema={meta.schema}
-        enableReinitialize
+        onSubmit={onSubmitBefore}
+        validationSchema={schema}
         children={propsFormik => (
           <Form
-            loading={propsFormik.isSubmitting}
             success={!!propsFormik.status && !!propsFormik.status.success}
             error={!!propsFormik.errors.submit}
             onSubmit={propsFormik.handleSubmit}
           >
-            <Paper
-              style={{
-                marginTop: '18px',
-                marginLeft: '5%',
-                padding: '8px',
-                paddingBotton: '18px',
-                width: '95%',
-              }}
-            >
-              <GridChilds
-                view={[8, 4]}
-                spacing={3}
-                style={{ marginTop: '16px', width: '100%' }}
-              >
-                <Field
-                  name={'titolo'}
-                  style={{ width: '100%' }}
-                  component={TextField}
-                  label="Titolo"
-                />
-                <Field
-                  name={'idcorso'}
-                  style={{ width: '100%' }}
-                  component={TextField}
-                  label="Id Corso"
-                />
-              </GridChilds>
-              <GridChilds
-                view={[8, 4]}
-                spacing={3}
-                style={{ marginTop: '16px', width: '100%' }}
-              >
-                <Field
-                  name={'titoloModulo'}
-                  style={{ width: '100%' }}
-                  component={TextField}
-                  label="Titolo modulo"
-                />
-                <Field
-                  name={'idmodulo'}
-                  style={{ width: '100%' }}
-                  component={TextField}
-                  label="Id Modulo"
-                />
-              </GridChilds>
+            <FormikOnChange delay={500} onChange={onChangeForm(propsFormik)} />
 
-              <GridChilds
-                view={[10, 2]}
-                spacing={3}
-                style={{ marginTop: '16px', width: '100%' }}
-              >
-                <TagsInput
-                  selectedTags={handleSelecetedTags}
-                  fullWidth
-                  variant="outlined"
-                  id="docenti"
-                  name="docenti"
-                  placeholder="add Tags"
-                  label="Docenti"
-                />
-                <Field
-                  name={'NumPartecipanti'}
-                  style={{ width: '100%' }}
-                  component={TextField}
-                  label="Num. Partecipanti"
-                />
-              </GridChilds>
-            </Paper>
-            <GridChilds
-              view={[12]}
-              spacing={3}
-              style={{ marginTop: '16px', width: '100%' }}
-            >
-              <FieldArray
-                name="partecipanti"
-                render={arrayHelper => (
-                  <>
-                    {value.partecipanti &&
-                      !value.partecipanti[0] &&
-                      arrayHelper.push(empityParteipante)}
-
-                    {value.partecipanti.map((elem, index) =>
-                      PartecipanteForm(index),
-                    )}
-
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      fullWidth
-                      onClick={e => arrayHelper.push(empityParteipante)}
-                    >
-                      Aggiungi Partecipante
-                    </Button>
-                  </>
-                )}
+            {propsFormik.values && (
+              <QuestionUsersFields
+                propsFormik={propsFormik}
+                numPartecipanti={numPartecipanti}
+                value={propsFormik.values}
+                parentValue={propsFormik.values}
+                addPartecipante={addPartecipante}
               />
-            </GridChilds>
+            )}
             <GridChilds
               view={[12]}
               spacing={3}
