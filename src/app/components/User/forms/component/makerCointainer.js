@@ -32,7 +32,6 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
       values,
       { setSubmitting, setErrors, setStatus, resetForm, ...subMitMethods },
     ) => {
-      debugger;
       const [saved, error] = await handlePromise(actions.save(values));
       console.log('form is  submitted', saved);
       if (error) {
