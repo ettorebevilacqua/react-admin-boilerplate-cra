@@ -19,7 +19,12 @@ export const questionViewSlice = createViewSlice(
   providersView.getQuestion,
 );
 
-export const questionSlice = createCrudSlice('question', questionProvider);
+export const questionSlice = createCrudSlice({
+  name: 'question',
+  provider: questionProvider,
+  queryProvider: providersView.getQuestion,
+});
+
 export const { actions: userAuthActions, reducer } = userSlice;
 
 export const useUserAuthSlice = () => {

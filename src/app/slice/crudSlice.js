@@ -12,7 +12,19 @@ import { initialState, asyncStateReducer, handlePromise } from './helperSlice';
 import store from 'store/configureStore';
 
 const init = store =>
-  function createCrudSlice(name, provider) {
+  function createCrudSlice(options) {
+    const { name, provider, queryProvider } = options;
+
+    const clearProvider = () => {
+      provider && provider?.provider?.cleanCache();
+      gueryProvider && gueryProvider?.provider?.cleanCache();
+    };
+
+    const clearStateAndProvider = () => {
+      clearProvider();
+      return initialState;
+    };
+
     const readProvider = createAsyncThunk(
       name + '/all',
       async (payload, thunkAPI) => {
@@ -43,6 +55,16 @@ const init = store =>
       },
     );
 
+    const gueryProvider = createAsyncThunk(
+      name + '/query',
+      async (payload, thunkAPI) => {
+        const [data, error] = await handlePromise(
+          (queryProvider || provider).query({ queryString: payload }).read(),
+        );
+        return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+      },
+    );
+
     const sliceName = name + 'Slice';
 
     const providerSlice = createSlice({
@@ -50,12 +72,15 @@ const init = store =>
       initialState,
       reducers: {
         clearState: state => initialState,
+        clearStateAndProvider,
+        clearProvider,
       },
       extraReducers: builder => {
         // const autoBuild = buildCaseDefault(builder);
         const autoBuild = asyncStateReducer(builder);
         autoBuild(readProvider, { dataname: 'data' });
         autoBuild(saveProvider, { storeKey: 'saved' });
+        autoBuild(gueryProvider, { dataname: 'data' });
       },
     });
 
@@ -117,6 +142,16 @@ const init = store =>
           },
           get: id => {
             dispatch(getProvider(id));
+          },
+          query: (queryString, refresh) => {
+            refresh && (queryProvider || provider.provider).cleanCache();
+            dispatch(gueryProvider(queryString));
+          },
+          clearStateAndProvider: id => {
+            dispatch(clearStateAndProvider());
+          },
+          clearProvider: id => {
+            dispatch(clearProvider());
           },
         },
       };
