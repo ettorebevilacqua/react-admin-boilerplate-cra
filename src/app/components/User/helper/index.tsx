@@ -1,7 +1,9 @@
 export const handlePromise = promise =>
-  promise
-    .then(data => [data, undefined])
-    .catch(error => Promise.resolve([undefined, error]));
+  !promise || !promise.then
+    ? Promise.resolve([undefined, 'no promise'])
+    : promise
+        .then(data => [data, undefined])
+        .catch(error => Promise.resolve([undefined, error]));
 
 export const isNotEmpity = data => {
   for (var key in data)
