@@ -90,77 +90,81 @@ const MquestionTo = ({
     numPartecipanti !== numPart && setNumPartecipanti(numPart);
     // valuesNew.partecipanti.length !== numPart && onChangeNumPartecipanti(propsFormik, numPart);
   };
+  const renderButtonActionRecord = propsFormik => (
+    <GridChilds style={{ textAlign: 'end' }} view={[6, 6]}>
+      <Button
+        color="primary"
+        variant="contained"
+        fullWidth
+        disabled={!(propsFormik.dirty && propsFormik.isValid)}
+        type="submit"
+      >
+        <span className={classes.buttonAction}>Salva</span>
+      </Button>
+      <Button variant="contained" color="primary" onClick={e => 1}>
+        <span className={classes.buttonAction}>Invia mail</span>
+      </Button>
+    </GridChilds>
+  );
+
+  const renderTitle = propsFormik => (
+    <div className={classes.paperTitle}>
+      <GridChilds
+        justify="space-between"
+        style={{ alignItems: 'center' }}
+        view={[9, 3]}
+      >
+        <div>
+          <Typography variant="h3" color="textSecondary">
+            Indagine : {modulo?.title}
+          </Typography>
+          <Typography variant="h4" color="error">
+            {saved?.isError && saved?.errorMessage}
+          </Typography>
+        </div>
+        {renderButtonActionRecord(propsFormik)}
+      </GridChilds>
+    </div>
+  );
 
   return (
     <div className={classes.root}>
-      <div className={classes.paperTitle}>
-        <GridChilds
-          justify="space-between"
-          style={{ alignItems: 'center' }}
-          view={[9, 3]}
-        >
-          <div>
-            <Typography variant="h3" color="textSecondary">
-              Indagine : {modulo?.title}
-            </Typography>
-            <Typography variant="h4" color="error">
-              {saved?.isError && saved?.errorMessage}
-            </Typography>
-          </div>
-          <GridChilds
-            justify="space-between"
-            style={{ alignItems: 'center' }}
-            view={[6, 6]}
-          >
-            <Button variant="contained" color="primary" onClick={e => 1}>
-              <span style={{ fontSize: '11px' }}>Salva</span>
-            </Button>
-            <Button variant="contained" color="primary" onClick={e => 1}>
-              <span style={{ fontSize: '11px' }}>Invia mail</span>
-            </Button>
-          </GridChilds>
-        </GridChilds>
-      </div>
       {!!value && (
         <Formik
           initialValues={value}
           onSubmit={onSubmitBefore}
           validationSchema={schema}
           children={propsFormik => (
-            <Form
-              success={!!propsFormik.status && !!propsFormik.status.success}
-              error={!!propsFormik.errors.submit}
-              onSubmit={propsFormik.handleSubmit}
-            >
-              <FormikOnChange
-                delay={500}
-                onChange={onChangeForm(propsFormik)}
-              />
-
-              {
-                <QuestionUsersFields
-                  propsFormik={propsFormik}
-                  numPartecipanti={numPartecipanti}
-                  parentValue={propsFormik.values}
-                />
-              }
-              <GridChilds
-                view={[12]}
-                spacing={3}
-                style={{ marginTop: '16px', width: '100%' }}
+            <>
+              {renderTitle(propsFormik)}
+              <Form
+                success={!!propsFormik.status && !!propsFormik.status.success}
+                error={!!propsFormik.errors.submit}
+                onSubmit={propsFormik.handleSubmit}
               >
-                <Button
-                  color="primary"
-                  variant="contained"
-                  fullWidth
-                  disabled={!(propsFormik.dirty && propsFormik.isValid)}
-                  type="submit"
+                <FormikOnChange
+                  delay={500}
+                  onChange={onChangeForm(propsFormik)}
+                />
+
+                {
+                  <QuestionUsersFields
+                    propsFormik={propsFormik}
+                    numPartecipanti={numPartecipanti}
+                    parentValue={propsFormik.values}
+                  />
+                }
+                <GridChilds
+                  view={[9, 3]}
+                  justify="space-between"
+                  spacing={3}
+                  style={{ marginTop: '16px', width: '100%' }}
                 >
-                  Salva e invia le email
-                </Button>
-                {propsFormik.errors.submit}
-              </GridChilds>
-            </Form>
+                  <div>{propsFormik.errors.submit} </div>
+                  {renderButtonActionRecord(propsFormik)}
+                </GridChilds>
+              </Form>
+            </>
           )}
         />
       )}

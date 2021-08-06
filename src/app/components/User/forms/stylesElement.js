@@ -67,4 +67,7 @@ export const elemStyle = makeStyles(theme => ({
     width: '95%',
     marginLeft: '5%',
   },
+  buttonAction: {
+    fontSize: '14px',
+  },
 }));
