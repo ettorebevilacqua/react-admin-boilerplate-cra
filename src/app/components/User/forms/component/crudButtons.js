@@ -2,6 +2,7 @@ import React from 'react';
 import GridChilds from './gridChilds';
 import { Box, Button } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 
 function makeEnum(arr) {
   let obj = {};
@@ -11,14 +12,19 @@ function makeEnum(arr) {
   return Object.freeze(obj);
 }
 
-export const ButtonnType = makeEnum(['add', 'delete', 'blue']);
+export const ButtonType = makeEnum(['add', 'delete', 'blue']);
 
 export const CrudButton = props => {
   const { onClick, show, hides, disableds, children } = props;
   const isFoundInList = (list, val) => list && list.indexOf(val) > -1;
-  const isFound = val =>
-    (!show ? true : isFoundInList(show, val)) && !isFoundInList(hides, val);
+  const isFound = val => (!show ? true : isFoundInList(show, val)); //&& !isFoundInList(hides, val);
+  const isDisable = val => (!disableds ? false : isFoundInList(disableds, val));
+  const numElem = !show ? 2 : show.length;
+  const numToFill = Math.floor(12 / numElem);
+  const viewSizes = Array(numElem).fill(numToFill);
 
+  isFound('add') && viewSizes.push(2);
+  isFound('add') && viewSizes.push(2);
   return (
     <>
       {children}
@@ -27,26 +33,31 @@ export const CrudButton = props => {
         justify="space-between"
         alignItems="center"
         spacing={2}
-        view={[2, 4, 1, 1, 1]}
+        view={viewSizes}
+        style={{ textAlign: 'end' }}
       >
-        {isFound(ButtonnType.add) && (
+        {isFound('add') && (
           <Box style={{ width: '100%' }}>
             <Button
               variant="contained"
               color="primary"
-              onClick={onClick && onClick(ButtonnType.add)}
+              onClick={onClick && onClick(ButtonType.add)}
             >
               <span style={{ fontSize: '11px' }}>Add</span>
             </Button>
           </Box>
         )}
-        {isFound(ButtonnType.delete) && (
+        {isFound('delete') && (
           <Box>
-            <DeleteIcon
+            <IconButton
               style={{ fontSize: '36px' }}
               color="secondary"
-              onClick={event => onClick && onClick(ButtonnType.delete)}
-            />
+              aria-label="delete"
+              disabled={isDisable('delete')}
+              onClick={event => onClick && onClick(ButtonType.delete)}
+            >
+              <DeleteIcon />
+            </IconButton>
           </Box>
         )}
         <span> </span>
