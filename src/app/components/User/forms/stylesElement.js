@@ -65,5 +65,6 @@ export const elemStyle = makeStyles(theme => ({
   },
   width95: {
     width: '95%',
+    marginLeft: '5%',
   },
 }));

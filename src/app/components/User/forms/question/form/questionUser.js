@@ -24,7 +24,7 @@ import TagsInput from '../comp/tagInput';
 import GridChilds from '../../component/gridChilds';
 import { elemStyle } from '../../stylesElement';
 
-import { CrudButton, ButtonnType } from '../../component/crudButtons';
+import { CrudButton, ButtonType } from '../../component/crudButtons';
 
 import {
   empityParteipante,
@@ -74,21 +74,22 @@ const getPartecipantiByNum = (list, valNum) => {
   // setTimeout(() => propsFormik.setFieldTouched('partecipanti.1.nome', true));
 };
 
-const QuestionUsersFields = ({
-  propsFormik,
-  numPartecipanti,
-  addPartecipante,
-  parentValue,
-}) => {
+const QuestionUsersFields = ({ propsFormik, numPartecipanti, parentValue }) => {
   const handleSelecetedTags = () => {};
   const classes = elemStyle();
+  const propValue = propsFormik?.values || {};
 
   const getPartecipanti = values =>
     getPartecipantiByNum(values, numPartecipanti || 1);
-  const propValue = propsFormik.values;
+
   const [partecipanti, setPartecipanti] = React.useState(
-    getPartecipanti(propsFormik?.values?.partecipanti || [empityParteipante]),
+    getPartecipanti(propValue?.partecipanti),
   );
+
+  const [docenti, setDocenti] = React.useState();
+  const docentiAction = arrayHelper => type => {
+    type === ButtonType.delete && arrayHelper.remove();
+  };
 
   const init = () => {
     // setPartecip anti(getPartecipanti());
@@ -96,8 +97,40 @@ const QuestionUsersFields = ({
 
   React.useEffect(init, []);
   React.useEffect(() => {
-    partecipanti && setPartecipanti(getPartecipanti(partecipanti));
+    if (numPartecipanti !== partecipanti.length) {
+      setPartecipanti(getPartecipanti(partecipanti));
+      propsFormik.setFieldValue('partecipanti', partecipanti);
+    }
   }, [numPartecipanti]);
+
+  const DocentiForm = (index, arrayHelper) => {
+    return (
+      <Paper className={`${classes.paperTitle} ${classes.width95}`} key={index}>
+        <GridChilds
+          justify="space-between"
+          view={[4, 4, 3, 1]}
+          spacing={1}
+          style={{ width: '100%' }}
+        >
+          {renderField({}, `docenti.${index}.nome`, TextField, 'Nome')}
+          {renderField({}, `docenti.${index}.email`, TextField, 'Email')}
+          {renderField({}, `docenti.${index}.phone`, TextField, 'Telefono')}
+
+          <CrudButton
+            show={['delete']}
+            onClick={docentiAction(arrayHelper)}
+            disableds={
+              index === 0 &&
+              arrayHelper?.form?.values?.docenti &&
+              arrayHelper?.form?.values?.docenti.length < 2
+                ? ['delete']
+                : null
+            }
+          />
+        </GridChilds>
+      </Paper>
+    );
+  };
 
   const PartecipanteForm = index => {
     return (
@@ -153,33 +186,50 @@ const QuestionUsersFields = ({
             'number',
           )}
         </GridChilds>
-
-        <GridChilds
-          view={[10, 2]}
-          spacing={3}
-          style={{ marginTop: '16px', width: '100%' }}
-        >
-          <TagsInput
-            selectedTags={handleSelecetedTags}
-            fullWidth
-            variant="outlined"
-            id="docenti"
-            name="docenti"
-            placeholder="add Tags"
-            label="Docenti"
-          />
-        </GridChilds>
       </Paper>
+
+      <Typography variant="h4" style={{ marginTop: '12px' }}>
+        Docenti
+      </Typography>
+
+      <FieldArray
+        name="docenti"
+        render={arrayHelper => (
+          <>
+            {/* value.partecipanti &&
+                !value.partecipanti[0] &&
+              addPartecipante(propsFormik, arrayHelper, value) */}
+
+            {propsFormik?.values?.docenti &&
+              propsFormik.values.docenti.map((elem, index) =>
+                DocentiForm(index, arrayHelper),
+              )}
+            <GridChilds
+              view={[10, 2]}
+              justify="space-between"
+              spacing={2}
+              style={{ marginTop: '16px', width: '100%' }}
+              style={{ textAlign: 'end' }}
+            >
+              <span> </span>
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                onClick={e => arrayHelper.push(empityParteipante)}
+              >
+                Nuovo Docente
+              </Button>
+            </GridChilds>
+          </>
+        )}
+      />
 
       <Typography variant="h4" style={{ marginTop: '12px' }}>
         Partecipanti
       </Typography>
 
-      <GridChilds
-        view={[12]}
-        spacing={1}
-        style={{ marginTop: '1px', width: '100%', marginLeft: '5%' }}
-      >
+      <GridChilds view={[12]} spacing={1}>
         <FieldArray
           name="partecipanti"
           render={arrayHelper => (

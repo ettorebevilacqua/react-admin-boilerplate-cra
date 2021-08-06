@@ -72,9 +72,6 @@ const MquestionTo = ({
     return <span> </span>;
   }
 
-  const addPartecipante = (propsFormik, arrayHelper, value) =>
-    arrayHelper.push(empityParteipante);
-
   /*
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -145,7 +142,6 @@ const MquestionTo = ({
                   propsFormik={propsFormik}
                   numPartecipanti={numPartecipanti}
                   parentValue={propsFormik.values}
-                  addPartecipante={addPartecipante}
                 />
               }
               <GridChilds

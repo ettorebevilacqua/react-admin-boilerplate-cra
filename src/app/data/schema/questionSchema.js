@@ -1,9 +1,39 @@
 import * as Yup from 'yup';
+import get from 'lodash/get';
 
+Yup.addMethod(Yup.array, 'unique', function (message, path) {
+  return this.test('unique', message, function (list) {
+    const mapper = x => get(x, path);
+    const set = [...new Set(list.map(mapper))];
+    const isUnique = list.length === set.length;
+    if (isUnique) {
+      return true;
+    }
+    const idx = list.findIndex((l, i) => mapper(l) !== set[i]);
+    const founds = list.filter((l, i) => mapper(l) === set[0]);
+    founds &&
+      founds.map((el, idEl) =>
+        this.createError({ path: `${this.path}.[${idEl}].${path}`, message }),
+      );
+    return this.createError({
+      path: `${this.path}.[${idx}].${path}`,
+      message,
+    });
+  });
+});
 export const schema = Yup.object().shape({
   titolo: Yup.string().required('Required'),
   idcorso: Yup.string().required('Required'),
   idmodulo: Yup.string().required('Required'),
+  docenti: Yup.array()
+    .of(
+      Yup.object().shape({
+        nome: Yup.string().required('Required'),
+        email: Yup.string().email('Email non valida.').required('Required'),
+        phone: Yup.string(),
+      }),
+    )
+    .unique('email ripetuta', 'email'),
   partecipanti: Yup.array()
     .of(
       Yup.object().shape({
@@ -13,9 +43,9 @@ export const schema = Yup.object().shape({
       }),
     )
     .required('Required')
+    .unique('email ripetuta', 'email')
     .min(1, 'inserire almeno un partecipante'),
   numPartecipanti: Yup.number()
-    .required('Required')
     .min(1, 'inserire almeno un partecipante')
     .when('partecipanti', (partecipanti, schema) =>
       schema.test({
@@ -34,5 +64,6 @@ export const empityQuestion = {
   idmodulo: '',
   docenti: '',
   numPartecipanti: 1,
+  docenti: [empityParteipante],
   partecipanti: [empityParteipante],
 };
