@@ -1,4 +1,12 @@
 // DEBUG: User Router
+
+/**
+ * react route for state and history management : https://blog.logrocket.com/react-router-with-redux-navigation-state/
+ *
+ *
+ *
+ */
+
 import React from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async'; // Import UI Generator
@@ -38,7 +46,7 @@ import IndaginiMenu from './section/indagini/menuIndagini';
 import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
 import Question from './forms/question';
-import { QuestionToForm } from './forms/';
+import { QuestionToForm, QuestionList } from './forms/';
 
 const genData: any = []; // generateData();
 const data = { defaultData: genData } as LocalStorageDataProviderParams;
@@ -103,6 +111,11 @@ export default function UserComp() {
                 exact
                 path="/app/user/indagini_invio/:idmodulo/:idcorso"
                 component={QuestionToForm}
+              />
+              <Route
+                exact
+                path="/app/user/indagini/list"
+                component={QuestionList}
               />
               <Route
                 exact

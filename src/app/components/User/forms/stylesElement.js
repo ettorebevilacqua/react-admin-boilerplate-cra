@@ -63,6 +63,24 @@ export const elemStyle = makeStyles(theme => ({
     padding: '8px',
     width: '95%',
   },
+  paperRow: {
+    marginTop: '12px',
+    marginLeft: '12px',
+    marginRight: '12px',
+    padding: '8px',
+  },
+  paperRowElem: {
+    padding: '2px',
+    fontSize: '16px',
+  },
+  fieldTitle: {
+    padding: '2px',
+    fontSize: '18px',
+    textAlign: 'center',
+    backgroundColor: theme.palette.primary.main + 'dd',
+    fontWeight: 'bold',
+    color: 'white',
+  },
   width95: {
     width: '95%',
     marginLeft: '5%',

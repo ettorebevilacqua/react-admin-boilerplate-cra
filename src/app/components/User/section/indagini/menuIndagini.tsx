@@ -19,7 +19,7 @@ const data = [
   },
   {
     name: 'Indagini aperte',
-    link: '/#/indagini',
+    link: '/app/user/indagini/list',
     hardLink: true,
   },
   {
