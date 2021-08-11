@@ -64,12 +64,6 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
 
     const rendereError = () => (
       <>
-        <div>
-          <h2>Errrore nel Caricamento</h2>
-          <p>
-            <Link to="/" />
-          </p>
-        </div>
         <Button
           color="primary"
           variant="contained"
