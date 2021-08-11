@@ -147,10 +147,10 @@ const init = store =>
             refresh && (queryProvider || provider.provider).cleanCache();
             dispatch(gueryProvider(queryString));
           },
-          clearStateAndProvider: id => {
+          clearStateAndProvider: () => {
             dispatch(clearStateAndProvider());
           },
-          clearProvider: id => {
+          clearProvider: () => {
             dispatch(clearProvider());
           },
         },
