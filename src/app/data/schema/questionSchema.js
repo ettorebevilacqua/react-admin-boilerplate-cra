@@ -3,6 +3,7 @@ import get from 'lodash/get';
 
 Yup.addMethod(Yup.array, 'unique', function (message, path) {
   return this.test('unique', message, function (list) {
+    if (!list) return true;
     const mapper = x => get(x, path);
     const set = [...new Set(list.map(mapper))];
     const isUnique = list.length === set.length;
@@ -64,6 +65,6 @@ export const empityQuestion = {
   idmodulo: '',
   docenti: '',
   numPartecipanti: 1,
-  docenti: [empityParteipante],
+  docenti: [],
   partecipanti: [empityParteipante],
 };
