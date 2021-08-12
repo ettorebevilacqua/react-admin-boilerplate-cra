@@ -72,7 +72,7 @@ const init = store =>
       initialState,
       reducers: {
         clearState: state => initialState,
-        clearStateAndProvider,
+        clearStateAndProvider: state => clearStateAndProvider(),
         clearProvider,
       },
       extraReducers: builder => {
@@ -133,7 +133,7 @@ const init = store =>
     const mapDispatchToProps = dispatch => {
       return {
         actions: {
-          clearState: () => dispatch(clearState),
+          clearState: () => dispatch(clearState()),
           load: id => {
             dispatch(readProvider(id));
           },
@@ -144,8 +144,12 @@ const init = store =>
             dispatch(getProvider(id));
           },
           query: (queryString, refresh) => {
-            refresh && (queryProvider || provider.provider).cleanCache();
-            dispatch(gueryProvider(queryString));
+            if (refresh) {
+              (queryProvider || provider.provider).cleanCache();
+              dispatch(clearState());
+            }
+
+            setTimeout(() => dispatch(gueryProvider(queryString)), 10);
           },
           clearStateAndProvider: () => {
             dispatch(clearStateAndProvider());
@@ -175,7 +179,6 @@ const init = store =>
         selectItem,
       },
       slice: providerSlice,
-
       initialState,
     };
   };

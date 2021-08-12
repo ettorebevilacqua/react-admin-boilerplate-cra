@@ -74,7 +74,7 @@ export const mapDispatchToPropsCreator = (
 ) => {
   return {
     actions: {
-      clearState: () => clearState && dispatch(clearState),
+      clearState: () => clearState && dispatch(clearState()),
       load: id => {
         readProvider && dispatch(readProvider(id));
       },
