@@ -114,6 +114,11 @@ export default function UserComp() {
               />
               <Route
                 exact
+                path="/app/user/indagini_edit/:id"
+                component={QuestionToForm}
+              />
+              <Route
+                exact
                 path="/app/user/indagini/list"
                 component={QuestionList}
               />

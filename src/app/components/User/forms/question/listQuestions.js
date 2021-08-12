@@ -52,9 +52,13 @@ const MlistQuestions = ({
   // return <span> </span>;
   // }
 
-  const renderButtonActionRecord = () => (
+  const renderButtonActionRecord = id => (
     <GridChilds style={{ textAlign: 'end' }} view={[12]}>
-      <Button variant="contained" color="primary" onClick={e => 1}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={e => props.history.push(`/app/user/indagini_edit/${id}`)}
+      >
         <span className={classes.buttonAction}>Vai</span>
       </Button>
     </GridChilds>
@@ -104,7 +108,7 @@ const MlistQuestions = ({
 
   const getRenderValues = (fields, dataTo) => {
     const vals = fields.map(renderValue(dataTo));
-    vals.push(renderButtonActionRecord());
+    vals.push(renderButtonActionRecord(dataTo.id));
     return vals;
   };
 

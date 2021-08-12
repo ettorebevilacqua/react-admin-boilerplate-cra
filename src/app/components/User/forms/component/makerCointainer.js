@@ -31,7 +31,6 @@ export function makeContainer(
     }, []);
 
     React.useEffect(() => {
-      debugger;
       saved &&
         saved.isSuccess &&
         loadCallBack(props?.match?.params, history, props?.location, saved);
