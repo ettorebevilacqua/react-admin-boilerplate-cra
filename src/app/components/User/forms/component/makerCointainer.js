@@ -6,12 +6,19 @@ import { Link, useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 import { handlePromise } from '../../helper';
+import { initial } from 'lodash';
 
-export function makeContainer(Component, sliceProvider, loadCallBack) {
+export function makeContainer(
+  Component,
+  sliceProvider,
+  loadCallBack,
+  initialState,
+) {
   const { slice, mapToProps } = sliceProvider;
   const { state: mapStateToProps, dispatch: mapDispatchToProps } = mapToProps;
 
   const Container = props => {
+    const [firstTime, setFirstTime] = React.useState(true);
     const toProps = { ...props };
     const {
       formProp: { stateLoad, saved, data },
@@ -19,10 +26,12 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     } = props;
     const history = useHistory();
     React.useEffect(() => {
+      setFirstTime(false);
       loadCallBack(props?.match?.params, history, props?.location);
     }, []);
 
     React.useEffect(() => {
+      debugger;
       saved &&
         saved.isSuccess &&
         loadCallBack(props?.match?.params, history, props?.location, saved);
@@ -37,13 +46,14 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
           ? await handlePromise(actions.save(values))
           : [];
       console.log('form is  submitted', saved);
-      if (error) {
+      /* if (error) {
         setStatus({ success: false });
         setSubmitting(false);
         setErrors({ submit: error.message });
         resetForm(values);
         return;
       }
+      */
       setSubmitting(true);
       setTimeout(async () => {
         // it will set formik.isDirty to false // it will also keep new values
@@ -53,25 +63,20 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
       setStatus({ success: true });
     };
 
-    const linkToErrorOnLoad = () => (
-      <div>
-        <h2>Errrore nel Caricamento</h2>
-        <p>
-          <Link to="/">Ricarica qui </Link>
-        </p>
-      </div>
-    );
-
     const rendereError = () => (
       <>
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          onClick={() => props.history.push('/')}
-        >
-          Torna Indietro
-        </Button>
+        <h2>Errrore nel Caricamento</h2>
+        <p> {stateLoad.errorMessage}</p>
+        <div>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={() => props.history.push('/app/user')}
+          >
+            Torna Indietro
+          </Button>
+        </div>
       </>
     );
     const renderComp = state => (
@@ -87,7 +92,9 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     ) : (
       <div>
         <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
-          {!stateLoad.isFetching && !data ? rendereError() : renderComp()}
+          {!stateLoad.isFetching && !data
+            ? rendereError()
+            : !firstTime && renderComp()}
         </LoadingOverlay>
       </div>
     );
@@ -98,10 +105,19 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
 
   const Loader = props => {
     useInjectReducer({ key: slice.name, reducer: slice.reducer });
-    const id = props?.match?.params?.id;
 
     return <NewContainer {...props} />;
   };
 
   return Loader;
+}
+
+export function makeContainerRefreshed(Component, sliceProvider, loadCallBack) {
+  sliceProvider.actions.clearState();
+  return makeContainer(
+    Component,
+    sliceProvider,
+    loadCallBack,
+    sliceProvider.initialState,
+  );
 }
