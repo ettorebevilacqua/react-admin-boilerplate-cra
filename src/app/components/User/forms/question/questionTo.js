@@ -46,6 +46,9 @@ const MquestionTo = ({
       ...((questions && questions.results && questions.results[0]) ||
         empityQuestion),
     };
+    if (!dataToValue.docenti || !!dataToValue.docenti[0]) {
+      // dataToValue.docenti = [empityParteipante];
+    }
     const dataValue = dataToValue || empityQuestion;
     const idmodulo =
       modulo && modulo.id ? modulo.id : dataValue?.idmodulo || '';
@@ -53,23 +56,27 @@ const MquestionTo = ({
   }
 
   const [value, setValue] = React.useState();
-  const [numPartecipanti, setNumPartecipanti] = React.useState(
-    value?.numPartecipanti,
-  );
+  const [numPartecipanti, setNumPartecipanti] = React.useState(null);
   const classes = elemStyle();
 
   const init = () => {
     // !value && setValue(dataValueState || empityQuestion);
   };
 
-  const dataUpdate = () => data && setValue(loadData());
+  const dataUpdate = () => {
+    if (data) {
+      const quest = loadData();
+      setValue(quest);
+      setNumPartecipanti(quest?.numPartecipanti || 1);
+    }
+  };
 
   React.useEffect(init, []);
   React.useEffect(dataUpdate, [data]);
 
   if (data && !modulo) {
-    props.history.push('/app/user/indagini');
-    return <span> </span>;
+    //  props.history.push('/app/user/indagini');
+    // return <span> </span>;
   }
 
   /*

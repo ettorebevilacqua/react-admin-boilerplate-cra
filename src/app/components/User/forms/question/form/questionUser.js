@@ -50,26 +50,27 @@ const renderField = (props = {}, name, component, label, type, error) => {
 
 // const partecipantiFilled = list => isItemsFieldEmpity(list);
 
-const getPartecipantiByNum = (list, valNum) => {
+const getPartecipantiByNum = (list, val) => {
   // const val = e.target.value;
-  // const valNum = isNaN(val) ? 1 : Number(val);
-  const newVal = valNum > 99 ? 99 : valNum < 1 ? 1 : valNum;
+
   const partecipanti = !list ? [empityParteipante] : [...list];
+  const valToNum = !val ? 1 : Number(val);
+  const valNum = isNaN(valToNum) ? partecipanti.length : valToNum;
+  const newVal = valNum > 99 ? 99 : valNum < 1 ? 1 : valNum;
+
+  if (partecipanti.length === newVal) return partecipanti;
+
   const empityList =
     partecipanti.length < newVal
-      ? Array(newVal - partecipanti.length).fill(
-          empityParteipante,
-          partecipanti.length - 1,
-          newVal - 1,
-        )
+      ? Array(newVal - partecipanti.length).fill(empityParteipante)
       : [];
-  const refList = [...partecipanti, ...empityList];
+  const refList = [...list, ...empityList];
   const partecipantiNew =
-    refList.length > newVal ? refList.slice(0, newVal - 1) : refList;
+    refList.length > newVal ? refList.slice(0, newVal) : refList;
   partecipantiNew.length === 0 && partecipantiNew.push(empityParteipante);
   // setValue();
   return partecipantiNew;
-  // setValue({ ...value, partecipanti: partecipantiNew });
+  // s
   // propsFormik.setFieldValue('', partecipantiNew);
   // setTimeout(() => propsFormik.setFieldTouched('partecipanti.1.nome', true));
 };
@@ -98,8 +99,8 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, parentValue }) => {
   React.useEffect(init, []);
   React.useEffect(() => {
     if (numPartecipanti !== partecipanti.length) {
-      setPartecipanti(getPartecipanti(partecipanti));
-      propsFormik.setFieldValue('partecipanti', partecipanti);
+      setPartecipanti(getPartecipanti(propValue?.partecipanti));
+      // propsFormik.setFieldValue('partecipanti', partecipanti);
     }
   }, [numPartecipanti]);
 
