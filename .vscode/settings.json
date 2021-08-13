@@ -23,7 +23,7 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "**/node_modules": true
+    "**/node_modules": false
   },
   "todo.colors.tags.foreground": ["#000000", "#000000", "#000000", "#000000"],
   "todo.colors.types": {

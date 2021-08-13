@@ -8,12 +8,13 @@ import {
   createAsyncThunk,
   createSelector,
 } from '@reduxjs/toolkit';
+import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { initialState, asyncStateReducer, handlePromise } from './helperSlice';
 import store from 'store/configureStore';
 
 const init = store =>
   function createCrudSlice(options) {
-    const { name, provider, queryProvider } = options;
+    const { name, provider, queryProvider, actionsSlice } = options;
 
     const clearProvider = () => {
       provider && provider?.provider?.cleanCache();
@@ -169,6 +170,7 @@ const init = store =>
         getProvider,
       },
       actions: mapDispatchToProps(store.dispatch).actions,
+      actionsSlice,
       mapToProps: {
         state: mapStateToProps,
         dispatch: mapDispatchToProps,

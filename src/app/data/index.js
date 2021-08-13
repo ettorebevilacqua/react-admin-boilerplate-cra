@@ -6,6 +6,7 @@ import * as userProviderFrom from './usersProvider';
 import { defaultProvider } from './defaultProvider';
 import { queryViews, providersView } from './viewProvider';
 import schemas from './schema';
+import { createListAxio } from './helper.provider';
 
 export const moduliProvider = defaultProvider(
   'moduli',
@@ -19,6 +20,13 @@ export const questionProvider = defaultProvider(
   '/questions',
   schemas.questionSchemas,
   ['axios', 'questions'],
+);
+
+export const emailProvider = defaultProvider(
+  'emailProvider',
+  '/questions/sendEmail',
+  schemas.questionSchemas,
+  ['axios', 'emailProvider'],
 );
 
 /*
@@ -59,6 +67,7 @@ const dataApi = {
   providersView,
   queryViews,
   questionProvider,
+  emailProvider,
 };
 export const userProvider = userProviderFrom;
 export default dataApi;

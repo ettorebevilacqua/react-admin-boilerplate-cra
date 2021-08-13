@@ -7,22 +7,29 @@ import { userAuthSaga } from './saga';
 // import { UserAuthState, RepoErrorType } from './types';
 
 import createCrudSlice from './crudSlice';
-import { userSlice } from './userSlice';
 import createViewSlice from './viewSlice';
+import createActionsSlice from './actionsSlice';
+import { userSlice } from './userSlice';
+
 import { moduliSlice } from './moduliSlice';
 
 import providers from '../data';
-const { questionProvider, providersView } = providers;
+const { questionProvider, providersView, emailProvider } = providers;
 
 export const questionViewSlice = createViewSlice(
   'getQuestion',
   providersView.getQuestion,
 );
 
+export const questionActionlSlice = createActionsSlice('questionEmail', [
+  { name: 'sendEmail', action: emailProvider.create },
+]);
+
 export const questionSlice = createCrudSlice({
   name: 'question',
   provider: questionProvider,
   queryProvider: providersView.getQuestion,
+  actionsSlice: { questionActionlSlice },
 });
 
 export const { actions: userAuthActions, reducer } = userSlice;
