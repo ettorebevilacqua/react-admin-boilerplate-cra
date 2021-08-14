@@ -109,7 +109,12 @@ const MquestionTo = ({
         <span className={classes.buttonAction}>Salva</span>
       </Button>
       <Button variant="contained" color="primary" onClick={e => 1}>
-        <span className={classes.buttonAction}>Invia mail</span>
+        <span
+          onClick={e => value && value.id && actions.sendEmail(value.id)}
+          className={classes.buttonAction}
+        >
+          Invia mail
+        </span>
       </Button>
     </GridChilds>
   );

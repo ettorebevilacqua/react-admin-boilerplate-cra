@@ -11,34 +11,24 @@ import {
   mapDispatchToPropsCreator,
 } from './helperSlice';
 
-import { setGetObj, compose } from 'utils/functional';
+import { setGetObj, mapOrReduceOnKeys, compose } from 'utils/functional';
 import store from 'store/configureStore';
 
 function createActionsSlice(name, actionsProviders) {
   const sliceName = name + 'Slice';
 
   const getThunk = ({ name, action }) =>
-    createAsyncThunk(name + '/action/', async (payload, thunkAPI) => {
-      const [data, error] = await handlePromise(action(payload));
+    createAsyncThunk('/action/' + name, async (payload, thunkAPI) => {
+      debugger;
+      const [data, error] = await handlePromise(action(payload, {}));
       return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
     });
 
-  const thunkGetter = (acc, thunk) => {
-    acc[thunk.name] = getThunk(thunk);
-    return acc;
-  };
+  const thunkGetter = (acc, thunk) =>
+    setGetObj(acc, thunk.name, getThunk(thunk));
 
   const thunks = actionsProviders.reduce(thunkGetter, {});
-
-  const thunksMapper = (mapper, accMapper) => {
-    const keys = Object.keys(thunks);
-    const reducerMapper = (acc, actionName, index) =>
-      mapper(acc, actionName, thunks[actionName], index);
-
-    return accMapper !== undefined
-      ? keys.reduce(reducerMapper, accMapper)
-      : keys.map((actionName, index) => mapper(thunks[actionName], index));
-  };
+  const thunksMapper = mapOrReduceOnKeys(thunks);
 
   const actionsSlice = createSlice({
     name: sliceName,
@@ -52,23 +42,20 @@ function createActionsSlice(name, actionsProviders) {
       ),
   });
 
-  const dataSelector = state => {
-    const cond = !state || !state[sliceName] ? initialState : state[sliceName];
-    return cond;
-  };
-
+  const dataSelector = state =>
+    !state || !state[sliceName] ? initialState : state[sliceName];
   const selectData = createSelector([dataSelector], dataState => dataState);
-  // const selectItem = createSelector([dataGetSelector], state => state);
 
   const mapStateToProps = mapStateToPropsCreator(selectData, {});
   const mapDispatchToProps = dispatch => {
-    const dispacher = _thunk => payload => dispatch(_thunk.action(payload));
-    const createActions = (acc, actionName, _thunk) =>
+    debugger;
+    const dispacher = _thunk => payload => dispatch(_thunk(payload));
+    const createActions = (acc, _thunk, actionName) =>
       setGetObj(acc, actionName, dispacher(_thunk));
 
     return {
       actions: {
-        clearState: () => dispatch(actionsSlice.clearState()),
+        clearStateAction: () => dispatch(actionsSlice.clearState()),
         ...thunksMapper(createActions, {}),
       },
     };

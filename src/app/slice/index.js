@@ -22,14 +22,14 @@ export const questionViewSlice = createViewSlice(
 );
 
 export const questionActionlSlice = createActionsSlice('questionEmail', [
-  { name: 'sendEmail', action: emailProvider.create },
+  { name: 'sendEmail', action: emailProvider.save },
 ]);
 
 export const questionSlice = createCrudSlice({
   name: 'question',
   provider: questionProvider,
   queryProvider: providersView.getQuestion,
-  actionsSlice: { questionActionlSlice },
+  actionsSlice: [questionActionlSlice],
 });
 
 export const { actions: userAuthActions, reducer } = userSlice;

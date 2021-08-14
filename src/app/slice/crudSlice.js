@@ -11,6 +11,7 @@ import {
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { initialState, asyncStateReducer, handlePromise } from './helperSlice';
 import store from 'store/configureStore';
+import { setGetObj, mapOrReduceOnKeys, compose } from 'utils/functional';
 
 const init = store =>
   function createCrudSlice(options) {
@@ -132,33 +133,41 @@ const init = store =>
     };
 
     const mapDispatchToProps = dispatch => {
-      return {
-        actions: {
-          clearState: () => dispatch(clearState()),
-          load: id => {
-            dispatch(readProvider(id));
-          },
-          save: id => {
-            dispatch(saveProvider(id));
-          },
-          get: id => {
-            dispatch(getProvider(id));
-          },
-          query: (queryString, refresh) => {
-            if (refresh) {
-              (queryProvider || provider.provider).cleanCache();
-              dispatch(clearState());
-            }
-
-            setTimeout(() => dispatch(gueryProvider(queryString)), 10);
-          },
-          clearStateAndProvider: () => {
-            dispatch(clearStateAndProvider());
-          },
-          clearProvider: () => {
-            dispatch(clearProvider());
-          },
+      const base = {
+        clearState: () => dispatch(clearState()),
+        load: id => {
+          dispatch(readProvider(id));
         },
+        save: id => {
+          dispatch(saveProvider(id));
+        },
+        get: id => {
+          dispatch(getProvider(id));
+        },
+        query: (queryString, refresh) => {
+          if (refresh) {
+            (queryProvider || provider.provider).cleanCache();
+            dispatch(clearState());
+          }
+
+          setTimeout(() => dispatch(gueryProvider(queryString)), 10);
+        },
+        clearStateAndProvider: () => {
+          dispatch(clearStateAndProvider());
+        },
+        clearProvider: () => {
+          dispatch(clearProvider());
+        },
+      };
+
+      const reducerOther = (acc, slice) => ({ ...acc, ...slice.actions });
+      const otherActions = !actionsSlice
+        ? {}
+        : actionsSlice.reduce(reducerOther, {});
+
+      const actions = { ...base, ...otherActions };
+      return {
+        actions,
       };
     };
 

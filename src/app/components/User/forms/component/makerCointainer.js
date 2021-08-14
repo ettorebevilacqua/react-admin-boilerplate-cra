@@ -2,6 +2,7 @@ import React from 'react';
 import { shallowEqual, connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
+import { injectReducer, injectSaga } from 'redux-injectors';
 import { Link, useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
@@ -45,6 +46,7 @@ export function makeContainer(
           ? await handlePromise(actions.save(values))
           : [];
       console.log('form is  submitted', saved);
+      // TODO: MANAGE ERROR
       /* if (error) {
         setStatus({ success: false });
         setSubmitting(false);
@@ -102,13 +104,35 @@ export function makeContainer(
   const withConnect = connect(mapStateToProps, mapDispatchToProps);
   const NewContainer = compose(withConnect)(Container);
 
-  const Loader = props => {
-    useInjectReducer({ key: slice.name, reducer: slice.reducer });
-
-    return <NewContainer {...props} />;
+  // for dynamic load useHook
+  const InjectedComp = ({ sliceDef }) => {
+    useInjectReducer({
+      key: sliceDef.slice.name,
+      reducer: sliceDef.slice.reducer,
+    });
+    return <></>;
   };
 
-  return Loader;
+  const Loader = props => {
+    useInjectReducer({ key: slice.name, reducer: slice.reducer });
+    const hasMoreActions = !!sliceProvider?.actionsSlice.map;
+
+    return (
+      <>
+        {hasMoreActions &&
+          sliceProvider.actionsSlice.map(sliceDef => (
+            <InjectedComp sliceDef={sliceDef} />
+          ))}
+        <NewContainer {...props} />
+      </>
+    );
+  };
+
+  // Calling the function using the array with apply()
+  // compose(injected)(Loader);
+  // compose.apply(null, injected)(Loader);
+
+  return Loader; // sliceProvider.actionsSlice ? LoaderTwo : LoaderOne;
 }
 
 export function makeContainerRefreshed(Component, sliceProvider, loadCallBack) {
