@@ -108,13 +108,15 @@ const MquestionTo = ({
       >
         <span className={classes.buttonAction}>Salva</span>
       </Button>
-      <Button variant="contained" color="primary" onClick={e => 1}>
-        <span
-          onClick={e => value && value.id && actions.sendEmail(value.id)}
-          className={classes.buttonAction}
-        >
-          Invia mail
-        </span>
+      <Button
+        disabled={!propsFormik.isValid}
+        variant="contained"
+        color="primary"
+        onClick={e =>
+          value && value.id && actions.sendEmail(value.id) && actions.reload()
+        }
+      >
+        <span className={classes.buttonAction}>Invia mail</span>
       </Button>
     </GridChilds>
   );

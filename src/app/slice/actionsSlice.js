@@ -48,7 +48,6 @@ function createActionsSlice(name, actionsProviders) {
 
   const mapStateToProps = mapStateToPropsCreator(selectData, {});
   const mapDispatchToProps = dispatch => {
-    debugger;
     const dispacher = _thunk => payload => dispatch(_thunk(payload));
     const createActions = (acc, _thunk, actionName) =>
       setGetObj(acc, actionName, dispacher(_thunk));
