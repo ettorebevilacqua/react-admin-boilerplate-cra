@@ -39,7 +39,7 @@ const MyComp = () => <h3>my comp</h3>;
 const Public = () => (
   <>
     <h3>Public</h3>
-    <Route path="/guest/:token" component={MyComp} />
+    <Route path="/guest/compile/:token" component={MyComp} />
   </>
 );
 
@@ -50,7 +50,6 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
     <Route
       {...rest}
       render={({ location }) => {
-        console.log('xxxxx', isAuthenticated);
         return isAuthenticated === true ? children : <Login />;
       }}
     />
@@ -60,9 +59,12 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
 const AppRoute = ({ isAuthenticated }) => (
   <>
     <Route path="/guest" component={Public} />
-    <PrivateRoute path="/app" isAuthenticated={isAuthenticated}>
+    <PrivateRoute
+      path="/app"
+      component={AppHome}
+      isAuthenticated={isAuthenticated}
+    >
       <Switch>
-        <Route path="/app" component={AppHome} />
         <Route exact path="/admin" component={AdminApp} />
 
         <Route component={NotFoundPage} />
