@@ -21,6 +21,8 @@ export function makeContainer(
   const Container = props => {
     const [firstTime, setFirstTime] = React.useState(true);
     const toProps = { ...props };
+    toProps.actions.reload = () =>
+      loadCallBack(props?.match?.params, history, props?.location);
     const {
       formProp: { stateLoad, saved, data },
       actions,

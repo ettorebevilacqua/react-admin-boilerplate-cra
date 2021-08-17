@@ -1,10 +1,25 @@
 /*
 https://cloudnweb.dev/2021/02/modern-react-redux-tutotials-redux-toolkit-login-user-registration/
+
+auth with provate route
+https://ui.dev/react-router-v5-protected-routes-authentication/
+
 */
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from '@reduxjs/toolkit';
 import { userProvider } from '../data';
 import dataApi from '../data';
+import {
+  asyncStateReducer,
+  handlePromise,
+  mapStateToPropsCreator,
+  mapDispatchToPropsCreator,
+} from './helperSlice';
+
 /* export const signupUser = createAsyncThunk(
   'users/signupUser',
   async ({ email, password }, thunkAPI) => {
@@ -88,6 +103,7 @@ const initialState = {
   isSuccess: false,
   isError: false,
   errorMessage: '',
+  mustAuth: false,
 };
 
 const setUserState = (state, payload) => {
@@ -99,6 +115,7 @@ const setUserState = (state, payload) => {
   // state.tokens = payload.tokens || null;
   state.isFetching = false;
   state.isSuccess = true;
+  state.mustAuth = false;
   return state;
 };
 
@@ -107,6 +124,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     clearState: state => initialState,
+    clearStateLogOut: state => ({ ...initialState, mustAuth: true }),
+    mustAuth: state => {
+      state.mustAuth = true;
+    },
   },
   extraReducers: builder => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -176,6 +197,7 @@ export const userSlice = createSlice({
   },
 });
 let _GlobalStore = null;
+export const { clearState, mustAuth } = userSlice.actions;
 export function initUser(store) {
   _GlobalStore = store;
   const token = localStorage.getItem('token');
@@ -183,17 +205,31 @@ export function initUser(store) {
 
   if (token && userId) {
     store.dispatch(fetchUserById({ id: userId }));
-  }
+  } else store.dispatch(mustAuth());
 }
 
 export function logOut() {
-  _GlobalStore.dispatch(userSlice.actions.clearState());
+  _GlobalStore.dispatch(userSlice.actions.clearStateLogOut());
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
 }
 
-export const { clearState } = userSlice.actions;
+export const authToken = localStorage.getItem('token');
 
 export const userSelector = state =>
   !state || !state.userAuth ? initialState : state.userAuth;
-export const authToken = localStorage.getItem('token');
+
+const selectData = createSelector([userSelector], dataState => dataState);
+export const mapStateToPropsUser = mapStateToPropsCreator(selectData, {});
+const mapDispatchToProps = dispatch => {
+  return {
+    actions: {
+      clearStateAction: () => dispatch(userSlice.clearState()),
+      clearStateLogOut: () => dispatch(userSlice.clearStateLogOut()),
+    },
+  };
+};
+export const mapToPropsUser = {
+  state: mapStateToPropsUser,
+  dispatch: mapDispatchToProps,
+};
