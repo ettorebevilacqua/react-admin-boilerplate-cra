@@ -117,8 +117,8 @@ export function makeContainer(
 
   const Loader = props => {
     useInjectReducer({ key: slice.name, reducer: slice.reducer });
-    const hasMoreActions = !!sliceProvider?.actionsSlice.map;
-
+    const hasMoreActions = !!sliceProvider?.actionsSlice?.map;
+    debugger;
     return (
       <>
         {hasMoreActions &&

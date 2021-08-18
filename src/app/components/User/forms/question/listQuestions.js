@@ -31,7 +31,7 @@ import TagsInput from './comp/tagInput';
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
 import { CrudButton, ButtonnType } from '../component/crudButtons';
-import { ViewWeek } from '@material-ui/icons';
+import { ViewWeek, Email } from '@material-ui/icons';
 
 const MlistQuestions = ({
   formProp: { id, data, saved, stateLoad, meta },
@@ -53,7 +53,15 @@ const MlistQuestions = ({
   // }
 
   const renderButtonActionRecord = id => (
-    <GridChilds style={{ textAlign: 'end' }} view={[12]}>
+    <GridChilds style={{ textAlign: 'end' }} view={[6, 6]}>
+      <IconButton
+        style={{ fontSize: '36px' }}
+        color="secondary"
+        aria-label="delete"
+        disabled={true}
+      >
+        <Email />
+      </IconButton>
       <Button
         variant="contained"
         color="primary"
@@ -108,7 +116,7 @@ const MlistQuestions = ({
 
   const getRenderValues = (fields, dataTo) => {
     const vals = fields.map(renderValue(dataTo));
-    vals.push(renderButtonActionRecord(dataTo.id));
+    vals && vals.push(renderButtonActionRecord(dataTo.id));
     return vals;
   };
 
