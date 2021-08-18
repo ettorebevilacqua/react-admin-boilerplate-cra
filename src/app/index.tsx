@@ -33,15 +33,9 @@ import { Login } from 'app/admin/layout';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
 import { useUserAuthSlice } from 'app/slice';
+import { GuestRoute } from './components/User';
 
 initUser(store); // check if user is logged with present token
-const MyComp = () => <h3>my comp</h3>;
-const Public = () => (
-  <>
-    <h3>Public</h3>
-    <Route path="/guest/compile/:token" component={MyComp} />
-  </>
-);
 
 const Protected = () => <h3>Protected</h3>;
 
@@ -58,7 +52,7 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
 
 const AppRoute = ({ isAuthenticated }) => (
   <>
-    <Route path="/guest" component={Public} />
+    <Route path="/guest" component={GuestRoute} />
     <PrivateRoute
       path="/app"
       component={AppHome}

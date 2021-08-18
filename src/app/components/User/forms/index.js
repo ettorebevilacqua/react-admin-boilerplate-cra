@@ -2,7 +2,7 @@ import React from 'react';
 import { shallowEqual, connect } from 'react-redux';
 import { compose } from 'redux';
 
-import { questionSlice, questionEditSlice, questionViewSlice } from 'app/slice';
+import { questionSlice, moduliSliceCrud, questionViewSlice } from 'app/slice';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 
 import { QuestionTo } from './question/questionTo';
@@ -12,6 +12,7 @@ import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import Question from './question';
 import { makeContainerRefreshed } from './component/makerCointainer';
 import { pick } from 'utils/pick';
+import GuestQuestionFormWrap from './question/guestQuestionForm';
 
 export const QuestionToForm = makeContainerRefreshed(
   QuestionTo,
@@ -26,6 +27,23 @@ export const QuestionToForm = makeContainerRefreshed(
     // console.log('xxxxx queryParam', queryParam);
     questionSlice.actions.clearState();
     questionSlice.actions.query(queryParam, true);
+  },
+);
+
+export const GuestQuestionForm = makeContainerRefreshed(
+  GuestQuestionFormWrap,
+  moduliSliceCrud,
+  (matchParam, history, location, saved) => {
+    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+
+    const queryParam =
+      !saved || !saved.data || !saved.data.id
+        ? pick(matchParam, ['id', 'idmodulo', 'idcorso'])
+        : { id: saved.data.id };
+    // console.log('xxxxx queryParam', queryParam);
+    debugger;
+    questionSlice.actions.clearState();
+    questionSlice.actions.get(id);
   },
 );
 

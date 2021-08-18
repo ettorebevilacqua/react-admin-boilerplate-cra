@@ -46,7 +46,8 @@ import IndaginiMenu from './section/indagini/menuIndagini';
 import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
 import Question from './forms/question';
-import { QuestionToForm, QuestionList } from './forms/';
+
+import { QuestionToForm, QuestionList, GuestQuestionForm } from './forms/';
 
 const genData: any = []; // generateData();
 const data = { defaultData: genData } as LocalStorageDataProviderParams;
@@ -68,6 +69,22 @@ const helmetRender = () => (
   <Helmet titleTemplate="%s - Smart" defaultTitle="Smart">
     <meta name="description" content="Smart service" />
   </Helmet>
+);
+
+export const GuestRoute = () => (
+  <>
+    {helmetRender()}
+    <LayoutProvider>
+      <ThemeProvider theme={Themes.default}>
+        <CssBaseline />
+        <Layout>
+          <Switch>
+            <Route path="/guest/compile/:token" component={GuestQuestionForm} />
+          </Switch>
+        </Layout>
+      </ThemeProvider>
+    </LayoutProvider>
+  </>
 );
 
 export default function UserComp() {

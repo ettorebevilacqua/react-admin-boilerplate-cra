@@ -25,12 +25,15 @@ import GridChilds from '../../component/gridChilds';
 import { elemStyle } from '../../stylesElement';
 
 import { CrudButton, ButtonType } from '../../component/crudButtons';
+import { ViewWeek, Email, PlaylistAddCheck } from '@material-ui/icons';
 
 import {
   empityParteipante,
   empityQuestion,
   schema,
 } from 'app/data/schema/questionSchema';
+
+import Tooltip from '@material-ui/core/Tooltip';
 
 const renderField = (props = {}, name, component, label, type, error) => {
   return (
@@ -75,7 +78,12 @@ const getPartecipantiByNum = (list, val) => {
   // setTimeout(() => propsFormik.setFieldTouched('partecipanti.1.nome', true));
 };
 
-const QuestionUsersFields = ({ propsFormik, numPartecipanti, parentValue }) => {
+const QuestionUsersFields = ({
+  propsFormik,
+  numPartecipanti,
+  parentValue,
+  ...rest
+}) => {
   const handleSelecetedTags = () => {};
   const classes = elemStyle();
   const propValue = propsFormik?.values || {};
@@ -133,10 +141,57 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, parentValue }) => {
     );
   };
 
-  const PartecipanteForm = index => {
+  const PartecipanteForm = (elem, index) => {
+    const renderButtonActionRecord = token => (
+      <GridChilds
+        justify="space-between"
+        alignItems="center"
+        spacing={1}
+        style={{
+          flexDirection: 'row',
+          textAlign: 'end',
+        }}
+        view={[6, 6]}
+      >
+        <Box style={{ width: '100%' }}>
+          <Tooltip title="Vai alle domande">
+            <IconButton
+              style={{ fontSize: '48px' }}
+              color="primary"
+              aria-label="domande"
+              onClick={e => {
+                debugger;
+                rest.history.push('/guest/' + token);
+              }}
+            >
+              <PlaylistAddCheck />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Box style={{ width: '100%' }}>
+          <Tooltip title="invia mail">
+            <IconButton
+              style={{ fontSize: '36px' }}
+              color="primary"
+              aria-label="delete"
+              disabled={!token}
+              onClick={e => {
+                debugger;
+                rest.history.push('/guest/' + token);
+              }}
+            >
+              <Email />
+              <span style={{ fontSize: '18px', whiteSpace: 'nowrap' }}>
+                {elem.sendCount ? ' (' + elem.sendCount + ') ' : ''}
+              </span>
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </GridChilds>
+    );
     return (
       <Paper className={`${classes.paperTitle} ${classes.width95}`} key={index}>
-        <GridChilds view={[4, 4, 4]} spacing={3} style={{ width: '100%' }}>
+        <GridChilds view={[3, 4, 3, 2]} spacing={3} style={{ width: '100%' }}>
           {renderField({}, `partecipanti.${index}.nome`, TextField, 'Nome')}
           {renderField({}, `partecipanti.${index}.email`, TextField, 'Email')}
           {renderField(
@@ -145,7 +200,8 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, parentValue }) => {
             TextField,
             'Telefono',
           )}
-          {/* <CrudButton /> */}
+
+          {renderButtonActionRecord(elem.token)}
         </GridChilds>
       </Paper>
     );
@@ -209,8 +265,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, parentValue }) => {
               view={[10, 2]}
               justify="space-between"
               spacing={2}
-              style={{ marginTop: '16px', width: '100%' }}
-              style={{ textAlign: 'end' }}
+              style={{ textAlign: 'end', marginTop: '16px', width: '100%' }}
             >
               <span> </span>
               <Button
@@ -241,7 +296,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, parentValue }) => {
 
               {partecipanti &&
                 partecipanti.map((elem, index) =>
-                  PartecipanteForm(index, classes),
+                  PartecipanteForm(elem, index, classes),
                 )}
               <GridChilds
                 view={[4, 2]}
