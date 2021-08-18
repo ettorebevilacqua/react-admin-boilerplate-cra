@@ -20,8 +20,6 @@ import { ToFieldArray, withField } from '../../lib/formikWithField';
 import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
 
 import { DomandaForm } from './domanda';
-import { ShowQuestion } from './show';
-import { Moduli } from './moduli';
 
 import { newDomanda } from 'app/services/question/moduliModel';
 import { AdjustingInterval } from 'app/services/helper';

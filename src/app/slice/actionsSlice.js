@@ -19,7 +19,6 @@ function createActionsSlice(name, actionsProviders) {
 
   const getThunk = ({ name, action }) =>
     createAsyncThunk('/action/' + name, async (payload, thunkAPI) => {
-      debugger;
       const [data, error] = await handlePromise(action(payload, {}));
       return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
     });

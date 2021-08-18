@@ -166,6 +166,7 @@ const MquestionTo = ({
                     propsFormik={propsFormik}
                     numPartecipanti={numPartecipanti}
                     parentValue={propsFormik.values}
+                    {...props}
                   />
                 }
                 <GridChilds
