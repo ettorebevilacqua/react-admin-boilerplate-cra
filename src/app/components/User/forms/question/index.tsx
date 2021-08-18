@@ -21,55 +21,20 @@ import {
   TipoSchemaCustomer,
 } from './schema';
 
-// styles
-import useStyles from './styles';
-import { Card } from '@material-ui/core';
-import { isImmutable } from 'immutable';
-import queryString from 'query-string';
+import { ModuliFormMaker } from './moduliForm';
 
-import getResource from '../../../../data/adminProvider';
-import { withRouter } from 'react-router';
-import { FormikTest } from './formik';
-import { useSelector, useDispatch } from 'react-redux';
-import { readModuli, dataSelector } from 'app/slice/moduliSlice';
-// getResource('corsi').then(resp => console.log('ss', resp));
-
-const values = {};
-const listValues = [];
-
-// Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
-function Question(props) {
-  var classes = useStyles();
-  const { data, isFetching, isError } = useSelector(dataSelector);
-  const [store, setStore] = React.useState(() => createEmptyStore('object'));
-  const [storeQ, setStoreQ] = React.useState(() =>
-    createStore(createOrderedMap(listValues)),
-  );
-
-  const [showValidity, setShowValidity] = React.useState(false);
-
-  const qryLocation = queryString.parse(props.location.search);
-  const currentSchema = 'isCustomer' in qryLocation ? schemaCustomer : schema;
-  const currentTipoSchema =
-    'isCustomer' in qryLocation ? TipoSchemaCustomer : TipoSchema;
-
-  // Create a state with the data, transforming into immutable on first mount
-
-  // or create empty store, based on the schema type:
-  // const [store, setStore] = React.useState(() => createEmptyStore(schema.get('type'));
-
-  const onChange = React.useCallback(
-    (storeKeys, scopes, updater, deleteOnEmpty, type) => {
-      setStore(storeUpdater(storeKeys, scopes, updater, deleteOnEmpty, type));
-    },
-    [setStore],
-  );
-
-  return (
-    <div className={classes.root}>
-      {isFetching ? <h2>Loading</h2> : <FormikTest />}
-    </div>
-  );
+export function ModuliFormContainer({
+  formProp: { id, data, saved, stateLoad, meta },
+  queryValue,
+  onSubmit,
+  actions,
+  ...props
+}) {
+  const { modulo, questions } = data || {};
+  // React.useEffect(init, []);
+  // React.useEffect(dataUpdate, [data]);
+  console.log('ModuliFormContainer', data);
+  const values = [];
+  const onSendRisposte = () => 1;
+  return <ModuliFormMaker data={values} onSend={onSendRisposte} />;
 }
-
-export default withRouter(Question);

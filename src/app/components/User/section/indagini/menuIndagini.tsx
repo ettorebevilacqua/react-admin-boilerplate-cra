@@ -38,7 +38,7 @@ function IndaginiMenu(props) {
 
     const AddLink = {
       name: 'Crea Indagine',
-      link: '/app/user/question?isCustomer',
+      link: '/app/user/moduli?isCustomer',
     };
 
     // 'isAdmin' in params && setMenu([AddLink, ...data]);

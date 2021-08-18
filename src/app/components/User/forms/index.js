@@ -1,18 +1,12 @@
 import React from 'react';
-import { shallowEqual, connect } from 'react-redux';
-import { compose } from 'redux';
-
+import { pick } from 'utils/pick';
 import { questionSlice, moduliSliceCrud, questionViewSlice } from 'app/slice';
-import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
+import { makeContainerRefreshed } from './component/makerCointainer';
 
 import { QuestionTo } from './question/questionTo';
 import { ListQuestions } from './question/listQuestions';
-
-import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
-import Question from './question';
-import { makeContainerRefreshed } from './component/makerCointainer';
-import { pick } from 'utils/pick';
 import GuestQuestionFormWrap from './question/guestQuestionForm';
+import { ModuliFormContainer } from './question';
 
 export const QuestionToForm = makeContainerRefreshed(
   QuestionTo,
@@ -42,8 +36,8 @@ export const GuestQuestionForm = makeContainerRefreshed(
         : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
     debugger;
-    questionSlice.actions.clearState();
-    questionSlice.actions.get(id);
+    moduliSliceCrud.actions.clearState();
+    moduliSliceCrud.actions.get(id);
   },
 );
 
@@ -59,6 +53,18 @@ export const QuestionList = makeContainerRefreshed(
       ]),
       true,
     );
+  },
+);
+
+export const ModuliForm = makeContainerRefreshed(
+  ModuliFormContainer,
+  moduliSliceCrud,
+  (matchParam, history, location, saved, stateLoad) => {
+    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    // console.log('xxxxx queryParam', queryParam);
+    moduliSliceCrud.actions.clearState();
+    moduliSliceCrud.actions.load();
+    console.log();
   },
 );
 

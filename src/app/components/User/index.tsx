@@ -45,9 +45,13 @@ import Indagini from './section/indagini';
 import IndaginiMenu from './section/indagini/menuIndagini';
 import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
-import Question from './forms/question';
 
-import { QuestionToForm, QuestionList, GuestQuestionForm } from './forms/';
+import {
+  ModuliForm,
+  QuestionToForm,
+  QuestionList,
+  GuestQuestionForm,
+} from './forms/';
 
 const genData: any = []; // generateData();
 const data = { defaultData: genData } as LocalStorageDataProviderParams;
@@ -116,8 +120,8 @@ export default function UserComp() {
               />
               <Route
                 exact
-                path="/app/user/question"
-                component={() => <Question />}
+                path="/app/user/moduli"
+                component={() => <ModuliForm />}
               />
               <Route
                 exact
