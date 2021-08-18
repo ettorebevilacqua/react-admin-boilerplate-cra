@@ -19,23 +19,30 @@ export function makeContainer(
   const { state: mapStateToProps, dispatch: mapDispatchToProps } = mapToProps;
 
   const Container = props => {
-    const [firstTime, setFirstTime] = React.useState(true);
     const toProps = { ...props };
     toProps.actions.reload = () =>
-      loadCallBack(props?.match?.params, history, props?.location);
+      !stateLoad.isFetching &&
+      loadCallBack(props?.match?.params, history, props?.location, stateLoad);
+
     const {
       formProp: { stateLoad, saved, data },
       actions,
     } = props;
     const history = useHistory();
+
     React.useEffect(() => {
-      setFirstTime(false);
-      loadCallBack(props?.match?.params, history, props?.location);
+      !stateLoad.isSuccess &&
+        !stateLoad.isFetching &&
+        !stateLoad.isError &&
+        !data &&
+        loadCallBack(props?.match?.params, history, props?.location);
     }, []);
 
     React.useEffect(() => {
-      saved &&
+      !!saved &&
         saved.isSuccess &&
+        !stateLoad.isFetching &&
+        !stateLoad.isError &&
         loadCallBack(props?.match?.params, history, props?.location, saved);
     }, [saved]);
 
@@ -84,7 +91,7 @@ export function makeContainer(
     );
     const renderComp = state => (
       <Component
-        queryValue={props?.match.params}
+        queryValue={props?.match?.params || {}}
         onSubmit={onSubmit}
         {...toProps}
       />
@@ -96,8 +103,8 @@ export function makeContainer(
       <div>
         <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
           {!stateLoad.isFetching && !data
-            ? rendereError()
-            : !firstTime && renderComp()}
+            ? stateLoad.isError && rendereError()
+            : renderComp()}
         </LoadingOverlay>
       </div>
     );
@@ -118,7 +125,6 @@ export function makeContainer(
   const Loader = props => {
     useInjectReducer({ key: slice.name, reducer: slice.reducer });
     const hasMoreActions = !!sliceProvider?.actionsSlice?.map;
-    debugger;
     return (
       <>
         {hasMoreActions &&
