@@ -14,7 +14,13 @@ import { userSlice } from './userSlice';
 import { moduliSlice } from './moduliSlice';
 
 import providers from '../data';
-const { questionProvider, providersView, emailProvider } = providers;
+const {
+  questionProvider,
+  providersView,
+  emailProvider,
+  moduliProvider,
+  moduloProvider,
+} = providers;
 
 export const questionViewSlice = createViewSlice(
   'getQuestion',
@@ -30,6 +36,11 @@ export const questionSlice = createCrudSlice({
   provider: questionProvider,
   queryProvider: providersView.getQuestion,
   actionsSlice: [questionActionlSlice],
+});
+
+export const moduliSliceCrud = createCrudSlice({
+  name: 'moduliSliceCrud',
+  provider: moduloProvider,
 });
 
 export const { actions: userAuthActions, reducer } = userSlice;

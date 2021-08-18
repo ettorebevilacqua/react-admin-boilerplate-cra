@@ -29,6 +29,14 @@ export const emailProvider = defaultProvider(
   ['axios', 'emailProvider'],
 );
 
+debugger;
+export const moduloProvider = defaultProvider(
+  'moduloProvider',
+  '/moduli/:id',
+  schemas.moduli,
+  ['axios', 'moduloProvider'],
+);
+
 /*
 
 export const moduliProvider = new Axios({
@@ -37,11 +45,7 @@ export const moduliProvider = new Axios({
   tags: ['moduli', 'need-auth'],
 });
 
-export const moduloProvider = new Axios({
-  id: 'moduli/id',
-  url: '/moduli/:id',
-  tags: ['moduli', 'need-auth'],
-});
+
 
 export const moduliQuery = new Selector(
   moduliProvider,
@@ -64,6 +68,7 @@ export const moduliQuery = new Selector(
 const dataApi = {
   userProvider: userProviderFrom,
   moduliProvider,
+  moduloProvider,
   providersView,
   queryViews,
   questionProvider,
