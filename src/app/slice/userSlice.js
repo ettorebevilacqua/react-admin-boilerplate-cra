@@ -124,7 +124,11 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     clearState: state => initialState,
-    clearStateLogOut: state => ({ ...initialState, mustAuth: true }),
+    clearStateLogOut: state => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      return { ...initialState, mustAuth: true };
+    },
     mustAuth: state => {
       state.mustAuth = true;
     },
@@ -209,9 +213,9 @@ export function initUser(store) {
 }
 
 export function logOut() {
-  _GlobalStore.dispatch(userSlice.actions.clearStateLogOut());
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
+  _GlobalStore.dispatch(userSlice.actions.clearStateLogOut());
 }
 
 export const authToken = localStorage.getItem('token');
