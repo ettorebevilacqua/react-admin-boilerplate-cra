@@ -3,19 +3,9 @@ import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async'; // Import UI Generator
 import { Link, Typography } from '@material-ui/core';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { readModuli, dataSelector } from 'app/slice/moduliSlice';
-
 import UserComp from '../../components/User/';
-import { useUserCompSlice } from './slice/userCompSlice';
 
 export function UserPage() {
-  useUserCompSlice();
-  const dispatch = useDispatch();
-  React.useEffect(() => {
-    dispatch(readModuli());
-  }, []);
-
   return (
     <>
       <Helmet>

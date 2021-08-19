@@ -71,7 +71,7 @@ const AppRoute = ({ isAuthenticated }) => (
 );
 
 function AppBody(props: any) {
-  const { actions } = useUserAuthSlice(); // start up slices
+  useUserAuthSlice(); // start up slices
   const {
     id,
     isFetching,

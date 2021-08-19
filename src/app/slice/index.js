@@ -46,7 +46,7 @@ export const { actions: userAuthActions, reducer } = userSlice;
 
 export const useUserAuthSlice = () => {
   useInjectReducer({ key: userSlice.name, reducer: userSlice.reducer });
-  useInjectReducer({ key: moduliSlice.name, reducer: moduliSlice.reducer });
+  // useInjectReducer({ key: moduliSlice.name, reducer: moduliSlice.reducer });
   /* useInjectReducer({
     key: questionSlice.providerSlice.name,
     reducer: questionSlice.providerSlice.reducer,
