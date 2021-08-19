@@ -111,6 +111,14 @@ function Header(props) {
   const handleDrawerOpen = () => {
     setOpen(!open);
   };
+  /*  if(window.history.length > 1 &&
+    document.referrer.indexOf(window.location.host) !== -1) { */
+
+  const goBack = browserHistory =>
+    window.history.length > 1 &&
+    document.referrer.indexOf(window.location.host) === -1
+      ? browserHistory.push('/')
+      : browserHistory.goBack();
 
   const isMenu = false;
   return (
@@ -118,7 +126,7 @@ function Header(props) {
       <Toolbar className={classes.toolbar}>
         <IconButton
           color="inherit"
-          onClick={() => props.history.goBack()}
+          onClick={() => goBack(props.history)}
           className={classNames(
             classes.headerMenuButton,
             classes.headerMenuButtonCollapse,

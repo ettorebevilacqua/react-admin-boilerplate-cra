@@ -5,16 +5,13 @@ https://cloudnweb.dev/2021/02/modern-react-redux-tutotials-redux-toolkit-login-u
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { moduliProvider } from '../data';
 
+import { handlePromise } from 'utils/functional';
+
 export const readModuli = createAsyncThunk(
   'moduli/all',
   async (payload, thunkAPI) => {
-    try {
-      let data = await moduliProvider.list().read();
-
-      return { ...data };
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
-    }
+    const [data, error] = await handlePromise(moduliProvider.list().read());
+    return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
   },
 );
 

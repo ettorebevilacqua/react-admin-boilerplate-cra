@@ -136,7 +136,9 @@ const MquestionTo = ({
             {saved?.isError && saved?.errorMessage}
           </Typography>
         </div>
-        {renderButtonActionRecord(propsFormik)}
+        {
+          // renderButtonActionRecord(propsFormik)
+        }
       </GridChilds>
     </div>
   );

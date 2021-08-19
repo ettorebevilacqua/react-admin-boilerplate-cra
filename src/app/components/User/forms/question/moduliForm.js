@@ -41,7 +41,7 @@ export const ModuliFormMaker = props => {
   const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
 
   const dispatch = useDispatch();
-  debugger;
+
   React.useEffect(() => {
     //  data && setValues(data.results);
   }, []);
