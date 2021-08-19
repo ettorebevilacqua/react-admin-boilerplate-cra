@@ -30,7 +30,7 @@ import {
 // const moduliProvider = moduliProvider;
 
 export const ModuliFormMaker = props => {
-  const { data, isFetching, isError } = props;
+  const { data, isFetching, isError, onSubmit } = props;
   const isModuliState = useSelector(userCompSelector);
   const [isModuli, setIsModuli] = React.useState(true);
 
@@ -41,7 +41,7 @@ export const ModuliFormMaker = props => {
   const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
 
   const dispatch = useDispatch();
-
+  debugger;
   React.useEffect(() => {
     //  data && setValues(data.results);
   }, []);
@@ -52,12 +52,14 @@ export const ModuliFormMaker = props => {
   };
 
   const onSaveData = index => domanda => {
-    if (!values[index]) return false;
-    const dataModuliTmp = [...values];
-    dataModuliTmp[index] = domanda;
-    dispatch(saveModulo(domanda));
-    setValues(dataModuliTmp);
-    saveValues(dataModuliTmp);
+    if (!values[index] || isFetching) return false;
+
+    const aa = dispatch(saveModulo(domanda)).then(savedData => {
+      const dataModuliTmp = [...values];
+      dataModuliTmp[index] = savedData.payload;
+      setValues(dataModuliTmp);
+      saveValues(dataModuliTmp);
+    });
   };
 
   const commandModuli = (cmd, payload) => {

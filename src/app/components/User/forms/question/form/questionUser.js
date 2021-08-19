@@ -155,36 +155,40 @@ const QuestionUsersFields = ({
       >
         <Box style={{ width: '100%' }}>
           <Tooltip title="Vai alle domande">
-            <IconButton
-              style={{ fontSize: '48px' }}
-              color="primary"
-              aria-label="domande"
-              onClick={e => {
-                debugger;
-                rest.history.push('/guest/' + token);
-              }}
-            >
-              <PlaylistAddCheck />
-            </IconButton>
+            <span>
+              <IconButton
+                style={{ fontSize: '48px' }}
+                color="primary"
+                aria-label="domande"
+                onClick={e => {
+                  debugger;
+                  rest.history.push('/guest/' + token);
+                }}
+              >
+                <PlaylistAddCheck />
+              </IconButton>
+            </span>
           </Tooltip>
         </Box>
         <Box style={{ width: '100%' }}>
           <Tooltip title="invia mail">
-            <IconButton
-              style={{ fontSize: '36px' }}
-              color="primary"
-              aria-label="delete"
-              disabled={!token}
-              onClick={e => {
-                debugger;
-                rest.history.push('/guest/' + token);
-              }}
-            >
-              <Email />
-              <span style={{ fontSize: '18px', whiteSpace: 'nowrap' }}>
-                {elem.sendCount ? ' (' + elem.sendCount + ') ' : ''}
-              </span>
-            </IconButton>
+            <span>
+              <IconButton
+                style={{ fontSize: '36px' }}
+                color="primary"
+                aria-label="delete"
+                disabled={!token}
+                onClick={e => {
+                  debugger;
+                  rest.history.push('/guest/' + token);
+                }}
+              >
+                <Email />
+                <span style={{ fontSize: '18px', whiteSpace: 'nowrap' }}>
+                  {elem.sendCount ? ' (' + elem.sendCount + ') ' : ''}
+                </span>
+              </IconButton>
+            </span>
           </Tooltip>
         </Box>
       </GridChilds>

@@ -34,7 +34,8 @@ export function ModuliFormContainer({
   // React.useEffect(init, []);
   // React.useEffect(dataUpdate, [data]);
   console.log('ModuliFormContainer', data);
-  const values = [];
-  const onSendRisposte = () => 1;
-  return <ModuliFormMaker data={values} onSend={onSendRisposte} />;
+  const onSendRisposte = (val1, val2) => {
+    console.log('ModuliFormContainer onSendRisposte', val1, val2);
+  };
+  return <ModuliFormMaker data={data} onSend={onSendRisposte} />;
 }
