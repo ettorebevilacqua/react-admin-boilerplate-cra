@@ -1,12 +1,18 @@
 import React from 'react';
 import { pick } from 'utils/pick';
-import { questionSlice, moduliSliceCrud, questionViewSlice } from 'app/slice';
+import {
+  questionSlice,
+  moduliSliceCrud,
+  questionSlice2,
+  questionViewSlice,
+} from 'app/slice';
 import { makeContainerRefreshed } from './component/makerCointainer';
 
 import { QuestionTo } from './question/questionTo';
 import { ListQuestions } from './question/listQuestions';
 import GuestQuestionFormWrap from './question/guestQuestionForm';
 import { ModuliFormContainer } from './question';
+import IndaginiContainer from 'app/components/User/section/indagini';
 
 export const QuestionToForm = makeContainerRefreshed(
   QuestionTo,
@@ -19,6 +25,7 @@ export const QuestionToForm = makeContainerRefreshed(
         ? pick(matchParam, ['id', 'idmodulo', 'idcorso'])
         : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
+
     questionSlice.actions.clearState();
     questionSlice.actions.query(queryParam, true);
   },
@@ -35,7 +42,6 @@ export const GuestQuestionForm = makeContainerRefreshed(
         ? pick(matchParam, ['id', 'idmodulo', 'idcorso'])
         : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
-    debugger;
     moduliSliceCrud.actions.clearState();
     moduliSliceCrud.actions.get(id);
   },
@@ -43,9 +49,10 @@ export const GuestQuestionForm = makeContainerRefreshed(
 
 export const QuestionList = makeContainerRefreshed(
   ListQuestions,
-  questionSlice,
+  questionSlice2,
   (matchParam, history, location, saved) => {
-    questionSlice.actions.query(
+    questionSlice2.actions.clearState();
+    questionSlice2.actions.query(
       pick({ closeAt: 'false', full: 'true', ...matchParam }, [
         'closeAt',
         'full',
@@ -68,4 +75,15 @@ export const ModuliForm = makeContainerRefreshed(
   },
 );
 
+export const IndaginiList = makeContainerRefreshed(
+  IndaginiContainer,
+  moduliSliceCrud,
+  (matchParam, history, location, saved, stateLoad) => {
+    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    // console.log('xxxxx queryParam', queryParam);
+    moduliSliceCrud.actions.clearState();
+    moduliSliceCrud.actions.load();
+    console.log();
+  },
+);
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale

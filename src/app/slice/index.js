@@ -37,6 +37,13 @@ export const questionSlice = createCrudSlice({
   actionsSlice: [questionActionlSlice],
 });
 
+export const questionSlice2 = createCrudSlice({
+  name: 'question2',
+  provider: questionProvider,
+  queryProvider: providersView.getQuestion,
+  actionsSlice: [questionActionlSlice],
+});
+
 export const moduliSliceCrud = createCrudSlice({
   name: 'moduliSliceCrud',
   provider: moduliProvider,

@@ -51,6 +51,7 @@ import {
   QuestionToForm,
   QuestionList,
   GuestQuestionForm,
+  IndaginiList,
 } from './forms/';
 
 const genData: any = []; // generateData();
@@ -111,7 +112,7 @@ export default function UserComp() {
               <Route
                 exact
                 path="/app/user/indagini"
-                component={() => <Indagini />}
+                component={() => <IndaginiList />}
               />
               <Route
                 exact

@@ -142,8 +142,9 @@ const MlistQuestions = ({
         [4, 4, 2, 2],
       )}
       {!!values &&
+        values.map &&
         values.map(
-          renderList(['titoloModulo', 'titolo', 'idcorso'], [4, 4, 2]),
+          renderList(['titleIndagine', 'titolo', 'idcorso'], [4, 4, 2]),
         )}
     </div>
   );
