@@ -161,7 +161,6 @@ const QuestionUsersFields = ({
                 color="primary"
                 aria-label="domande"
                 onClick={e => {
-                  debugger;
                   rest.history.push('/guest/' + token);
                 }}
               >
@@ -179,7 +178,6 @@ const QuestionUsersFields = ({
                 aria-label="delete"
                 disabled={!token}
                 onClick={e => {
-                  debugger;
                   rest.history.push('/guest/' + token);
                 }}
               >
