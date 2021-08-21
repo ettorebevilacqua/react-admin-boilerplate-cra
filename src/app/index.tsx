@@ -27,6 +27,8 @@ import {
   userSelector,
 } from 'app/slice/userSlice';
 
+import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
+
 import { AppHome } from './app';
 import AdminApp from './admin';
 import { Login } from 'app/admin/layout';
@@ -35,16 +37,17 @@ import { HomePage } from './pages/HomePage/Loadable';
 import { useUserAuthSlice } from 'app/slice';
 import { GuestRoute } from './components/User';
 
-initUser(store); // check if user is logged with present token
-
 const Protected = () => <h3>Protected</h3>;
 
 function PrivateRoute({ children, isAuthenticated, ...rest }) {
-  return (
+  return !isAuthenticated && window.location.pathname !== '/guest' ? (
+    <Login />
+  ) : (
     <Route
       {...rest}
       render={({ location }) => {
-        return isAuthenticated === true ? children : <Login />;
+        debugger;
+        return isAuthenticated === true ? children : <p>ccccc</p>;
       }}
     />
   );
@@ -52,26 +55,23 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
 
 const AppRoute = ({ isAuthenticated }) => (
   <>
-    <Route path="/guest" component={GuestRoute} />
+    <Route exact path="/guest" component={GuestRoute} />
     <PrivateRoute
       path="/app"
       component={AppHome}
       isAuthenticated={isAuthenticated}
     >
-      <Switch>
-        <Route exact path="/admin" component={AdminApp} />
+      <Route exact path="/admin" component={AdminApp} />
 
-        <Route component={NotFoundPage} />
-      </Switch>
+      <Route component={NotFoundPage} />
+      <Route exact path="/" component={HomePage}>
+        <Redirect from="/" to="/app/user" />
+      </Route>
     </PrivateRoute>
-    <Route exact path="/" component={HomePage}>
-      <Redirect from="/" to="/app/user" />
-    </Route>
   </>
 );
 
 function AppBody(props: any) {
-  useUserAuthSlice(); // start up slices
   const {
     id,
     isFetching,
@@ -81,19 +81,23 @@ function AppBody(props: any) {
   } = props.formProp.stateLoad;
 
   React.useEffect(() => {
-    console.log('check auth ', isFetching, mustAuth, id);
+    initUser(store); // check if user is logged with present token
+  }, []);
+
+  React.useEffect(() => {
+    // console.log('check auth ', isFetching, mustAuth, id);
   }, [props.formProp.stateLoad]);
 
   return !isFetching && !id && !mustAuth ? (
     <h3>start</h3>
-  ) : isFetching ? (
-    <h2>Loading</h2>
   ) : (
-    <BrowserRouter>
-      <Switch>
-        <AppRoute isAuthenticated={!!id && !mustAuth} />
-      </Switch>
-    </BrowserRouter>
+    <LoadingOverlay active={isFetching} spinner text="Loading...">
+      <BrowserRouter>
+        <Switch>
+          <AppRoute isAuthenticated={!!id && !mustAuth} />
+        </Switch>
+      </BrowserRouter>
+    </LoadingOverlay>
   );
 }
 
@@ -103,11 +107,17 @@ const AppBodyConnected = compose(withConnect)(AppBody);
 
 const helmetContext = {};
 
+const StartSlices = () => {
+  useUserAuthSlice(); // start up slices
+  return <></>;
+};
+
 export function App() {
   const { i18n } = useTranslation();
   return (
     <React.Fragment>
       <Provider store={store}>
+        <StartSlices />
         <HelmetProvider context={helmetContext}>
           <Helmet
             titleTemplate="%s - React Boilerplate"
