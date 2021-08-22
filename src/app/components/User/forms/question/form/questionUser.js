@@ -131,7 +131,7 @@ const QuestionUsersFields = ({
             disableds={
               index === 0 &&
               arrayHelper?.form?.values?.docenti &&
-              arrayHelper?.form?.values?.docenti.length < 2
+              arrayHelper?.form?.values?.docenti.length < 1
                 ? ['delete']
                 : null
             }
