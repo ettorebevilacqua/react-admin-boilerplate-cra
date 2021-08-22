@@ -33,6 +33,7 @@ export const ModuliFormMaker = props => {
   const { data, isFetching, isError, onSubmit } = props;
   const isModuliState = useSelector(userCompSelector);
   const [isModuli, setIsModuli] = React.useState(true);
+  const [newId, setNewId] = React.useState();
 
   const [isAnteprima, setIsAnteprima] = React.useState([false]);
   const [values, setValues] = React.useState(() =>
@@ -53,10 +54,14 @@ export const ModuliFormMaker = props => {
 
   const onSaveData = index => domanda => {
     if (!values[index] || isFetching) return false;
-
+    if (!domanda.id && newId) {
+      domanda.id = newId;
+    }
     const aa = dispatch(saveModulo(domanda)).then(savedData => {
       const dataModuliTmp = [...values];
       dataModuliTmp[index] = savedData.payload;
+      setNewId(savedData.payload.id);
+      debugger;
       setValues(dataModuliTmp);
       saveValues(dataModuliTmp);
     });
