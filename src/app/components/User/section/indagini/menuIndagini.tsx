@@ -20,7 +20,7 @@ const data = [
   {
     name: 'Indagini aperte',
     link: '/app/user/indagini/list',
-    hardLink: true,
+    hardLink: false,
   },
   {
     name: 'Genera repost annuale',
@@ -39,6 +39,7 @@ function IndaginiMenu(props) {
     const AddLink = {
       name: 'Crea Indagine',
       link: '/app/user/moduli?isCustomer',
+      hardLink: false,
     };
 
     // 'isAdmin' in params && setMenu([AddLink, ...data]);
