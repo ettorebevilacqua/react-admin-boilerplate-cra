@@ -46,8 +46,7 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
     <Route
       {...rest}
       render={({ location }) => {
-        debugger;
-        return isAuthenticated === true ? children : <p>ccccc</p>;
+        return isAuthenticated === true ? children : <Login />;
       }}
     />
   );
@@ -64,10 +63,10 @@ const AppRoute = ({ isAuthenticated }) => (
       <Route exact path="/admin" component={AdminApp} />
 
       <Route component={NotFoundPage} />
-      <Route exact path="/" component={HomePage}>
-        <Redirect from="/" to="/app/user" />
-      </Route>
     </PrivateRoute>
+    <Route exact path="/" component={HomePage}>
+      <Redirect from="/" to="/app/user" />
+    </Route>
   </>
 );
 
