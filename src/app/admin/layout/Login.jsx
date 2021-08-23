@@ -93,13 +93,14 @@ const Login = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (isError) {
-      dispatch(clearState());
-      // history.push('/login');
-    }
+    /*  if (isError) {
+        dispatch(clearState());
+        // history.push('/login');
+      } */
   }, [dispatch, history, isError]);
 
   const handleSubmit = auth => {
+    dispatch(clearState());
     setLoading(true);
     const username = { ...auth }.username;
     const fakeAuth = { username: 'fake@example.com', password: 'password1' };

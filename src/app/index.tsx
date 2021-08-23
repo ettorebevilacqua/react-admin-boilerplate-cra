@@ -84,16 +84,16 @@ function AppBody(props: any) {
   }, []);
 
   React.useEffect(() => {
-    // console.log('check auth ', isFetching, mustAuth, id);
+    // console.log('check auth isError ', isError);
   }, [props.formProp.stateLoad]);
 
-  return !isFetching && !id && !mustAuth ? (
+  return !isFetching && !id && !mustAuth && !isError ? (
     <h3>start</h3>
   ) : (
     <LoadingOverlay active={isFetching} spinner text="Loading...">
       <BrowserRouter>
         <Switch>
-          <AppRoute isAuthenticated={!!id && !mustAuth} />
+          <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
         </Switch>
       </BrowserRouter>
     </LoadingOverlay>
