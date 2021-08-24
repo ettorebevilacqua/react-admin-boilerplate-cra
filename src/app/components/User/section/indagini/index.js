@@ -45,7 +45,9 @@ function IndaginiContainer(props) {
         {isFetching && !data ? (
           <h2>Loading...</h2>
         ) : (
-          <IndaginiList values={(data && data.results) || []} />
+          <IndaginiList
+            values={data ? data.filter(item => item.isPublic) : []}
+          />
         )}
       </div>
     </>

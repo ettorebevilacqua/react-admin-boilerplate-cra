@@ -51,8 +51,9 @@ import {
   QuestionToForm,
   QuestionList,
   GuestQuestionForm,
-  IndaginiList,
 } from './forms/';
+
+import { IndaginiList } from './forms/question';
 
 const genData: any = []; // generateData();
 const data = { defaultData: genData } as LocalStorageDataProviderParams;

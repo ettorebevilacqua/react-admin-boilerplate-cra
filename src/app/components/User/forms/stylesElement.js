@@ -75,11 +75,22 @@ export const elemStyle = makeStyles(theme => ({
   },
   fieldTitle: {
     padding: '2px',
-    fontSize: '18px',
+    fontSize: '16px',
     textAlign: 'center',
     backgroundColor: theme.palette.primary.main + 'dd',
     fontWeight: 'bold',
     color: 'white',
+  },
+  texth4: {
+    fontSize: '16px',
+    fontWeight: 'bold',
+  },
+  texth5: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+  },
+  colorRed: {
+    color: 'red',
   },
   width95: {
     width: '95%',

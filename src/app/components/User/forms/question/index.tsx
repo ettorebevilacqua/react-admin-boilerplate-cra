@@ -6,6 +6,7 @@ import { makeContainerRefreshed } from '../component/makerCointainer';
 
 import { ModuliFormMaker } from './moduliForm';
 import QuestionModuli from './questionModuli';
+import IndaginiContainer from 'app/components/User/section/indagini';
 
 export function ModuliFormContainer({
   formProp: { id, data, saved, stateLoad, meta },
@@ -37,6 +38,18 @@ export const QuestionModuliForm = makeContainerRefreshed(
         ? pick(matchParam, ['id'])
         : { id: saved.data.id };
 
+    questionModuliSlice.actions.clearState();
+    questionModuliSlice.actions.query(queryParam, true);
+  },
+);
+
+export const IndaginiList = makeContainerRefreshed(
+  IndaginiContainer,
+  questionModuliSlice,
+  (matchParam, history, location, saved, stateLoad) => {
+    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    // console.log('xxxxx queryParam', queryParam);
+    const queryParam = {};
     questionModuliSlice.actions.clearState();
     questionModuliSlice.actions.query(queryParam, true);
   },

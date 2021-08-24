@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import GridChilds from '../../component/gridChilds';
 // import { withRouter } from 'react-router';
 import { withRouter, Switch, Route, Link, useParams } from 'react-router-dom';
+import { ShowQuestion } from 'app/components/User/forms/question/form/show';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,6 +27,7 @@ const routeToBase = id => `/app/user/indagini_invio/${id}/0`;
 
 function IndaginiList(props) {
   const { values, history } = props;
+  const [isShow, setIsShow] = React.useState(false);
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
@@ -50,52 +52,82 @@ function IndaginiList(props) {
 
   return (
     <>
-      <GridChilds
-        view={[12]}
-        style={{
-          marginTop: '4px',
-          padding: '8px',
-          width: '100%',
-          alignItems: 'center',
-        }}
-      >
-        <h2>Apri Indagine</h2>
-      </GridChilds>
-      <List className={classes.root}>
-        {values &&
-          values.map((value, idxModulo) => {
-            const labelId = `checkbox-list-label-${value}`;
+      {isShow ? (
+        <>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            type="submit"
+            onClick={e => setIsShow(false)}
+          >
+            Indagini
+          </Button>
 
-            return (
-              <ListItem
-                key={idxModulo}
-                role={undefined}
-                dense
-                button
-                onClick={handleToggle(value)}
-              >
-                <ListItemText id={labelId} primary={`${value.title}`} />
-                <ListItemSecondaryAction>
-                  <GridChilds
-                    spacing={1}
-                    view={[12]}
-                    style={{ alignItems: 'center', marginLeft: '12px' }}
+          <ShowQuestion values={{ domande: [] }} />
+        </>
+      ) : (
+        <>
+          <GridChilds
+            view={[12]}
+            style={{
+              marginTop: '4px',
+              padding: '8px',
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
+            <h2>Apri Indagine</h2>
+          </GridChilds>
+          <List className={classes.root}>
+            {values &&
+              values.map((value, idxModulo) => {
+                const labelId = `checkbox-list-label-${value}`;
+
+                return (
+                  <ListItem
+                    key={idxModulo}
+                    role={undefined}
+                    dense
+                    button
+                    onClick={handleToggle(value)}
                   >
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      fullWidth
-                      type="submit"
-                      onClick={e => history.push(routeToBase(value.id), value)}
-                    >
-                      Apri
-                    </Button>
-                  </GridChilds>
-                </ListItemSecondaryAction>
-              </ListItem>
-            );
-          })}
-      </List>
+                    <ListItemText id={labelId} primary={`${value.title}`} />
+                    <ListItemSecondaryAction>
+                      <GridChilds
+                        spacing={1}
+                        view={[6, 6]}
+                        style={{ alignItems: 'center', marginLeft: '12px' }}
+                      >
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          fullWidth
+                          type="submit"
+                          onClick={e => setIsShow(true)}
+                        >
+                          Anteprima
+                        </Button>
+
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          fullWidth
+                          type="submit"
+                          onClick={e =>
+                            history.push(routeToBase(value.id), value)
+                          }
+                        >
+                          edit
+                        </Button>
+                      </GridChilds>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                );
+              })}
+          </List>
+        </>
+      )}
     </>
   );
 }
