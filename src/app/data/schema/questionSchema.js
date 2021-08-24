@@ -56,6 +56,12 @@ export const schema = Yup.object().shape({
     ),
 });
 
+export const questionModulischema = Yup.object().shape({
+  title: Yup.string().required('Required'),
+  isPublic: Yup.boolean(),
+  moduli: Yup.array(),
+});
+
 export const empityParteipante = { nome: '', email: '', telefono: '' };
 
 export const empityQuestion = {

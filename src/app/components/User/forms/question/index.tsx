@@ -1,27 +1,11 @@
 import React from 'react';
 
-import { widgets } from '@ui-schema/ds-material';
+import { questionModuliSlice } from 'app/slice';
 
-// Import UI Generator
-import {
-  UIGenerator, // main component
-  isInvalid, // for validity checking
-  createEmptyStore,
-  createStore, // for initial data-store creation
-  createMap,
-  createOrderedMap,
-  prependKey, // for deep immutables
-} from '@ui-schema/ui-schema';
-import { storeUpdater } from '@ui-schema/ui-schema/UIStore/storeUpdater';
-import { Select, SelectMulti } from '@ui-schema/ds-material/Widgets/Select';
-import {
-  schema,
-  TipoSchema,
-  schemaCustomer,
-  TipoSchemaCustomer,
-} from './schema';
+import { makeContainerRefreshed } from '../component/makerCointainer';
 
 import { ModuliFormMaker } from './moduliForm';
+import QuestionModuliContainer from './questionModuliForm';
 
 export function ModuliFormContainer({
   formProp: { id, data, saved, stateLoad, meta },
@@ -37,5 +21,18 @@ export function ModuliFormContainer({
   const onSendRisposte = (val1, val2) => {
     console.log('ModuliFormContainer onSendRisposte', val1, val2);
   };
-  return <ModuliFormMaker data={data} onSend={onSendRisposte} />;
+  return (
+    <ModuliFormMaker actions={actions} data={data} onSend={onSendRisposte} />
+  );
 }
+
+export const QuestionModuliForm = makeContainerRefreshed(
+  QuestionModuliContainer,
+  questionModuliSlice,
+  (matchParam, history, location, saved, stateLoad) => {
+    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    // console.log('xxxxx queryParam', queryParam);
+    questionModuliSlice.actions.clearState();
+    questionModuliSlice.actions.load();
+  },
+);

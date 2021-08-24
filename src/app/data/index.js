@@ -29,6 +29,13 @@ export const emailProvider = defaultProvider(
   ['axios', 'emailProvider'],
 );
 
+export const questionModuliProvider = defaultProvider(
+  'questionModuli',
+  '/moduli/question',
+  schemas.questionModulischema,
+  ['axios', 'questionModuli'],
+);
+
 /*
 
 export const moduliProvider = new Axios({
