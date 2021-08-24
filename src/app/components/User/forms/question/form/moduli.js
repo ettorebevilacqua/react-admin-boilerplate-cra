@@ -16,7 +16,7 @@ import GridChilds from '../../component/gridChilds';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    maxWidth: 360,
+    maxWidth: '100%',
     backgroundColor: theme.palette.background.paper,
   },
 }));
@@ -71,8 +71,9 @@ export function Moduli({ onEdit, values, command, ...props }) {
                 dense
                 button
                 onClick={handleToggle(value)}
+                style={{ width: '100%', maxWidth: '100%', marginTop: '6px' }}
               >
-                <ListItemIcon>
+                {/* <ListItemIcon>
                   <Checkbox
                     edge="start"
                     checked={checked.indexOf(value) !== -1}
@@ -81,12 +82,16 @@ export function Moduli({ onEdit, values, command, ...props }) {
                     inputProps={{ 'aria-labelledby': labelId }}
                   />
                 </ListItemIcon>
+                */}
                 <ListItemText id={labelId} primary={`${value.title}`} />
                 <ListItemSecondaryAction>
                   <GridChilds
                     spacing={1}
                     view={[4, 4, 4]}
-                    style={{ alignItems: 'center', marginLeft: '12px' }}
+                    style={{
+                      alignItems: 'center',
+                      marginLeft: '12px',
+                    }}
                   >
                     <Button
                       color="primary"
