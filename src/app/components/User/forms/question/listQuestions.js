@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
@@ -84,7 +85,7 @@ const MlistQuestions = ({
             Indagini Aperte soddifazione cliente :
           </Typography>
           <Typography variant="h4" color="error">
-            {saved?.isError && saved?.errorMessage}
+            {saved && saved.isError && saved.errorMessage}
           </Typography>
         </div>
       </GridChilds>
@@ -116,7 +117,7 @@ const MlistQuestions = ({
 
   const getRenderValues = (fields, dataTo) => {
     const vals = fields.map(renderValue(dataTo));
-    vals && vals.push(renderButtonActionRecord(dataTo.id));
+    // vals && vals.push(renderButtonActionRecord(dataTo.id));
     return vals;
   };
 
@@ -126,9 +127,28 @@ const MlistQuestions = ({
         <GridChilds
           justify="space-between"
           style={{ alignItems: 'center' }}
-          view={[...sizes, 2]}
+          view={[...sizes]}
         >
-          {getRenderValues(fields, dataTo).map(elem => elem)}
+          <div className={classes.paperRowElem}>
+            {dataTo['titleIndagine'] || ''}
+          </div>
+          <div className={classes.paperRowElem}>
+            {data['data'] || '10/03/2021'}
+          </div>
+          <div className={classes.paperRowElem}>
+            {data['rendeption'] || '10/03/2021'}
+          </div>
+          <div>
+            <ul style={{ fontSize: '18px' }}>
+              <li>
+                <Link to={`/app/user/indagini_edit/${dataTo.id}`}>
+                  Visualizza i risultati grezzi
+                </Link>
+              </li>
+              <li>Genera remind per chi non ha risposto</li>
+              <li>Chiudi indagine e genera relazione</li>
+            </ul>
+          </div>
         </GridChilds>
       </Paper>
     );
@@ -138,13 +158,13 @@ const MlistQuestions = ({
     <div className={classes.root}>
       {renderTitle()}
       {renderHeaderList(
-        ['Modulo', 'Titolo', 'idCorso', 'Visualizza'],
-        [4, 4, 2, 2],
+        ['Indagine', 'Data Apertura', 'Rendeptiom', 'Azioni'],
+        [4, 2, 2, 4],
       )}
       {!!values &&
         values.map &&
         values.map(
-          renderList(['titleIndagine', 'titolo', 'idcorso'], [4, 4, 2]),
+          renderList(['titleIndagine', 'data', 'rendeption'], [4, 2, 2, 4]),
         )}
     </div>
   );
