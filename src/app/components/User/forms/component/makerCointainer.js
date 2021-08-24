@@ -73,6 +73,12 @@ export function makeContainer(
       setStatus({ success: true });
     };
 
+    const saveData = async valToSave => {
+      return actions && actions.save
+        ? await handlePromise(actions.save(valToSave))
+        : new Promise(() => [null, 'error save not found']);
+    };
+
     const rendereError = () => (
       <>
         <h2>Errrore nel Caricamento</h2>
@@ -93,6 +99,7 @@ export function makeContainer(
       <Component
         queryValue={props?.match?.params || {}}
         onSubmit={onSubmit}
+        saveData={saveData}
         {...toProps}
       />
     );
