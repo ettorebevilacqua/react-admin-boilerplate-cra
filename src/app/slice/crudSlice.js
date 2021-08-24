@@ -127,7 +127,7 @@ const init = store =>
           data,
           saved,
           stateLoad,
-          meta: { schema: provider.schema },
+          meta: { schema: provider.schemas },
         },
       };
     };
