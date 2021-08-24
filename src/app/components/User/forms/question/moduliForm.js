@@ -161,7 +161,7 @@ export const ModuliFormMaker = props => {
       {isModuli ? (
         <GridChilds view={[5, 7]}>
           <Moduli values={values} command={commandModuli} onEdit={editModulo} />
-          <QuestionModuliForm />
+          <QuestionModuliForm moduli={values} />
         </GridChilds>
       ) : isAnteprima ? (
         <div
