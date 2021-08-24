@@ -38,9 +38,9 @@ import { useUserAuthSlice } from 'app/slice';
 import { GuestRoute } from './components/User';
 
 const Protected = () => <h3>Protected</h3>;
-
+const isGuest = () => window.location.pathname === '/guest';
 function PrivateRoute({ children, isAuthenticated, ...rest }) {
-  return !isAuthenticated && window.location.pathname !== '/guest' ? (
+  return !isAuthenticated && isGuest() ? (
     <Login />
   ) : (
     <Route
@@ -54,25 +54,29 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
 
 const AppRoute = ({ isAuthenticated }) => (
   <>
-    <Route exact path="/guest" component={GuestRoute} />
-    <PrivateRoute
-      path="/app"
-      component={AppHome}
-      isAuthenticated={isAuthenticated}
-    >
-      <Route exact path="/admin" component={AdminApp} />
+    {isAuthenticated && (
+      <>
+        <PrivateRoute
+          path="/app"
+          component={AppHome}
+          isAuthenticated={isAuthenticated}
+        >
+          <Route exact path="/admin" component={AdminApp} />
 
-      <Route component={NotFoundPage} />
-    </PrivateRoute>
-    <Route exact path="/" component={HomePage}>
-      <Redirect from="/" to="/app/user" />
-    </Route>
+          <Route component={NotFoundPage} />
+        </PrivateRoute>
+        <Route exact path="/" component={HomePage}>
+          <Redirect from="/" to="/app/user" />
+        </Route>
+      </>
+    )}
   </>
 );
 
 function AppBody(props: any) {
   const {
     id,
+    isAuth,
     isFetching,
     mustAuth,
     isSuccess,
@@ -87,17 +91,47 @@ function AppBody(props: any) {
     // console.log('check auth isError ', isError);
   }, [props.formProp.stateLoad]);
 
-  return !isFetching && !id && !mustAuth && !isError ? (
-    <h3>start</h3>
-  ) : (
+  const renderRouting = isGuest => (
     <LoadingOverlay active={isFetching} spinner text="Loading...">
       <BrowserRouter>
         <Switch>
-          <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
+          {isGuest ? (
+            <Route exact path="/guest" component={GuestRoute} />
+          ) : (
+            <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
+          )}
         </Switch>
       </BrowserRouter>
     </LoadingOverlay>
   );
+
+  const renderBlankPage = () => (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        background:
+          'linear-gradient( #19005ee4, rgba(255,255,255,0.4)), url(https://source.unsplash.com/random/1600x900)',
+      }}
+    >
+      {' '}
+    </div>
+  );
+
+  const renderLogin = () => (
+    <LoadingOverlay active={isFetching} spinner text="Loading...">
+      {' '}
+      <Login />
+    </LoadingOverlay>
+  );
+
+  return isGuest()
+    ? renderRouting(true)
+    : !isAuth || isError || isFetching
+    ? renderLogin()
+    : !isFetching && !id && !mustAuth
+    ? renderBlankPage()
+    : renderRouting(false);
 }
 
 // const { mapStateToProps, mapDispatchToProps } = mapToPropsUser;

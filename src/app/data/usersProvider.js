@@ -43,12 +43,12 @@ const grabRequest = (prom, cb) =>
   new Promise((resolve, reject) =>
     prom
       .then(resp => resolve(cb ? cb(resp) : resp))
-      .catch(error =>
-        reject(
-          error && error.code
+      .catch(
+        error => reject(error),
+        /*  error && error.code
             ? { code: error.code, message: error.message, auth: is401(error) }
             : { code: 0, message: error },
-        ),
+        ), */
       ),
   );
 

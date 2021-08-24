@@ -34,7 +34,13 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
   const statReducer = stateAsyncNameReducer(dataname);
 
   builder.addCase(thunk.fulfilled, (state, { payload }) => {
-    const param = { isFetching: false, isSuccess: true, payload };
+    const param = {
+      isFetching: false,
+      isSuccess: true,
+      payload,
+      isError: false,
+      errorMessage: '',
+    };
     statReducer(getState(state), param);
   });
 
@@ -42,6 +48,7 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
     statReducer(getState(state), {
       isFetching: false,
       isError: true,
+      isSuccess: false,
       errorMessage: payload?.message,
     });
   });

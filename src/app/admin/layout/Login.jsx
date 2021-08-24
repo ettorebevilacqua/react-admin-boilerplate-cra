@@ -30,7 +30,8 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100vh',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    background: 'url(https://source.unsplash.com/random/1600x900)',
+    background:
+      'linear-gradient( #19005ee4, rgba(255,255,255,0.4)), url(https://source.unsplash.com/random/1600x900)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
   },
@@ -81,15 +82,13 @@ const { Form } = withTypes();
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { isFetching, isError } = useSelector(userSelector);
+  const { isFetching, isError, errorMessage } = useSelector(userSelector);
 
   const [loading, setLoading] = useState(false);
 
   const translate = useTranslate();
   const classes = useStyles();
   const notify = useNotify();
-  const login = useLogin();
-  const location = useLocation();
   const history = useHistory();
 
   useEffect(() => {
@@ -100,7 +99,7 @@ const Login = () => {
   }, [dispatch, history, isError]);
 
   const handleSubmit = auth => {
-    dispatch(clearState());
+    // dispatch(clearState());
     setLoading(true);
     const username = { ...auth }.username;
     const fakeAuth = { username: 'fake@example.com', password: 'password1' };
@@ -194,19 +193,25 @@ const Login = () => {
                   />
                 </div>
               </div>
-              <CardActions className={classes.actions}>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  color="primary"
-                  disabled={isFetching}
-                  fullWidth
-                >
-                  {loading && <CircularProgress size={25} thickness={2} />}
-                  {'login' || translate('ra.auth.sign_in')}
-                </Button>
-                {isError && <p>Error</p>}
+              <div
+                style={{ displat: 'block', textAlign: 'center', color: 'red' }}
+              >
+                {isError && <p>{errorMessage}</p>}
                 {isFetching && <p>loading</p>}
+              </div>
+              <CardActions className={classes.actions}>
+                <div style={{ displat: 'block' }}>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    color="primary"
+                    disabled={isFetching}
+                    fullWidth
+                  >
+                    {loading && <CircularProgress size={25} thickness={2} />}
+                    {'login' || translate('ra.auth.sign_in')}
+                  </Button>
+                </div>
               </CardActions>
             </Card>
           </div>

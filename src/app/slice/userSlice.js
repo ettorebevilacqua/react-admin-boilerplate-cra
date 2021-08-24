@@ -65,7 +65,7 @@ export const loginUser = createAsyncThunk(
       userProvider.authBear(token);
       return { ...data };
     } catch (e) {
-      return thunkAPI.rejectWithValue(e);
+      return thunkAPI.rejectWithValue(e.data || e);
     }
   },
 );
@@ -104,6 +104,7 @@ const initialState = {
   isError: false,
   errorMessage: '',
   mustAuth: false,
+  isAuth: false,
 };
 
 const setUserState = (state, payload) => {
@@ -116,6 +117,9 @@ const setUserState = (state, payload) => {
   state.isFetching = false;
   state.isSuccess = true;
   state.mustAuth = false;
+  state.isAuth = true;
+  state.errorMessage = '';
+  state.isError = false;
   return state;
 };
 
@@ -159,6 +163,7 @@ export const userSlice = createSlice({
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;
+      state.isAuth = false;
     });
 
     builder.addCase(loginUser.pending, (state, { payload }) => {
@@ -169,6 +174,10 @@ export const userSlice = createSlice({
     builder.addCase(fetchUserById.pending, (state, { payload }) => {
       state.isFetching = true;
       state.isSuccess = false;
+      state.isAuth = false;
+      state.isError = false;
+      state.errorMessage = '';
+      state.id = '';
     });
     builder.addCase(fetchUserById.fulfilled, (state, { payload }) =>
       setUserState(state, payload),
@@ -176,6 +185,7 @@ export const userSlice = createSlice({
     builder.addCase(fetchUserById.rejected, (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
+      state.isAuth = false;
       state.errorMessage = payload.message;
     });
 
