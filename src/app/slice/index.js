@@ -51,8 +51,9 @@ export const moduliSliceCrud = createCrudSlice({
 });
 
 export const questionModuliSlice = createCrudSlice({
-  name: 'questionModuliSlice',
+  name: 'questionModuliCrudNew',
   provider: questionModuliProvider,
+  queryProvider: questionModuliProvider.provider,
 });
 
 export const { actions: userAuthActions, reducer } = userSlice;

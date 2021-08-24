@@ -25,14 +25,14 @@ export const questionProvider = defaultProvider(
 export const emailProvider = defaultProvider(
   'emailProvider',
   '/questions/sendEmail',
-  schemas.questionSchemas,
+  schemas.question,
   ['axios', 'emailProvider'],
 );
 
 export const questionModuliProvider = defaultProvider(
   'questionModuli',
   '/moduli/question',
-  schemas.questionModulischema,
+  schemas.question,
   ['axios', 'questionModuli'],
 );
 
@@ -67,6 +67,7 @@ export const moduliQuery = new Selector(
 const dataApi = {
   userProvider: userProviderFrom,
   moduliProvider,
+  questionModuliProvider,
   providersView,
   queryViews,
   questionProvider,

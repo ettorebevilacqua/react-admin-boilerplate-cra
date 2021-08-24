@@ -1,11 +1,11 @@
 import React from 'react';
-
+import { pick } from 'utils/pick';
 import { questionModuliSlice } from 'app/slice';
 
 import { makeContainerRefreshed } from '../component/makerCointainer';
 
 import { ModuliFormMaker } from './moduliForm';
-import QuestionModuliContainer from './questionModuliForm';
+import QuestionModuli from './questionModuli';
 
 export function ModuliFormContainer({
   formProp: { id, data, saved, stateLoad, meta },
@@ -27,12 +27,17 @@ export function ModuliFormContainer({
 }
 
 export const QuestionModuliForm = makeContainerRefreshed(
-  QuestionModuliContainer,
+  QuestionModuli,
   questionModuliSlice,
   (matchParam, history, location, saved, stateLoad) => {
     const { id, idmodulo, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
+    const queryParam =
+      !saved || !saved.data || !saved.data.id
+        ? pick(matchParam, ['id'])
+        : { id: saved.data.id };
+
     questionModuliSlice.actions.clearState();
-    questionModuliSlice.actions.load();
+    questionModuliSlice.actions.query(queryParam, true);
   },
 );

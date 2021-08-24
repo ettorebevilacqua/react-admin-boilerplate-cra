@@ -27,13 +27,17 @@ import {
   toggleModuliShow,
 } from 'app/pages/User/slice/userCompSlice';
 
+import { QuestionModuliForm } from './';
+
 // const moduliProvider = moduliProvider;
 
 export const ModuliFormMaker = props => {
-  const { data, isFetching, isError, onSubmit } = props;
-  const isModuliState = useSelector(userCompSelector);
-  const [isModuli, setIsModuli] = React.useState(true);
+  const { data, isFetching, isError, onSubmit, actions } = props;
+  const isModuliStore = useSelector(userCompSelector);
+  const [isModuli, setIsModuli] = React.useState(isModuliStore);
   const [newId, setNewId] = React.useState();
+
+  // const isModuli = Window.sessionStorage.getItem('appSmart_moduli_isModuli') || true;
 
   const [isAnteprima, setIsAnteprima] = React.useState([false]);
   const [values, setValues] = React.useState(() =>
@@ -42,14 +46,15 @@ export const ModuliFormMaker = props => {
   const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
 
   const dispatch = useDispatch();
-
   React.useEffect(() => {
     //  data && setValues(data.results);
   }, []);
 
   const changeView = val => {
-    setIsModuli(val);
-    dispatch(toggleModuliShow(val));
+    // Window.sessionStorage.set('appSmart_moduli_isModuli', val);
+
+    dispatch(toggleModuliShow(!isModuli));
+    setIsModuli(!isModuli);
   };
 
   const onSaveData = index => domanda => {
@@ -61,9 +66,10 @@ export const ModuliFormMaker = props => {
       const dataModuliTmp = [...values];
       dataModuliTmp[index] = savedData.payload;
       setNewId(savedData.payload.id);
-      debugger;
       setValues(dataModuliTmp);
       saveValues(dataModuliTmp);
+      actions.reload();
+      actions.clearState();
     });
   };
 
@@ -153,7 +159,10 @@ export const ModuliFormMaker = props => {
   return (
     <div>
       {isModuli ? (
-        <Moduli values={values} command={commandModuli} onEdit={editModulo} />
+        <GridChilds view={[5, 7]}>
+          <Moduli values={values} command={commandModuli} onEdit={editModulo} />
+          <QuestionModuliForm />
+        </GridChilds>
       ) : isAnteprima ? (
         <div
           style={{

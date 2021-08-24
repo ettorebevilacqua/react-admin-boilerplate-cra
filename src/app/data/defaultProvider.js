@@ -45,6 +45,7 @@ export function defaultProvider(id, url, schemas, tags) {
     create: data => myProvider.create(data),
     save: (id, data) => updateTodo(id, data),
     list: funzFilt => mySelector,
+    query: param => idProvider.query(param).read(),
     get: id => idProvider.query({ urlParams: { id } }).read(),
     delete: id => idProvider.query({ urlParams: { id } }).delete(),
   };
