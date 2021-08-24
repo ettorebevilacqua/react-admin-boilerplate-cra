@@ -54,7 +54,11 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
   });
 
   builder.addCase(thunk.pending, (state, { payload }) => {
-    statReducer(getState(state), { ...initialState, isFetching: true });
+    statReducer(getState(state), {
+      ...initialState,
+      isError: false,
+      isFetching: true,
+    });
   });
 };
 

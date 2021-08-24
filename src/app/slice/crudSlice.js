@@ -16,7 +16,6 @@ import { setGetObj, mapOrReduceOnKeys, compose } from 'utils/functional';
 const init = store =>
   function createCrudSlice(options) {
     const { name, provider, queryProvider, actionsSlice } = options;
-
     const clearProvider = () => {
       provider && provider?.provider?.cleanCache();
       gueryProvider && gueryProvider?.provider?.cleanCache();
@@ -63,7 +62,7 @@ const init = store =>
         const [data, error] = await handlePromise(
           (queryProvider || provider).query({ queryString: payload }).read(),
         );
-        return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+        return error ? thunkAPI.rejectWithValue(error.data) : data;
       },
     );
 
