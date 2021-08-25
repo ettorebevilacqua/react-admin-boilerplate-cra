@@ -1,18 +1,14 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import GridChilds from '../../component/gridChilds';
 // import { withRouter } from 'react-router';
 import { withRouter, Switch, Route, Link, useParams } from 'react-router-dom';
 import { ShowQuestion } from 'app/components/User/forms/question/form/show';
+import Paper from '@material-ui/core/Paper';
+import { elemStyle } from '../../stylesElement';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,7 +24,7 @@ const routeToBase = id => `/app/user/indagini_invio/${id}/0`;
 function IndaginiList(props) {
   const { values, history } = props;
   const [isShow, setIsShow] = React.useState(false);
-  const classes = useStyles();
+  const classes = elemStyle();
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
 
@@ -45,13 +41,46 @@ function IndaginiList(props) {
     setChecked(newChecked);
   };
 
-  const handleEditBt = idx => {
-    // onEdit(idx);
-  };
-  const command = () => {};
+  const renderIndagine = (value, index) => (
+    <Paper className={`${classes.paperRow}`} key={'paper_' + index}>
+      <GridChilds
+        style={{ alignItems: 'center' }}
+        justifyContent="space-between"
+        view={[8, 4]}
+      >
+        <div className={classes.paperRowElem}>
+          <h4>{value.title}</h4>
+        </div>
 
+        <GridChilds
+          spacing={1}
+          view={[6, 6]}
+          justifyContent="space-between"
+          style={{ alignItems: 'center', padding: '0px' }}
+        >
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={e => setIsShow(true)}
+          >
+            Anteprima
+          </Button>
+
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={e => history.push(routeToBase(value.id), value)}
+          >
+            edit
+          </Button>
+        </GridChilds>
+      </GridChilds>
+    </Paper>
+  );
   return (
-    <>
+    <div className={classes.root}>
       {isShow ? (
         <>
           <Button
@@ -79,56 +108,11 @@ function IndaginiList(props) {
           >
             <h2>Apri Indagine</h2>
           </GridChilds>
-          <List className={classes.root}>
-            {values &&
-              values.map((value, idxModulo) => {
-                const labelId = `checkbox-list-label-${value}`;
 
-                return (
-                  <ListItem
-                    key={idxModulo}
-                    role={undefined}
-                    dense
-                    button
-                    onClick={handleToggle(value)}
-                  >
-                    <ListItemText id={labelId} primary={`${value.title}`} />
-                    <ListItemSecondaryAction>
-                      <GridChilds
-                        spacing={1}
-                        view={[6, 6]}
-                        style={{ alignItems: 'center', marginLeft: '12px' }}
-                      >
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          fullWidth
-                          type="submit"
-                          onClick={e => setIsShow(true)}
-                        >
-                          Anteprima
-                        </Button>
-
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          fullWidth
-                          type="submit"
-                          onClick={e =>
-                            history.push(routeToBase(value.id), value)
-                          }
-                        >
-                          edit
-                        </Button>
-                      </GridChilds>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                );
-              })}
-          </List>
+          {values && values.map(renderIndagine)}
         </>
       )}
-    </>
+    </div>
   );
 }
 

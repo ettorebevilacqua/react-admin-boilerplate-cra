@@ -41,15 +41,11 @@ function IndaginiContainer(props) {
         <title>Indagini</title>
         <meta name="description" content="Indagini" />
       </Helmet>
-      <div className={classes.root}>
-        {isFetching && !data ? (
-          <h2>Loading...</h2>
-        ) : (
-          <IndaginiList
-            values={data ? data.filter(item => item.isPublic) : []}
-          />
-        )}
-      </div>
+      {isFetching && !data ? (
+        <h2>Loading...</h2>
+      ) : (
+        <IndaginiList values={data ? data.filter(item => item.isPublic) : []} />
+      )}
     </>
   );
 }

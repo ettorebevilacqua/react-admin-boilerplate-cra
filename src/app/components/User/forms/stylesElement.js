@@ -65,9 +65,8 @@ export const elemStyle = makeStyles(theme => ({
   },
   paperRow: {
     marginTop: '12px',
-    marginLeft: '12px',
-    marginRight: '12px',
-    padding: '8px',
+    paddingLeft: '8px',
+    paddingRight: '8px',
   },
   paperRowElem: {
     padding: '2px',
