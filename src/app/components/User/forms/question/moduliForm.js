@@ -3,8 +3,14 @@ import ReactDOM from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
+
+import { makeStyles } from '@material-ui/core/styles';
+
 import GridChilds from '../component/gridChilds';
 
 // import { Domande } from './comp/question';
@@ -30,16 +36,69 @@ import {
 import { QuestionModuliForm } from './';
 
 // const moduliProvider = moduliProvider;
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </div>
+  );
+}
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+const TabsForms = props => {
+  const { tabs, onChange, value, visibles, ...rest } = props;
+  const classes = useStyles();
+  debugger;
+  return (
+    <div className={classes.root} {...rest} style={{ marginTop: '14px' }}>
+      <AppBar position="static">
+        <Tabs
+          value={value}
+          onChange={onChange}
+          aria-label="simple tabs example"
+        >
+          {tabs.map(
+            (tab, idx) =>
+              visibles[value].indexOf(idx) > -1 && (
+                <Tab label={tab.label} {...a11yProps(idx)} />
+              ),
+          )}
+        </Tabs>
+      </AppBar>
+      {tabs.map((tab, idx) => (
+        <TabPanel value={value} index={idx}>
+          {tab.comp()}
+        </TabPanel>
+      ))}
+    </div>
+  );
+};
 
 export const ModuliFormMaker = props => {
   const { data, isFetching, isError, onSubmit, actions } = props;
-  const isModuliStore = useSelector(userCompSelector);
-  const [isModuli, setIsModuli] = React.useState(isModuliStore);
   const [newId, setNewId] = React.useState();
-
-  // const isModuli = Window.sessionStorage.getItem('appSmart_moduli_isModuli') || true;
-
-  const [isAnteprima, setIsAnteprima] = React.useState([false]);
+  const [tabValue, setTabValue] = React.useState(0);
   const [values, setValues] = React.useState(() =>
     data && data.results ? data.results : [],
   );
@@ -49,13 +108,6 @@ export const ModuliFormMaker = props => {
   React.useEffect(() => {
     //  data && setValues(data.results);
   }, []);
-
-  const changeView = val => {
-    // Window.sessionStorage.set('appSmart_moduli_isModuli', val);
-
-    dispatch(toggleModuliShow(!isModuli));
-    setIsModuli(!isModuli);
-  };
 
   const onSaveData = index => domanda => {
     if (!values[index] || isFetching) return false;
@@ -76,9 +128,8 @@ export const ModuliFormMaker = props => {
   const commandModuli = (cmd, payload) => {
     const add = () => {
       const newModuli = [...values, empityModulo];
-      changeView(false);
       setCurrentIdxModule(newModuli.length - 1);
-      setIsAnteprima(false);
+      setTabValue(2);
       setValues(newModuli);
     };
     const remove = () => {
@@ -96,19 +147,13 @@ export const ModuliFormMaker = props => {
   };
 
   const cmdDomanda = (cmd, payload) => {
-    const cmds = { list: () => changeView(true) };
+    const cmds = { list: () => setTabValue(2) };
     cmds[cmd] && cmds[cmd](payload);
   };
 
   const editModulo = idx => {
     setCurrentIdxModule(idx);
-    setIsAnteprima(false);
-    changeView(false);
-  };
-
-  const showModuli = () => {
-    onSaveData(values);
-    changeView(true);
+    setTabValue(2);
   };
 
   const initDomande = moduloFrom => {
@@ -137,58 +182,59 @@ export const ModuliFormMaker = props => {
       <div>
         <h2>Moduli</h2>
       </div>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ height: '42px', width: '120px' }}
-        onClick={e => setIsAnteprima(!isAnteprima)}
-      >
-        {isAnteprima ? 'Compila' : 'Anteprima'}
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ height: '42px', width: '120px' }}
-        onClick={e => changeView(true)}
-      >
-        {'moduli'}
-      </Button>
     </GridChilds>
   );
 
+  const renserShow = () => (
+    <div style={{ marginLeft: '24px' }}>
+      <HeaderModuli />
+      <ShowQuestion
+        values={getCurrentModulo()}
+        risposte={makeRisposte(values.domande || [])}
+      />
+    </div>
+  );
+
+  const renderDomande = () => (
+    <div style={{ marginLeft: '24px' }}>
+      <HeaderModuli />
+      <Domande
+        initialValues={getCurrentModulo()}
+        command={cmdDomanda}
+        onSaveData={onSaveData(currentIdxModule)}
+      />
+    </div>
+  );
+
+  const compTabs = [
+    <Moduli values={values} command={commandModuli} onEdit={editModulo} />,
+    <QuestionModuliForm moduli={values} />,
+    renderDomande,
+    renserShow,
+  ];
+
+  const tabsElem = [
+    { label: 'Moduli', comp: () => compTabs[0] },
+    { label: 'Questionari', comp: () => compTabs[1] },
+    { label: 'domande', comp: compTabs[2] },
+    { label: 'Anteprima', comp: compTabs[3] },
+  ];
+
+  const visibleTabs = [
+    [0, 1],
+    [0, 1],
+    [0, 1, 2, 3],
+    [0, 1, 2, 3],
+  ];
+
   return (
     <div>
-      {isModuli ? (
-        <GridChilds view={[5, 7]}>
-          <Moduli values={values} command={commandModuli} onEdit={editModulo} />
-          <QuestionModuliForm moduli={values} />
-        </GridChilds>
-      ) : isAnteprima ? (
-        <div
-          style={{
-            marginLeft: '24px',
-          }}
-        >
-          <HeaderModuli />
-          <ShowQuestion
-            values={getCurrentModulo()}
-            risposte={makeRisposte(values.domande || [])}
-          />
-        </div>
-      ) : (
-        <div
-          style={{
-            marginLeft: '24px',
-          }}
-        >
-          <HeaderModuli />
-          <Domande
-            initialValues={getCurrentModulo()}
-            command={cmdDomanda}
-            onSaveData={onSaveData(currentIdxModule)}
-          />
-        </div>
-      )}
+      <TabsForms
+        value={tabValue}
+        onChange={(event, newValue) => setTabValue(newValue)}
+        tabs={tabsElem}
+        visibles={visibleTabs}
+      />
     </div>
   );
 };
