@@ -31,7 +31,7 @@ export const QuestionModuliForm = makeContainerRefreshed(
   QuestionModuli,
   questionModuliSlice,
   (matchParam, history, location, saved, stateLoad) => {
-    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
     const queryParam =
       !saved || !saved.data || !saved.data.id
@@ -47,7 +47,7 @@ export const IndaginiList = makeContainerRefreshed(
   IndaginiContainer,
   questionModuliSlice,
   (matchParam, history, location, saved, stateLoad) => {
-    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
     const queryParam = {};
     questionModuliSlice.actions.clearState();

@@ -25,7 +25,7 @@ Yup.addMethod(Yup.array, 'unique', function (message, path) {
 export const schema = Yup.object().shape({
   titolo: Yup.string().required('Required'),
   idcorso: Yup.string().required('Required'),
-  idmodulo: Yup.string().required('Required'),
+  idquestion: Yup.string().required('Required'),
   docenti: Yup.array()
     .of(
       Yup.object().shape({
@@ -68,7 +68,7 @@ export const empityQuestion = {
   titolo: '',
   idcorso: '',
   titoloModulo: '',
-  idmodulo: '',
+  idquestion: '',
   docenti: '',
   numPartecipanti: 1,
   docenti: [],

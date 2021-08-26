@@ -18,11 +18,11 @@ export const QuestionToForm = makeContainerRefreshed(
   QuestionTo,
   questionSlice,
   (matchParam, history, location, saved) => {
-    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    const { id, idquestion, idcorso } = (saved && saved.data) || {};
 
     const queryParam =
       !saved || !saved.data || !saved.data.id
-        ? pick(matchParam, ['id', 'idmodulo', 'idcorso'])
+        ? pick(matchParam, ['id', 'idquestion', 'idcorso'])
         : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
 
@@ -35,11 +35,11 @@ export const GuestQuestionForm = makeContainerRefreshed(
   GuestQuestionFormWrap,
   moduliSliceCrud,
   (matchParam, history, location, saved) => {
-    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    const { id, idquestion, idcorso } = (saved && saved.data) || {};
 
     const queryParam =
       !saved || !saved.data || !saved.data.id
-        ? pick(matchParam, ['id', 'idmodulo', 'idcorso'])
+        ? pick(matchParam, ['id', 'idquestion', 'idcorso'])
         : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
     moduliSliceCrud.actions.clearState();
@@ -67,7 +67,7 @@ export const ModuliForm = makeContainerRefreshed(
   ModuliFormContainer,
   moduliSliceCrud,
   (matchParam, history, location, saved, stateLoad) => {
-    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
     moduliSliceCrud.actions.clearState();
     moduliSliceCrud.actions.load();
@@ -79,7 +79,7 @@ export const IndaginiList = makeContainerRefreshed(
   IndaginiContainer,
   moduliSliceCrud,
   (matchParam, history, location, saved, stateLoad) => {
-    const { id, idmodulo, idcorso } = (saved && saved.data) || {};
+    const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
     moduliSliceCrud.actions.clearState();
     moduliSliceCrud.actions.load();
