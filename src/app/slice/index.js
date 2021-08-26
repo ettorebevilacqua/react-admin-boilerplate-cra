@@ -51,7 +51,7 @@ export const moduliSliceCrud = createCrudSlice({
 });
 
 export const questionModuliSlice = createCrudSlice({
-  name: 'questionModuliCrudNew',
+  name: 'questionModuliSlice',
   provider: questionModuliProvider,
   queryProvider: questionModuliProvider.provider,
 });
