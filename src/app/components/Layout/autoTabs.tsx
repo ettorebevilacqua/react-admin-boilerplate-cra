@@ -56,7 +56,7 @@ export const AutoTabs: React.FC<any> = (props): JSX.Element => {
     onChange(val);
     setValue(val);
   };
-  debugger;
+
   const classes = useStyles();
   return (
     <div className={classes.root} {...rest} style={{ marginTop: '14px' }}>
