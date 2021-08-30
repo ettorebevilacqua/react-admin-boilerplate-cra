@@ -52,7 +52,7 @@ export const AutoTabs: React.FC<any> = (props): JSX.Element => {
           {tabs.map(
             (tab, idx) =>
               visibles[value].indexOf(idx) > -1 && (
-                <Tab label={tab.label} {...a11yProps(idx)} />
+                <Tab key={idx} label={tab.label} {...a11yProps(idx)} />
               ),
           )}
         </Tabs>

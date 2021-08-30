@@ -1,3 +1,12 @@
+COME GESTIRE BENE I COMPONENTI e MVC :
+https://blog.testdouble.com/posts/2019-11-04-react-mvc/
+
+pdf e table :
+
+o uso jspdf in abbinato con il plugin autotable js praticamente la tabella me la sono ricreata io portando i valori direttamente tramite variabile …
+Magari ti è utile
+https://github.com/simonbengtsson/jsPDF-AutoTable
+
 log analize
 https://github.com/undici77/LogAnalyzer?fbclid=IwAR1rN0_mzRpCR16JNmQzXhRbuwgq7RjTPXS9OFLC2tPkssDe_Pn7tE3OdUk
 
