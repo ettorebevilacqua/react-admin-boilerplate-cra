@@ -57,3 +57,20 @@ export function AdjustingInterval(workFunc, interval, errorFunc) {
     // timeout = setTimeout(step, Math.max(0, that.interval - drift));
   }
 }
+
+// use url for storage state
+export const getParams = (location, key) => ({
+  [key]: new URLSearchParams(location.search).get(key) || '',
+});
+
+export const setParams = (data, key) => {
+  const val = data.hasOwnProperty(key) ? data[key] : '';
+  const searchParams = new URLSearchParams();
+  searchParams.set(key, val === 0 ? 0 : val || '');
+  return searchParams.toString();
+};
+
+export const updateURL = (history, state, key) => {
+  const url = setParams(state, key);
+  history.push(`?${url}`);
+};
