@@ -1,9 +1,9 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { shallowEqual, connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { injectReducer, injectSaga } from 'redux-injectors';
-import { Link, useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 import { handlePromise } from '../../helper';
@@ -19,6 +19,7 @@ export function makeContainer(
   const { state: mapStateToProps, dispatch: mapDispatchToProps } = mapToProps;
 
   const Container = props => {
+    const history = useHistory();
     const toProps = { ...props };
     toProps.actions.reload = () =>
       !stateLoad.isFetching &&
@@ -28,7 +29,6 @@ export function makeContainer(
       formProp: { stateLoad, saved, data },
       actions,
     } = props;
-    const history = useHistory();
 
     React.useEffect(() => {
       !stateLoad.isSuccess &&
@@ -88,7 +88,7 @@ export function makeContainer(
             color="primary"
             variant="contained"
             fullWidth
-            onClick={() => props.history.push('/app/user')}
+            onClick={() => history.push('/app/user')}
           >
             Torna Indietro
           </Button>
