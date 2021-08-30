@@ -3,11 +3,10 @@ import { useLocation, useHistory } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import TextField from '@material-ui/core/TextField';
 import Box from '@material-ui/core/Box';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { getParams, setParams, updateURL } from 'app/services/helper';
+import { getParams, updateURL } from 'app/services/helper';
 
 // const moduliProvider = moduliProvider;
 export function TabPanel(props) {
@@ -40,22 +39,32 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+export const getParamTab = (location, _tabsName) => {
+  const currentTabState = (getParams(location, _tabsName) || '0') as string;
+  const currentTabParse = parseInt(currentTabState[_tabsName]);
+  return isNaN(currentTabParse) ? 0 : currentTabParse;
+};
+
 export const AutoTabs: React.FC<any> = (props): JSX.Element => {
-  const { key, tabs, onChange, visibles, ...rest } = props;
+  const { tabsName, tabs, value, onChange, visibles, ...rest } = props;
   const location = useLocation();
   const history = useHistory();
-  const tabName = 'tabs' + (key || '');
-  const currentTabState = (getParams(location, tabName) || '0') as string;
-  const currentTabParse = parseInt(currentTabState[tabName]);
-  const currentTab = isNaN(currentTabParse) ? 0 : currentTabParse;
+  const _tabsName = tabsName || 'tabs';
 
-  const [value, setValue] = React.useState(currentTab);
-
-  const changeTab = (event, val) => {
-    updateURL(history, { [tabName]: val }, tabName);
-    onChange(val);
-    setValue(val);
+  const changeTab = val => {
+    debugger;
+    const currentTab = getParamTab(location, _tabsName);
+    if (currentTab === val) return;
+    updateURL(history, { [_tabsName]: val }, _tabsName);
+    onChange && onChange(val);
   };
+
+  React.useEffect(() => {
+    const currentTab = getParamTab(location, _tabsName);
+    if (value !== currentTab) {
+      updateURL(history, { [_tabsName]: value }, _tabsName);
+    }
+  }, [value]);
 
   const classes = useStyles();
   return (
@@ -63,12 +72,12 @@ export const AutoTabs: React.FC<any> = (props): JSX.Element => {
       <AppBar position="static">
         <Tabs
           value={value}
-          onChange={changeTab}
+          onChange={(event, val) => value !== val && changeTab(val)}
           aria-label="simple tabs example"
         >
           {tabs.map(
             (tab, idx) =>
-              visibles[currentTab].indexOf(idx) > -1 && (
+              visibles[value].indexOf(idx) > -1 && (
                 <Tab key={idx} label={tab.label} {...a11yProps(idx)} />
               ),
           )}
