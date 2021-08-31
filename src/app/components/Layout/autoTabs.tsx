@@ -51,7 +51,6 @@ export const AutoTabs: React.FC<any> = (props): JSX.Element => {
   const _tabsName = tabsName || 'tabs';
 
   const changeTab = val => {
-    debugger;
     const currentTab = getParamTab(location, _tabsName);
     if (currentTab === val) return;
     updateURL(history, { [_tabsName]: val }, _tabsName);
