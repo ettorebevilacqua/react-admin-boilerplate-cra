@@ -64,7 +64,6 @@ export const ModuliFormMakerC = props => {
   };
 
   const editModulo = idx => {
-    debugger;
     setterIdxModulo(idx);
     setTabValue(2);
   };
@@ -74,7 +73,6 @@ export const ModuliFormMakerC = props => {
   }, []);
 
   const onSaveData = index => domanda => {
-    debugger;
     if (isFetching) return false;
     if (!domanda.id && newId) {
       domanda.id = newId;
@@ -90,7 +88,6 @@ export const ModuliFormMakerC = props => {
 
   const commandModuli = (cmd, payload) => {
     const add = () => {
-      debugger;
       // const newModuli = [...values, empityModulo];
       setterIdxModulo(-1);
       // setValues(newModuli);
@@ -127,7 +124,6 @@ export const ModuliFormMakerC = props => {
   };
 
   const getCurrentModulo = () => {
-    debugger;
     const cur = getIdxModulo();
     return values && cur > -1 && values[cur]
       ? initDomande(values[cur])
@@ -153,7 +149,7 @@ export const ModuliFormMakerC = props => {
     <div style={{ marginLeft: '24px' }}>
       <HeaderModuli />
       <ShowQuestion
-        values={getCurrentModulo()}
+        values={{ moduli: [getCurrentModulo()] }}
         risposte={makeRisposte(values.domande || [])}
       />
     </div>
@@ -174,7 +170,7 @@ export const ModuliFormMakerC = props => {
     moduli: (
       <Moduli
         values={values}
-        cuurent={getIdxModulo()}
+        current={getIdxModulo()}
         command={commandModuli}
         onEdit={editModulo}
       />

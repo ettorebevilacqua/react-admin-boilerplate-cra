@@ -111,55 +111,68 @@ const useStyles = makeStyles(theme => ({
 export function ShowQuestion(props) {
   const { values, onSend } = props;
   const classes = useStyles();
-  const risposteProps = makeRisposte(values.domande);
+  debugger;
+  const moduliRisposte =
+    !values || !values.moduli || !values.moduli.map
+      ? []
+      : values.moduli.map(modulo => makeRisposte(modulo.domande));
 
-  const [risposte, setRisposte] = React.useState(risposteProps);
+  const [risposte, setRisposte] = React.useState(moduliRisposte);
 
-  const getValueRiposta = (idxDomanda, idxRisposta) =>
-    risposte && risposte[idxDomanda] && risposte[idxDomanda][idxRisposta];
+  const getValueRiposta = (idxModulo, idxDomanda, idxRisposta) =>
+    risposte &&
+    risposte[idxModulo][idxDomanda] &&
+    risposte[idxModulo][idxDomanda][idxRisposta];
 
-  const getDomanda = idx =>
+  const getDomanda = (idxModulo, idx) =>
     values &&
-    values.domande &&
-    values.domande[idx] &&
-    values.domande[idx].domanda.trim &&
-    values.domande[idx].domanda.trim()
-      ? values.domande[idx]
+    values.moduli &&
+    values.moduli[idxModulo] &&
+    values.moduli[idxModulo].domande &&
+    values.moduli[idxModulo].domande[idx] &&
+    values.moduli[idxModulo].domande[idx].domanda.trim &&
+    values.moduli[idxModulo].domande[idx].domanda.trim()
+      ? values.moduli[idxModulo].domande[idx]
       : null;
 
-  const getRispostaOfValues = (idxDomanda, idxRisposta) => {
-    const domanda = getDomanda(idxDomanda);
+  const getRispostaOfValues = (idxModulo, idxDomanda, idxRisposta) => {
+    const domanda = getDomanda(idxModulo, idxDomanda);
     return !domanda || !domanda.risposte || !domanda.risposte[idxRisposta]
       ? null
       : domanda.risposte[idxRisposta];
   };
 
-  const getCorrelata = (idxDomanda, idxRisposta) => {
-    const domanda = getDomanda(idxDomanda);
-    if ([5, 6].indexOf(domanda.tipo) > -1) return null;
-    const risposta = getRispostaOfValues(idxDomanda, idxRisposta);
+  const getCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
+    const domanda = getDomanda(idxModulo, idxDomanda);
+    const tipoNum = toNumberOr(domanda.tipo, -1);
+    if ([5, 6].indexOf(tipoNum) > -1) return null;
+    const risposta = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
     return risposta && risposta.correlata ? risposta.correlata : null;
   };
 
-  const getUserValCorrelata = (idxDomanda, idxRisposta) => {
-    const valRisposta = getValueRiposta(idxDomanda, idxRisposta);
+  const getUserValCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
+    const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
     return valRisposta && valRisposta.correlata ? valRisposta.val : null;
   };
-  const getUserVal = (idxDomanda, idxRisposta) => {
-    const valRisposta = getValueRiposta(idxDomanda, idxRisposta);
+  const getUserVal = (idxModulo, idxDomanda, idxRisposta) => {
+    const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
     return valRisposta && valRisposta.correlata ? valRisposta.val : valRisposta;
   };
 
-  const isCorrelata = (idxDomanda, idxRisposta, val) => {
-    const correlata = getCorrelata(idxDomanda, idxRisposta);
+  const isCorrelata = (idxModulo, idxDomanda, idxRisposta, val) => {
+    const correlata = getCorrelata(idxModulo, idxDomanda, idxRisposta);
     if (!correlata) return false;
-    const userVal = getUserVal(idxDomanda, idxRisposta);
+    const userVal = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const valCur = val === undefined ? userVal : val;
-    const valValuesTmp = getRispostaOfValues(idxDomanda, idxRisposta);
-    const domanda = getDomanda(idxDomanda);
+    const valValuesTmp = getRispostaOfValues(
+      idxModulo,
+      idxDomanda,
+      idxRisposta,
+    );
+    const domanda = getDomanda(idxModulo, idxDomanda);
     const tipo = domanda && domanda.tipo;
-    const valValues = tipo === 1 ? valValuesTmp.rating : valValuesTmp.val;
-    return correlata && valCur === valValues;
+    const valValues = tipo == 1 ? valValuesTmp.rating : valValuesTmp.val;
+    return correlata && valCur == valValues;
   };
 
   const onChangeRating = (idxDomanda, idxRisposta) => e => {
@@ -169,7 +182,7 @@ export function ShowQuestion(props) {
     console.log('click risposta', idxDomanda, idxRisposta, valRisp);
   };
 
-  const renderScala = (idxDomanda, scalaVal) => (
+  const renderScala = (idxModulo, idxDomanda, scalaVal) => (
     <Box
       style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}
     >
@@ -181,11 +194,11 @@ export function ShowQuestion(props) {
         style={{ marginLeft: '26px', marginRight: '26px' }}
         name="ratingRisposta"
         max={toNumberOr(scalaVal && scalaVal.ratingMax, 2)}
-        value={toNumberOr(risposte[idxDomanda], 0)}
+        value={toNumberOr(risposte[idxModulo][idxDomanda], 0)}
         onChange={(event, newValue) => {
           console.log('risposta rating ', scalaVal, newValue);
           const _risposte = [...risposte];
-          _risposte[idxDomanda][0] = newValue;
+          _risposte[idxModulo][idxDomanda][0] = newValue;
           setRisposte(_risposte);
         }}
       />
@@ -201,25 +214,25 @@ export function ShowQuestion(props) {
     setRisposte(newRisposte);
   };
 
-  const onClickOptions = (tipo, idxDomanda, idxRisposta) => e => {
+  const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta) => e => {
     console.log('click risposta', idxDomanda, idxRisposta);
-    const valBefore = getUserVal(idxDomanda, idxRisposta);
+    const valBefore = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const isBool = [2, 3, 4].indexOf(tipo) > -1;
     const valBoolTmp = isBool ? !valBefore : valBefore;
-    const correlata = getCorrelata(idxDomanda, idxRisposta);
+    const correlata = getCorrelata(idxModulo, idxDomanda, idxRisposta);
 
     const valBool = correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
     const _risposte = [...risposte];
-    const _rispostaOptionTmp = !risposte[idxDomanda][idxRisposta]
+    const _rispostaOptionTmp = !risposte[idxModulo][idxDomanda][idxRisposta]
       ? resize([], idxRisposta + 1, null)
       : [...risposte[idxDomanda]];
 
-    _rispostaOptionTmp[idxRisposta] = valBool;
-    _risposte[idxDomanda] = _rispostaOptionTmp;
+    _rispostaOptionTmp[idxModulo][idxRisposta] = valBool;
+    _risposte[idxModulo][idxDomanda] = _rispostaOptionTmp;
 
-    return tipo === 2
+    return tipo == 2
       ? setRisposte(_risposte)
-      : isBool && changeRisposte(idxDomanda, idxRisposta, valBool);
+      : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
 
   const radioTrueFalse = (val, onClickInner) => (
@@ -238,14 +251,20 @@ export function ShowQuestion(props) {
     </>
   );
 
-  const renderTipoInner = (risposta, idxDomanda, idxRisposta, tipo) => {
+  const renderTipoInner = (
+    risposta,
+    idxModulo,
+    idxDomanda,
+    idxRisposta,
+    tipo,
+  ) => {
     if (!risposta) return <span></span>;
-    const val = getUserVal(idxDomanda, idxRisposta);
+    const val = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
     console.log('vals', val);
     return (
       <div key={idxRisposta}>
-        {tipo === 2 ? (
+        {tipo == 2 ? (
           val ? (
             <Button onClick={onClickInner}>
               <RadioButtonChecked color={val ? 'primary' : 'secondary'} />
@@ -255,13 +274,13 @@ export function ShowQuestion(props) {
               <RadioButtonUnchecked color="secondary" />
             </Button>
           )
-        ) : tipo === 3 ? (
+        ) : tipo == 3 ? (
           <Checkbox checked={val} onClick={onClickInner} />
-        ) : tipo === 4 ? (
+        ) : tipo == 4 ? (
           <RadioGroup aria-label="gender" name="gender1">
             {radioTrueFalse(val, onClickInner)}
           </RadioGroup>
-        ) : tipo === 5 ? (
+        ) : tipo == 5 ? (
           <TextField value={val} onChange={onClickInner} />
         ) : (
           <span></span>
@@ -270,11 +289,14 @@ export function ShowQuestion(props) {
     );
   };
 
-  const renderRisposte = (tipo, idxDomanda) => (risposta, idxRisposta) =>
+  const renderRisposte = (idxModulo, tipo, idxDomanda) => (
+    risposta,
+    idxRisposta,
+  ) =>
     risposta &&
-    (tipo !== 1 ? risposta.risposta : idxRisposta === 0) && (
+    (tipo != 1 ? risposta.risposta : idxRisposta === 0) && (
       <GridChilds
-        key={idxRisposta}
+        key={idxModulo + idxRisposta}
         view={[1, 11]}
         className={classes.cardDomanda}
         style={{ marginTop: '-1px', marginBotton: '-1px' }}
@@ -285,20 +307,23 @@ export function ShowQuestion(props) {
             <Box className={classes.boxDomanda}>{risposta.risposta || ''}</Box>
             {renderTipoInner(
               risposta,
+              idxModulo,
               idxDomanda,
               idxRisposta,
               tipo,
-              getValueRiposta(idxDomanda, idxRisposta),
+              getValueRiposta(idxModulo, idxDomanda, idxRisposta),
             )}
-            {isCorrelata(idxDomanda, idxRisposta) &&
+            {isCorrelata(idxModulo, idxDomanda, idxRisposta) &&
               renderDomanda(risposta.correlata, 0, '32px')}
           </GridChilds>
-        ) : tipo === 1 ? (
+        ) : tipo == 1 ? (
           <>
-            {renderScala(idxDomanda, risposta)}
-            {isCorrelata(idxDomanda, idxRisposta) && (
+            {renderScala(idxModulo, idxDomanda, risposta)}
+            {isCorrelata(idxModulo, idxDomanda, idxRisposta) && (
               <ShowQuestion
-                values={{ domande: [getCorrelata(idxDomanda, idxRisposta)] }}
+                values={{
+                  domande: [getCorrelata(idxModulo, idxDomanda, idxRisposta)],
+                }}
               />
             )}
           </>
@@ -308,11 +333,11 @@ export function ShowQuestion(props) {
       </GridChilds>
     );
 
-  const renderDomandaAperta = idxDomanda => {
-    const risposta = risposte[idxDomanda];
+  const renderDomandaAperta = (idxModulo, idxDomanda) => {
+    const risposta = risposte[idxModulo][idxDomanda];
     return (
       <>
-        <GridChilds view={[1, 10]}>
+        <GridChilds key={idxModulo + idxDomanda} view={[1, 10]}>
           <span> </span>
           <TextField
             style={{ width: '100%' }}
@@ -325,7 +350,7 @@ export function ShowQuestion(props) {
               const val = correlata
                 ? { val: valEvent, correlata: {} }
                 : valEvent;
-              _risposte[idxDomanda][0] = val;
+              risposta[0] = val;
               setRisposte(_risposte);
             }}
           />
@@ -334,12 +359,13 @@ export function ShowQuestion(props) {
     );
   };
 
-  const renderDomanda = (domanda, idx, margin) =>
-    !getDomanda(idx) || !domanda || !domanda.tipo ? (
+  const renderDomanda = (modulo, idxModulo) => (domanda, idx, margin) => {
+    console.log('domanda', domanda);
+    return !getDomanda(idxModulo, idx) || !domanda || !domanda.tipo ? (
       <></>
-    ) : domanda.tipo === 6 ? (
+    ) : domanda.tipo == 6 ? (
       <div
-        key={idx}
+        key={idxModulo + idx}
         className={classes.cardDomanda}
         style={{
           marginLeft: margin || '0px',
@@ -348,7 +374,7 @@ export function ShowQuestion(props) {
         }}
       >
         <Typography
-          variant={domanda.tipo === 6 ? 'h3' : 'span'}
+          variant={domanda.tipo == 6 ? 'h3' : 'span'}
           className={classes.domandaTxt}
           color="textSecondary"
         >
@@ -356,7 +382,7 @@ export function ShowQuestion(props) {
         </Typography>
       </div>
     ) : (
-      <div key={idx}>
+      <div key={idxModulo + idx}>
         <Paper style={{ marginTop: '26px', marginBottom: '12px' }}>
           <GridChilds
             className={classes.cardDomanda}
@@ -364,7 +390,7 @@ export function ShowQuestion(props) {
             style={{ height: '48px' }}
           >
             <Typography
-              variant={domanda.tipo === 6 ? 'h3' : 'body1'}
+              variant={domanda.tipo == 6 ? 'h3' : 'body1'}
               className={classes.domandaTxt}
               color="textSecondary"
             >
@@ -372,13 +398,29 @@ export function ShowQuestion(props) {
             </Typography>
           </GridChilds>
         </Paper>
-        {domanda.tipo !== 6 && domanda.tipo === 5
-          ? renderDomandaAperta(idx)
+        {domanda.tipo != 6 && domanda.tipo == 5
+          ? renderDomandaAperta(idxModulo, idx)
           : domanda.risposte &&
             domanda.risposte.map &&
-            domanda.risposte.map(renderRisposte(domanda.tipo, idx))}
+            domanda.risposte.map(
+              renderRisposte(idxModulo, toNumberOr(domanda.tipo, -1), idx),
+            )}
       </div>
     );
+  };
+
+  const renderModulo = () => {
+    return !values || !values.moduli ? (
+      <></>
+    ) : (
+      values.moduli.map((modulo, idxModulo) => {
+        debugger;
+        return modulo.domande.map(renderDomanda(modulo, idxModulo));
+      })
+    );
+  };
+
+  if (!values) return <h2>Attendere</h2>;
 
   return (
     <div style={{ marginTop: '16px', marginLeft: '8px', width: '80%' }}>
@@ -388,23 +430,23 @@ export function ShowQuestion(props) {
         view={[12]}
         style={{ marginTop: '16px', width: '100%' }}
       >
-        {values.domande.map(renderDomanda)}
+        {renderModulo()}
       </GridChilds>
 
       <GridChilds
-        key="gridChildShowMain2"
+        key="gridChildShowMain3"
         view={[1, 4]}
         style={{ marginTop: '16px', width: '100%' }}
       >
         <p> </p>
-        <Button
+        {/* <Button
           color="primary"
           variant="contained"
           style={{ fontSize: '11px', width: '200px', maxHeight: '22px' }}
           onClick={e => onSend && onSend(risposte)}
         >
           Salva Questionario
-        </Button>
+        </Button> */}
       </GridChilds>
     </div>
   );
