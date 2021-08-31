@@ -75,15 +75,4 @@ export const ModuliForm = makeContainerRefreshed(
   },
 );
 
-export const IndaginiList = makeContainerRefreshed(
-  IndaginiContainer,
-  moduliSliceCrud,
-  (matchParam, history, location, saved, stateLoad) => {
-    const { id, idquestion, idcorso } = (saved && saved.data) || {};
-    // console.log('xxxxx queryParam', queryParam);
-    moduliSliceCrud.actions.reset();
-    moduliSliceCrud.actions.load();
-    console.log();
-  },
-);
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale

@@ -6,7 +6,7 @@ import { makeContainerRefreshed } from '../component/makerCointainer';
 
 import { ModuliFormMaker } from './moduliForm';
 import QuestionModuli from './questionModuli';
-import IndaginiContainer from 'app/components/User/section/indagini';
+import IndaginiListForm from './form/indaginList';
 
 export function ModuliFormContainer({
   formProp: { id, data, saved, stateLoad, meta },
@@ -43,7 +43,7 @@ export const QuestionModuliForm = makeContainerRefreshed(
 );
 
 export const IndaginiList = makeContainerRefreshed(
-  IndaginiContainer,
+  IndaginiListForm,
   questionModuliSlice,
   (matchParam, history, location, saved, stateLoad) => {
     const { id, idquestion, idcorso } = (saved && saved.data) || {};
