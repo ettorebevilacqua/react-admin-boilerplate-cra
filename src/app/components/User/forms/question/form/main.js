@@ -24,7 +24,7 @@ import { DomandaForm } from './domanda';
 import { newDomanda } from 'app/services/question/moduliModel';
 import { AdjustingInterval } from 'app/services/helper';
 
-const ticker = new AdjustingInterval(null, 3000);
+const ticker = new AdjustingInterval(null, 6000);
 
 const toNumberOr = (val, orVal) =>
   isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
