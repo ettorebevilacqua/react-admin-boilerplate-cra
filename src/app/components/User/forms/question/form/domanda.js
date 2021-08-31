@@ -87,7 +87,7 @@ const MDomandaForm = ({
   // useValues(name, props)
   const { values, setFieldValue: setSubFieldValue } = useFormikContext();
   const [expanded, setExpanded] = React.useState(
-    fieldProps.expanded || values.tipo === 0 || false,
+    fieldProps.expanded || values.tipo == 0 || false,
   );
 
   const [isFirstTime, setIsFirstTime] = React.useState(true);

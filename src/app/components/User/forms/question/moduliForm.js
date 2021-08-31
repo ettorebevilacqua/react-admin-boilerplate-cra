@@ -39,38 +39,34 @@ import { updateURL } from 'app/services/helper';
 
 import { QuestionModuliForm } from './';
 
-export const ModuliFormMaker = props => {
-  const { data, isFetching, isError, onSubmit, actions } = props;
+const toNumberOr = (val, orVal) =>
+  !val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
+
+export const ModuliFormMakerC = props => {
+  const { isFetching, isError, onSubmit, actions, values, setValues } = props;
   const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
   const intiTab = getParamTab(location, 'tabs1');
-  const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
   const [newId, setNewId] = React.useState();
   const [tabValue, setTabValue] = React.useState(intiTab);
-  const [values, setValues] = React.useState(() =>
-    data && data.results ? data.results : [],
+  const [isNew, setIsNew] = React.useState(false);
+
+  const getIdxModulo = () =>
+    toNumberOr(sessionStorage.getItem('moduliForm'), 0);
+
+  const [currentIdxModule, setCurrentIdxModule] = React.useState(
+    getIdxModulo(),
   );
+  const setterIdxModulo = idx => {
+    sessionStorage.setItem('moduliForm', idx);
+    setCurrentIdxModule(idx);
+  };
 
-  const commandModuli = (cmd, payload) => {
-    const add = () => {
-      const newModuli = [...values, empityModulo];
-      setCurrentIdxModule(newModuli.length - 1);
-      setTabValue(2);
-      setValues(newModuli);
-    };
-    const remove = () => {
-      const newValues = payload === 0 ? [empityModulo] : [...values];
-      const id = newValues[payload].id;
-      payload > 0 && newValues.splice(payload, 1);
-      id && dispatch(saveModulo({ id, _deleted: true }));
-      setValues(newValues);
-      setCurrentIdxModule(0);
-      actions.reload();
-    };
-
-    const cmds = { add, remove };
-    cmds[cmd] && cmds[cmd](payload);
+  const editModulo = idx => {
+    debugger;
+    setterIdxModulo(idx);
+    setTabValue(2);
   };
 
   React.useEffect(() => {
@@ -78,12 +74,12 @@ export const ModuliFormMaker = props => {
   }, []);
 
   const onSaveData = index => domanda => {
-    if (!values[index] || isFetching) return false;
+    debugger;
+    if (isFetching) return false;
     if (!domanda.id && newId) {
       domanda.id = newId;
     }
     dispatch(saveModulo(domanda)).then(savedData => {
-      debugger;
       const dataModuliTmp = [...values];
       dataModuliTmp[index] = savedData.payload;
       setNewId(savedData.payload.id);
@@ -92,14 +88,33 @@ export const ModuliFormMaker = props => {
     });
   };
 
-  const cmdDomanda = (cmd, payload) => {
-    const cmds = { list: () => setTabValue(2) };
+  const commandModuli = (cmd, payload) => {
+    const add = () => {
+      debugger;
+      // const newModuli = [...values, empityModulo];
+      setterIdxModulo(-1);
+      // setValues(newModuli);
+      setIsNew(true);
+      onSaveData(values.lenght)({ ...empityModulo, title: 'Nuovo' });
+      // setTimeout(() => setTabValue(2), 50);
+    };
+    const remove = () => {
+      const newValues = payload === 0 ? [empityModulo] : [...values];
+      const id = newValues[payload].id;
+      payload > 0 && newValues.splice(payload, 1);
+      id && dispatch(saveModulo({ id, _deleted: true }));
+      setValues(newValues);
+      setterIdxModulo(0);
+      actions.reload();
+    };
+
+    const cmds = { add, remove };
     cmds[cmd] && cmds[cmd](payload);
   };
 
-  const editModulo = idx => {
-    setCurrentIdxModule(idx);
-    setTabValue(2);
+  const cmdDomanda = (cmd, payload) => {
+    const cmds = { list: () => setTabValue(2) };
+    cmds[cmd] && cmds[cmd](payload);
   };
 
   const initDomande = moduloFrom => {
@@ -111,10 +126,13 @@ export const ModuliFormMaker = props => {
     return modulo;
   };
 
-  const getCurrentModulo = () =>
-    values[currentIdxModule]
-      ? initDomande(values[currentIdxModule])
+  const getCurrentModulo = () => {
+    debugger;
+    const cur = getIdxModulo();
+    return values && cur > -1 && values[cur]
+      ? initDomande(values[cur])
       : empityModulo;
+  };
 
   const HeaderModuli = props => (
     <GridChilds
@@ -147,14 +165,19 @@ export const ModuliFormMaker = props => {
       <Domande
         initialValues={getCurrentModulo()}
         command={cmdDomanda}
-        onSaveData={onSaveData(currentIdxModule)}
+        onSaveData={onSaveData(getIdxModulo())}
       />
     </div>
   );
 
   const compTabs = {
     moduli: (
-      <Moduli values={values} command={commandModuli} onEdit={editModulo} />
+      <Moduli
+        values={values}
+        cuurent={getIdxModulo()}
+        command={commandModuli}
+        onEdit={editModulo}
+      />
     ),
     qModuli: <QuestionModuliForm moduli={values} />,
     domande: renderDomande,
@@ -188,6 +211,21 @@ export const ModuliFormMaker = props => {
       />
     </div>
   );
+};
+
+export const ModuliFormMaker = props => {
+  const data = props.data && props.data.results ? props.data.results : [];
+  const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
+
+  data &&
+    data[0] &&
+    data.length - 1 < storeIdx &&
+    sessionStorage.setItem('moduliForm', 0);
+
+  const [values, setValues] = React.useState(() => data);
+
+  if (!data) return <h2>Attender</h2>;
+  return <ModuliFormMakerC values={values} setValues={setValues} {...props} />;
 };
 /*
 providers.getByTag('axios').cleanCache();

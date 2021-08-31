@@ -21,11 +21,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Moduli({ onEdit, values, command, ...props }) {
+export function Moduli({ onEdit, values, current, command, ...props }) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
-
+  debugger;
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -46,19 +46,20 @@ export function Moduli({ onEdit, values, command, ...props }) {
   return (
     <>
       <GridChilds
-        view={[8, 1, 1]}
+        view={[10, 2]}
         style={{ marginTop: '16px', width: '100%', alignItems: 'center' }}
       >
         <h3>Moduli</h3>
         <Button
           variant="contained"
           color="primary"
-          style={{ height: '42px', width: '120px' }}
+          style={{ height: '42px', width: '180px' }}
           onClick={e => command('add')}
         >
-          Nuova
+          Nuovo modulo
         </Button>
       </GridChilds>
+      <br />
       <List className={classes.root}>
         {values &&
           values.map((value, idxModulo) => {

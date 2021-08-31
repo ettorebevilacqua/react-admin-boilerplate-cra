@@ -26,6 +26,9 @@ import { AdjustingInterval } from 'app/services/helper';
 
 const ticker = new AdjustingInterval(null, 3000);
 
+const toNumberOr = (val, orVal) =>
+  isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
+
 export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   const [values, setValues] = React.useState(initialValues);
   const [arManagerDomande, setArManagerDomande] = React.useState();
@@ -33,8 +36,10 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   const [dataModuli, setDataModuli] = React.useState(initialValues);
   const [timeOutAutoSave, setTimeOutAutoSave] = React.useState(null);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
-
+  const [isFirstRender, setIsFirstRender] = React.useState(true);
+  debugger;
   const onSave = () => {
+    if (isFirstTime) return false;
     onSaveData(values);
     console.log('main change', values);
     ticker.stop();
@@ -47,7 +52,8 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   };
 
   const onChangeForm = (valuesNew, isFirstTime) => {
-    // if (isFirstTime) return setIsFirstTime(false);
+    // if (isFirstRender) return setIsFirstRender(false);
+    debugger;
 
     setValues(valuesNew);
     ticker.stop();
@@ -156,7 +162,7 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
                 return {
                   onSubFormChange: onSubFormChange(arrayHelper, index),
                   arrayManager: arrayManager(arrayHelper, index),
-                  tipo: values.tipo,
+                  tipo: toNumberOr(values && values.tipo, 0),
                 };
               }}
             />
