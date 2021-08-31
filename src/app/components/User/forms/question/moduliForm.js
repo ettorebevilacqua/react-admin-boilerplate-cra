@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useHistory } from 'react-router-dom';
+
 import { useFormik } from 'formik';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,7 +13,7 @@ import Box from '@material-ui/core/Box';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { AutoTabs } from 'app/components/Layout/autoTabs';
+import { AutoTabs, getParamTab } from 'app/components/Layout/autoTabs';
 import GridChilds from '../component/gridChilds';
 
 // import { Domande } from './comp/question';
@@ -20,7 +22,6 @@ import { Domande } from './form/main';
 import { Moduli } from './form/moduli';
 import { ShowQuestion } from './form/show';
 import {
-  saveValues,
   empityModulo,
   newDomanda,
   makeRisposte,
@@ -34,37 +35,22 @@ import {
   toggleModuliShow,
 } from 'app/pages/User/slice/userCompSlice';
 
+import { updateURL } from 'app/services/helper';
+
 import { QuestionModuliForm } from './';
 
 export const ModuliFormMaker = props => {
   const { data, isFetching, isError, onSubmit, actions } = props;
+  const location = useLocation();
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const intiTab = getParamTab(location, 'tabs1');
+  const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
   const [newId, setNewId] = React.useState();
-  const [tabValue, setTabValue] = React.useState(0);
+  const [tabValue, setTabValue] = React.useState(intiTab);
   const [values, setValues] = React.useState(() =>
     data && data.results ? data.results : [],
   );
-  const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
-
-  const dispatch = useDispatch();
-  React.useEffect(() => {
-    //  data && setValues(data.results);
-  }, []);
-
-  const onSaveData = index => domanda => {
-    if (!values[index] || isFetching) return false;
-    if (!domanda.id && newId) {
-      domanda.id = newId;
-    }
-    const aa = dispatch(saveModulo(domanda)).then(savedData => {
-      const dataModuliTmp = [...values];
-      dataModuliTmp[index] = savedData.payload;
-      setNewId(savedData.payload.id);
-      setValues(dataModuliTmp);
-      saveValues(dataModuliTmp);
-      actions.reload();
-      actions.clearState();
-    });
-  };
 
   const commandModuli = (cmd, payload) => {
     const add = () => {
@@ -79,12 +65,31 @@ export const ModuliFormMaker = props => {
       payload > 0 && newValues.splice(payload, 1);
       id && dispatch(saveModulo({ id, _deleted: true }));
       setValues(newValues);
-      saveValues(newValues);
       setCurrentIdxModule(0);
+      actions.reload();
     };
 
     const cmds = { add, remove };
     cmds[cmd] && cmds[cmd](payload);
+  };
+
+  React.useEffect(() => {
+    //  data && setValues(data.results);
+  }, []);
+
+  const onSaveData = index => domanda => {
+    if (!values[index] || isFetching) return false;
+    if (!domanda.id && newId) {
+      domanda.id = newId;
+    }
+    dispatch(saveModulo(domanda)).then(savedData => {
+      debugger;
+      const dataModuliTmp = [...values];
+      dataModuliTmp[index] = savedData.payload;
+      setNewId(savedData.payload.id);
+      setValues(dataModuliTmp);
+      actions.reload();
+    });
   };
 
   const cmdDomanda = (cmd, payload) => {
@@ -147,18 +152,20 @@ export const ModuliFormMaker = props => {
     </div>
   );
 
-  const compTabs = [
-    <Moduli values={values} command={commandModuli} onEdit={editModulo} />,
-    <QuestionModuliForm moduli={values} />,
-    renderDomande,
-    renserShow,
-  ];
+  const compTabs = {
+    moduli: (
+      <Moduli values={values} command={commandModuli} onEdit={editModulo} />
+    ),
+    qModuli: <QuestionModuliForm moduli={values} />,
+    domande: renderDomande,
+    show: renserShow,
+  };
 
   const tabsElem = [
-    { label: 'Moduli', comp: () => compTabs[0] },
-    { label: 'Questionari', comp: () => compTabs[1] },
-    { label: 'domande', comp: compTabs[2] },
-    { label: 'Anteprima', comp: compTabs[3] },
+    { label: 'Moduli', comp: () => compTabs.moduli },
+    { label: 'Questionari', comp: () => compTabs.qModuli },
+    { label: 'Domande', comp: compTabs.domande },
+    { label: 'Anteprima', comp: compTabs.show },
   ];
 
   const visibleTabs = [
@@ -171,10 +178,13 @@ export const ModuliFormMaker = props => {
   return (
     <div>
       <AutoTabs
+        tabsName="tabs1"
         value={tabValue}
-        onChange={(event, newValue) => setTabValue(newValue)}
         tabs={tabsElem}
         visibles={visibleTabs}
+        onChange={newValue => {
+          tabValue && setTabValue(newValue);
+        }}
       />
     </div>
   );
