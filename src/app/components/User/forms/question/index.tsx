@@ -18,9 +18,8 @@ export function ModuliFormContainer({
   const { modulo, questions } = data || {};
   // React.useEffect(init, []);
   // React.useEffect(dataUpdate, [data]);
-  console.log('ModuliFormContainer', data);
   const onSendRisposte = (val1, val2) => {
-    console.log('ModuliFormContainer onSendRisposte', val1, val2);
+    // console.log('ModuliFormContainer onSendRisposte', val1, val2);
   };
   return (
     <ModuliFormMaker actions={actions} data={data} onSend={onSendRisposte} />
@@ -33,12 +32,12 @@ export const QuestionModuliForm = makeContainerRefreshed(
   (matchParam, history, location, saved, stateLoad) => {
     const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
-    const queryParam =
-      !saved || !saved.data || !saved.data.id
+    const queryParam = {};
+    /* !saved || !saved.data || !saved.data.id
         ? pick(matchParam, ['id'])
-        : { id: saved.data.id };
+        : { id: saved.data.id }; */
 
-    questionModuliSlice.actions.clearState();
+    questionModuliSlice.actions.reset();
     questionModuliSlice.actions.query(queryParam, true);
   },
 );
@@ -50,7 +49,7 @@ export const IndaginiList = makeContainerRefreshed(
     const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
     const queryParam = {};
-    questionModuliSlice.actions.clearState();
+    questionModuliSlice.actions.reset();
     questionModuliSlice.actions.query(queryParam, true);
   },
 );

@@ -26,7 +26,7 @@ export const QuestionToForm = makeContainerRefreshed(
         : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
 
-    questionSlice.actions.clearState();
+    questionSlice.actions.reset();
     questionSlice.actions.query(queryParam, true);
   },
 );
@@ -42,7 +42,7 @@ export const GuestQuestionForm = makeContainerRefreshed(
         ? pick(matchParam, ['id', 'idquestion', 'idcorso'])
         : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
-    moduliSliceCrud.actions.clearState();
+    moduliSliceCrud.actions.reset();
     moduliSliceCrud.actions.get(id);
   },
 );
@@ -51,7 +51,7 @@ export const QuestionList = makeContainerRefreshed(
   ListQuestions,
   questionSlice2,
   (matchParam, history, location, saved) => {
-    questionSlice2.actions.clearState();
+    questionSlice2.actions.reset();
     questionSlice2.actions.query(
       pick({ closeAt: 'false', full: 'true', ...matchParam }, [
         'closeAt',
@@ -69,7 +69,7 @@ export const ModuliForm = makeContainerRefreshed(
   (matchParam, history, location, saved, stateLoad) => {
     const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
-    moduliSliceCrud.actions.clearState();
+    moduliSliceCrud.actions.reset();
     moduliSliceCrud.actions.load();
     console.log();
   },
@@ -81,7 +81,7 @@ export const IndaginiList = makeContainerRefreshed(
   (matchParam, history, location, saved, stateLoad) => {
     const { id, idquestion, idcorso } = (saved && saved.data) || {};
     // console.log('xxxxx queryParam', queryParam);
-    moduliSliceCrud.actions.clearState();
+    moduliSliceCrud.actions.reset();
     moduliSliceCrud.actions.load();
     console.log();
   },

@@ -151,7 +151,7 @@ export function makeContainer(
 }
 
 export function makeContainerRefreshed(Component, sliceProvider, loadCallBack) {
-  sliceProvider.actions.clearState();
+  sliceProvider.actions.reset();
   return makeContainer(
     Component,
     sliceProvider,

@@ -73,6 +73,7 @@ const init = store =>
       initialState,
       reducers: {
         clearState: state => initialState,
+        reset: state => clearStateAndProvider(),
         clearStateAndProvider: state => clearStateAndProvider(),
         clearProvider,
       },
@@ -85,7 +86,7 @@ const init = store =>
       },
     });
 
-    const { clearState } = providerSlice.actions;
+    const { clearState, reset } = providerSlice.actions;
 
     const dataSelector = state => {
       const cond =
@@ -134,6 +135,7 @@ const init = store =>
     const mapDispatchToProps = dispatch => {
       const base = {
         clearState: () => dispatch(clearState()),
+        reset: () => dispatch(reset()),
         load: id => {
           dispatch(readProvider(id));
         },
