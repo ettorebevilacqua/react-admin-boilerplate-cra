@@ -25,7 +25,6 @@ export function Moduli({ onEdit, values, current, command, ...props }) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
-  debugger;
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];

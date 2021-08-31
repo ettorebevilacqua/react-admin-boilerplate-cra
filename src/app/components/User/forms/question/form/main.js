@@ -37,7 +37,7 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
   const [timeOutAutoSave, setTimeOutAutoSave] = React.useState(null);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [isFirstRender, setIsFirstRender] = React.useState(true);
-  debugger;
+
   const onSave = () => {
     if (isFirstTime) return false;
     onSaveData(values);
@@ -53,7 +53,6 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
 
   const onChangeForm = (valuesNew, isFirstTime) => {
     // if (isFirstRender) return setIsFirstRender(false);
-    debugger;
 
     setValues(valuesNew);
     ticker.stop();
