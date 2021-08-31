@@ -119,7 +119,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
   };
 
   const renderTipoInner = () =>
-    tipo === 2 ? (
+    tipo == 2 ? (
       valValue ? (
         <RadioButtonChecked
           color={valValue ? 'primary' : 'secondary'}
@@ -128,15 +128,15 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       ) : (
         <RadioButtonUnchecked color="secondary" onClick={onClickOptions} />
       )
-    ) : tipo === 3 ? (
+    ) : tipo == 3 ? (
       <Field component={Checkbox} name="val" type="checkbox" />
-    ) : tipo === 1 ? (
+    ) : tipo == 1 ? (
       <Box component="fieldset" mb={3} borderColor="transparent"></Box>
-    ) : tipo === 4 ? (
+    ) : tipo == 4 ? (
       <Field component={RadioGroup} aria-label="gender" name="gender1">
         {radioTrueFalse(valValue, [true, false])}
       </Field>
-    ) : tipo === 5 || tipo === 6 ? (
+    ) : tipo == 5 || tipo === 6 ? (
       <span></span>
     ) : (
       <span></span>
