@@ -6,6 +6,7 @@ import {
   Toolbar,
   Typography,
   Fab,
+  Button,
 } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -138,6 +139,15 @@ function Header(props) {
             }}
           />
         </IconButton>
+
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={() => props.history.push('/')}
+        >
+          <span style={{}}>Home</span>
+        </Button>
+
         {isMenu && (
           <IconButton
             color="inherit"
