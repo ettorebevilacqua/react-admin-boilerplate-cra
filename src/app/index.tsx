@@ -20,12 +20,14 @@ import { compose } from 'redux';
 import store from '../store/configureStore';
 import { useTranslation } from 'react-i18next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-
+import { useSelector, useDispatch } from 'react-redux';
 import {
   initUser,
   mapStateToPropsUser,
   userSelector,
 } from 'app/slice/userSlice';
+import { RootState } from 'types';
+import { UserAuthState } from 'app/slice/types';
 
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 
@@ -72,24 +74,26 @@ const AppRoute = ({ isAuthenticated }) => (
     )}
   </>
 );
-
+initUser(store); // check if user is logged with present token
 function AppBody(props: any) {
+  const xxx = useSelector((state: RootState) => {
+    debugger;
+    console.log('state', state.userAuth);
+    return state.userAuth || undefined;
+  });
   const {
     id,
-    isAuth,
-    isFetching,
     mustAuth,
+    isAuth,
     isSuccess,
+    isFetching,
     isError,
-  } = props.formProp.stateLoad;
-
-  React.useEffect(() => {
-    initUser(store); // check if user is logged with present token
-  }, []);
+  } = xxx as UserAuthState;
+  React.useEffect(() => {}, []);
 
   React.useEffect(() => {
     // console.log('check auth isError ', isError);
-  }, [props.formProp.stateLoad]);
+  }, [xxx]);
 
   const renderRouting = isGuest => (
     <LoadingOverlay active={isFetching} spinner text="Loading...">
@@ -134,10 +138,6 @@ function AppBody(props: any) {
     : renderRouting(false);
 }
 
-// const { mapStateToProps, mapDispatchToProps } = mapToPropsUser;
-const withConnect = connect(mapStateToPropsUser);
-const AppBodyConnected = compose(withConnect)(AppBody);
-
 const helmetContext = {};
 
 const StartSlices = () => {
@@ -159,7 +159,7 @@ export function App() {
           >
             <meta name="description" content="Smart service" />
           </Helmet>
-          <AppBodyConnected />
+          <AppBody />
         </HelmetProvider>
       </Provider>
     </React.Fragment>

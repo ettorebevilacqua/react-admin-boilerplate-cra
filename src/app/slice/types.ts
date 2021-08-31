@@ -8,6 +8,8 @@ export interface UserAuthState {
   isFetching: boolean;
   isSuccess: boolean;
   isError: boolean;
+  isAuth: boolean;
+  mustAuth: boolean;
   errorMessage: string;
   user: any;
 }
