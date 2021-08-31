@@ -127,7 +127,7 @@ function AppBody(props: any) {
 
   return isGuest()
     ? renderRouting(true)
-    : !isAuth || isError || isFetching
+    : !isAuth || isError
     ? renderLogin()
     : !isFetching && !id && !mustAuth
     ? renderBlankPage()
