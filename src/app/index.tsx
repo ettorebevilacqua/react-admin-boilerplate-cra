@@ -77,8 +77,7 @@ const AppRoute = ({ isAuthenticated }) => (
 initUser(store); // check if user is logged with present token
 function AppBody(props: any) {
   const xxx = useSelector((state: RootState) => {
-    debugger;
-    console.log('state', state.userAuth);
+    // console.log('state', state.userAuth);
     return state.userAuth || undefined;
   });
   const {

@@ -152,14 +152,16 @@ export default function QuestionModuli({
           <Select
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
-            value={moduloToAdd}
+            value={moduloToAdd || ''}
             style={{ width: '100%' }}
             onChange={onModuloChange(index)}
           >
             {moduli &&
               moduli.map &&
-              moduli.map(item => (
-                <MenuItem value={item.id}>{item.title}</MenuItem>
+              moduli.map((item, idx) => (
+                <MenuItem key={idx} value={item.id}>
+                  {item.title}
+                </MenuItem>
               ))}
           </Select>
           <Button

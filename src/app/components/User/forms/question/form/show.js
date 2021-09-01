@@ -111,7 +111,6 @@ const useStyles = makeStyles(theme => ({
 export function ShowQuestion(props) {
   const { values, onSend } = props;
   const classes = useStyles();
-  debugger;
   const moduliRisposte =
     !values || !values.moduli || !values.moduli.map
       ? []
@@ -414,7 +413,6 @@ export function ShowQuestion(props) {
       <></>
     ) : (
       values.moduli.map((modulo, idxModulo) => {
-        debugger;
         return modulo.domande.map(renderDomanda(modulo, idxModulo));
       })
     );
