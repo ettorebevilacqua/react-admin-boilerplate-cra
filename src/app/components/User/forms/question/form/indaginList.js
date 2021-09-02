@@ -30,9 +30,12 @@ function IndaginiListForm(props) {
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
 
-  const [values, setValues] = React.useState(
-    data ? data.filter(item => item.isPublic) : [],
-  );
+  const getDataPublic = () =>
+    data && data.filter ? data.filter(item => item.isPublic) : [];
+  const [values, setValues] = React.useState(getDataPublic());
+
+  // React.useEffect(() => props.actions.load(), []);
+  React.useEffect(() => setValues(getDataPublic()), [data]);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -121,7 +124,7 @@ function IndaginiListForm(props) {
     { label: 'Anteprima', comp: renderSwow },
   ];
 
-  const visibleTabs = [[0], [0, 2], [0, 2]];
+  const visibleTabs = [[0], [0, 2], [0]];
   return (
     <div>
       <AutoTabs
