@@ -27,8 +27,7 @@ import { UserAuthState } from 'app/slice/types';
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 
 import { AppHome } from './app';
-import AdminApp from './admin';
-import { Login } from 'app/admin/layout';
+import Login from 'app/components/Layout/Login';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
 import { useUserAuthSlice } from 'app/slice';
@@ -57,8 +56,6 @@ const AppRoute = ({ isAuthenticated }) => (
           component={AppHome}
           isAuthenticated={isAuthenticated}
         >
-          <Route exact path="/admin" component={AdminApp} />
-
           <Route component={NotFoundPage} />
         </PrivateRoute>
         <Route exact path="/" component={HomePage}>

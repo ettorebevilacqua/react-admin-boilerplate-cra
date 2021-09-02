@@ -1,7 +1,10 @@
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+export {};
+/* import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { routerMiddleware, connectRouter } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 import { all, fork } from 'redux-saga/effects';
+
+
 import { adminReducer, adminSaga, USER_LOGOUT } from 'react-admin';
 
 const createAdminStore = ({ authProvider, dataProvider, history }) => {
@@ -36,7 +39,7 @@ const createAdminStore = ({ authProvider, dataProvider, history }) => {
   const store = createStore(
     resettableAppReducer,
     {
-      /* set your initial state here */
+      // set your initial state here
     },
     composeEnhancers(
       applyMiddleware(
@@ -52,3 +55,4 @@ const createAdminStore = ({ authProvider, dataProvider, history }) => {
 };
 
 export default createAdminStore;
+*/

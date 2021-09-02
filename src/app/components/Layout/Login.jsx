@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Field, withTypes } from 'react-final-form';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -78,7 +77,7 @@ const renderInput = ({
 
 const { Form } = withTypes();
 
-const Login = () => {
+const LoginComp = () => {
   const dispatch = useDispatch();
   const { isFetching, isError, errorMessage } = useSelector(userSelector);
 
@@ -212,18 +211,13 @@ const Login = () => {
   );
 };
 
-Login.propTypes = {
-  authProvider: PropTypes.func,
-  previousRoute: PropTypes.string,
-};
-
 // We need to put the ThemeProvider decoration in another component
 // Because otherwise the useStyles() hook used in Login won't get
 // the right theme
-const LoginWithTheme = props => (
+const Login = props => (
   <ThemeProvider theme={createMuiTheme(lightTheme)}>
-    <Login {...props} />
+    <LoginComp {...props} />
   </ThemeProvider>
 );
 
-export default LoginWithTheme;
+export default Login;
