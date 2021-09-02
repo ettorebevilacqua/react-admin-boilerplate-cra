@@ -33,6 +33,8 @@ const newDomanda = {
   risposte: [{ val: null }],
 };
 
+const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
+
 const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...props }) => {
   const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
   const propComp = {
@@ -49,7 +51,7 @@ const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...prop
 
 const MRispostaForm = ({ name, fieldProps }) => {
   const arrayManager = fieldProps.arrayManager;
-  const [tipo, setTipo] = useState(fieldProps.tipo);
+  const [tipo, setTipo] = useState(toNumberOr(fieldProps.tipo, 0));
   const [valValue, setValValue] = useState(false);
   const { values, setFieldValue } = useFormikContext();
 
@@ -98,21 +100,21 @@ const MRispostaForm = ({ name, fieldProps }) => {
   };
 
   const renderTipoInner = () =>
-    tipo == 2 ? (
+    tipo === 2 ? (
       valValue ? (
         <RadioButtonChecked color={valValue ? 'primary' : 'secondary'} onClick={onClickOptions} />
       ) : (
         <RadioButtonUnchecked color="secondary" onClick={onClickOptions} />
       )
-    ) : tipo == 3 ? (
+    ) : tipo === 3 ? (
       <Field component={Checkbox} name="val" type="checkbox" />
-    ) : tipo == 1 ? (
+    ) : tipo === 1 ? (
       <Box component="fieldset" mb={3} borderColor="transparent"></Box>
-    ) : tipo == 4 ? (
+    ) : tipo === 4 ? (
       <Field component={RadioGroup} aria-label="gender" name="gender1">
         {radioTrueFalse(valValue, [true, false])}
       </Field>
-    ) : tipo == 5 || tipo === 6 ? (
+    ) : tipo === 5 || tipo === 6 ? (
       <span></span>
     ) : (
       <span></span>

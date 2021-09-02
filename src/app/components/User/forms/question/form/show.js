@@ -129,9 +129,9 @@ export function ShowQuestion(props) {
     const valCur = val === undefined ? userVal : val;
     const valValuesTmp = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
     const domanda = getDomanda(idxModulo, idxDomanda);
-    const tipo = domanda && domanda.tipo;
-    const valValues = tipo == 1 ? valValuesTmp.rating : valValuesTmp.val;
-    return correlata && valCur == valValues;
+    const tipo = toNumberOr(domanda && domanda.tipo, 0);
+    const valValues = tipo === 1 ? toNumberOr(valValuesTmp.rating, 1) : toNumberOr(valValuesTmp.val, 1);
+    return correlata && valCur === valValues;
   };
 
   /* const onChangeRating = (idxDomanda, idxRisposta) => e => {
@@ -187,7 +187,7 @@ export function ShowQuestion(props) {
     _rispostaOptionTmp[idxModulo][idxRisposta] = valBool;
     _risposte[idxModulo][idxDomanda] = _rispostaOptionTmp;
 
-    return tipo == 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
+    return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
 
   const radioTrueFalse = (val, onClickInner) => (
@@ -211,7 +211,7 @@ export function ShowQuestion(props) {
     console.log('vals', val);
     return (
       <div key={idxRisposta}>
-        {tipo == 2 ? (
+        {tipo === 2 ? (
           val ? (
             <Button onClick={onClickInner}>
               <RadioButtonChecked color={val ? 'primary' : 'secondary'} />
@@ -221,13 +221,13 @@ export function ShowQuestion(props) {
               <RadioButtonUnchecked color="secondary" />
             </Button>
           )
-        ) : tipo == 3 ? (
+        ) : tipo === 3 ? (
           <Checkbox checked={val} onClick={onClickInner} />
-        ) : tipo == 4 ? (
+        ) : tipo === 4 ? (
           <RadioGroup aria-label="gender" name="gender1">
             {radioTrueFalse(val, onClickInner)}
           </RadioGroup>
-        ) : tipo == 5 ? (
+        ) : tipo === 5 ? (
           <TextField value={val} onChange={onClickInner} />
         ) : (
           <span></span>
@@ -238,7 +238,7 @@ export function ShowQuestion(props) {
 
   const renderRisposte = (idxModulo, tipo, idxDomanda) => (risposta, idxRisposta) =>
     risposta &&
-    (tipo != 1 ? risposta.risposta : idxRisposta === 0) && (
+    (tipo !== 1 ? risposta.risposta : idxRisposta === 0) && (
       <GridChilds
         key={idxModulo + idxRisposta}
         view={[1, 11]}
@@ -259,7 +259,7 @@ export function ShowQuestion(props) {
             )}
             {isCorrelata(idxModulo, idxDomanda, idxRisposta) && renderDomanda(risposta.correlata, 0, '32px')}
           </GridChilds>
-        ) : tipo == 1 ? (
+        ) : tipo === 1 ? (
           <>
             {renderScala(idxModulo, idxDomanda, risposta)}
             {isCorrelata(idxModulo, idxDomanda, idxRisposta) && (
@@ -302,9 +302,10 @@ export function ShowQuestion(props) {
 
   const renderDomanda = (modulo, idxModulo) => (domanda, idx, margin) => {
     console.log('domanda', domanda);
+    const tipo = toNumberOr(domanda.tipo, 0);
     return !getDomanda(idxModulo, idx) || !domanda || !domanda.tipo ? (
       <></>
-    ) : domanda.tipo == 6 ? (
+    ) : tipo === 6 ? (
       <div
         key={idxModulo + idx}
         className={classes.cardDomanda}
@@ -314,7 +315,7 @@ export function ShowQuestion(props) {
           marginTop: '22px',
         }}
       >
-        <Typography variant={domanda.tipo == 6 ? 'h3' : 'span'} className={classes.domandaTxt} color="textSecondary">
+        <Typography variant={domanda.tipo === 6 ? 'h3' : 'span'} className={classes.domandaTxt} color="textSecondary">
           {domanda.domanda}
         </Typography>
       </div>
@@ -322,16 +323,12 @@ export function ShowQuestion(props) {
       <div key={idxModulo + idx}>
         <Paper style={{ marginTop: '26px', marginBottom: '12px' }}>
           <GridChilds className={classes.cardDomanda} view={[12]} style={{ height: '48px' }}>
-            <Typography
-              variant={domanda.tipo == 6 ? 'h3' : 'body1'}
-              className={classes.domandaTxt}
-              color="textSecondary"
-            >
+            <Typography variant={tipo === 6 ? 'h3' : 'body1'} className={classes.domandaTxt} color="textSecondary">
               {domanda.domanda}
             </Typography>
           </GridChilds>
         </Paper>
-        {domanda.tipo != 6 && domanda.tipo == 5
+        {domanda.tipo !== 6 && domanda.tipo === 5
           ? renderDomandaAperta(idxModulo, idx)
           : domanda.risposte &&
             domanda.risposte.map &&
