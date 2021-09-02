@@ -49,10 +49,11 @@ const useStyles = makeStyles(theme => ({
     },
   },
   cardDomanda: {
-    padding: '4px',
+    padding: '1px',
     paddingLeft: '8px',
     alignItems: 'center',
     display: 'flex',
+    marginBottom: '0px',
   },
   boxDomanda: {
     background: 'white',
@@ -245,41 +246,38 @@ export function ShowQuestion(props) {
   const renderRisposte = (idxModulo, tipo, idxDomanda) => (risposta, idxRisposta) =>
     risposta &&
     (tipo !== 1 ? risposta.risposta : idxRisposta === 0) && (
-      <GridChilds
-        key={idxModulo + idxRisposta}
-        view={[1, 11]}
-        className={classes.cardDomanda}
-        style={{ marginTop: '-1px', marginBotton: '-1px' }}
-      >
-        <span> </span>
-        {[1].indexOf(tipo) < 0 ? (
-          <GridChilds view={[10, 2]} style={{ alignItems: 'center' }}>
-            <Box className={classes.boxDomanda}>{risposta.risposta || ''}</Box>
-            {renderTipoInner(
-              risposta,
-              idxModulo,
-              idxDomanda,
-              idxRisposta,
-              tipo,
-              getValueRiposta(idxModulo, idxDomanda, idxRisposta),
-            )}
-            {isCorrelata(idxModulo, idxDomanda, idxRisposta) && renderDomanda(risposta.correlata, 0, '32px')}
-          </GridChilds>
-        ) : tipo === 1 ? (
-          <>
-            {renderScala(idxModulo, idxDomanda, risposta)}
-            {isCorrelata(idxModulo, idxDomanda, idxRisposta) && (
-              <ShowQuestion
-                values={{
-                  domande: [getCorrelata(idxModulo, idxDomanda, idxRisposta)],
-                }}
-              />
-            )}
-          </>
-        ) : (
-          <span></span>
-        )}
-      </GridChilds>
+      <Box className={classes.cardDomanda}>
+        <GridChilds key={idxModulo + idxRisposta} view={[1, 11]}>
+          <span> </span>
+          {[1].indexOf(tipo) < 0 ? (
+            <GridChilds view={[10, 2]} style={{ alignItems: 'center' }}>
+              <Box className={classes.boxDomanda}>{risposta.risposta || ''}</Box>
+              {renderTipoInner(
+                risposta,
+                idxModulo,
+                idxDomanda,
+                idxRisposta,
+                tipo,
+                getValueRiposta(idxModulo, idxDomanda, idxRisposta),
+              )}
+              {isCorrelata(idxModulo, idxDomanda, idxRisposta) && renderDomanda(risposta.correlata, 0, '32px')}
+            </GridChilds>
+          ) : tipo === 1 ? (
+            <>
+              {renderScala(idxModulo, idxDomanda, risposta)}
+              {isCorrelata(idxModulo, idxDomanda, idxRisposta) && (
+                <ShowQuestion
+                  values={{
+                    domande: [getCorrelata(idxModulo, idxDomanda, idxRisposta)],
+                  }}
+                />
+              )}
+            </>
+          ) : (
+            <span></span>
+          )}
+        </GridChilds>
+      </Box>
     );
 
   const renderDomandaAperta = (idxModulo, idxDomanda) => {
