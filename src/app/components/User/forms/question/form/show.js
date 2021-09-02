@@ -168,12 +168,6 @@ export function ShowQuestion(props) {
     </Box>
   );
 
-  const changeRisposte = (idxModulo, idxDomanda, idxRisposta, val) => {
-    const newRisposte = [...risposte];
-    newRisposte[idxModulo][idxDomanda][idxRisposta] = val;
-    setRisposte(newRisposte);
-  };
-
   const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta = 0) => () => {
     console.log('click risposta', idxDomanda, idxRisposta);
     const valBefore = getUserVal(idxModulo, idxDomanda, idxRisposta);
