@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { Field, FieldArray, ErrorMessage } from 'formik';
 
 import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core';
-import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
+import { TextField, Checkbox, RadioGroup } from 'formik-material-ui';
 import {
   Box,
   Radio,
@@ -67,7 +69,7 @@ const getPartecipantiByNum = (list, val) => {
     partecipanti.length < newVal
       ? Array(newVal - partecipanti.length).fill(empityParteipante)
       : [];
-  const refList = [...list, ...empityList];
+  const refList = [...(partecipanti || []), ...empityList];
   const partecipantiNew =
     refList.length > newVal ? refList.slice(0, newVal) : refList;
   partecipantiNew.length === 0 && partecipantiNew.push(empityParteipante);
@@ -114,7 +116,10 @@ const QuestionUsersFields = ({
 
   const DocentiForm = (index, arrayHelper) => {
     return (
-      <Paper className={`${classes.paperTitle} ${classes.width95}`} key={index}>
+      <Paper
+        className={`${classes.paperTitle} ${classes.width95}`}
+        key={'docenti' + index}
+      >
         <GridChilds
           justify="space-between"
           view={[4, 4, 3, 1]}
@@ -152,6 +157,7 @@ const QuestionUsersFields = ({
           textAlign: 'end',
         }}
         view={[6, 6]}
+        key={'gridPart' + index}
       >
         <Box style={{ width: '100%' }}>
           <Tooltip title="Vai alle domande">
@@ -225,6 +231,21 @@ const QuestionUsersFields = ({
           spacing={3}
           style={{ marginTop: '16px', width: '100%' }}
         >
+          <Select
+            labelId="demo-simple-select-helper-label"
+            id="demo-simple-select-helper"
+            value={propValue.corso || ''}
+            style={{ width: '100%' }}
+            onChange={e => propsFormik.setFieldValue('corso', e.target.value)}
+          >
+            {['corso1', 'corso2', 'corso3'].map((item, idx) => (
+              <MenuItem key={idx} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </Select>
+
+          {renderField({}, 'idcorso', TextField, 'Id Corso')}
           {renderField({}, 'titolo', TextField, 'Titolo')}
         </GridChilds>
 
@@ -234,9 +255,8 @@ const QuestionUsersFields = ({
           style={{ marginTop: '16px', width: '100%' }}
         >
           <Typography variant="h6" style={{ textAlign: 'center' }}>
-            <b>Id modolo</b> <br /> {propValue?.idmodulo || ''}{' '}
+            {''}{' '}
           </Typography>
-          {renderField({}, 'idcorso', TextField, 'Id Corso')}
           {renderField(
             { max: 99, min: 1, onKeyUp: e => e },
             'numPartecipanti',

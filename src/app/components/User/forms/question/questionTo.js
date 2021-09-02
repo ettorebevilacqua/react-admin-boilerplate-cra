@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
@@ -35,24 +36,27 @@ import { CrudButton, ButtonnType } from '../component/crudButtons';
 const MquestionTo = ({
   formProp: { id, data, saved, stateLoad, meta },
   queryValue,
-  onSubmit,
+  saveData,
   actions,
   ...props
 }) => {
+  const history = useHistory();
+  const { id: idParam, idquestion } = useParams();
   const { modulo, questions } = data || {};
 
   function loadData() {
-    const dataToValue = {
-      ...((questions && questions.results && questions.results[0]) ||
-        empityQuestion),
-    };
+    const questionData = questions && questions.results && questions.results[0];
+    const dataToValue = idParam
+      ? questionData
+      : {
+          ...empityQuestion,
+          idquestion,
+        };
     if (!dataToValue.docenti || !!dataToValue.docenti[0]) {
       // dataToValue.docenti = [empityParteipante];
     }
-    const dataValue = dataToValue || empityQuestion;
-    const idmodulo =
-      modulo && modulo.id ? modulo.id : dataValue?.idmodulo || '';
-    return { ...dataValue, idmodulo };
+    debugger;
+    return dataToValue;
   }
 
   const [value, setValue] = React.useState();
@@ -87,14 +91,17 @@ const MquestionTo = ({
 */
 
   const onSubmitBefore = (values, actions) => {
-    console.log(actions);
-    onSubmit(values, actions);
+    saveData(values).then(res => {
+      const idnew = res.payload.id;
+      history.push('/app/user/indagini_edit/' + idnew);
+    });
   };
 
   const onChangeForm = propsFormik => (valuesNew, isFirstTime) => {
     if (isFirstTime) return;
     const numPart = valuesNew.numPartecipanti || 1;
     numPartecipanti !== numPart && setNumPartecipanti(numPart);
+    console.log(propsFormik);
     // valuesNew.partecipanti.length !== numPart && onChangeNumPartecipanti(propsFormik, numPart);
   };
   const renderButtonActionRecord = propsFormik => (
@@ -103,7 +110,7 @@ const MquestionTo = ({
         color="primary"
         variant="contained"
         fullWidth
-        disabled={!(propsFormik.dirty && propsFormik.isValid)}
+        disabled={!propsFormik.dirty}
         type="submit"
       >
         <span className={classes.buttonAction}>Salva</span>
@@ -142,7 +149,9 @@ const MquestionTo = ({
       </GridChilds>
     </div>
   );
-
+  const formHtmlSub = (formikProp, hamdle) => aa => {
+    console.log('ffff', formikProp, hamdle);
+  };
   return (
     <div className={classes.root}>
       {!!value && (
@@ -153,11 +162,7 @@ const MquestionTo = ({
           children={propsFormik => (
             <>
               {renderTitle(propsFormik)}
-              <Form
-                success={!!propsFormik.status && !!propsFormik.status.success}
-                error={!!propsFormik.errors.submit}
-                onSubmit={propsFormik.handleSubmit}
-              >
+              <Form onSubmit={propsFormik.handleSubmit}>
                 <FormikOnChange
                   delay={500}
                   onChange={onChangeForm(propsFormik)}
