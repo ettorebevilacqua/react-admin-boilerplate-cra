@@ -23,7 +23,7 @@ import { UserPage } from './pages/User/Loadable';
 
 // dataApi.userProvider.login('ettore@bevilacqua.com1', 'password1').then(data=>alert(data));
 
-export function AppHome(props: any) {
+export function AppHome() {
   return (
     <>
       <Switch>

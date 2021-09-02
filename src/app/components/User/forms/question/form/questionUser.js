@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { Field, FieldArray, ErrorMessage } from 'formik';
 
@@ -69,8 +69,10 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
   const propValue = propsFormik?.values || {};
 
-  const getPartecipanti = values =>
-    getPartecipantiByNum(values, numPartecipanti || 1);
+  const getPartecipanti = useCallback(
+    values => getPartecipantiByNum(values, numPartecipanti || 1),
+    [numPartecipanti],
+  );
 
   const [partecipanti, setPartecipanti] = React.useState(
     getPartecipanti(propValue?.partecipanti),
@@ -90,7 +92,12 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       setPartecipanti(getPartecipanti(propValue?.partecipanti));
       // propsFormik.setFieldValue('partecipanti', partecipanti);
     }
-  }, [numPartecipanti]);
+  }, [
+    numPartecipanti,
+    getPartecipanti,
+    partecipanti.length,
+    propValue.partecipanti,
+  ]);
 
   const DocentiForm = (index, arrayHelper) => {
     return (

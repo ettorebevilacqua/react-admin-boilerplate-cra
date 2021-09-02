@@ -26,7 +26,7 @@ export const makeRisposte = domande =>
         (!domanda.risposte || domanda.risposte.length === 0
           ? [null]
           : domanda.risposte
-        ).map(risp => null),
+        ).map(() => null),
       );
 
 export const getValues = () => {
@@ -61,7 +61,7 @@ export const saveValues = values => {
   localStorage.setItem(MODULO_DATA_KEY, JSON.stringify(values));
 };
 
-export const getIndaginiAperte = values => {
+export const getIndaginiAperte = () => {
   return getValues();
 };
 
