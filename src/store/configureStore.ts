@@ -27,10 +27,7 @@ export function configureAppStore() {
     reducer: createReducer({
       //  [DATA_PROVIDER_NAMESPACE]: storeManager.reducer,
     } as any),
-    middleware: [
-      ...getDefaultMiddleware({ serializableCheck: false }),
-      ...middlewares,
-    ],
+    middleware: [...getDefaultMiddleware({ serializableCheck: false }), ...middlewares],
     devTools: process.env.NODE_ENV !== 'production',
     enhancers,
   });

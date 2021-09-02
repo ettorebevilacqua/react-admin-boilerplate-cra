@@ -52,8 +52,7 @@ export const componentGenerator: PlopGeneratorConfig = {
       type: 'confirm',
       name: ComponentProptNames.wantTranslations,
       default: false,
-      message:
-        'Do you want i18n translations (i.e. will this component use text)?',
+      message: 'Do you want i18n translations (i.e. will this component use text)?',
     },
     {
       type: 'confirm',

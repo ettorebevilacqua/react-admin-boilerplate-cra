@@ -25,10 +25,9 @@ function IndaginiListForm(props) {
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const classes = elemStyle();
 
-  const getDataPublic = React.useCallback(
-    () => (data && data.filter ? data.filter(item => item.isPublic) : []),
-    [data],
-  );
+  const getDataPublic = React.useCallback(() => (data && data.filter ? data.filter(item => item.isPublic) : []), [
+    data,
+  ]);
   const [values, setValues] = React.useState(getDataPublic());
 
   // React.useEffect(() => props.actions.load(), []);
@@ -54,27 +53,13 @@ function IndaginiListForm(props) {
 
   const renderIndagine = (value, index) => (
     <Paper className={`${classes.paperRow}`} key={'paper_' + index}>
-      <GridChilds
-        style={{ alignItems: 'center' }}
-        justify="space-between"
-        view={[8, 4]}
-      >
+      <GridChilds style={{ alignItems: 'center' }} justify="space-between" view={[8, 4]}>
         <div className={classes.paperRowElem}>
           <h4>{value.title}</h4>
         </div>
 
-        <GridChilds
-          spacing={1}
-          view={[6, 6]}
-          justify="space-between"
-          style={{ alignItems: 'center', padding: '0px' }}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            onClick={() => onRowClick(index, setTabValue, 2)}
-          >
+        <GridChilds spacing={1} view={[6, 6]} justify="space-between" style={{ alignItems: 'center', padding: '0px' }}>
+          <Button color="primary" variant="contained" fullWidth onClick={() => onRowClick(index, setTabValue, 2)}>
             Anteprima
           </Button>
 
@@ -82,9 +67,7 @@ function IndaginiListForm(props) {
             color="primary"
             variant="contained"
             fullWidth
-            onClick={() =>
-              history.push('/app/user/indagini_invio/' + values[index].id)
-            }
+            onClick={() => history.push('/app/user/indagini_invio/' + values[index].id)}
           >
             Crea
           </Button>
@@ -100,9 +83,7 @@ function IndaginiListForm(props) {
     </>
   );
 
-  const renderSwow = () => (
-    <ShowQuestion values={values[currentQuestion]} risposte={[]} />
-  );
+  const renderSwow = () => <ShowQuestion values={values[currentQuestion]} risposte={[]} />;
   const questinToProps = () => {
     return {
       saveData: props.saveData,

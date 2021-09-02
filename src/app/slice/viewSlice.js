@@ -1,8 +1,4 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import {
   initialState,
   asyncStateReducer,
@@ -17,15 +13,10 @@ const init = store =>
   function createViewSlice(name, provider) {
     const sliceName = name + 'Slice';
 
-    const gueryProvider = createAsyncThunk(
-      name + '/query',
-      async (payload, thunkAPI) => {
-        const [data, error] = await handlePromise(
-          provider.query({ queryString: payload }).read(),
-        );
-        return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
-      },
-    );
+    const gueryProvider = createAsyncThunk(name + '/query', async (payload, thunkAPI) => {
+      const [data, error] = await handlePromise(provider.query({ queryString: payload }).read());
+      return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+    });
 
     const viewsSlice = createSlice({
       name: sliceName,
@@ -42,8 +33,7 @@ const init = store =>
     const { clearState } = viewsSlice.actions;
 
     const dataSelector = state => {
-      const cond =
-        !state || !state[sliceName] ? initialState : state[sliceName];
+      const cond = !state || !state[sliceName] ? initialState : state[sliceName];
       return cond;
     };
 
@@ -51,11 +41,7 @@ const init = store =>
     // const selectItem = createSelector([dataGetSelector], state => state);
 
     const mapStateToProps = mapStateToPropsCreator(selectData, {});
-    const mapDispatchToProps = mapDispatchToPropsCreator(
-      store.dispatch,
-      clearState,
-      { gueryProvider },
-    );
+    const mapDispatchToProps = mapDispatchToPropsCreator(store.dispatch, clearState, { gueryProvider });
 
     return {
       name: viewsSlice.name,

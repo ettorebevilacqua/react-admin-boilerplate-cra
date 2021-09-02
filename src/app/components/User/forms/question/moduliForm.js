@@ -10,18 +10,13 @@ import GridChilds from '../component/gridChilds';
 import { Domande } from './form/main';
 import { Moduli } from './form/moduli';
 import { ShowQuestion } from './form/show';
-import {
-  empityModulo,
-  newDomanda,
-  makeRisposte,
-} from 'app/services/question/moduliModel';
+import { empityModulo, newDomanda, makeRisposte } from 'app/services/question/moduliModel';
 
 import { saveModulo } from 'app/slice/moduliSlice';
 
 import { QuestionModuliForm } from './';
 
-const toNumberOr = (val, orVal) =>
-  !val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
+const toNumberOr = (val, orVal) => (!val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
 export const ModuliFormMakerC = props => {
   const { isFetching, actions, values, setValues } = props;
@@ -31,8 +26,7 @@ export const ModuliFormMakerC = props => {
   const [newId, setNewId] = React.useState();
   const [tabValue, setTabValue] = React.useState(intiTab);
 
-  const getIdxModulo = () =>
-    toNumberOr(sessionStorage.getItem('moduliForm'), 0);
+  const getIdxModulo = () => toNumberOr(sessionStorage.getItem('moduliForm'), 0);
 
   const setterIdxModulo = idx => {
     sessionStorage.setItem('moduliForm', idx);
@@ -89,19 +83,14 @@ export const ModuliFormMakerC = props => {
   };
 
   const initDomande = moduloFrom => {
-    const domande =
-      moduloFrom.domande && moduloFrom.domande[0]
-        ? moduloFrom.domande
-        : [newDomanda];
+    const domande = moduloFrom.domande && moduloFrom.domande[0] ? moduloFrom.domande : [newDomanda];
     const modulo = { ...moduloFrom, domande };
     return modulo;
   };
 
   const getCurrentModulo = () => {
     const cur = getIdxModulo();
-    return values && cur > -1 && values[cur]
-      ? initDomande(values[cur])
-      : empityModulo;
+    return values && cur > -1 && values[cur] ? initDomande(values[cur]) : empityModulo;
   };
 
   const HeaderModuli = () => (
@@ -122,33 +111,19 @@ export const ModuliFormMakerC = props => {
   const renserShow = () => (
     <div style={{ marginLeft: '24px' }}>
       <HeaderModuli />
-      <ShowQuestion
-        values={{ moduli: [getCurrentModulo()] }}
-        risposte={makeRisposte(values.domande || [])}
-      />
+      <ShowQuestion values={{ moduli: [getCurrentModulo()] }} risposte={makeRisposte(values.domande || [])} />
     </div>
   );
 
   const renderDomande = () => (
     <div style={{ marginLeft: '24px' }}>
       <HeaderModuli />
-      <Domande
-        initialValues={getCurrentModulo()}
-        command={cmdDomanda}
-        onSaveData={onSaveData(getIdxModulo())}
-      />
+      <Domande initialValues={getCurrentModulo()} command={cmdDomanda} onSaveData={onSaveData(getIdxModulo())} />
     </div>
   );
 
   const compTabs = {
-    moduli: (
-      <Moduli
-        values={values}
-        current={getIdxModulo()}
-        command={commandModuli}
-        onEdit={editModulo}
-      />
-    ),
+    moduli: <Moduli values={values} current={getIdxModulo()} command={commandModuli} onEdit={editModulo} />,
     qModuli: <QuestionModuliForm moduli={values} />,
     domande: renderDomande,
     show: renserShow,
@@ -187,10 +162,7 @@ export const ModuliFormMaker = props => {
   const data = props.data && props.data.results ? props.data.results : [];
   const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
 
-  data &&
-    data[0] &&
-    data.length - 1 < storeIdx &&
-    sessionStorage.setItem('moduliForm', 0);
+  data && data[0] && data.length - 1 < storeIdx && sessionStorage.setItem('moduliForm', 0);
 
   const [values, setValues] = React.useState(() => data);
 

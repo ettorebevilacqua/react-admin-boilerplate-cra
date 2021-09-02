@@ -1,22 +1,12 @@
 import { Field, FieldArray, useFormikContext } from 'formik';
 
-export const withField = Component => ({ field, form, ...props }) => (
-  <Component {...field} {...form} {...props} />
-);
+export const withField = Component => ({ field, form, ...props }) => <Component {...field} {...form} {...props} />;
 
-export const ToFieldArray = ({
-  name,
-  renderHeader,
-  renderFooter,
-  renderMaxElem,
-  ...props
-}) => {
+export const ToFieldArray = ({ name, renderHeader, renderFooter, renderMaxElem, ...props }) => {
   const { values } = useFormikContext();
 
   const renderField = arrayHelper => (elem, index) => {
-    const fieldProps = props.fieldProps
-      ? props.fieldProps({ index, arrayHelper })
-      : {};
+    const fieldProps = props.fieldProps ? props.fieldProps({ index, arrayHelper }) : {};
     if (renderMaxElem && index + 1 > renderMaxElem) return '';
 
     return (

@@ -35,8 +35,7 @@ const usePersistedState = (initialState, key, { get, set }): [any, any] => {
 
   const persistentSetState = useCallback(
     newState => {
-      const newStateValue =
-        typeof newState === 'function' ? newState(state) : newState;
+      const newStateValue = typeof newState === 'function' ? newState(state) : newState;
 
       set(key, newStateValue); // persist to localStorage
       setState(newStateValue);

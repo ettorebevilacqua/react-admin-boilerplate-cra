@@ -33,14 +33,7 @@ const newDomanda = {
   risposte: [{ val: null }],
 };
 
-const CompTrueFalse = ({
-  value,
-  title,
-  compProps,
-  color,
-  onClickOptions,
-  ...props
-}) => {
+const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...props }) => {
   const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
   const propComp = {
     color,
@@ -61,9 +54,7 @@ const MRispostaForm = ({ name, fieldProps }) => {
   const { values, setFieldValue } = useFormikContext();
 
   const onChangeForm = (values, isFirstTime) => {
-    !isFirstTime &&
-      fieldProps.onSubFormChange &&
-      fieldProps.onSubFormChange(values);
+    !isFirstTime && fieldProps.onSubFormChange && fieldProps.onSubFormChange(values);
   };
 
   React.useEffect(() => {
@@ -86,9 +77,7 @@ const MRispostaForm = ({ name, fieldProps }) => {
         <div key={index}>
           <CompTrueFalse
             key={index}
-            value={
-              val === null || val === undefined ? false : !index ? val : !val
-            }
+            value={val === null || val === undefined ? false : !index ? val : !val}
             title={title}
             color={!index ? 'primary' : 'secondary'}
             onClickOptions={onClickOptions}
@@ -111,10 +100,7 @@ const MRispostaForm = ({ name, fieldProps }) => {
   const renderTipoInner = () =>
     tipo == 2 ? (
       valValue ? (
-        <RadioButtonChecked
-          color={valValue ? 'primary' : 'secondary'}
-          onClick={onClickOptions}
-        />
+        <RadioButtonChecked color={valValue ? 'primary' : 'secondary'} onClick={onClickOptions} />
       ) : (
         <RadioButtonUnchecked color="secondary" onClick={onClickOptions} />
       )
@@ -133,22 +119,13 @@ const MRispostaForm = ({ name, fieldProps }) => {
     );
 
   const renderButtonRisposta = () => (
-    <GridChilds
-      key="1aag"
-      justify="space-between"
-      alignItems="center"
-      spacing={2}
-      view={[2, 4, 1, 1, 1]}
-    >
+    <GridChilds key="1aag" justify="space-between" alignItems="center" spacing={2} view={[2, 4, 1, 1, 1]}>
       <Box style={{ float: 'left', marginRight: '6px' }}>
         <Box style={{ float: 'left' }}>
           <ArrowUpward color="primary" onClick={() => arrayManager('moveup')} />
         </Box>
         <Box>
-          <ArrowDownward
-            color="primary"
-            onClick={() => arrayManager('movedown')}
-          />
+          <ArrowDownward color="primary" onClick={() => arrayManager('movedown')} />
         </Box>
       </Box>
       <Box style={{ width: '100%' }}>
@@ -160,11 +137,7 @@ const MRispostaForm = ({ name, fieldProps }) => {
       </Box>
       <Box>
         {!(fieldProps.index === 0) && (
-          <DeleteIcon
-            style={{ fontSize: '36px' }}
-            color="secondary"
-            onClick={() => arrayManager('delete')}
-          />
+          <DeleteIcon style={{ fontSize: '36px' }} color="secondary" onClick={() => arrayManager('delete')} />
         )}
       </Box>
 
@@ -174,13 +147,7 @@ const MRispostaForm = ({ name, fieldProps }) => {
 
   const renderTipo = () =>
     tipo !== 5 && tipo !== 1 ? (
-      <GridChilds
-        key="1aag"
-        style={{ alignItems: 'center' }}
-        justify="space-between"
-        view={[5, 7]}
-        spacing={5}
-      >
+      <GridChilds key="1aag" style={{ alignItems: 'center' }} justify="space-between" view={[5, 7]} spacing={5}>
         <div>{renderTipoInner()}</div>
         {renderButtonRisposta()}
       </GridChilds>
@@ -206,31 +173,16 @@ const MRispostaForm = ({ name, fieldProps }) => {
             {renderButtonRisposta()}
           </GridChilds>
         ) : (
-          <GridChilds
-            justify="space-between"
-            alignItems="center"
-            spacing={2}
-            key="ss0"
-            view={[8, 4]}
-          >
+          <GridChilds justify="space-between" alignItems="center" spacing={2} key="ss0" view={[8, 4]}>
             <div>
-              <Field
-                component={TextField}
-                fullWidth
-                name={`risposta`}
-                label="Risposta"
-              />
+              <Field component={TextField} fullWidth name={`risposta`} label="Risposta" />
             </div>
 
             <div style={{ marginLeft: '8px' }}>{renderTipo()}</div>
           </GridChilds>
         )}
         {values.correlata && (
-          <GridChilds
-            key="ss04"
-            style={{ alignItems: 'center' }}
-            view={[11, 1]}
-          >
+          <GridChilds key="ss04" style={{ alignItems: 'center' }} view={[11, 1]}>
             <Field
               component={DomandaForm}
               name="correlata"

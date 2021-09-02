@@ -1,12 +1,7 @@
 /* eslint-disable max-params */
 import { useRef, useEffect } from 'react';
 
-const useEventListener = (
-  eventName,
-  handler,
-  element = global,
-  options = {},
-) => {
+const useEventListener = (eventName, handler, element = global, options = {}) => {
   const savedHandler = useRef();
   const { capture, passive, once } = options as any;
 
@@ -20,8 +15,7 @@ const useEventListener = (
       return;
     }
 
-    const eventListener = event =>
-      savedHandler && (savedHandler as any).current(event);
+    const eventListener = event => savedHandler && (savedHandler as any).current(event);
     const opts = { capture, passive, once };
     element.addEventListener(eventName, eventListener, opts);
     return () => {

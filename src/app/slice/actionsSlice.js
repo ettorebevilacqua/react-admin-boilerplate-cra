@@ -1,14 +1,5 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  createSelector,
-} from '@reduxjs/toolkit';
-import {
-  initialState,
-  asyncStateReducer,
-  handlePromise,
-  mapStateToPropsCreator,
-} from './helperSlice';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { initialState, asyncStateReducer, handlePromise, mapStateToPropsCreator } from './helperSlice';
 
 import { setGetObj, mapOrReduceOnKeys } from 'utils/functional';
 import store from 'store/configureStore';
@@ -22,8 +13,7 @@ function createActionsSlice(name, actionsProviders) {
       return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
     });
 
-  const thunkGetter = (acc, thunk) =>
-    setGetObj(acc, thunk.name, getThunk(thunk));
+  const thunkGetter = (acc, thunk) => setGetObj(acc, thunk.name, getThunk(thunk));
 
   const thunks = actionsProviders.reduce(thunkGetter, {});
   const thunksMapper = mapOrReduceOnKeys(thunks);
@@ -34,21 +24,16 @@ function createActionsSlice(name, actionsProviders) {
     reducers: {
       clearState: () => initialState,
     },
-    extraReducers: builder =>
-      thunksMapper(_thunk =>
-        asyncStateReducer(builder)(_thunk, { storeKey: 'saved' }),
-      ),
+    extraReducers: builder => thunksMapper(_thunk => asyncStateReducer(builder)(_thunk, { storeKey: 'saved' })),
   });
 
-  const dataSelector = state =>
-    !state || !state[sliceName] ? initialState : state[sliceName];
+  const dataSelector = state => (!state || !state[sliceName] ? initialState : state[sliceName]);
   const selectData = createSelector([dataSelector], dataState => dataState);
 
   const mapStateToProps = mapStateToPropsCreator(selectData, {});
   const mapDispatchToProps = dispatch => {
     const dispacher = _thunk => payload => dispatch(_thunk(payload));
-    const createActions = (acc, _thunk, actionName) =>
-      setGetObj(acc, actionName, dispacher(_thunk));
+    const createActions = (acc, _thunk, actionName) => setGetObj(acc, actionName, dispacher(_thunk));
 
     return {
       actions: {

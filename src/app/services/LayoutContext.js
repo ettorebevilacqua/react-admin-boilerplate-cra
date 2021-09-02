@@ -19,9 +19,7 @@ function LayoutProvider({ children }) {
   });
   return (
     <LayoutStateContext.Provider value={state}>
-      <LayoutDispatchContext.Provider value={dispatch}>
-        {children}
-      </LayoutDispatchContext.Provider>
+      <LayoutDispatchContext.Provider value={dispatch}>{children}</LayoutDispatchContext.Provider>
     </LayoutStateContext.Provider>
   );
 }

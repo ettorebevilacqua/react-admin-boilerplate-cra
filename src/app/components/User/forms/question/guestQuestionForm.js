@@ -9,11 +9,5 @@ export default function GuestQuestionFormWrap({ formProp: { data } }) {
   console.log('GuestQuestionForm', data);
   const values = [];
   const onSendRisposte = () => 1;
-  return (
-    <ShowQuestion
-      values={values}
-      onSend={onSendRisposte}
-      risposte={makeRisposte(values || [])}
-    />
-  );
+  return <ShowQuestion values={values} onSend={onSendRisposte} risposte={makeRisposte(values || [])} />;
 }

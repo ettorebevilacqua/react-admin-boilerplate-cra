@@ -6,17 +6,7 @@ import { widgets } from '@ui-schema/ds-material/widgetsBinding';
 
 import { TransTitle } from '@ui-schema/ui-schema';
 
-export const pointer = ({
-  value,
-  ownKey,
-  storeKeys,
-  onChange,
-  required,
-  schema,
-  errors,
-  valid,
-  ...props
-}) => {
+export const pointer = ({ value, ownKey, storeKeys, onChange, required, schema, errors, valid, ...props }) => {
   return (
     <>
       <label>
@@ -41,12 +31,7 @@ export const pointer = ({
   );
 };
 
-const TipoDomande = [
-  { tipo: 'unica' },
-  { tipo: 'multipla' },
-  { tipo: 'vf' },
-  { tipo: 'aperta' },
-];
+const TipoDomande = [{ tipo: 'unica' }, { tipo: 'multipla' }, { tipo: 'vf' }, { tipo: 'aperta' }];
 
 export const TipoSchema = createOrderedMap({
   type: 'object',

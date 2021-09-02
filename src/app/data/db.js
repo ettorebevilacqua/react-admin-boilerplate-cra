@@ -42,10 +42,7 @@ export const createTodo = text => {
 };
 
 export const updateTodo = (id, completed) => {
-  return todo
-    .query({ urlParams: { id } })
-    .update({ completed })
-    .then(cleanTodosCache);
+  return todo.query({ urlParams: { id } }).update({ completed }).then(cleanTodosCache);
 };
 
 export const deleteTodo = id => {

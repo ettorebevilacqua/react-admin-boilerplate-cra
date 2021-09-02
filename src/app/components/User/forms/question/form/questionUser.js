@@ -50,13 +50,9 @@ const getPartecipantiByNum = (list, val) => {
 
   if (partecipanti.length === newVal) return partecipanti;
 
-  const empityList =
-    partecipanti.length < newVal
-      ? Array(newVal - partecipanti.length).fill(empityParteipante)
-      : [];
+  const empityList = partecipanti.length < newVal ? Array(newVal - partecipanti.length).fill(empityParteipante) : [];
   const refList = [...(partecipanti || []), ...empityList];
-  const partecipantiNew =
-    refList.length > newVal ? refList.slice(0, newVal) : refList;
+  const partecipantiNew = refList.length > newVal ? refList.slice(0, newVal) : refList;
   partecipantiNew.length === 0 && partecipantiNew.push(empityParteipante);
   // setValue();
   return partecipantiNew;
@@ -69,14 +65,9 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
   const propValue = propsFormik?.values || {};
 
-  const getPartecipanti = useCallback(
-    values => getPartecipantiByNum(values, numPartecipanti || 1),
-    [numPartecipanti],
-  );
+  const getPartecipanti = useCallback(values => getPartecipantiByNum(values, numPartecipanti || 1), [numPartecipanti]);
 
-  const [partecipanti, setPartecipanti] = React.useState(
-    getPartecipanti(propValue?.partecipanti),
-  );
+  const [partecipanti, setPartecipanti] = React.useState(getPartecipanti(propValue?.partecipanti));
 
   const docentiAction = arrayHelper => type => {
     type === ButtonType.delete && arrayHelper.remove();
@@ -92,25 +83,12 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       setPartecipanti(getPartecipanti(propValue?.partecipanti));
       // propsFormik.setFieldValue('partecipanti', partecipanti);
     }
-  }, [
-    numPartecipanti,
-    getPartecipanti,
-    partecipanti.length,
-    propValue.partecipanti,
-  ]);
+  }, [numPartecipanti, getPartecipanti, partecipanti.length, propValue.partecipanti]);
 
   const DocentiForm = (index, arrayHelper) => {
     return (
-      <Paper
-        className={`${classes.paperTitle} ${classes.width95}`}
-        key={'docenti' + index}
-      >
-        <GridChilds
-          justify="space-between"
-          view={[4, 4, 3, 1]}
-          spacing={1}
-          style={{ width: '100%' }}
-        >
+      <Paper className={`${classes.paperTitle} ${classes.width95}`} key={'docenti' + index}>
+        <GridChilds justify="space-between" view={[4, 4, 3, 1]} spacing={1} style={{ width: '100%' }}>
           {renderField({}, `docenti.${index}.nome`, TextField, 'Nome')}
           {renderField({}, `docenti.${index}.email`, TextField, 'Email')}
           {renderField({}, `docenti.${index}.phone`, TextField, 'Telefono')}
@@ -119,9 +97,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
             show={['delete']}
             onClick={docentiAction(arrayHelper)}
             disableds={
-              index === 0 &&
-              arrayHelper?.form?.values?.docenti &&
-              arrayHelper?.form?.values?.docenti.length < 1
+              index === 0 && arrayHelper?.form?.values?.docenti && arrayHelper?.form?.values?.docenti.length < 1
                 ? ['delete']
                 : null
             }
@@ -187,12 +163,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         <GridChilds view={[3, 4, 3, 2]} spacing={3} style={{ width: '100%' }}>
           {renderField({}, `partecipanti.${index}.nome`, TextField, 'Nome')}
           {renderField({}, `partecipanti.${index}.email`, TextField, 'Email')}
-          {renderField(
-            {},
-            `partecipanti.${index}.phone`,
-            TextField,
-            'Telefono',
-          )}
+          {renderField({}, `partecipanti.${index}.phone`, TextField, 'Telefono')}
 
           {renderButtonActionRecord(elem.token)}
         </GridChilds>
@@ -211,11 +182,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
           width: '95%',
         }}
       >
-        <GridChilds
-          view={[8, 4]}
-          spacing={3}
-          style={{ marginTop: '16px', width: '100%' }}
-        >
+        <GridChilds view={[8, 4]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
           <Select
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
@@ -234,11 +201,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
           {renderField({}, 'titolo', TextField, 'Titolo')}
         </GridChilds>
 
-        <GridChilds
-          view={[4, 4, 4]}
-          spacing={3}
-          style={{ marginTop: '16px', width: '100%' }}
-        >
+        <GridChilds view={[4, 4, 4]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
           <Typography variant="h6" style={{ textAlign: 'center' }}>
             {''}{' '}
           </Typography>
@@ -265,9 +228,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               addPartecipante(propsFormik, arrayHelper, value) */}
 
             {propsFormik?.values?.docenti &&
-              propsFormik.values.docenti.map((elem, index) =>
-                DocentiForm(index, arrayHelper),
-              )}
+              propsFormik.values.docenti.map((elem, index) => DocentiForm(index, arrayHelper))}
             <GridChilds
               view={[10, 2]}
               justify="space-between"
@@ -275,12 +236,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               style={{ textAlign: 'end', marginTop: '16px', width: '100%' }}
             >
               <span> </span>
-              <Button
-                color="primary"
-                variant="contained"
-                fullWidth
-                onClick={() => arrayHelper.push(empityParteipante)}
-              >
+              <Button color="primary" variant="contained" fullWidth onClick={() => arrayHelper.push(empityParteipante)}>
                 Nuovo Docente
               </Button>
             </GridChilds>
@@ -301,15 +257,8 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                 !value.partecipanti[0] &&
               addPartecipante(propsFormik, arrayHelper, value) */}
 
-              {partecipanti &&
-                partecipanti.map((elem, index) =>
-                  PartecipanteForm(elem, index, classes),
-                )}
-              <GridChilds
-                view={[4, 2]}
-                spacing={3}
-                style={{ marginTop: '16px', width: '100%' }}
-              >
+              {partecipanti && partecipanti.map((elem, index) => PartecipanteForm(elem, index, classes))}
+              <GridChilds view={[4, 2]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
                 <span> </span>
                 {/* <Button
                   color="primary"

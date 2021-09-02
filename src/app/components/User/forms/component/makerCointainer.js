@@ -17,50 +17,30 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     const location = useLocation();
 
     const toProps = { ...props };
-    toProps.actions.reload = () =>
-      !stateLoad.isFetching &&
-      loadCallBack(params, history, location, stateLoad);
+    toProps.actions.reload = () => !stateLoad.isFetching && loadCallBack(params, history, location, stateLoad);
 
     const {
       formProp: { stateLoad, saved, data },
       actions,
     } = props;
 
-    const loadData = React.useCallback(
-      () => loadCallBack(params, history, location, saved),
-      [history, location, params, saved],
-    );
-
-    React.useEffect(() => {
-      !stateLoad.isSuccess &&
-        !stateLoad.isFetching &&
-        !stateLoad.isError &&
-        !data &&
-        loadData();
-    }, [
-      data,
-      loadData,
-      stateLoad.isError,
-      stateLoad.isFetching,
-      stateLoad.isSuccess,
+    const loadData = React.useCallback(() => loadCallBack(params, history, location, saved), [
+      history,
+      location,
+      params,
+      saved,
     ]);
 
     React.useEffect(() => {
-      !!saved &&
-        saved.isSuccess &&
-        !stateLoad.isFetching &&
-        !stateLoad.isError &&
-        loadData();
+      !stateLoad.isSuccess && !stateLoad.isFetching && !stateLoad.isError && !data && loadData();
+    }, [data, loadData, stateLoad.isError, stateLoad.isFetching, stateLoad.isSuccess]);
+
+    React.useEffect(() => {
+      !!saved && saved.isSuccess && !stateLoad.isFetching && !stateLoad.isError && loadData();
     }, [loadData, saved, stateLoad.isError, stateLoad.isFetching]);
 
-    const onSubmit = async (
-      values,
-      { setSubmitting, setStatus, resetForm },
-    ) => {
-      const [saved] =
-        actions && actions.save
-          ? await handlePromise(actions.save(values))
-          : [];
+    const onSubmit = async (values, { setSubmitting, setStatus, resetForm }) => {
+      const [saved] = actions && actions.save ? await handlePromise(actions.save(values)) : [];
       console.log('form is  submitted', saved);
       // TODO: MANAGE ERROR
       /* if (error) {
@@ -81,9 +61,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     };
 
     const saveData = async valToSave => {
-      return actions && actions.save
-        ? actions.save(valToSave)
-        : new Promise(() => [null, 'error save not found']);
+      return actions && actions.save ? actions.save(valToSave) : new Promise(() => [null, 'error save not found']);
     };
 
     const rendereError = () => (
@@ -91,24 +69,14 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
         <h2>Errrore nel Caricamento</h2>
         <p> {stateLoad.errorMessage}</p>
         <div>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            onClick={() => history.push('/app/user')}
-          >
+          <Button color="primary" variant="contained" fullWidth onClick={() => history.push('/app/user')}>
             Torna Indietro
           </Button>
         </div>
       </>
     );
     const renderComp = () => (
-      <Component
-        queryValue={props?.match?.params || {}}
-        onSubmit={onSubmit}
-        saveData={saveData}
-        {...toProps}
-      />
+      <Component queryValue={props?.match?.params || {}} onSubmit={onSubmit} saveData={saveData} {...toProps} />
     );
 
     return stateLoad.isError ? (
@@ -116,9 +84,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     ) : (
       <div>
         <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
-          {!stateLoad.isFetching && !data
-            ? stateLoad.isError && rendereError()
-            : renderComp()}
+          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : renderComp()}
         </LoadingOverlay>
       </div>
     );
@@ -141,10 +107,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     const hasMoreActions = !!sliceProvider?.actionsSlice?.map;
     return (
       <>
-        {hasMoreActions &&
-          sliceProvider.actionsSlice.map(sliceDef => (
-            <InjectedComp sliceDef={sliceDef} />
-          ))}
+        {hasMoreActions && sliceProvider.actionsSlice.map(sliceDef => <InjectedComp sliceDef={sliceDef} />)}
         <NewContainer {...props} />
       </>
     );
@@ -159,10 +122,5 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
 
 export function makeContainerRefreshed(Component, sliceProvider, loadCallBack) {
   sliceProvider.actions.reset();
-  return makeContainer(
-    Component,
-    sliceProvider,
-    loadCallBack,
-    sliceProvider.initialState,
-  );
+  return makeContainer(Component, sliceProvider, loadCallBack, sliceProvider.initialState);
 }

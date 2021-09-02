@@ -3,11 +3,7 @@ https://cloudnweb.dev/2021/02/modern-react-redux-tutotials-redux-toolkit-login-u
 */
 
 // DEBUG: Crud Slice
-import {
-  createSlice,
-  createAsyncThunk,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { initialState, asyncStateReducer, handlePromise } from './helperSlice';
 import store from 'store/configureStore';
 
@@ -24,49 +20,35 @@ const init = store =>
       return initialState;
     };
 
-    const readProvider = createAsyncThunk(
-      name + '/all',
-      async (payload, thunkAPI) => {
-        const [data, error] = await handlePromise(provider.list().read());
-        return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
-      },
-    );
+    const readProvider = createAsyncThunk(name + '/all', async (payload, thunkAPI) => {
+      const [data, error] = await handlePromise(provider.list().read());
+      return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+    });
 
-    const saveProvider = createAsyncThunk(
-      name + '/save',
-      async (payload, thunkAPI) => {
-        const id = payload.id;
-        try {
-          let data = !id
-            ? await provider.create(payload)
-            : payload._deleted
-            ? await provider.delete(id)
-            : await provider.save(id, payload);
-          return Promise.resolve({ ...data });
-        } catch (e) {
-          return Promise.reject(thunkAPI.rejectWithValue(e));
-        }
-      },
-    );
+    const saveProvider = createAsyncThunk(name + '/save', async (payload, thunkAPI) => {
+      const id = payload.id;
+      try {
+        let data = !id
+          ? await provider.create(payload)
+          : payload._deleted
+          ? await provider.delete(id)
+          : await provider.save(id, payload);
+        return Promise.resolve({ ...data });
+      } catch (e) {
+        return Promise.reject(thunkAPI.rejectWithValue(e));
+      }
+    });
 
-    const getProvider = createAsyncThunk(
-      name + '/get',
-      async (payload, thunkAPI) => {
-        const id = payload;
-        const [data, error] = await handlePromise(provider.get(id));
-        return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
-      },
-    );
+    const getProvider = createAsyncThunk(name + '/get', async (payload, thunkAPI) => {
+      const id = payload;
+      const [data, error] = await handlePromise(provider.get(id));
+      return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+    });
 
-    const gueryProvider = createAsyncThunk(
-      name + '/query',
-      async (payload, thunkAPI) => {
-        const [data, error] = await handlePromise(
-          (queryProvider || provider).query({ queryString: payload }).read(),
-        );
-        return error ? thunkAPI.rejectWithValue(error.data) : data;
-      },
-    );
+    const gueryProvider = createAsyncThunk(name + '/query', async (payload, thunkAPI) => {
+      const [data, error] = await handlePromise((queryProvider || provider).query({ queryString: payload }).read());
+      return error ? thunkAPI.rejectWithValue(error.data) : data;
+    });
 
     const sliceName = name + 'Slice';
 
@@ -91,25 +73,19 @@ const init = store =>
     const { clearState, reset } = providerSlice.actions;
 
     const dataSelector = state => {
-      const cond =
-        !state || !state[sliceName] ? initialState : state[sliceName];
+      const cond = !state || !state[sliceName] ? initialState : state[sliceName];
       return cond;
     };
 
     const dataGetSelector = id => state => {
       const cond =
-        !state ||
-        !state.moduliSlice ||
-        !state.moduliSlice.data ||
-        !state.moduliSlice.data.results
+        !state || !state.moduliSlice || !state.moduliSlice.data || !state.moduliSlice.data.results
           ? null
           : id
           ? state.moduliSlice.data.results
           : state.moduliSlice.data.results.filter(item => item.id === id);
       const isFetching =
-        !state || !state.moduliSlice || !state.moduliSlice.isFetching
-          ? false
-          : state.moduliSlice.isFetching;
+        !state || !state.moduliSlice || !state.moduliSlice.isFetching ? false : state.moduliSlice.isFetching;
 
       return { isFetching, data: cond };
     };
@@ -162,9 +138,7 @@ const init = store =>
       };
 
       const reducerOther = (acc, slice) => ({ ...acc, ...slice.actions });
-      const otherActions = !actionsSlice
-        ? {}
-        : actionsSlice.reduce(reducerOther, {});
+      const otherActions = !actionsSlice ? {} : actionsSlice.reduce(reducerOther, {});
 
       const actions = { ...base, ...otherActions };
       return {

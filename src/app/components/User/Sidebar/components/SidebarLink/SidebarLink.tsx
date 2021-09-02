@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Collapse,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from '@material-ui/core';
+import { Collapse, Divider, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
@@ -27,23 +19,12 @@ interface Props {
   nested?: any;
   type?: any;
 }
-export default function SidebarLink({
-  link,
-  icon,
-  label,
-  children,
-  location,
-  isSidebarOpened,
-  nested,
-  type,
-}: Props) {
+export default function SidebarLink({ link, icon, label, children, location, isSidebarOpened, nested, type }: Props) {
   var classes = useStyles();
 
   // local
   var [isOpen, setIsOpen] = useState(false);
-  var isLinkActive =
-    link &&
-    (location.pathname === link || location.pathname.indexOf(link) !== -1);
+  var isLinkActive = link && (location.pathname === link || location.pathname.indexOf(link) !== -1);
 
   if (type === 'title')
     return (
@@ -120,12 +101,7 @@ export default function SidebarLink({
         />
       </ListItem>
       {children && (
-        <Collapse
-          in={isOpen && isSidebarOpened}
-          timeout="auto"
-          unmountOnExit
-          className={classes.nestedList}
-        >
+        <Collapse in={isOpen && isSidebarOpened} timeout="auto" unmountOnExit className={classes.nestedList}>
           <List component="div" disablePadding>
             {children.map(childrenLink => (
               <SidebarLink

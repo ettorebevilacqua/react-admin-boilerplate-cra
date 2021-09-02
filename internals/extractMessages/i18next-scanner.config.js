@@ -6,11 +6,7 @@ const compilerOptions = require('../../tsconfig.json').compilerOptions;
 const stringfyTranslationObjects = require('./stringfyTranslations.js');
 
 module.exports = {
-  input: [
-    'src/app/**/**.{ts,tsx}',
-    '!**/node_modules/**',
-    '!src/app/**/*.test.{ts,tsx}',
-  ],
+  input: ['src/app/**/**.{ts,tsx}', '!**/node_modules/**', '!src/app/**/*.test.{ts,tsx}'],
   output: './',
   options: {
     debug: false,

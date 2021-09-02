@@ -1,25 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
-import {
-  Paper,
-  IconButton,
-  Menu,
-  MenuItem,
-  withStyles,
-} from '@material-ui/core';
+import { Paper, IconButton, Menu, MenuItem, withStyles } from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Typography from '@material-ui/core/es/Typography/Typography';
 
-const Widget = ({
-  classes,
-  children,
-  title,
-  noBodyPadding,
-  bodyClass,
-  className,
-  disableWidgetMenu,
-  ...props
-}) => (
+const Widget = ({ classes, children, title, noBodyPadding, bodyClass, className, disableWidgetMenu, ...props }) => (
   <div className={classes.widgetWrapper}>
     <Paper className={classes.paper} classes={{ root: classes.widgetRoot }}>
       <div className={classes.widgetHeader}>

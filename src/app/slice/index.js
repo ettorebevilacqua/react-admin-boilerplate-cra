@@ -9,18 +9,9 @@ import createActionsSlice from './actionsSlice';
 import { userSlice } from './userSlice';
 
 import providers from '../data';
-const {
-  questionProvider,
-  providersView,
-  emailProvider,
-  moduliProvider,
-  questionModuliProvider,
-} = providers;
+const { questionProvider, providersView, emailProvider, moduliProvider, questionModuliProvider } = providers;
 
-export const questionViewSlice = createViewSlice(
-  'getQuestion',
-  providersView.getQuestion,
-);
+export const questionViewSlice = createViewSlice('getQuestion', providersView.getQuestion);
 
 export const questionActionlSlice = createActionsSlice('questionEmail', [
   { name: 'sendEmail', action: emailProvider.save },

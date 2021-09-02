@@ -18,20 +18,10 @@ function Forms(props) {
   return (
     <div className={classes.root}>
       <Card className={classes.card}>
-        <UIGenerator
-          schema={schemaTitolo}
-          store={store}
-          onChange={onChange}
-          widgets={widgets}
-        />
+        <UIGenerator schema={schemaTitolo} store={store} onChange={onChange} widgets={widgets} />
       </Card>
       <Card className={classes.card}>
-        <UIGenerator
-          schema={schemaQuestion}
-          store={store}
-          onChange={onChange}
-          widgets={widgets}
-        />
+        <UIGenerator schema={schemaQuestion} store={store} onChange={onChange} widgets={widgets} />
       </Card>
     </div>
   );

@@ -6,11 +6,7 @@ https://ui.dev/react-router-v5-protected-routes-authentication/
 
 */
 
-import {
-  createSlice,
-  createAsyncThunk,
-  createSelector,
-} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { userProvider } from '../data';
 import dataApi from '../data';
 import { mapStateToPropsCreator } from './helperSlice';
@@ -38,56 +34,48 @@ import { mapStateToPropsCreator } from './helperSlice';
 */
 const getInfoUser = data => {
   const userId = data && data.user && data.user.id;
-  const token =
-    data && data.tokens && data.tokens.access && data.tokens.access.token;
+  const token = data && data.tokens && data.tokens.access && data.tokens.access.token;
   return { userId, token };
 };
 
-export const loginUser = createAsyncThunk(
-  'users/login',
-  async (payload, thunkAPI) => {
-    const { username, password } = payload;
-    try {
-      let data = await dataApi.userProvider.login(username, password);
-      const userId = data && data.user && data.user.id;
-      const token =
-        data && data.tokens && data.tokens.access && data.tokens.access.token;
-      if (!userId || !token) {
-        return thunkAPI.rejectWithValue({ message: 'bad data' });
-      }
+export const loginUser = createAsyncThunk('users/login', async (payload, thunkAPI) => {
+  const { username, password } = payload;
+  try {
+    let data = await dataApi.userProvider.login(username, password);
+    const userId = data && data.user && data.user.id;
+    const token = data && data.tokens && data.tokens.access && data.tokens.access.token;
+    if (!userId || !token) {
+      return thunkAPI.rejectWithValue({ message: 'bad data' });
+    }
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', userId);
+    userProvider.authBear(token);
+    return { ...data };
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e.data || e);
+  }
+});
+
+export const fetchUserById = createAsyncThunk('users/fetchUserById', async (payload, thunkAPI) => {
+  const { id } = payload;
+  const tokenLocal = localStorage.getItem('token');
+  const userIdLocal = localStorage.getItem('userId');
+  tokenLocal && dataApi.userProvider.authBear(tokenLocal);
+
+  try {
+    let data = await dataApi.userProvider.getUser(id);
+
+    if (!tokenLocal || !userIdLocal) {
+      const { userId, token } = getInfoUser(data);
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
-      userProvider.authBear(token);
-      return { ...data };
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.data || e);
     }
-  },
-);
 
-export const fetchUserById = createAsyncThunk(
-  'users/fetchUserById',
-  async (payload, thunkAPI) => {
-    const { id } = payload;
-    const tokenLocal = localStorage.getItem('token');
-    const userIdLocal = localStorage.getItem('userId');
-    tokenLocal && dataApi.userProvider.authBear(tokenLocal);
-
-    try {
-      let data = await dataApi.userProvider.getUser(id);
-
-      if (!tokenLocal || !userIdLocal) {
-        const { userId, token } = getInfoUser(data);
-        localStorage.setItem('token', token);
-        localStorage.setItem('userId', userId);
-      }
-
-      return { ...data };
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
-    }
-  },
-);
+    return { ...data };
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
 
 const initialState = {
   username: '',
@@ -149,9 +137,7 @@ export const userSlice = createSlice({
       state.isError = true;
       state.errorMessage = payload.message;
     },*/
-    builder.addCase(loginUser.fulfilled, (state, { payload }) =>
-      setUserState(state, payload),
-    );
+    builder.addCase(loginUser.fulfilled, (state, { payload }) => setUserState(state, payload));
 
     builder.addCase(loginUser.rejected, (state, { payload }) => {
       state.isFetching = false;
@@ -172,9 +158,7 @@ export const userSlice = createSlice({
       state.errorMessage = '';
       state.id = '';
     });
-    builder.addCase(fetchUserById.fulfilled, (state, { payload }) =>
-      setUserState(state, payload),
-    );
+    builder.addCase(fetchUserById.fulfilled, (state, { payload }) => setUserState(state, payload));
     builder.addCase(fetchUserById.rejected, (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
@@ -223,8 +207,7 @@ export function logOut() {
 
 export const authToken = localStorage.getItem('token');
 
-export const userSelector = state =>
-  !state || !state.userAuth ? initialState : state.userAuth;
+export const userSelector = state => (!state || !state.userAuth ? initialState : state.userAuth);
 
 const selectData = createSelector([userSelector], dataState => dataState);
 export const mapStateToPropsUser = mapStateToPropsCreator(selectData, {});

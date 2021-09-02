@@ -43,13 +43,11 @@ const useStyles = makeStyles({
         color: '#111',
       },
       transform: 'translateY(-5px) scale(1.025) translateZ(0)',
-      boxShadow:
-        '0 24px 36px rgba(0,0,0,0.11), 0 24px 46px rgba(220, 233, 255, 0.48)',
+      boxShadow: '0 24px 36px rgba(0,0,0,0.11), 0 24px 46px rgba(220, 233, 255, 0.48)',
     },
     '&:active': {
       transform: 'scale(1) translateZ(0)',
-      boxShadow:
-        '0 15px 24px rgba(0,0,0,0.11),0 15px 24px rgba(220, 233, 255, 0.48)',
+      boxShadow: '0 15px 24px rgba(0,0,0,0.11),0 15px 24px rgba(220, 233, 255, 0.48)',
     },
   },
 
@@ -184,13 +182,7 @@ const svgs = [
       </g>
     </g>
   </svg>,
-  <svg
-    key={1}
-    height="60px"
-    viewBox="0 0 481.83088 481"
-    width="60px"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg key={1} height="60px" viewBox="0 0 481.83088 481" width="60px" xmlns="http://www.w3.org/2000/svg">
     <path
       d="m322.097656 322.359375c-7.578125 7.574219-15.796875 14.480469-24.5625 20.640625l131.121094 131.121094 45.199219-45.203125-131.117188-131.117188c-6.164062 8.761719-13.070312 16.980469-20.640625 24.558594zm0 0"
       fill="#111"
@@ -229,13 +221,7 @@ const svgs = [
       <path d="m26 19h26v2h-26z" />
     </g>
   </svg>,
-  <svg
-    key={3}
-    height="60px"
-    viewBox="0 0 480 480.25828"
-    width="60px"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg key={3} height="60px" viewBox="0 0 480 480.25828" width="60px" xmlns="http://www.w3.org/2000/svg">
     <g fill="#111">
       <path d="m104.128906 440.257812c0-26.507812-21.488281-48-48-48-26.507812 0-48 21.492188-48 48v32h96zm0 0" />
       <path d="m88.128906 360.257812c0 17.671876-14.328125 32-32 32s-32-14.328124-32-32c0-17.671874 14.328125-32 32-32s32 14.328126 32 32zm0 0" />
@@ -314,9 +300,7 @@ export default function AnalyticsCards(props) {
           return (
             <Link
               onClick={() => {
-                item.hardLink &&
-                  item.link &&
-                  window.location.assign(item.link || '');
+                item.hardLink && item.link && window.location.assign(item.link || '');
               }}
               key={i}
               to={item.link || ''}
@@ -326,9 +310,7 @@ export default function AnalyticsCards(props) {
                 bgSelectorIndex={i}
                 item={item}
                 onClick={() => {
-                  item.hardLink &&
-                    item.link &&
-                    window.location.assign(item.link || '');
+                  item.hardLink && item.link && window.location.assign(item.link || '');
                 }}
               />
             </Link>

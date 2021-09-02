@@ -23,11 +23,7 @@ import SidebarLink from './components/SidebarLink/SidebarLink';
 import Dot from './components/Dot';
 
 // context
-import {
-  useLayoutState,
-  useLayoutDispatch,
-  toggleSidebar,
-} from '../LayoutContext';
+import { useLayoutState, useLayoutDispatch, toggleSidebar } from '../LayoutContext';
 
 const structure = [
   { id: 0, label: 'Dashboard', link: '/app/dashboard', icon: <HomeIcon /> },
@@ -124,12 +120,7 @@ function Sidebar({ location }) {
       </div>
       <List>
         {structure.map(link => (
-          <SidebarLink
-            key={link.id}
-            location={location}
-            isSidebarOpened={isSidebarOpened}
-            {...link}
-          />
+          <SidebarLink key={link.id} location={location} isSidebarOpened={isSidebarOpened} {...link} />
         ))}
       </List>
     </Drawer>

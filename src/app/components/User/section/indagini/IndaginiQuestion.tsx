@@ -38,11 +38,7 @@ function IndaginiQuestion() {
         <meta name="description" content="Indagini" />
       </Helmet>
       <div className={classes.root}>
-        <ShowQuestion
-          values={values}
-          onSend={onSendRisposte}
-          risposte={makeRisposte(values || [])}
-        />
+        <ShowQuestion values={values} onSend={onSendRisposte} risposte={makeRisposte(values || [])} />
       </div>
     </>
   );

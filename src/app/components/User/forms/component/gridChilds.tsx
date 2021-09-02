@@ -7,12 +7,7 @@ const GridLayout = props => {
 
   const render = (child, i) =>
     child && (
-      <Grid
-        key={'subGridLay' + i}
-        {...childProps}
-        item
-        xs={view && view[i] ? view[i] : 12}
-      >
+      <Grid key={'subGridLay' + i} {...childProps} item xs={view && view[i] ? view[i] : 12}>
         {child}
       </Grid>
     );

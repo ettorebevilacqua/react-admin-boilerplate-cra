@@ -30,24 +30,12 @@ const Editor = () => {
 
   return (
     <React.Fragment>
-      <FormMaker
-        storeName="smart_users"
-        schemaObj={userSchema}
-        onChange={onChange}
-      />
+      <FormMaker storeName="smart_users" schemaObj={userSchema} onChange={onChange} />
 
-      <Typography
-        component={'p'}
-        variant={'body1'}
-        style={{ marginTop: 24, marginBottom: 24 }}
-      >
-        This form saves the values onChange in the browsers{' '}
-        <code>localStorage</code> and restores it at component mount, code in{' '}
-        <Link
-          href={
-            'https://github.com/ui-schema/demo-cra/blob/master/src/Schema/UserSettings.js'
-          }
-        >
+      <Typography component={'p'} variant={'body1'} style={{ marginTop: 24, marginBottom: 24 }}>
+        This form saves the values onChange in the browsers <code>localStorage</code> and restores it at component
+        mount, code in{' '}
+        <Link href={'https://github.com/ui-schema/demo-cra/blob/master/src/Schema/UserSettings.js'}>
           src/Schema/UserSettings.js
         </Link>
       </Typography>

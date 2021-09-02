@@ -27,8 +27,7 @@ import { ToFieldArray } from '../../lib/formikWithField';
 import { RispostaForm } from './risposta';
 
 // util Function for
-const toNumberOr = (val, orVal) =>
-  isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
+const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
 const nameSchema = Yup.object().shape({
   // first: Yup.string().required('Required'),
@@ -59,9 +58,7 @@ const TipoQuestion = [
 const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
   // useValues(name, props)
   const { values, setFieldValue: setSubFieldValue } = useFormikContext();
-  const [expanded, setExpanded] = React.useState(
-    fieldProps.expanded || toNumberOr(values.tipo, 0) === 0 || false,
-  );
+  const [expanded, setExpanded] = React.useState(fieldProps.expanded || toNumberOr(values.tipo, 0) === 0 || false);
 
   const [isFirstTime, setIsFirstTime] = React.useState(true);
 
@@ -75,13 +72,9 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
     }
     console.log('domanda onChangeForm ', newValues);
 
-    fieldProps &&
-      fieldProps.onSubFormChange &&
-      fieldProps.onSubFormChange(newValues);
+    fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(newValues);
 
-    fieldProps &&
-      fieldProps.onCorrelataFormChange &&
-      fieldProps.onCorrelataFormChange(newValues);
+    fieldProps && fieldProps.onCorrelataFormChange && fieldProps.onCorrelataFormChange(newValues);
     // fieldProps.onSubFormChange(values);
   };
 
@@ -139,33 +132,16 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
 
   const onChangeAccordion = () => setExpanded(!expanded);
   const getRatingVals = key =>
-    values &&
-    values.risposte &&
-    values.risposte[0] &&
-    values.risposte[0][key] &&
-    values.risposte[0][key];
+    values && values.risposte && values.risposte[0] && values.risposte[0][key] && values.risposte[0][key];
 
   const renderScala = () => (
     <Box component="fieldset" mb={3} borderColor="transparent">
       <GridChilds view={[12]}>
         {values.tipo === TipoQuestionName.scala && (
           <GridChilds view={[5, 5, 2]}>
-            <Field
-              component={TextField}
-              name="ratingStart"
-              label="Descrizione Minimo"
-            />
-            <Field
-              component={TextField}
-              name="ratingEnd"
-              label="Descrizione Massimo"
-            />
-            <Field
-              component={TextField}
-              name="ratingMax"
-              type="number"
-              label="N. Stelle"
-            />
+            <Field component={TextField} name="ratingStart" label="Descrizione Minimo" />
+            <Field component={TextField} name="ratingEnd" label="Descrizione Massimo" />
+            <Field component={TextField} name="ratingMax" type="number" label="N. Stelle" />
           </GridChilds>
         )}
       </GridChilds>
@@ -180,9 +156,7 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
           marginTop: '16px',
         }}
       >
-        <Typography variant="subtitle2">
-          {getRatingVals('ratingStart') || ''}
-        </Typography>
+        <Typography variant="subtitle2">{getRatingVals('ratingStart') || ''}</Typography>
         <span> </span>
         <Box style={{ marginLeft: '16px', marginRight: '16px' }}>
           <Rating
@@ -195,9 +169,7 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
           />
         </Box>
         <span> </span>
-        <Typography variant="subtitle2">
-          {getRatingVals('ratingEnd') || ''}
-        </Typography>
+        <Typography variant="subtitle2">{getRatingVals('ratingEnd') || ''}</Typography>
       </Grid>
     </Box>
   );
@@ -210,11 +182,7 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
         alignContent="flex-end"
         justifyContent="flex-end"
       >
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => arrayHelper.push({ risposta: '', val: null })}
-        >
+        <Button variant="contained" color="primary" onClick={() => arrayHelper.push({ risposta: '', val: null })}>
           <span style={{ fontSize: '11px' }}>Nuova Risposta</span>
         </Button>
       </Box>
@@ -265,17 +233,8 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
               width: '100%',
             }}
           >
-            <GridChilds
-              view={[8, 2, 2]}
-              style={{ alignItems: 'center' }}
-              width="100%"
-            >
-              <Field
-                style={{ width: '100%' }}
-                component={TextField}
-                name="domanda"
-                label="Domanda"
-              />
+            <GridChilds view={[8, 2, 2]} style={{ alignItems: 'center' }} width="100%">
+              <Field style={{ width: '100%' }} component={TextField} name="domanda" label="Domanda" />
 
               <FormControl style={{ width: '100%' }}>
                 <InputLabel>Tipo Domanda</InputLabel>
@@ -288,28 +247,16 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
                 </Field>
               </FormControl>
               {(!fieldProps || !fieldProps.parentValues) && (
-                <GridChilds
-                  spacing={1}
-                  view={[6, 6]}
-                  style={{ alignItems: 'center', marginLeft: '12px' }}
-                >
+                <GridChilds spacing={1} view={[6, 6]} style={{ alignItems: 'center', marginLeft: '12px' }}>
                   <Box style={{ marginBottom: '1px' }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={clonaDomanda}
-                      style={{ width: '77px' }}
-                    >
+                    <Button variant="contained" color="primary" onClick={clonaDomanda} style={{ width: '77px' }}>
                       <span style={{ fontSize: '11px' }}>Clona</span>
                     </Button>
                   </Box>
 
                   <Box>
                     <Button onClick={() => fieldProps.arrayManager('delete')}>
-                      <DeleteIcon
-                        color="secondary"
-                        style={{ fontSize: '36px' }}
-                      />
+                      <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
                     </Button>
                   </Box>
                 </GridChilds>
@@ -320,39 +267,27 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
         </AccordionSummary>
         <AccordionDetails style={{ flexDirection: 'column' }}>
           <>
-            {values.risposte &&
-              values.tipo !== TipoQuestionName.titolo &&
-              values.tipo !== TipoQuestionName.aperta && (
-                <ToFieldArray
-                  name={'risposte'}
-                  renderMaxElem={
-                    values.tipo === TipoQuestionName.aperta ||
-                    values.tipo === TipoQuestionName.scala
-                      ? 1
-                      : 0
-                  }
-                  values={
-                    values.risposte && values.risposte[0]
-                      ? values.risposte
-                      : [{}]
-                  }
-                  fieldProps={({ index, arrayHelper }) => {
-                    return {
-                      renderScala,
-                      onChange: onClickOption(arrayHelper.replace, index),
-                      onSubFormChange: onSubFormChange(
-                        arrayHelper.replace,
-                        index,
-                      ),
-                      arrayManager: arrayManager(arrayHelper, index),
-                      tipo: values.tipo,
-                      isCorrelata: fieldProps && fieldProps.parentValues,
-                    };
-                  }}
-                  renderFooter={renderAddRisposta}
-                  component={RispostaForm}
-                />
-              )}
+            {values.risposte && values.tipo !== TipoQuestionName.titolo && values.tipo !== TipoQuestionName.aperta && (
+              <ToFieldArray
+                name={'risposte'}
+                renderMaxElem={
+                  values.tipo === TipoQuestionName.aperta || values.tipo === TipoQuestionName.scala ? 1 : 0
+                }
+                values={values.risposte && values.risposte[0] ? values.risposte : [{}]}
+                fieldProps={({ index, arrayHelper }) => {
+                  return {
+                    renderScala,
+                    onChange: onClickOption(arrayHelper.replace, index),
+                    onSubFormChange: onSubFormChange(arrayHelper.replace, index),
+                    arrayManager: arrayManager(arrayHelper, index),
+                    tipo: values.tipo,
+                    isCorrelata: fieldProps && fieldProps.parentValues,
+                  };
+                }}
+                renderFooter={renderAddRisposta}
+                component={RispostaForm}
+              />
+            )}
           </>
         </AccordionDetails>
       </Accordion>

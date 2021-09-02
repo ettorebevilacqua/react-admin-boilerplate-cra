@@ -12,10 +12,7 @@ Yup.addMethod(Yup.array, 'unique', function (message, path) {
     }
     const idx = list.findIndex((l, i) => mapper(l) !== set[i]);
     const founds = list.filter(l => mapper(l) === set[0]);
-    founds &&
-      founds.map((el, idEl) =>
-        this.createError({ path: `${this.path}.[${idEl}].${path}`, message }),
-      );
+    founds && founds.map((el, idEl) => this.createError({ path: `${this.path}.[${idEl}].${path}`, message }));
     return this.createError({
       path: `${this.path}.[${idx}].${path}`,
       message,

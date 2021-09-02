@@ -17,10 +17,7 @@ export default function UserAvatar({ color = 'primary', ...props }) {
     .join('');
 
   return (
-    <div
-      className={classes.avatar}
-      style={{ backgroundColor: theme.palette[color].main }}
-    >
+    <div className={classes.avatar} style={{ backgroundColor: theme.palette[color].main }}>
       <Typography className={classes.text}>{letters}</Typography>
     </div>
   );

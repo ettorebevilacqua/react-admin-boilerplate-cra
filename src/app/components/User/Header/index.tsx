@@ -1,13 +1,4 @@
-import {
-  AppBar,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-  Fab,
-  Button,
-} from '@material-ui/core';
+import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, Fab, Button } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsNone';
@@ -25,11 +16,7 @@ import Notification from '../components/Notification';
 import { Badge } from '../components/Wrappers';
 import React, { useState } from 'react';
 // context
-import {
-  toggleSidebar,
-  useLayoutDispatch,
-  useLayoutState,
-} from '../LayoutContext';
+import { toggleSidebar, useLayoutDispatch, useLayoutState } from '../LayoutContext';
 import { useSelector } from 'react-redux';
 import { logOut, userSelector } from 'app/slice/userSlice';
 // styles
@@ -102,17 +89,14 @@ function Header(props) {
   var [mailMenu, setMailMenu] = useState<any>(null);
   var [isMailsUnread, setIsMailsUnread] = useState<boolean>(true);
   var [notificationsMenu, setNotificationsMenu] = useState<any>(null);
-  var [isNotificationsUnread, setIsNotificationsUnread] = useState<boolean>(
-    true,
-  );
+  var [isNotificationsUnread, setIsNotificationsUnread] = useState<boolean>(true);
   var [profileMenu, setProfileMenu] = useState<any>(null);
 
   /*  if(window.history.length > 1 &&
     document.referrer.indexOf(window.location.host) !== -1) { */
 
   const goBack = browserHistory =>
-    window.history.length > 1 &&
-    document.referrer.indexOf(window.location.host) === -1
+    window.history.length > 1 && document.referrer.indexOf(window.location.host) === -1
       ? browserHistory.push('/')
       : browserHistory.goBack();
 
@@ -123,10 +107,7 @@ function Header(props) {
         <IconButton
           color="inherit"
           onClick={() => goBack(props.history)}
-          className={classNames(
-            classes.headerMenuButton,
-            classes.headerMenuButtonCollapse,
-          )}
+          className={classNames(classes.headerMenuButton, classes.headerMenuButtonCollapse)}
         >
           <ArrowBackIcon
             classes={{
@@ -135,11 +116,7 @@ function Header(props) {
           />
         </IconButton>
 
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={() => props.history.push('/')}
-        >
+        <Button color="primary" variant="contained" onClick={() => props.history.push('/')}>
           <span style={{}}>Home</span>
         </Button>
 
@@ -147,27 +124,18 @@ function Header(props) {
           <IconButton
             color="inherit"
             onClick={() => toggleSidebar(layoutDispatch)}
-            className={classNames(
-              classes.headerMenuButton,
-              classes.headerMenuButtonCollapse,
-            )}
+            className={classNames(classes.headerMenuButton, classes.headerMenuButtonCollapse)}
           >
             {layoutState.isSidebarOpened ? (
               <ArrowBackIcon
                 classes={{
-                  root: classNames(
-                    classes.headerIcon,
-                    classes.headerIconCollapse,
-                  ),
+                  root: classNames(classes.headerIcon, classes.headerIconCollapse),
                 }}
               />
             ) : (
               <MenuIcon
                 classes={{
-                  root: classNames(
-                    classes.headerIcon,
-                    classes.headerIconCollapse,
-                  ),
+                  root: classNames(classes.headerIcon, classes.headerIconCollapse),
                 }}
               />
             )}
@@ -186,10 +154,7 @@ function Header(props) {
           }}
           className={classes.headerMenuButton}
         >
-          <Badge
-            badgeContent={isNotificationsUnread ? notifications.length : null}
-            color="warning"
-          >
+          <Badge badgeContent={isNotificationsUnread ? notifications.length : null} color="warning">
             <NotificationsIcon classes={{ root: classes.headerIcon }} />
           </Badge>
         </IconButton>
@@ -203,10 +168,7 @@ function Header(props) {
           }}
           className={classes.headerMenuButton}
         >
-          <Badge
-            badgeContent={isMailsUnread ? messages.length : null}
-            color="secondary"
-          >
+          <Badge badgeContent={isMailsUnread ? messages.length : null} color="secondary">
             <MailIcon classes={{ root: classes.headerIcon }} />
           </Badge>
         </IconButton>
@@ -231,11 +193,7 @@ function Header(props) {
         >
           <div className={classes.profileMenuUser}>
             <Typography>New Messages</Typography>
-            <Typography
-              className={classes.profileMenuLink}
-              component="a"
-              color="secondary"
-            >
+            <Typography className={classes.profileMenuLink} component="a" color="secondary">
               {messages.length} New Messages
             </Typography>
           </div>
@@ -245,23 +203,13 @@ function Header(props) {
                 <UserAvatar color={message.variant} name={message.name} />
                 <Typography>{message.time}</Typography>
               </div>
-              <div
-                className={classNames(
-                  classes.messageNotificationSide,
-                  classes.messageNotificationBodySide,
-                )}
-              >
+              <div className={classNames(classes.messageNotificationSide, classes.messageNotificationBodySide)}>
                 <Typography gutterBottom>{message.name}</Typography>
                 <Typography>{message.message}</Typography>
               </div>
             </MenuItem>
           ))}
-          <Fab
-            variant="extended"
-            color="primary"
-            aria-label="Add"
-            className={classes.sendMessageButton}
-          >
+          <Fab variant="extended" color="primary" aria-label="Add" className={classes.sendMessageButton}>
             Send New Message
             <SendIcon className={classes.sendButtonIcon} />
           </Fab>
@@ -295,45 +243,21 @@ function Header(props) {
         >
           <div className={classes.profileMenuUser}>
             <Typography>{username || email}</Typography>
-            <Typography
-              className={classes.profileMenuLink}
-              component="a"
-              color="primary"
-              href="https://flatlogic.com"
-            >
+            <Typography className={classes.profileMenuLink} component="a" color="primary" href="https://flatlogic.com">
               {}
             </Typography>
           </div>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
+          <MenuItem className={classNames(classes.profileMenuItem, classes.headerMenuItem)}>
             <AccountIcon className={classes.profileMenuIcon} /> Profile
           </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
+          <MenuItem className={classNames(classes.profileMenuItem, classes.headerMenuItem)}>
             <AccountIcon className={classes.profileMenuIcon} /> Tasks
           </MenuItem>
-          <MenuItem
-            className={classNames(
-              classes.profileMenuItem,
-              classes.headerMenuItem,
-            )}
-          >
+          <MenuItem className={classNames(classes.profileMenuItem, classes.headerMenuItem)}>
             <AccountIcon className={classes.profileMenuIcon} /> Messages
           </MenuItem>
           <div className={classes.profileMenuUser}>
-            <Typography
-              className={classes.profileMenuLink}
-              color="primary"
-              onClick={() => logOut()}
-            >
+            <Typography className={classes.profileMenuLink} color="primary" onClick={() => logOut()}>
               Sign Out
             </Typography>
           </div>

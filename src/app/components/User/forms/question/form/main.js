@@ -18,8 +18,7 @@ import { AdjustingInterval } from 'app/services/helper';
 
 const ticker = new AdjustingInterval(null, 6000);
 
-const toNumberOr = (val, orVal) =>
-  isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
+const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
 export const Domande = ({ initialValues, onSaveData }) => {
   const [values, setValues] = React.useState(initialValues);
@@ -107,17 +106,8 @@ export const Domande = ({ initialValues, onSaveData }) => {
         <Form>
           <FormikOnChange delay={500} onChange={onChangeForm} />
 
-          <GridChilds
-            view={[8, 4]}
-            spacing={3}
-            style={{ marginTop: '16px', width: '100%' }}
-          >
-            <Field
-              name={'title'}
-              style={{ width: '100%' }}
-              component={TextField}
-              label="Modulo nome"
-            />
+          <GridChilds view={[8, 4]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
+            <Field name={'title'} style={{ width: '100%' }} component={TextField} label="Modulo nome" />
             <TagsInput
               selectedTags={handleSelecetedTags}
               fullWidth

@@ -11,11 +11,7 @@ import Switch from '@material-ui/core/Switch';
 
 // import { Email } from '@material-ui/icons';
 
-export default function QuestionModuli({
-  formProp: { data, saved },
-  moduli,
-  saveData,
-}) {
+export default function QuestionModuli({ formProp: { data, saved }, moduli, saveData }) {
   const [values, setValues] = React.useState();
   const [moduloToAdd, setModuloToAdd] = React.useState();
   const classes = elemStyle();
@@ -48,8 +44,7 @@ export default function QuestionModuli({
     if (!moduloFound) return false;
 
     const newValues = getNewValues(values);
-    const _moduli =
-      newValues && newValues[idx] && getNewValues(newValues[idx].moduli);
+    const _moduli = newValues && newValues[idx] && getNewValues(newValues[idx].moduli);
     const _moduliFound = _moduli.find(item => item.id === moduloToAdd);
     if (!_moduliFound) {
       _moduli.push(moduloFound);
@@ -73,10 +68,7 @@ export default function QuestionModuli({
     if (!values) return false;
     const newValues = getNewValues(values);
     const _moduli =
-      newValues[idxquestion] &&
-      getNewValues(newValues[idxquestion].moduli).filter(
-        item => item.id !== id,
-      );
+      newValues[idxquestion] && getNewValues(newValues[idxquestion].moduli).filter(item => item.id !== id);
     newValues[idxquestion] = {
       ...newValues[idxquestion],
       moduli: _moduli,
@@ -95,18 +87,9 @@ export default function QuestionModuli({
   const renderList = () => (dataTo, index) => (
     <div key={index}>
       <Paper className={`${classes.paperRow}`} key={'paper_' + index}>
-        <GridChilds
-          justify="space-between"
-          style={{ alignItems: 'center' }}
-          view={[8, 2, 2]}
-        >
-          <TextField
-            value={dataTo.title || ''}
-            onChange={e => onChangeTitle(e.target.value, index)}
-          />
-          <span style={{ color: dataTo.isPublic ? 'black' : 'red' }}>
-            Pubblicato :
-          </span>
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[8, 2, 2]}>
+          <TextField value={dataTo.title || ''} onChange={e => onChangeTitle(e.target.value, index)} />
+          <span style={{ color: dataTo.isPublic ? 'black' : 'red' }}>Pubblicato :</span>
           <Switch
             checked={dataTo.isPublic}
             onChange={e => onPublish(e.target.value, index)}
@@ -116,11 +99,7 @@ export default function QuestionModuli({
         </GridChilds>
       </Paper>
       <div className={`${classes.paperRow} ${classes.width95}`}>
-        <GridChilds
-          justify="space-between"
-          style={{ alignItems: 'center' }}
-          view={[4, 6, 2]}
-        >
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[4, 6, 2]}>
           <span>Moduli :</span>
 
           <Select
@@ -138,26 +117,15 @@ export default function QuestionModuli({
                 </MenuItem>
               ))}
           </Select>
-          <Button
-            onClick={() => addModulo(index)}
-            variant="contained"
-            color="primary"
-          >
+          <Button onClick={() => addModulo(index)} variant="contained" color="primary">
             Add
           </Button>
         </GridChilds>
         {dataTo.moduli &&
           dataTo.moduli.map &&
           dataTo.moduli.map((modulo, idxModulo) => (
-            <Paper
-              className={`${classes.paperRow} ${classes.width95}`}
-              key={idxModulo}
-            >
-              <GridChilds
-                justify="space-between"
-                style={{ alignItems: 'center' }}
-                view={[10, 2]}
-              >
+            <Paper className={`${classes.paperRow} ${classes.width95}`} key={idxModulo}>
+              <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[10, 2]}>
                 <div className={classes.paperRowElem}>{modulo.title || ''}</div>
                 <IconButton
                   style={{ fontSize: '36px' }}
@@ -177,22 +145,14 @@ export default function QuestionModuli({
 
   const renderTitle = () => (
     <div className={classes.paperTitle}>
-      <GridChilds
-        justify="space-between"
-        style={{ alignItems: 'center' }}
-        view={[9, 3]}
-      >
+      <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[9, 3]}>
         <div>
           <span className={classes.texth4}>Questionari :</span>
           <span className={`${classes.colorRed} ${classes.texth5}`}>
             {saved && saved.isError && saved.errorMessage}
           </span>
         </div>
-        <Button
-          onClick={() => addQuestion()}
-          variant="contained"
-          color="primary"
-        >
+        <Button onClick={() => addQuestion()} variant="contained" color="primary">
           Nuovo
         </Button>
       </GridChilds>
@@ -201,19 +161,10 @@ export default function QuestionModuli({
 
   const renderHeaderList = (fields, sizes) => {
     return (
-      <Paper
-        className={`${classes.paperRow} ${classes.width95}`}
-        key={'headerFields'}
-      >
-        <GridChilds
-          justify="space-between"
-          style={{ alignItems: 'center' }}
-          view={sizes}
-        >
+      <Paper className={`${classes.paperRow} ${classes.width95}`} key={'headerFields'}>
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={sizes}>
           {fields.map(field => (
-            <div className={`${classes.fieldTitle} ${classes.texth5}`}>
-              {field}
-            </div>
+            <div className={`${classes.fieldTitle} ${classes.texth5}`}>{field}</div>
           ))}
         </GridChilds>
       </Paper>

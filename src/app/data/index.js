@@ -5,33 +5,22 @@ import { defaultProvider } from './defaultProvider';
 import { queryViews, providersView } from './viewProvider';
 import schemas from './schema';
 
-export const moduliProvider = defaultProvider(
-  'moduli',
-  '/moduli',
-  schemas.moduli,
-  ['axios', 'moduli'],
-);
+export const moduliProvider = defaultProvider('moduli', '/moduli', schemas.moduli, ['axios', 'moduli']);
 
-export const questionProvider = defaultProvider(
+export const questionProvider = defaultProvider('questions', '/questions', schemas.questionSchemas, [
+  'axios',
   'questions',
-  '/questions',
-  schemas.questionSchemas,
-  ['axios', 'questions'],
-);
+]);
 
-export const emailProvider = defaultProvider(
+export const emailProvider = defaultProvider('emailProvider', '/questions/sendEmail', schemas.question, [
+  'axios',
   'emailProvider',
-  '/questions/sendEmail',
-  schemas.question,
-  ['axios', 'emailProvider'],
-);
+]);
 
-export const questionModuliProvider = defaultProvider(
+export const questionModuliProvider = defaultProvider('questionModuli', '/moduli/question', schemas.question, [
+  'axios',
   'questionModuli',
-  '/moduli/question',
-  schemas.question,
-  ['axios', 'questionModuli'],
-);
+]);
 
 /*
 

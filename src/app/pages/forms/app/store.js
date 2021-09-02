@@ -34,9 +34,7 @@ const values = {};
 
 export const Editor = () => {
   // Create a state with the data, transforming into immutable on first mount
-  const [store, setStore] = React.useState(() =>
-    createStore(createOrderedMap(values)),
-  );
+  const [store, setStore] = React.useState(() => createStore(createOrderedMap(values)));
 
   // or create empty store, based on the schema type:
   // const [store, setStore] = React.useState(() => createEmptyStore(schema.get('type'));
@@ -48,14 +46,7 @@ export const Editor = () => {
     [setStore],
   );
 
-  return (
-    <UIGenerator
-      schema={schema}
-      store={store}
-      onChange={onChange}
-      widgets={widgets}
-    />
-  );
+  return <UIGenerator schema={schema} store={store} onChange={onChange} widgets={widgets} />;
 };
 
 // export default Editor;

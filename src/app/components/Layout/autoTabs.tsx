@@ -50,10 +50,9 @@ export const AutoTabs: React.FC<any> = (props): JSX.Element => {
   const history = useHistory();
   const _tabsName = tabsName || 'tabs';
 
-  const _updateURL = React.useCallback(
-    (_tabsName, val) => updateURL(history, { [_tabsName]: val }, _tabsName),
-    [history],
-  );
+  const _updateURL = React.useCallback((_tabsName, val) => updateURL(history, { [_tabsName]: val }, _tabsName), [
+    history,
+  ]);
 
   const changeTab = val => {
     const currentTab = getParamTab(location, _tabsName);
@@ -73,16 +72,9 @@ export const AutoTabs: React.FC<any> = (props): JSX.Element => {
   return (
     <div className={classes.root} {...rest} style={{ marginTop: '14px' }}>
       <AppBar position="static">
-        <Tabs
-          value={value}
-          onChange={(event, val) => value !== val && changeTab(val)}
-          aria-label="simple tabs example"
-        >
+        <Tabs value={value} onChange={(event, val) => value !== val && changeTab(val)} aria-label="simple tabs example">
           {tabs.map(
-            (tab, idx) =>
-              visibles[value].indexOf(idx) > -1 && (
-                <Tab key={idx} label={tab.label} {...a11yProps(idx)} />
-              ),
+            (tab, idx) => visibles[value].indexOf(idx) > -1 && <Tab key={idx} label={tab.label} {...a11yProps(idx)} />,
           )}
         </Tabs>
       </AppBar>

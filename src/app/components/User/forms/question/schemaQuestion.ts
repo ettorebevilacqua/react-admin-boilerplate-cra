@@ -4,19 +4,9 @@ import {
 
 import { widgets } from '@ui-schema/ds-material/widgetsBinding';
 
-const TipoDomande = [
-  { tipo: 'unica' },
-  { tipo: 'multipla' },
-  { tipo: 'vf' },
-  { tipo: 'aperta' },
-];
+const TipoDomande = [{ tipo: 'unica' }, { tipo: 'multipla' }, { tipo: 'vf' }, { tipo: 'aperta' }];
 
-const TipoQuestion = [
-  { tipo: 'Scala' },
-  { tipo: 'Opzione unica' },
-  { tipo: 'Opzione multipla' },
-  { tipo: 'Aperta' },
-];
+const TipoQuestion = [{ tipo: 'Scala' }, { tipo: 'Opzione unica' }, { tipo: 'Opzione multipla' }, { tipo: 'Aperta' }];
 
 export const schemaTitolo = createOrderedMap({
   type: 'object',

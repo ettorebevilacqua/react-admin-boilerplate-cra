@@ -7,31 +7,25 @@ import { moduliProvider } from '../data';
 
 import { handlePromise } from 'utils/functional';
 
-export const readModuli = createAsyncThunk(
-  'moduli/all',
-  async (payload, thunkAPI) => {
-    const [data, error] = await handlePromise(moduliProvider.list().read());
-    return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
-  },
-);
+export const readModuli = createAsyncThunk('moduli/all', async (payload, thunkAPI) => {
+  const [data, error] = await handlePromise(moduliProvider.list().read());
+  return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+});
 
-export const saveModulo = createAsyncThunk(
-  'moduli/save',
-  async (payload, thunkAPI) => {
-    const id = payload.id;
-    try {
-      let data = !id
-        ? await moduliProvider.create(payload)
-        : payload._deleted
-        ? await moduliProvider.delete(id)
-        : await moduliProvider.save(id, payload);
+export const saveModulo = createAsyncThunk('moduli/save', async (payload, thunkAPI) => {
+  const id = payload.id;
+  try {
+    let data = !id
+      ? await moduliProvider.create(payload)
+      : payload._deleted
+      ? await moduliProvider.delete(id)
+      : await moduliProvider.save(id, payload);
 
-      return { ...data };
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e);
-    }
-  },
-);
+    return { ...data };
+  } catch (e) {
+    return thunkAPI.rejectWithValue(e);
+  }
+});
 
 const initialState = {
   data: null,
@@ -84,18 +78,13 @@ export const dataSelector = state => {
 };
 export const dataGetSelector = id => state => {
   const cond =
-    !state ||
-    !state.moduliSlice ||
-    !state.moduliSlice.data ||
-    !state.moduliSlice.data.results
+    !state || !state.moduliSlice || !state.moduliSlice.data || !state.moduliSlice.data.results
       ? null
       : id
       ? state.moduliSlice.data.results
       : state.moduliSlice.data.results.filter(item => item.id === id);
   const isFetching =
-    !state || !state.moduliSlice || !state.moduliSlice.isFetching
-      ? false
-      : state.moduliSlice.isFetching;
+    !state || !state.moduliSlice || !state.moduliSlice.isFetching ? false : state.moduliSlice.isFetching;
 
   return { isFetching, data: cond };
 };

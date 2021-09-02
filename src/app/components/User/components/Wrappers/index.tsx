@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  withStyles,
-  Badge as BadgeBase,
-  Typography as TypographyBase,
-  Button as ButtonBase,
-} from '@material-ui/core';
+import { withStyles, Badge as BadgeBase, Typography as TypographyBase, Button as ButtonBase } from '@material-ui/core';
 import classnames from 'classnames';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
@@ -119,17 +114,7 @@ interface Bprops {
   style?: any;
   onClick?: () => void;
 }
-function Button({
-  children,
-  color,
-  className,
-  component,
-  select,
-  href,
-  variant,
-  style,
-  onClick,
-}: Bprops) {
+function Button({ children, color, className, component, select, href, variant, style, onClick }: Bprops) {
   var theme = useTheme();
 
   var Styled = createStyled({
@@ -231,9 +216,7 @@ function getFontSize(size, variant = '', theme) {
   }
 
   var defaultSize =
-    variant && theme.typography[variant]
-      ? theme.typography[variant].fontSize
-      : theme.typography.fontSize + 'px';
+    variant && theme.typography[variant] ? theme.typography[variant].fontSize : theme.typography.fontSize + 'px';
 
   return `calc(${defaultSize} * ${multiplier})`;
 }

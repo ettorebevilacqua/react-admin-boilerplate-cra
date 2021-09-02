@@ -17,8 +17,4 @@ export const mapOrReduceOnKeys = obj => (mapper, accMapper) => {
 export const handlePromise = (promise, onSucces, onError) =>
   promise
     .then(data => (onSucces ? onSucces(data) : [data, undefined]))
-    .catch(error =>
-      onError
-        ? Promise.resolve(onError(error))
-        : Promise.resolve([undefined, error]),
-    );
+    .catch(error => (onError ? Promise.resolve(onError(error)) : Promise.resolve([undefined, error])));

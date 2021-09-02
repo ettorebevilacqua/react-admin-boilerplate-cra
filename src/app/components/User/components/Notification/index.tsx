@@ -82,17 +82,9 @@ export default function Notification({
       })}
       style={{
         backgroundColor:
-          (variant === 'contained' &&
-            tinycolor(theme.palette[color].main)
-              .setAlpha(0.25)
-              .toRgbString()) ||
-          '',
-        borderColor:
-          (variant === 'contained' && theme.palette[color].main) || 'none',
-        borderLeft:
-          (variant === 'contained' &&
-            `4px solid ${theme.palette[color].main}`) ||
-          'none',
+          (variant === 'contained' && tinycolor(theme.palette[color].main).setAlpha(0.25).toRgbString()) || '',
+        borderColor: (variant === 'contained' && theme.palette[color].main) || 'none',
+        borderLeft: (variant === 'contained' && `4px solid ${theme.palette[color].main}`) || 'none',
       }}
     >
       <div
@@ -101,9 +93,7 @@ export default function Notification({
           [classes.notificationIconContainerRounded]: variant === 'rounded',
         })}
         style={{
-          backgroundColor:
-            variant === 'rounded' &&
-            tinycolor(theme.palette[color].main).setAlpha(0.15).toRgbString(),
+          backgroundColor: variant === 'rounded' && tinycolor(theme.palette[color].main).setAlpha(0.15).toRgbString(),
         }}
       >
         {iconWithStyles}
@@ -119,11 +109,7 @@ export default function Notification({
           {message}
         </Typography>
         {extraButton && extraButtonClick && (
-          <Button
-            onClick={extraButtonClick}
-            disableRipple
-            className={classes.extraButton}
-          >
+          <Button onClick={extraButtonClick} disableRipple className={classes.extraButton}>
             {extraButton}
           </Button>
         )}

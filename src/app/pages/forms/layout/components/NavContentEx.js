@@ -47,10 +47,7 @@ const NavContentEx = () => (
         <ListItemIcon>
           <Icon>{icon}</Icon>
         </ListItemIcon>
-        <ListItemText
-          primary={primaryText}
-          primaryTypographyProps={{ noWrap: true }}
-        />
+        <ListItemText primary={primaryText} primaryTypographyProps={{ noWrap: true }} />
       </ListItem>
     ))}
     <Divider style={{ margin: '12px 0' }} />
@@ -58,10 +55,7 @@ const NavContentEx = () => (
       <ListItemIcon>
         <Icon>settings</Icon>
       </ListItemIcon>
-      <ListItemText
-        primary={'Settings & account'}
-        primaryTypographyProps={{ noWrap: true }}
-      />
+      <ListItemText primary={'Settings & account'} primaryTypographyProps={{ noWrap: true }} />
     </ListItem>
   </List>
 );

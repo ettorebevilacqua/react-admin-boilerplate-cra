@@ -23,21 +23,15 @@ export const makeRisposte = domande =>
   !domande || !domande.map
     ? []
     : domande.map(domanda =>
-        (!domanda.risposte || domanda.risposte.length === 0
-          ? [null]
-          : domanda.risposte
-        ).map(() => null),
+        (!domanda.risposte || domanda.risposte.length === 0 ? [null] : domanda.risposte).map(() => null),
       );
 
 export const getValues = () => {
   const storeValuesTxt = localStorage.getItem(MODULO_DATA_KEY);
-  const storeValuesTmp = storeValuesTxt
-    ? JSON.parse(storeValuesTxt)
-    : [empityModulo];
+  const storeValuesTmp = storeValuesTxt ? JSON.parse(storeValuesTxt) : [empityModulo];
 
   const dataRow = storeValuesTmp && storeValuesTmp[0];
-  !dataRow &&
-    localStorage.setItem(MODULO_DATA_KEY, JSON.stringify([empityModulo]));
+  !dataRow && localStorage.setItem(MODULO_DATA_KEY, JSON.stringify([empityModulo]));
 
   const storeValues = !dataRow ? [empityModulo] : storeValuesTmp;
   return !storeValues || !storeValues[0] ? [empityModulo] : storeValues;
@@ -45,13 +39,10 @@ export const getValues = () => {
 
 function getStoreValueDefault(storeKey, valDefault) {
   const storeValuesTxt = localStorage.getItem(storeKey);
-  const storeValuesTmp = storeValuesTxt
-    ? JSON.parse(storeValuesTxt)
-    : [empityModulo];
+  const storeValuesTmp = storeValuesTxt ? JSON.parse(storeValuesTxt) : [empityModulo];
 
   const dataRow = storeValuesTmp && storeValuesTmp[0];
-  !dataRow &&
-    localStorage.setItem(RISPOSTE_DATA_KEY, JSON.stringify(valDefault));
+  !dataRow && localStorage.setItem(RISPOSTE_DATA_KEY, JSON.stringify(valDefault));
 
   const storeValues = !dataRow ? [empityModulo] : storeValuesTmp;
   return !storeValues || !storeValues[0] ? [empityModulo] : storeValues;

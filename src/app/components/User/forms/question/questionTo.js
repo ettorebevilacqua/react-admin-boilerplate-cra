@@ -13,12 +13,7 @@ import { empityQuestion, schema } from 'app/data/schema/questionSchema';
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
 
-const MquestionTo = ({
-  formProp: { data, saved },
-  saveData,
-  actions,
-  ...props
-}) => {
+const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
   const history = useHistory();
   const { id: idParam, idquestion } = useParams();
   const { modulo, questions } = data || {};
@@ -85,22 +80,14 @@ const MquestionTo = ({
   };
   const renderButtonActionRecord = propsFormik => (
     <GridChilds style={{ textAlign: 'end' }} view={[6, 6]}>
-      <Button
-        color="primary"
-        variant="contained"
-        fullWidth
-        disabled={!propsFormik.dirty}
-        type="submit"
-      >
+      <Button color="primary" variant="contained" fullWidth disabled={!propsFormik.dirty} type="submit">
         <span className={classes.buttonAction}>Salva</span>
       </Button>
       <Button
         disabled={!propsFormik.isValid}
         variant="contained"
         color="primary"
-        onClick={() =>
-          value && value.id && actions.sendEmail(value.id) && actions.reload()
-        }
+        onClick={() => value && value.id && actions.sendEmail(value.id) && actions.reload()}
       >
         <span className={classes.buttonAction}>Invia mail</span>
       </Button>
@@ -109,11 +96,7 @@ const MquestionTo = ({
 
   const renderTitle = () => (
     <div className={classes.paperTitle}>
-      <GridChilds
-        justify="space-between"
-        style={{ alignItems: 'center' }}
-        view={[9, 3]}
-      >
+      <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[9, 3]}>
         <div>
           <Typography variant="h3" color="textSecondary">
             Indagine : {modulo?.title}
@@ -144,10 +127,7 @@ const MquestionTo = ({
             <>
               {renderTitle(propsFormik)}
               <Form onSubmit={propsFormik.handleSubmit}>
-                <FormikOnChange
-                  delay={500}
-                  onChange={onChangeForm(propsFormik)}
-                />
+                <FormikOnChange delay={500} onChange={onChangeForm(propsFormik)} />
 
                 {
                   <QuestionUsersFields

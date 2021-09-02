@@ -33,15 +33,11 @@ export const GuestQuestionForm = makeContainerRefreshed(
   },
 );
 
-export const ModuliForm = makeContainerRefreshed(
-  ModuliFormContainer,
-  moduliSliceCrud,
-  () => {
-    // console.log('xxxxx queryParam', queryParam);
-    moduliSliceCrud.actions.reset();
-    moduliSliceCrud.actions.load();
-    console.log();
-  },
-);
+export const ModuliForm = makeContainerRefreshed(ModuliFormContainer, moduliSliceCrud, () => {
+  // console.log('xxxxx queryParam', queryParam);
+  moduliSliceCrud.actions.reset();
+  moduliSliceCrud.actions.load();
+  console.log();
+});
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale

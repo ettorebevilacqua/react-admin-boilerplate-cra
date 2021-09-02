@@ -22,11 +22,7 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
 
   const renderTitle = () => (
     <div className={classes.paperTitle}>
-      <GridChilds
-        justify="space-between"
-        style={{ alignItems: 'center' }}
-        view={[9, 3]}
-      >
+      <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[9, 3]}>
         <div>
           <Typography variant="h3" color="textSecondary">
             Indagini Aperte soddifazione cliente :
@@ -41,15 +37,8 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
 
   const renderHeaderList = (fields, sizes) => {
     return (
-      <Paper
-        className={`${classes.paperRow} ${classes.width95}`}
-        key={'headerFields'}
-      >
-        <GridChilds
-          justify="space-between"
-          style={{ alignItems: 'center' }}
-          view={sizes}
-        >
+      <Paper className={`${classes.paperRow} ${classes.width95}`} key={'headerFields'}>
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={sizes}>
           {fields.map(field => (
             <div className={classes.fieldTitle}>{field}</div>
           ))}
@@ -72,26 +61,14 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
   const renderList = (fields, sizes) => (dataTo, index) => {
     return (
       <Paper className={`${classes.paperRow} ${classes.width95}`} key={index}>
-        <GridChilds
-          justify="space-between"
-          style={{ alignItems: 'center' }}
-          view={[...sizes]}
-        >
-          <div className={classes.paperRowElem}>
-            {dataTo['titleIndagine'] || ''}
-          </div>
-          <div className={classes.paperRowElem}>
-            {data['data'] || '10/03/2021'}
-          </div>
-          <div className={classes.paperRowElem}>
-            {data['rendeption'] || '10/03/2021'}
-          </div>
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[...sizes]}>
+          <div className={classes.paperRowElem}>{dataTo['titleIndagine'] || ''}</div>
+          <div className={classes.paperRowElem}>{data['data'] || '10/03/2021'}</div>
+          <div className={classes.paperRowElem}>{data['rendeption'] || '10/03/2021'}</div>
           <div>
             <ul style={{ fontSize: '18px' }}>
               <li>
-                <Link to={`/app/user/indagini_edit/${dataTo.id}`}>
-                  Visualizza i risultati grezzi
-                </Link>
+                <Link to={`/app/user/indagini_edit/${dataTo.id}`}>Visualizza i risultati grezzi</Link>
               </li>
               <li>Genera remind per chi non ha risposto</li>
               <li>Chiudi indagine e genera relazione</li>
@@ -105,15 +82,8 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
   return (
     <div className={classes.root}>
       {renderTitle()}
-      {renderHeaderList(
-        ['Indagine', 'Data Apertura', 'Rendeptiom', 'Azioni'],
-        [4, 2, 2, 4],
-      )}
-      {!!values &&
-        values.map &&
-        values.map(
-          renderList(['titleIndagine', 'data', 'rendeption'], [4, 2, 2, 4]),
-        )}
+      {renderHeaderList(['Indagine', 'Data Apertura', 'Rendeptiom', 'Azioni'], [4, 2, 2, 4])}
+      {!!values && values.map && values.map(renderList(['titleIndagine', 'data', 'rendeption'], [4, 2, 2, 4]))}
     </div>
   );
 };

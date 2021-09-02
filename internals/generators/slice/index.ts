@@ -19,10 +19,7 @@ export enum SliceProptNames {
 
 type Answers = { [P in SliceProptNames]: string };
 
-export const rootStatePath = path.join(
-  __dirname,
-  '../../../src/types/RootState.ts',
-);
+export const rootStatePath = path.join(__dirname, '../../../src/types/RootState.ts');
 
 export const sliceGenerator: PlopGeneratorConfig = {
   description: 'Add a redux toolkit slice',

@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Paper,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-} from '@material-ui/core';
+import { Paper, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import classnames from 'classnames';
 

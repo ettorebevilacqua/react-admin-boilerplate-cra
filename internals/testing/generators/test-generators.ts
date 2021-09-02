@@ -13,9 +13,7 @@ import { sliceVariations } from './sliceVariations';
 import { baseGeneratorPath } from '../../generators/paths';
 
 interface PlopGenerator extends PG {
-  runActions: <T extends string | number>(
-    props: { [P in T]: any },
-  ) => Promise<{ changes: []; failures: [] }>;
+  runActions: <T extends string | number>(props: { [P in T]: any }) => Promise<{ changes: []; failures: [] }>;
 }
 
 process.chdir(path.join(__dirname, '../../generators'));
@@ -149,13 +147,7 @@ function removeGeneratedSlice(folderPath: string) {
   return rimraf.sync(path.join(baseGeneratorPath, folderPath, 'slice'));
 }
 
-async function handleResult({
-  changes,
-  failures,
-}: {
-  changes: [];
-  failures: [];
-}) {
+async function handleResult({ changes, failures }: { changes: []; failures: [] }) {
   return new Promise((resolve, reject) => {
     if (Array.isArray(failures) && failures.length > 0) {
       reject(new Error(JSON.stringify(failures, null, 2)));
@@ -183,10 +175,7 @@ function reportErrors(reason: Error, shouldExist = true) {
     process.exit(1);
   }
 }
-function restoreBackupFile(
-  path: string,
-  backupFileExtension = BACKUPFILE_EXTENSION,
-) {
+function restoreBackupFile(path: string, backupFileExtension = BACKUPFILE_EXTENSION) {
   const backupPath = path.concat(`.${backupFileExtension}`);
   fs.copyFileSync(backupPath, path);
   fs.unlinkSync(backupPath);

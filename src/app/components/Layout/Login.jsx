@@ -4,14 +4,7 @@ import { Field, withTypes } from 'react-final-form';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActions,
-  CircularProgress,
-  TextField,
-} from '@material-ui/core';
+import { Avatar, Button, Card, CardActions, CircularProgress, TextField } from '@material-ui/core';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
@@ -27,8 +20,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100vh',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    background:
-      'linear-gradient( #19005ee4, rgba(255,255,255,0.4)), url(https://source.unsplash.com/random/1600x900)',
+    background: 'linear-gradient( #19005ee4, rgba(255,255,255,0.4)), url(https://source.unsplash.com/random/1600x900)',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
   },
@@ -65,15 +57,7 @@ const renderInput = ({
   meta: { touched, error } = { touched: false, error: undefined },
   input: { ...inputProps },
   ...props
-}) => (
-  <TextField
-    error={!!(touched && error)}
-    helperText={touched && error}
-    {...inputProps}
-    {...props}
-    fullWidth
-  />
-);
+}) => <TextField error={!!(touched && error)} helperText={touched && error} {...inputProps} {...props} fullWidth />;
 
 const { Form } = withTypes();
 
@@ -183,21 +167,13 @@ const LoginComp = () => {
                   />
                 </div>
               </div>
-              <div
-                style={{ displat: 'block', textAlign: 'center', color: 'red' }}
-              >
+              <div style={{ displat: 'block', textAlign: 'center', color: 'red' }}>
                 {isError && <p>{errorMessage}</p>}
                 {isFetching && <p>loading</p>}
               </div>
               <CardActions className={classes.actions}>
                 <div style={{ displat: 'block' }}>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    color="primary"
-                    disabled={isFetching}
-                    fullWidth
-                  >
+                  <Button variant="contained" type="submit" color="primary" disabled={isFetching} fullWidth>
                     {loading && <CircularProgress size={25} thickness={2} />}
                     {'login' || translate('ra.auth.sign_in')}
                   </Button>

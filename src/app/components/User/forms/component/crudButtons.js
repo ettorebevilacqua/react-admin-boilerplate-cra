@@ -38,11 +38,7 @@ export const CrudButton = props => {
       >
         {isFound('add') && (
           <Box style={{ width: '100%' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onClick && onClick(ButtonType.add)}
-            >
+            <Button variant="contained" color="primary" onClick={onClick && onClick(ButtonType.add)}>
               <span style={{ fontSize: '11px' }}>Add</span>
             </Button>
           </Box>

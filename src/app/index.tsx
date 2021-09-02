@@ -51,11 +51,7 @@ const AppRoute = ({ isAuthenticated }) => (
   <>
     {isAuthenticated && (
       <>
-        <PrivateRoute
-          path="/app"
-          component={AppHome}
-          isAuthenticated={isAuthenticated}
-        >
+        <PrivateRoute path="/app" component={AppHome} isAuthenticated={isAuthenticated}>
           <Route component={NotFoundPage} />
         </PrivateRoute>
         <Route exact path="/" component={HomePage}>
@@ -135,11 +131,7 @@ export function App() {
       <Provider store={store}>
         <StartSlices />
         <HelmetProvider context={helmetContext}>
-          <Helmet
-            titleTemplate="%s - React Boilerplate"
-            defaultTitle="Smart"
-            htmlAttributes={{ lang: i18n.language }}
-          >
+          <Helmet titleTemplate="%s - React Boilerplate" defaultTitle="Smart" htmlAttributes={{ lang: i18n.language }}>
             <meta name="description" content="Smart service" />
           </Helmet>
           <AppBody />

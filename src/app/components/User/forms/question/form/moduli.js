@@ -42,10 +42,7 @@ export function Moduli({ onEdit, values, command }) {
 
   return (
     <>
-      <GridChilds
-        view={[10, 2]}
-        style={{ marginTop: '16px', width: '100%', alignItems: 'center' }}
-      >
+      <GridChilds view={[10, 2]} style={{ marginTop: '16px', width: '100%', alignItems: 'center' }}>
         <h3>Moduli</h3>
         <Button
           variant="contained"
@@ -102,10 +99,7 @@ export function Moduli({ onEdit, values, command }) {
                     </Button>
                     <Box>
                       <Button onClick={() => command('remove', idxModulo)}>
-                        <DeleteIcon
-                          color="secondary"
-                          style={{ fontSize: '36px' }}
-                        />
+                        <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
                       </Button>
                     </Box>
                     {icon && (

@@ -3,24 +3,13 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import {
-  RadioGroup,
-  Radio,
-  FormControlLabel,
-  Checkbox,
-} from '@material-ui/core';
+import { RadioGroup, Radio, FormControlLabel, Checkbox } from '@material-ui/core';
 
 import GridChilds from '../../component/gridChilds';
 
 const validationSchema = yup.object({
-  email: yup
-    .string()
-    .email('Enter a valid email')
-    .required('Email is required'),
-  password: yup
-    .string()
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
+  email: yup.string().email('Enter a valid email').required('Email is required'),
+  password: yup.string().min(8, 'Password should be of minimum 8 characters length').required('Password is required'),
 });
 
 export const Risposte = props => {
@@ -51,16 +40,8 @@ export const Risposte = props => {
               onChange={formik.handleChange}
             />
             {tipoQ.trim() === 'Opzione unica' ? (
-              <RadioGroup
-                aria-label="quiz"
-                name="quiz"
-                onChange={formik.handleChange}
-              >
-                <FormControlLabel
-                  value={item.val}
-                  control={<Radio checked={item.val} />}
-                  label="The best!"
-                />
+              <RadioGroup aria-label="quiz" name="quiz" onChange={formik.handleChange}>
+                <FormControlLabel value={item.val} control={<Radio checked={item.val} />} label="The best!" />
               </RadioGroup>
             ) : tipoQ.trim() === 'Opzione multipla' ? (
               <FormControlLabel

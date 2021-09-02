@@ -32,8 +32,7 @@ export const authBear = token => {
 };
 
 export const configWithAuth = data => {
-  const token =
-    data && data.tokens && data.tokens.access && data.tokens.access.token;
+  const token = data && data.tokens && data.tokens.access && data.tokens.access.token;
   // const idUser = data && data.user && data.user.id;
   authBear(token);
   return data;

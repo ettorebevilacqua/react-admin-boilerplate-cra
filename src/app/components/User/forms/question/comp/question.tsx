@@ -22,22 +22,11 @@ import {
 import GridChilds from '../../component/gridChilds';
 
 const validationSchema = yup.object({
-  email: yup
-    .string()
-    .email('Enter a valid email')
-    .required('Email is required'),
-  password: yup
-    .string()
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
+  email: yup.string().email('Enter a valid email').required('Email is required'),
+  password: yup.string().min(8, 'Password should be of minimum 8 characters length').required('Password is required'),
 });
 
-const TipoQuestion = [
-  { tipo: 'Scala' },
-  { tipo: 'Opzione unica' },
-  { tipo: 'Opzione multipla' },
-  { tipo: 'Aperta' },
-];
+const TipoQuestion = [{ tipo: 'Scala' }, { tipo: 'Opzione unica' }, { tipo: 'Opzione multipla' }, { tipo: 'Aperta' }];
 
 const valueRisposte = [
   { risposta: 'sssss', val: false, rating: 2 },
@@ -74,8 +63,7 @@ const TestL = ({
   if (!risposte || !risposte[index]) return <div></div>;
 
   const tipo = domanda.tipo;
-  const getChecked = (risposte, idx) =>
-    risposte && risposte[idx] ? risposte[idx].val : false;
+  const getChecked = (risposte, idx) => (risposte && risposte[idx] ? risposte[idx].val : false);
 
   const renderTipo = () =>
     tipo === 'Opzione unica' ? (
@@ -105,17 +93,11 @@ const TestL = ({
     ) : tipo === 'Scala' ? (
       <Box component="fieldset" mb={3} borderColor="transparent">
         <GridChilds view={[2, 8, 2]}>
-          <Typography variant="subtitle2">
-            {domanda.ratingStart || ''}
-          </Typography>
+          <Typography variant="subtitle2">{domanda.ratingStart || ''}</Typography>
           <Rating
             name="rating"
             max={ratingMax}
-            value={
-              risposte && risposte[index]
-                ? domanda.risposte[index].rating
-                : index
-            }
+            value={risposte && risposte[index] ? domanda.risposte[index].rating : index}
             onChange={(event, newValue) => {
               onSetRating(event, onSetRating, index, setFieldValue);
             }}
@@ -132,11 +114,7 @@ const TestL = ({
       <GridChilds view={[7, 4, 1]}>
         <GridChilds view={[1, 11]}>
           <span>{index + 1} )</span>
-          <TextField
-            fullWidth
-            name={`domande[.${idxDomanda}].risposte.${index}.risposta`}
-            label="Risposta"
-          />
+          <TextField fullWidth name={`domande[.${idxDomanda}].risposte.${index}.risposta`} label="Risposta" />
         </GridChilds>
 
         {renderTipo()}
@@ -149,12 +127,7 @@ const TestL = ({
               color="primary"
               variant="contained"
               style={{ fontSize: '11px', width: '100px', maxHeight: '22px' }}
-              onClick={e =>
-                setFieldValue(
-                  `domande[.${idxDomanda}].risposte.${index}.correlata`,
-                  null,
-                )
-              }
+              onClick={e => setFieldValue(`domande[.${idxDomanda}].risposte.${index}.correlata`, null)}
             >
               Rimuovi
             </Button>
@@ -263,11 +236,7 @@ export const Domande = props => {
       >
         <CardContent>
           <GridChilds view={[8, 4]} width="100%">
-            <TextField
-              fullWidth
-              name={`domande[${idxDomanda}].domanda`}
-              label="Domanda"
-            />
+            <TextField fullWidth name={`domande[${idxDomanda}].domanda`} label="Domanda" />
 
             {`domande[${idxDomanda}].domanda`}
 
@@ -278,14 +247,8 @@ export const Domande = props => {
                 title="Tipo"
                 label="Tipo"
                 onChange={e => {
-                  const val: string =
-                    e.target.value && typeof e.target.value === 'string'
-                      ? e.target.value
-                      : '';
-                  formikProps.setFieldValue(
-                    `domande[${idxDomanda}].tipo`,
-                    e.target.value,
-                  );
+                  const val: string = e.target.value && typeof e.target.value === 'string' ? e.target.value : '';
+                  formikProps.setFieldValue(`domande[${idxDomanda}].tipo`, e.target.value);
                   setTipo(val);
                 }}
                 onBlur={handleBlur}
@@ -304,17 +267,13 @@ export const Domande = props => {
                 fullWidth
                 name="ratingStart"
                 label="Start descrizione"
-                onChange={e =>
-                  formikProps.setFieldValue('ratingStart', e.target.value)
-                }
+                onChange={e => formikProps.setFieldValue('ratingStart', e.target.value)}
               />
               <TextField
                 fullWidth
                 name="ratingEnd"
                 label="End descrizione"
-                onChange={e =>
-                  formikProps.setFieldValue('ratingEnd', e.target.value)
-                }
+                onChange={e => formikProps.setFieldValue('ratingEnd', e.target.value)}
               />
               <TextField
                 fullWidth
@@ -332,13 +291,7 @@ export const Domande = props => {
     </>
   );
 
-  const renderDomanda = (
-    domanda,
-    idxDomanda,
-    onSetRating,
-    formikProps,
-    arrayHelpers,
-  ) =>
+  const renderDomanda = (domanda, idxDomanda, onSetRating, formikProps, arrayHelpers) =>
     domanda &&
     domanda.risposte &&
     domanda.risposte.map((risposta, index) => (
@@ -365,12 +318,7 @@ export const Domande = props => {
         onSubmit={onSubmit}
         render={formikProps => (
           <div>
-            <TextField
-              id={'questionario'}
-              fullWidth
-              name="questionario"
-              label="Questionario"
-            />
+            <TextField id={'questionario'} fullWidth name="questionario" label="Questionario" />
             <FieldArray
               name="domande"
               render={arrayHelpers => (
@@ -390,13 +338,7 @@ export const Domande = props => {
                         <FieldArray
                           name={`domande[${idxDomanda}].risposte`}
                           render={arrayHelpersInner =>
-                            renderDomanda(
-                              domanda,
-                              idxDomanda,
-                              onSetRating,
-                              formikProps,
-                              arrayHelpersInner,
-                            )
+                            renderDomanda(domanda, idxDomanda, onSetRating, formikProps, arrayHelpersInner)
                           }
                         />
                       </Card>

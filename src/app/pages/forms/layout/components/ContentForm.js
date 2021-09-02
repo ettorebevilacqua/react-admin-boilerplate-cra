@@ -27,13 +27,7 @@ const styles = ({ breakpoints }) => ({
   },
 });
 
-const ContentForm = ({
-  classes,
-  preset,
-  onChangePreset,
-  data,
-  onChangeData,
-}) => {
+const ContentForm = ({ classes, preset, onChangePreset, data, onChangeData }) => {
   const handleChange = key => e =>
     onChangeData({
       ...data,
@@ -52,36 +46,12 @@ const ContentForm = ({
                 value={preset}
                 onChange={e => onChangePreset(e.target.value)}
               >
-                <FormControlLabel
-                  value="createDefaultLayout"
-                  control={<Radio />}
-                  label="Default"
-                />
-                <FormControlLabel
-                  value="createStandardLayout"
-                  control={<Radio />}
-                  label="Standard"
-                />
-                <FormControlLabel
-                  value="createFixedLayout"
-                  control={<Radio />}
-                  label="Fixed"
-                />
-                <FormControlLabel
-                  value="createContentBasedLayout"
-                  control={<Radio />}
-                  label="Content-based"
-                />
-                <FormControlLabel
-                  value="createCozyLayout"
-                  control={<Radio />}
-                  label="Cozy"
-                />
-                <FormControlLabel
-                  value="createMuiTreasuryLayout"
-                  control={<Radio />}
-                  label="Mui Treasury"
-                />
+                <FormControlLabel value="createDefaultLayout" control={<Radio />} label="Default" />
+                <FormControlLabel value="createStandardLayout" control={<Radio />} label="Standard" />
+                <FormControlLabel value="createFixedLayout" control={<Radio />} label="Fixed" />
+                <FormControlLabel value="createContentBasedLayout" control={<Radio />} label="Content-based" />
+                <FormControlLabel value="createCozyLayout" control={<Radio />} label="Cozy" />
+                <FormControlLabel value="createMuiTreasuryLayout" control={<Radio />} label="Mui Treasury" />
               </RadioGroup>
             </FormControl>
           </Grid>
@@ -90,43 +60,19 @@ const ContentForm = ({
               <FormLabel component="legend">Enabled mockup</FormLabel>
               <FormGroup>
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={data.header}
-                      onChange={handleChange('header')}
-                      value="header"
-                    />
-                  }
+                  control={<Checkbox checked={data.header} onChange={handleChange('header')} value="header" />}
                   label="Header"
                 />
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={data.nav}
-                      onChange={handleChange('nav')}
-                      value="nav"
-                    />
-                  }
+                  control={<Checkbox checked={data.nav} onChange={handleChange('nav')} value="nav" />}
                   label="Nav"
                 />
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={data.content}
-                      onChange={handleChange('content')}
-                      value="content"
-                    />
-                  }
+                  control={<Checkbox checked={data.content} onChange={handleChange('content')} value="content" />}
                   label="Content"
                 />
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={data.footer}
-                      onChange={handleChange('footer')}
-                      value="footer"
-                    />
-                  }
+                  control={<Checkbox checked={data.footer} onChange={handleChange('footer')} value="footer" />}
                   label="Footer"
                 />
               </FormGroup>

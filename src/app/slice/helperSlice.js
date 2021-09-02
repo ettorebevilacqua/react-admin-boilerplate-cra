@@ -8,14 +8,9 @@ export const initialState = {
 };
 
 export const handlePromise = promise =>
-  promise
-    .then(data => [data, undefined])
-    .catch(error => Promise.resolve([undefined, error]));
+  promise.then(data => [data, undefined]).catch(error => Promise.resolve([undefined, error]));
 
-export const stateAsyncNameReducer = dataname => (
-  state,
-  { isFetching, isSuccess, isError, errorMessage, payload },
-) => {
+export const stateAsyncNameReducer = dataname => (state, { isFetching, isSuccess, isError, errorMessage, payload }) => {
   const stateKey = state;
   const setState = (key, value) => {
     stateKey[key] = value;

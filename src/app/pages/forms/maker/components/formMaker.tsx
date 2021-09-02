@@ -27,27 +27,16 @@ export function FormMaker(props: any) {
 
   // or create empty store, based on the schema type:
   // const [store, setStore] = React.useState(() => createEmptyStore(schema.get('type'));
-  const [schema /* setSchema */] = React.useState(
-    createOrderedMap(schemaObj) as StoreSchemaType,
-  );
+  const [schema /* setSchema */] = React.useState(createOrderedMap(schemaObj) as StoreSchemaType);
 
   const onChange2 = React.useCallback(
     (storeKeys, scopes, updater, deleteOnEmpty, type) => {
       setStore(prevStore => {
-        const newStore = storeUpdater(
-          storeKeys,
-          scopes,
-          updater,
-          deleteOnEmpty,
-          type,
-        )(prevStore);
+        const newStore = storeUpdater(storeKeys, scopes, updater, deleteOnEmpty, type)(prevStore);
 
         // if using a big schema this can be performance problematic!
         // if using strings, throttle the `toJS` operation!
-        window.localStorage.setItem(
-          'user_settings',
-          JSON.stringify(newStore.valuesToJS()),
-        );
+        window.localStorage.setItem('user_settings', JSON.stringify(newStore.valuesToJS()));
         onChange(newStore, prevStore);
 
         return newStore;
@@ -58,13 +47,7 @@ export function FormMaker(props: any) {
 
   return (
     <React.Fragment>
-      <UIGenerator
-        schema={schema}
-        store={store}
-        onChange={onChange2}
-        widgets={widgets}
-        t={browserT}
-      >
+      <UIGenerator schema={schema} store={store} onChange={onChange2} widgets={widgets} t={browserT}>
         {/*
               add children that should be under the schema editor,
               they can use the context of the editor for working

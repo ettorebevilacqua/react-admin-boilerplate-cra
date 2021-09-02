@@ -2,10 +2,7 @@ import { Axios } from '@data-provider/axios';
 
 const initialStateDefault = { loading: false, data: [] };
 
-export const createAxioByTag = (baseId, tags) => (
-  id,
-  { url, initialState = initialStateDefault },
-) =>
+export const createAxioByTag = (baseId, tags) => (id, { url, initialState = initialStateDefault }) =>
   new Axios({
     id: baseId + id,
     url,

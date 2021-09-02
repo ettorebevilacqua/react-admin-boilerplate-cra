@@ -30,8 +30,7 @@ function Plane() {
     {
       link: linkToRoute,
       title: 'Gold',
-      text:
-        'Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale',
+      text: 'Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale',
     },
     {
       link: linkToRoute,
@@ -64,18 +63,11 @@ function Plane() {
 
   return (
     <div className={classes.root}>
-      <Grid
-        container
-        direction="row"
-        justify="space-around"
-        alignItems="baseline"
-      >
+      <Grid container direction="row" justify="space-around" alignItems="baseline">
         <Grid item xs={6}>
           <Card style={{ margin: '22px' }}>
             <Box style={{ padding: '8px' }}>
-              <h2 style={{ marginTop: '46px' }}>
-                Sceglio il tuo profilo di servizio
-              </h2>
+              <h2 style={{ marginTop: '46px' }}>Sceglio il tuo profilo di servizio</h2>
             </Box>
           </Card>
         </Grid>

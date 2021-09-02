@@ -20,13 +20,7 @@ export const modqualifica = [
   { modalita: 'Altro (specificare)' },
 ];
 
-export const fgiuridiche = [
-  { tipo: 'SRL' },
-  { tipo: 'SNC' },
-  { tipo: 'SAS' },
-  { tipo: 'COOP' },
-  { tipo: 'CONSORZIO' },
-];
+export const fgiuridiche = [{ tipo: 'SRL' }, { tipo: 'SNC' }, { tipo: 'SAS' }, { tipo: 'COOP' }, { tipo: 'CONSORZIO' }];
 
 export const ambiti = [
   { ambito: 'Privacy' },

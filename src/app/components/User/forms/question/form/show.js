@@ -18,23 +18,12 @@ import TextField from '@material-ui/core/TextField';
 import { makeRisposte } from 'app/services/question/moduliModel';
 
 function resize(arr, newSize, defaultValue) {
-  return [
-    ...arr,
-    ...Array(Math.max(newSize - arr.length, 0)).fill(defaultValue),
-  ];
+  return [...arr, ...Array(Math.max(newSize - arr.length, 0)).fill(defaultValue)];
 }
 
-const toNumberOr = (val, orVal) =>
-  !val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
+const toNumberOr = (val, orVal) => (!val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
-const CompTrueFalse = ({
-  value,
-  title,
-  compProps,
-  color,
-  onClickOptions,
-  ...props
-}) => {
+const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...props }) => {
   const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
   const propComp = {
     color,
@@ -70,8 +59,7 @@ const useStyles = makeStyles(theme => ({
     padding: '8px',
     backGround: 'white',
     borderRadius: '6px',
-    boxShadow:
-      '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
+    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
   },
   main: () => ({
     overflow: 'inherit',
@@ -93,16 +81,12 @@ export function ShowQuestion(props) {
   const { values } = props;
   const classes = useStyles();
   const moduliRisposte =
-    !values || !values.moduli || !values.moduli.map
-      ? []
-      : values.moduli.map(modulo => makeRisposte(modulo.domande));
+    !values || !values.moduli || !values.moduli.map ? [] : values.moduli.map(modulo => makeRisposte(modulo.domande));
 
   const [risposte, setRisposte] = React.useState(moduliRisposte);
 
   const getValueRiposta = (idxModulo, idxDomanda, idxRisposta) =>
-    risposte &&
-    risposte[idxModulo][idxDomanda] &&
-    risposte[idxModulo][idxDomanda][idxRisposta];
+    risposte && risposte[idxModulo][idxDomanda] && risposte[idxModulo][idxDomanda][idxRisposta];
 
   const getDomanda = (idxModulo, idx) =>
     values &&
@@ -117,9 +101,7 @@ export function ShowQuestion(props) {
 
   const getRispostaOfValues = (idxModulo, idxDomanda, idxRisposta) => {
     const domanda = getDomanda(idxModulo, idxDomanda);
-    return !domanda || !domanda.risposte || !domanda.risposte[idxRisposta]
-      ? null
-      : domanda.risposte[idxRisposta];
+    return !domanda || !domanda.risposte || !domanda.risposte[idxRisposta] ? null : domanda.risposte[idxRisposta];
   };
 
   const getCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
@@ -145,11 +127,7 @@ export function ShowQuestion(props) {
     if (!correlata) return false;
     const userVal = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const valCur = val === undefined ? userVal : val;
-    const valValuesTmp = getRispostaOfValues(
-      idxModulo,
-      idxDomanda,
-      idxRisposta,
-    );
+    const valValuesTmp = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
     const domanda = getDomanda(idxModulo, idxDomanda);
     const tipo = domanda && domanda.tipo;
     const valValues = tipo == 1 ? valValuesTmp.rating : valValuesTmp.val;
@@ -164,9 +142,7 @@ export function ShowQuestion(props) {
   }; */
 
   const renderScala = (idxModulo, idxDomanda, scalaVal) => (
-    <Box
-      style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}
-    >
+    <Box style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}>
       <Typography variant={'span'} className={classes.domandaTxt}>
         {scalaVal && scalaVal.ratingStart}
       </Typography>
@@ -211,9 +187,7 @@ export function ShowQuestion(props) {
     _rispostaOptionTmp[idxModulo][idxRisposta] = valBool;
     _risposte[idxModulo][idxDomanda] = _rispostaOptionTmp;
 
-    return tipo == 2
-      ? setRisposte(_risposte)
-      : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
+    return tipo == 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
 
   const radioTrueFalse = (val, onClickInner) => (
@@ -221,9 +195,7 @@ export function ShowQuestion(props) {
       {['Vero', 'Falso'].map((title, index) => (
         <CompTrueFalse
           key={index}
-          value={
-            val === null || val === undefined ? false : !index ? val : !val
-          }
+          value={val === null || val === undefined ? false : !index ? val : !val}
           title={title}
           color={!index ? 'primary' : 'secondary'}
           onClickOptions={onClickInner}
@@ -232,13 +204,7 @@ export function ShowQuestion(props) {
     </>
   );
 
-  const renderTipoInner = (
-    risposta,
-    idxModulo,
-    idxDomanda,
-    idxRisposta,
-    tipo,
-  ) => {
+  const renderTipoInner = (risposta, idxModulo, idxDomanda, idxRisposta, tipo) => {
     if (!risposta) return <span></span>;
     const val = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
@@ -270,10 +236,7 @@ export function ShowQuestion(props) {
     );
   };
 
-  const renderRisposte = (idxModulo, tipo, idxDomanda) => (
-    risposta,
-    idxRisposta,
-  ) =>
+  const renderRisposte = (idxModulo, tipo, idxDomanda) => (risposta, idxRisposta) =>
     risposta &&
     (tipo != 1 ? risposta.risposta : idxRisposta === 0) && (
       <GridChilds
@@ -294,8 +257,7 @@ export function ShowQuestion(props) {
               tipo,
               getValueRiposta(idxModulo, idxDomanda, idxRisposta),
             )}
-            {isCorrelata(idxModulo, idxDomanda, idxRisposta) &&
-              renderDomanda(risposta.correlata, 0, '32px')}
+            {isCorrelata(idxModulo, idxDomanda, idxRisposta) && renderDomanda(risposta.correlata, 0, '32px')}
           </GridChilds>
         ) : tipo == 1 ? (
           <>
@@ -328,9 +290,7 @@ export function ShowQuestion(props) {
               const _risposte = [...risposte];
               const valEvent = e.currentTarget.value;
               const correlata = getCorrelata(idxDomanda, 0);
-              const val = correlata
-                ? { val: valEvent, correlata: {} }
-                : valEvent;
+              const val = correlata ? { val: valEvent, correlata: {} } : valEvent;
               risposta[0] = val;
               setRisposte(_risposte);
             }}
@@ -354,22 +314,14 @@ export function ShowQuestion(props) {
           marginTop: '22px',
         }}
       >
-        <Typography
-          variant={domanda.tipo == 6 ? 'h3' : 'span'}
-          className={classes.domandaTxt}
-          color="textSecondary"
-        >
+        <Typography variant={domanda.tipo == 6 ? 'h3' : 'span'} className={classes.domandaTxt} color="textSecondary">
           {domanda.domanda}
         </Typography>
       </div>
     ) : (
       <div key={idxModulo + idx}>
         <Paper style={{ marginTop: '26px', marginBottom: '12px' }}>
-          <GridChilds
-            className={classes.cardDomanda}
-            view={[12]}
-            style={{ height: '48px' }}
-          >
+          <GridChilds className={classes.cardDomanda} view={[12]} style={{ height: '48px' }}>
             <Typography
               variant={domanda.tipo == 6 ? 'h3' : 'body1'}
               className={classes.domandaTxt}
@@ -383,9 +335,7 @@ export function ShowQuestion(props) {
           ? renderDomandaAperta(idxModulo, idx)
           : domanda.risposte &&
             domanda.risposte.map &&
-            domanda.risposte.map(
-              renderRisposte(idxModulo, toNumberOr(domanda.tipo, -1), idx),
-            )}
+            domanda.risposte.map(renderRisposte(idxModulo, toNumberOr(domanda.tipo, -1), idx))}
       </div>
     );
   };
@@ -405,19 +355,11 @@ export function ShowQuestion(props) {
   return (
     <div style={{ marginTop: '16px', marginLeft: '8px', width: '80%' }}>
       <h2>{values.title}</h2>
-      <GridChilds
-        key="gridChildShowMain2"
-        view={[12]}
-        style={{ marginTop: '16px', width: '100%' }}
-      >
+      <GridChilds key="gridChildShowMain2" view={[12]} style={{ marginTop: '16px', width: '100%' }}>
         {renderModulo()}
       </GridChilds>
 
-      <GridChilds
-        key="gridChildShowMain3"
-        view={[1, 4]}
-        style={{ marginTop: '16px', width: '100%' }}
-      >
+      <GridChilds key="gridChildShowMain3" view={[1, 4]} style={{ marginTop: '16px', width: '100%' }}>
         <p> </p>
         {/* <Button
           color="primary"

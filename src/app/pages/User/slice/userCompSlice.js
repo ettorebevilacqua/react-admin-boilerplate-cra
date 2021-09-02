@@ -18,8 +18,7 @@ export const userCompSlice = createSlice({
 
 export const { toggleModuliShow } = userCompSlice.actions;
 
-export const userCompSelector = state =>
-  !state || !state.userCompSlice ? initialState : state.userCompSlice;
+export const userCompSelector = state => (!state || !state.userCompSlice ? initialState : state.userCompSlice);
 
 export const useUserCompSlice = () => {
   useInjectReducer({ key: userCompSlice.name, reducer: userCompSlice.reducer });

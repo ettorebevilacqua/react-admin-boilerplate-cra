@@ -26,9 +26,7 @@ export default function TagsInput({ ...props }) {
   function handleKeyDown(event) {
     if (event.key === 'Enter') {
       const newSelectedItem = [...selectedItem];
-      const duplicatedValues = newSelectedItem.indexOf(
-        event.target.value.trim(),
-      );
+      const duplicatedValues = newSelectedItem.indexOf(event.target.value.trim());
 
       if (duplicatedValues !== -1) {
         setInputValue('');
@@ -40,11 +38,7 @@ export default function TagsInput({ ...props }) {
       setSelectedItem(newSelectedItem);
       setInputValue('');
     }
-    if (
-      selectedItem.length &&
-      !inputValue.length &&
-      event.key === 'Backspace'
-    ) {
+    if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
       setSelectedItem(selectedItem.slice(0, selectedItem.length - 1));
     }
   }
@@ -68,12 +62,7 @@ export default function TagsInput({ ...props }) {
   }
   return (
     <React.Fragment>
-      <Downshift
-        id="downshift-multiple"
-        inputValue={inputValue}
-        onChange={handleChange}
-        selectedItem={selectedItem}
-      >
+      <Downshift id="downshift-multiple" inputValue={inputValue} onChange={handleChange} selectedItem={selectedItem}>
         {({ getInputProps }) => {
           const { onBlur, onChange, onFocus, ...inputProps } = getInputProps({
             onKeyDown: handleKeyDown,

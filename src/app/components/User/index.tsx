@@ -76,56 +76,16 @@ export default function UserComp() {
             {' '}
             {/* place ConnectedRouter under Provider */}
             <Switch>
-              <Route
-                exact
-                path="/app/user/"
-                component={() => <IndaginiMenu />}
-              />
-              <Route
-                exact
-                path="/app/user/indagini"
-                component={() => <IndaginiList />}
-              />
-              <Route
-                exact
-                path="/app/user/indaginiMenu"
-                component={() => <IndaginiMenu />}
-              />
-              <Route
-                exact
-                path="/app/user/moduli"
-                component={() => <ModuliForm />}
-              />
-              <Route
-                exact
-                path="/app/user/indagini_question/:id"
-                component={() => <IndaginiQuestion />}
-              />
-              <Route
-                exact
-                path="/app/user/indagini_invio/:idquestion/"
-                component={QuestionToForm}
-              />
-              <Route
-                exact
-                path="/app/user/indagini_edit/:id"
-                component={QuestionToForm}
-              />
-              <Route
-                exact
-                path="/app/user/indagini/list"
-                component={QuestionList}
-              />
-              <Route
-                exact
-                path="/app/user/indagine"
-                component={() => <Indagine />}
-              />
-              <Route
-                exact
-                path="/app/user/verifyr"
-                component={() => <MenuCard items={buttonData} />}
-              />
+              <Route exact path="/app/user/" component={() => <IndaginiMenu />} />
+              <Route exact path="/app/user/indagini" component={() => <IndaginiList />} />
+              <Route exact path="/app/user/indaginiMenu" component={() => <IndaginiMenu />} />
+              <Route exact path="/app/user/moduli" component={() => <ModuliForm />} />
+              <Route exact path="/app/user/indagini_question/:id" component={() => <IndaginiQuestion />} />
+              <Route exact path="/app/user/indagini_invio/:idquestion/" component={QuestionToForm} />
+              <Route exact path="/app/user/indagini_edit/:id" component={QuestionToForm} />
+              <Route exact path="/app/user/indagini/list" component={QuestionList} />
+              <Route exact path="/app/user/indagine" component={() => <Indagine />} />
+              <Route exact path="/app/user/verifyr" component={() => <MenuCard items={buttonData} />} />
               <Route exact path="/app/user/plane" component={() => <Plane />} />
               <Redirect from="/app/user" to="/app/user" exact />
             </Switch>

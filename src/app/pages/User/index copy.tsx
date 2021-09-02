@@ -25,10 +25,7 @@ export function UserPage() {
       <Helmet>
         <title>Forms Page</title>
         <meta name="description" content="A Boilerplate application homepage" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
       </Helmet>
       <span>User xS</span>
       <MenuUser />

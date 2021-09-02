@@ -37,9 +37,7 @@ const values = {};
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
 function Indagine() {
   // Create a state with the data, transforming into immutable on first mount
-  const [store, setStore] = React.useState(() =>
-    createStore(createOrderedMap(values)),
-  );
+  const [store, setStore] = React.useState(() => createStore(createOrderedMap(values)));
 
   // const todosProvider = todosFiltered.query({ completed: showCompleted });
   // const todos = useData(todosProvider);
@@ -64,12 +62,7 @@ function Indagine() {
       <div>
         <pre>{JSON.stringify(values)}</pre>
       </div>
-      <UIGenerator
-        schema={schema}
-        store={store}
-        onChange={onChange}
-        widgets={widgets}
-      />
+      <UIGenerator schema={schema} store={store} onChange={onChange} widgets={widgets} />
     </>
   );
 }
