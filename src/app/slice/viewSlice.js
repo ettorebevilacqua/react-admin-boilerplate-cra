@@ -31,7 +31,7 @@ const init = store =>
       name: sliceName,
       initialState,
       reducers: {
-        clearState: state => initialState,
+        clearState: () => initialState,
       },
       extraReducers: builder => {
         const autoBuild = asyncStateReducer(builder);

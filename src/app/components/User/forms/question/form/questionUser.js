@@ -22,7 +22,7 @@ import { empityParteipante } from 'app/data/schema/questionSchema';
 
 import Tooltip from '@material-ui/core/Tooltip';
 
-const renderField = (props = {}, name, component, label, type, error) => {
+const renderField = (props = {}, name, component, label, type) => {
   return (
     <div>
       <Field
@@ -65,13 +65,7 @@ const getPartecipantiByNum = (list, val) => {
   // setTimeout(() => propsFormik.setFieldTouched('partecipanti.1.nome', true));
 };
 
-const QuestionUsersFields = ({
-  propsFormik,
-  numPartecipanti,
-  parentValue,
-  ...rest
-}) => {
-  const handleSelecetedTags = () => {};
+const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
   const propValue = propsFormik?.values || {};
 
@@ -82,7 +76,6 @@ const QuestionUsersFields = ({
     getPartecipanti(propValue?.partecipanti),
   );
 
-  const [docenti, setDocenti] = React.useState();
   const docentiAction = arrayHelper => type => {
     type === ButtonType.delete && arrayHelper.remove();
   };
@@ -151,7 +144,7 @@ const QuestionUsersFields = ({
                 style={{ fontSize: '48px' }}
                 color="primary"
                 aria-label="domande"
-                onClick={e => {
+                onClick={() => {
                   rest.history.push('/guest/' + token);
                 }}
               >
@@ -168,7 +161,7 @@ const QuestionUsersFields = ({
                 color="primary"
                 aria-label="delete"
                 disabled={!token}
-                onClick={e => {
+                onClick={() => {
                   rest.history.push('/guest/' + token);
                 }}
               >
@@ -279,7 +272,7 @@ const QuestionUsersFields = ({
                 color="primary"
                 variant="contained"
                 fullWidth
-                onClick={e => arrayHelper.push(empityParteipante)}
+                onClick={() => arrayHelper.push(empityParteipante)}
               >
                 Nuovo Docente
               </Button>
@@ -295,7 +288,7 @@ const QuestionUsersFields = ({
       <GridChilds view={[12]} spacing={1}>
         <FieldArray
           name="partecipanti"
-          render={arrayHelper => (
+          render={() => (
             <>
               {/* value.partecipanti &&
                 !value.partecipanti[0] &&
