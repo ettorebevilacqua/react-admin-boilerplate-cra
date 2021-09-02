@@ -75,7 +75,7 @@ export function makeContainer(
 
     const saveData = async valToSave => {
       return actions && actions.save
-        ? await handlePromise(actions.save(valToSave))
+        ? actions.save(valToSave)
         : new Promise(() => [null, 'error save not found']);
     };
 

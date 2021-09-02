@@ -38,12 +38,16 @@ const init = store =>
       name + '/save',
       async (payload, thunkAPI) => {
         const id = payload.id;
-        const [data, error] = !id
-          ? await handlePromise(provider.create(payload))
-          : payload._deleted
-          ? await handlePromise(provider.delete(id))
-          : await handlePromise(provider.save(id, payload));
-        return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+        try {
+          let data = !id
+            ? await provider.create(payload)
+            : payload._deleted
+            ? await provider.delete(id)
+            : await provider.save(id, payload);
+          return Promise.resolve({ ...data });
+        } catch (e) {
+          return Promise.reject(thunkAPI.rejectWithValue(e));
+        }
       },
     );
 
@@ -139,9 +143,7 @@ const init = store =>
         load: id => {
           dispatch(readProvider(id));
         },
-        save: id => {
-          dispatch(saveProvider(id));
-        },
+        save: id => dispatch(saveProvider(id)),
         get: id => {
           dispatch(getProvider(id));
         },
