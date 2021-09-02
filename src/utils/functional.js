@@ -1,5 +1,8 @@
 export const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
-export const setGetObj = (obj, key, val) => ((obj[key] = val), obj);
+export const setGetObj = (obj, key, val) => {
+  obj[key] = val;
+  return obj;
+};
 export const setGetObjC = obj => key => val => setGetObj(obj, key, val);
 
 export const mapOrReduceOnKeys = obj => (mapper, accMapper) => {

@@ -122,8 +122,8 @@ export const userSlice = createSlice({
   name: 'userAuth',
   initialState,
   reducers: {
-    clearState: state => initialState,
-    clearStateLogOut: state => {
+    clearState: () => initialState,
+    clearStateLogOut: () => {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');
       return { ...initialState, mustAuth: true };
@@ -154,19 +154,17 @@ export const userSlice = createSlice({
     );
 
     builder.addCase(loginUser.rejected, (state, { payload }) => {
-      console.log('payload', payload);
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = payload.message;
       state.isAuth = false;
     });
 
-    builder.addCase(loginUser.pending, (state, { payload }) => {
-      console.log('payload', payload);
+    builder.addCase(loginUser.pending, state => {
       state.isFetching = true;
     });
 
-    builder.addCase(fetchUserById.pending, (state, { payload }) => {
+    builder.addCase(fetchUserById.pending, state => {
       state.isFetching = true;
       state.isSuccess = false;
       state.isAuth = false;

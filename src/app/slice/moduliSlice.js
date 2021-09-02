@@ -57,7 +57,7 @@ const buildCaseDefault = builder => (thunk, { dataname, storeKey } = {}) => {
     stateKey.isError = true;
     stateKey.errorMessage = payload.message;
   });
-  builder.addCase(thunk.pending, (state, { payload }) => {
+  builder.addCase(thunk.pending, state => {
     const stateKey = storeKey ? state[storeKey] : state;
     stateKey.isFetching = true;
   });

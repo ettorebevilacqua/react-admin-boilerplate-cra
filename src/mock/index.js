@@ -51,10 +51,6 @@ export const ambiti = [
   { ambito: 'Sicurezza' },
 ];
 
-const keysObj = obj => Object.keys(obj);
-const hasVals = obj =>
-  obj && Object.keys(obj).length === 0 && obj.constructor === Object;
-
 export function setLocalStorage() {
   const strStorage = localStorage.getItem('ra-data-local-storage');
   const storage = strStorage ? JSON.parse(strStorage) : {};
