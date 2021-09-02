@@ -1,13 +1,9 @@
-import { Formik } from 'formik';
 import React from 'react';
+import { Formik } from 'formik';
 
 const onSubmit = () => {};
 
-export const withSubForm = (Component, validationSchema) => ({
-  field,
-  form,
-  fieldProps,
-}) => {
+export const withSubForm = Component => ({ field, form, fieldProps }) => {
   const initialValues = field.value;
   return (
     <Formik

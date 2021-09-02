@@ -21,14 +21,9 @@ const ticker = new AdjustingInterval(null, 6000);
 const toNumberOr = (val, orVal) =>
   isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
 
-export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
+export const Domande = ({ initialValues, onSaveData }) => {
   const [values, setValues] = React.useState(initialValues);
-  const [arManagerDomande, setArManagerDomande] = React.useState();
-  const [currentIdxModule, setCurrentIdxModule] = React.useState(0);
-  const [dataModuli, setDataModuli] = React.useState(initialValues);
-  const [timeOutAutoSave, setTimeOutAutoSave] = React.useState(null);
   const [isFirstTime, setIsFirstTime] = React.useState(true);
-  const [isFirstRender, setIsFirstRender] = React.useState(true);
 
   const onSave = () => {
     if (isFirstTime) return false;
@@ -91,7 +86,7 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
       variant="contained"
       color="primary"
       style={{ height: '42px', width: '120px' }}
-      onClick={e => {
+      onClick={() => {
         const lenDomande = values.domande.length;
         console.log('', formikProps);
         formikProps.setFieldValue('domande.' + lenDomande, newDomanda);
@@ -101,12 +96,6 @@ export const Domande = ({ initialValues, onSaveData, command, ...props }) => {
     </Button>
   );
 
-  function a11yProps(index) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  }
   const handleSelecetedTags = () => {};
 
   return (

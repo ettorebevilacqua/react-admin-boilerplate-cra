@@ -67,7 +67,7 @@ export const moduliSlice = createSlice({
   name: 'moduliSlice',
   initialState,
   reducers: {
-    clearState: state => initialState,
+    clearState: () => initialState,
   },
   extraReducers: builder => {
     const autoBuild = buildCaseDefault(builder);

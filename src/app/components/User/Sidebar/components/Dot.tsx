@@ -16,11 +16,11 @@ var useStyles = makeStyles((theme: Theme) => ({
     height: 8,
   },
 }));
-interface Dot {
+interface IDot {
   size?: any;
   color: any;
 }
-export default function Dot({ size, color }: Dot) {
+export default function Dot({ size, color }: IDot) {
   var classes = useStyles();
   var theme = useTheme();
 

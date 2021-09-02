@@ -12,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 
 import Rating from '@material-ui/lab/Rating';
 
-import { createStyles } from '@material-ui/core';
 import { TextField, Select } from 'formik-material-ui';
 import FormikOnChange from '../../lib/FormikOnChange';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -57,26 +56,11 @@ const TipoQuestion = [
   { id: 6, tipo: 'Titolo' },
 ];
 
-const styles = ({ spacing }) =>
-  createStyles({
-    formControl: {
-      margin: spacing(1),
-      minWidth: 120,
-    },
-  });
-
-const MDomandaForm = ({
-  name,
-  errors,
-  touched,
-  fieldProps,
-  setFieldValue,
-  ...props
-}) => {
+const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
   // useValues(name, props)
   const { values, setFieldValue: setSubFieldValue } = useFormikContext();
   const [expanded, setExpanded] = React.useState(
-    fieldProps.expanded || values.tipo == 0 || false,
+    fieldProps.expanded || toNumberOr(values.tipo, 0) === 0 || false,
   );
 
   const [isFirstTime, setIsFirstTime] = React.useState(true);
@@ -85,7 +69,7 @@ const MDomandaForm = ({
     setExpanded(true);
   }, [values.tipo]);
 
-  const onChangeForm = (newValues, isFirstTime) => {
+  const onChangeForm = newValues => {
     if (isFirstTime) {
       return setIsFirstTime(false);
     }
@@ -127,7 +111,7 @@ const MDomandaForm = ({
       : op === 'moveup' && index > 0 && arrayHelper.move(index, index - 1);
   };
 
-  const clonaDomanda = e => fieldProps.arrayManager('clone', values);
+  const clonaDomanda = () => fieldProps.arrayManager('clone', values);
 
   const arrayManager = (arrayHelper, index) => op => {
     return op === 'delete'
@@ -139,13 +123,13 @@ const MDomandaForm = ({
       : () => 1;
   };
 
-  const onChangeRatingMax = e => {
+  /* const onChangeRatingMax = e => {
     const value = e.target.value;
     const numValue = parseInt(value);
     const numValValid = numValue < 2 ? 2 : numValue;
     e.target.value = numValValid;
     setSubFieldValue(`ratingMax`, numValValid);
-  };
+  }; */
 
   const onSetRating = e => {
     const value = e.target.value;
@@ -153,7 +137,7 @@ const MDomandaForm = ({
     setSubFieldValue(`risposte.0.rating`, numValue);
   };
 
-  const onChangeAccordion = e => setExpanded(!expanded);
+  const onChangeAccordion = () => setExpanded(!expanded);
   const getRatingVals = key =>
     values &&
     values.risposte &&
@@ -205,7 +189,7 @@ const MDomandaForm = ({
             name="rating"
             max={toNumberOr(getRatingVals('ratingMax'), 2)}
             value={toNumberOr(getRatingVals('rating'), 0)}
-            onChange={(event, newValue) => {
+            onChange={event => {
               onSetRating(event);
             }}
           />
@@ -229,7 +213,7 @@ const MDomandaForm = ({
         <Button
           variant="contained"
           color="primary"
-          onClick={e => arrayHelper.push({ risposta: '', val: null })}
+          onClick={() => arrayHelper.push({ risposta: '', val: null })}
         >
           <span style={{ fontSize: '11px' }}>Nuova Risposta</span>
         </Button>
@@ -321,9 +305,7 @@ const MDomandaForm = ({
                   </Box>
 
                   <Box>
-                    <Button
-                      onClick={event => fieldProps.arrayManager('delete')}
-                    >
+                    <Button onClick={() => fieldProps.arrayManager('delete')}>
                       <DeleteIcon
                         color="secondary"
                         style={{ fontSize: '36px' }}

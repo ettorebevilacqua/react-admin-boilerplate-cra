@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import queryString from 'query-string';
 
 // styles
 import useStyles from './styles';
@@ -25,12 +24,12 @@ const data = [
 ];
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
-function IndaginiMenu(props) {
+function IndaginiMenu() {
   const classes = useStyles();
   const [menu, setMenu] = useState(data);
 
   useEffect(() => {
-    const params = queryString.parse(props.location.search);
+    // const params = queryString.parse(props.location.search);
 
     const AddLink = {
       name: 'Crea Indagine',
@@ -42,14 +41,14 @@ function IndaginiMenu(props) {
     setMenu([AddLink, ...data]);
   }, []);
 
-  const commonStyle = {
+  /* const commonStyle = {
     background: 'rgb(173 182 235)',
     height: '120px',
     width: '75%',
     marginTop: '26px',
     marginLeft: '15%',
     paddind: '8px',
-  };
+  }; */
 
   return (
     <>

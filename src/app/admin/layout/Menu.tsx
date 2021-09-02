@@ -45,7 +45,7 @@ const Menu: FC<MenuProps> = ({ onMenuClick, logout, dense = false }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleToggle = (menu: MenuName) => {
-    setState(state => ({ ...state, [menu]: !state[menu] }));
+    setState(() => ({ ...state, [menu]: !state[menu] }));
   };
 
   return (

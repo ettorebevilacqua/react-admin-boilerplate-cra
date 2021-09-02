@@ -13,28 +13,28 @@ import { AutoTabs, getParamTab } from 'app/components/Layout/autoTabs';
 
 import { QuestionTo } from 'app/components/User/forms/question/questionTo';
 
-const routeToBase = id => `/app/user/indagini_invio/${id}/0`;
+// const routeToBase = id => `/app/user/indagini_invio/${id}/0`;
 // const routeToBase = id => `/app/user/indagini_question/${id}`;
 
 function IndaginiListForm(props) {
-  const { data, isFetching, isSuccess, isError } = props.formProp;
+  const { data } = props.formProp;
   const history = useHistory();
   const location = useLocation();
   const intiTab = getParamTab(location, 'tabs1');
   const [tabValue, setTabValue] = React.useState(intiTab);
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const classes = elemStyle();
-  const [checked, setChecked] = React.useState([0]);
-  const icon = false;
 
-  const getDataPublic = () =>
-    data && data.filter ? data.filter(item => item.isPublic) : [];
+  const getDataPublic = React.useCallback(
+    () => (data && data.filter ? data.filter(item => item.isPublic) : []),
+    [data],
+  );
   const [values, setValues] = React.useState(getDataPublic());
 
   // React.useEffect(() => props.actions.load(), []);
-  React.useEffect(() => setValues(getDataPublic()), [data]);
+  React.useEffect(() => setValues(getDataPublic()), [data, getDataPublic]);
 
-  const handleToggle = value => () => {
+  /* const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -45,7 +45,7 @@ function IndaginiListForm(props) {
     }
 
     setChecked(newChecked);
-  };
+  }; */
 
   const onRowClick = (idx, action, par) => {
     setCurrentQuestion(idx);
@@ -73,7 +73,7 @@ function IndaginiListForm(props) {
             color="primary"
             variant="contained"
             fullWidth
-            onClick={e => onRowClick(index, setTabValue, 2)}
+            onClick={() => onRowClick(index, setTabValue, 2)}
           >
             Anteprima
           </Button>
@@ -82,7 +82,7 @@ function IndaginiListForm(props) {
             color="primary"
             variant="contained"
             fullWidth
-            onClick={e =>
+            onClick={() =>
               history.push('/app/user/indagini_invio/' + values[index].id)
             }
           >

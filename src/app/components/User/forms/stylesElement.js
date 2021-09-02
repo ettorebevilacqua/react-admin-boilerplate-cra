@@ -42,7 +42,7 @@ export const elemStyle = makeStyles(theme => ({
     marginBottom: '12px',
     padding: '8px',
   },
-  main: props => ({
+  main: () => ({
     overflow: 'inherit',
     padding: 16,
     display: 'flex',

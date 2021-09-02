@@ -23,6 +23,6 @@ providers.getByTag('axios').config({
   */
 // providers.getByTag('selector').cleanDependenciesCache();
 
-providers.getByTag('axios').onNewProvider(provider => {
-  // console.log(`Added new api provider with id: ${provider.id}`);
-});
+// providers.getByTag('axios').onNewProvider(provider => {
+// console.log(`Added new api provider with id: ${provider.id}`);
+// });

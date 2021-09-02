@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { AutoTabs, getParamTab } from 'app/components/Layout/autoTabs';
 import GridChilds from '../component/gridChilds';
@@ -24,24 +24,18 @@ const toNumberOr = (val, orVal) =>
   !val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
 
 export const ModuliFormMakerC = props => {
-  const { isFetching, isError, onSubmit, actions, values, setValues } = props;
+  const { isFetching, actions, values, setValues } = props;
   const location = useLocation();
-  const history = useHistory();
   const dispatch = useDispatch();
   const intiTab = getParamTab(location, 'tabs1');
   const [newId, setNewId] = React.useState();
   const [tabValue, setTabValue] = React.useState(intiTab);
-  const [isNew, setIsNew] = React.useState(false);
 
   const getIdxModulo = () =>
     toNumberOr(sessionStorage.getItem('moduliForm'), 0);
 
-  const [currentIdxModule, setCurrentIdxModule] = React.useState(
-    getIdxModulo(),
-  );
   const setterIdxModulo = idx => {
     sessionStorage.setItem('moduliForm', idx);
-    setCurrentIdxModule(idx);
   };
 
   const editModulo = idx => {
@@ -72,7 +66,6 @@ export const ModuliFormMakerC = props => {
       // const newModuli = [...values, empityModulo];
       setterIdxModulo(-1);
       // setValues(newModuli);
-      setIsNew(true);
       onSaveData(values.lenght)({ ...empityModulo, title: 'Nuovo' });
       // setTimeout(() => setTabValue(2), 50);
     };
@@ -111,7 +104,7 @@ export const ModuliFormMakerC = props => {
       : empityModulo;
   };
 
-  const HeaderModuli = props => (
+  const HeaderModuli = () => (
     <GridChilds
       view={[8, 2, 2]}
       style={{

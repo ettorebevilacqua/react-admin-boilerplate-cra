@@ -34,7 +34,6 @@ import { HomePage } from './pages/HomePage/Loadable';
 import { useUserAuthSlice } from 'app/slice';
 import { GuestRoute } from './components/User';
 
-const Protected = () => <h3>Protected</h3>;
 const isGuest = () => window.location.pathname === '/guest';
 function PrivateRoute({ children, isAuthenticated, ...rest }) {
   return !isAuthenticated && isGuest() ? (
@@ -42,7 +41,7 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
   ) : (
     <Route
       {...rest}
-      render={({ location }) => {
+      render={() => {
         return isAuthenticated === true ? children : <Login />;
       }}
     />
@@ -70,19 +69,12 @@ const AppRoute = ({ isAuthenticated }) => (
   </>
 );
 initUser(store); // check if user is logged with present token
-function AppBody(props: any) {
+function AppBody() {
   const xxx = useSelector((state: RootState) => {
     // console.log('state', state.userAuth);
     return state.userAuth || undefined;
   });
-  const {
-    id,
-    mustAuth,
-    isAuth,
-    isSuccess,
-    isFetching,
-    isError,
-  } = xxx as UserAuthState;
+  const { id, mustAuth, isAuth, isFetching, isError } = xxx as UserAuthState;
   React.useEffect(() => {}, []);
 
   React.useEffect(() => {

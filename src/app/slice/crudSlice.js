@@ -74,9 +74,9 @@ const init = store =>
       name: sliceName,
       initialState,
       reducers: {
-        clearState: state => initialState,
-        reset: state => clearStateAndProvider(),
-        clearStateAndProvider: state => clearStateAndProvider(),
+        clearState: () => initialState,
+        reset: () => clearStateAndProvider(),
+        clearStateAndProvider: () => clearStateAndProvider(),
         clearProvider,
       },
       extraReducers: builder => {

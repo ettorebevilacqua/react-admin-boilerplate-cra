@@ -32,7 +32,7 @@ function createActionsSlice(name, actionsProviders) {
     name: sliceName,
     initialState,
     reducers: {
-      clearState: state => initialState,
+      clearState: () => initialState,
     },
     extraReducers: builder =>
       thunksMapper(_thunk =>

@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Moduli({ onEdit, values, current, command, ...props }) {
+export function Moduli({ onEdit, values, command }) {
   const classes = useStyles();
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
@@ -51,7 +51,7 @@ export function Moduli({ onEdit, values, current, command, ...props }) {
           variant="contained"
           color="primary"
           style={{ height: '42px', width: '180px' }}
-          onClick={e => command('add')}
+          onClick={() => command('add')}
         >
           Nuovo modulo
         </Button>
@@ -96,12 +96,12 @@ export function Moduli({ onEdit, values, current, command, ...props }) {
                       variant="contained"
                       fullWidth
                       type="submit"
-                      onClick={e => handleEditBt(idxModulo)}
+                      onClick={() => handleEditBt(idxModulo)}
                     >
                       Edit
                     </Button>
                     <Box>
-                      <Button onClick={event => command('remove', idxModulo)}>
+                      <Button onClick={() => command('remove', idxModulo)}>
                         <DeleteIcon
                           color="secondary"
                           style={{ fontSize: '36px' }}

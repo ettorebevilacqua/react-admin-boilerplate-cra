@@ -32,7 +32,7 @@ export function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
   },
@@ -50,19 +50,24 @@ export const AutoTabs: React.FC<any> = (props): JSX.Element => {
   const history = useHistory();
   const _tabsName = tabsName || 'tabs';
 
+  const _updateURL = React.useCallback(
+    (_tabsName, val) => updateURL(history, { [_tabsName]: val }, _tabsName),
+    [history],
+  );
+
   const changeTab = val => {
     const currentTab = getParamTab(location, _tabsName);
     if (currentTab === val) return;
-    updateURL(history, { [_tabsName]: val }, _tabsName);
+    _updateURL(_tabsName, val);
     onChange && onChange(val);
   };
 
   React.useEffect(() => {
     const currentTab = getParamTab(location, _tabsName);
     if (value !== currentTab) {
-      updateURL(history, { [_tabsName]: value }, _tabsName);
+      _updateURL(_tabsName, value);
     }
-  }, [value]);
+  }, [_tabsName, _updateURL, history, location, value]);
 
   const classes = useStyles();
   return (

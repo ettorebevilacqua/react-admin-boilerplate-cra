@@ -53,7 +53,7 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
     });
   });
 
-  builder.addCase(thunk.pending, (state, { payload }) => {
+  builder.addCase(thunk.pending, state => {
     statReducer(getState(state), {
       ...initialState,
       isError: false,

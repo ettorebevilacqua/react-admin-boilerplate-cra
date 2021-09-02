@@ -1,7 +1,5 @@
 import React from 'react';
-
 import { widgets } from '@ui-schema/ds-material';
-import useStyles from './styles';
 
 // Import UI Generator
 import {
@@ -37,8 +35,7 @@ const schema = createOrderedMap({
 const values = {};
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
-function Indagine(props) {
-  var classes = useStyles();
+function Indagine() {
   // Create a state with the data, transforming into immutable on first mount
   const [store, setStore] = React.useState(() =>
     createStore(createOrderedMap(values)),

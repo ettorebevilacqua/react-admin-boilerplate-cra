@@ -20,7 +20,7 @@ const userProvider = new Axios({
       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MGVkNjBhMmI1YTcxMzY0MWEyNGU5NGUiLCJpYXQiOjE2MjY3NjYwODYsImV4cCI6MTYyNjc4MDQ4NiwidHlwZSI6ImFjY2VzcyJ9.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MGViMWIwN2Q2NzQ1ODY4NzA3ZGU1YTMiLCJpYXQiOjE2MjY3NjY0MDcsImV4cCI6MTYyNjc4MDgwNywidHlwZSI6ImFjY2VzcyJ9.QFuflzI1P02MDqsJslM3jHkYcpmGZOK59NtKVpaHQVQ',
   },
 }); */
-const is401 = error => error && error.code && error.code === 401;
+// const is401 = error => error && error.code && error.code === 401;
 const getAuthHeader = token => ({
   headers: {
     Authorization: 'Bearer ' + token,
@@ -34,7 +34,7 @@ export const authBear = token => {
 export const configWithAuth = data => {
   const token =
     data && data.tokens && data.tokens.access && data.tokens.access.token;
-  const idUser = data && data.user && data.user.id;
+  // const idUser = data && data.user && data.user.id;
   authBear(token);
   return data;
 };

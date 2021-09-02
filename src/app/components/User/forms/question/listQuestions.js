@@ -2,22 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
-import { Email } from '@material-ui/icons';
+// import { Email } from '@material-ui/icons';
 
-const MlistQuestions = ({
-  formProp: { id, data, saved, stateLoad, meta },
-  queryValue,
-  onSubmit,
-  actions,
-  ...props
-}) => {
-  const { modulo, questions } = data || {};
+const MlistQuestions = ({ formProp: { data, saved } }) => {
   const [values, setValues] = React.useState();
   const classes = elemStyle();
 
@@ -29,27 +20,7 @@ const MlistQuestions = ({
   // return <span> </span>;
   // }
 
-  const renderButtonActionRecord = id => (
-    <GridChilds style={{ textAlign: 'end' }} view={[6, 6]}>
-      <IconButton
-        style={{ fontSize: '36px' }}
-        color="secondary"
-        aria-label="delete"
-        disabled={true}
-      >
-        <Email />
-      </IconButton>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={e => props.history.push(`/app/user/indagini_edit/${id}`)}
-      >
-        <span className={classes.buttonAction}>Vai</span>
-      </Button>
-    </GridChilds>
-  );
-
-  const renderTitle = propsFormik => (
+  const renderTitle = () => (
     <div className={classes.paperTitle}>
       <GridChilds
         justify="space-between"
@@ -66,10 +37,6 @@ const MlistQuestions = ({
         </div>
       </GridChilds>
     </div>
-  );
-
-  const renderValue = data => key => (
-    <div className={classes.paperRowElem}>{data[key] || ''}</div>
   );
 
   const renderHeaderList = (fields, sizes) => {
@@ -91,11 +58,16 @@ const MlistQuestions = ({
     );
   };
 
+  /*
+  const renderValue = data => key => (
+    <div className={classes.paperRowElem}>{data[key] || ''}</div>
+  );
+
   const getRenderValues = (fields, dataTo) => {
     const vals = fields.map(renderValue(dataTo));
     // vals && vals.push(renderButtonActionRecord(dataTo.id));
     return vals;
-  };
+  }; */
 
   const renderList = (fields, sizes) => (dataTo, index) => {
     return (

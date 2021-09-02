@@ -15,7 +15,7 @@ function makeEnum(arr) {
 export const ButtonType = makeEnum(['add', 'delete', 'blue']);
 
 export const CrudButton = props => {
-  const { onClick, show, hides, disableds, children } = props;
+  const { onClick, show, disableds, children } = props;
   const isFoundInList = (list, val) => list && list.indexOf(val) > -1;
   const isFound = val => (!show ? true : isFoundInList(show, val)); //&& !isFoundInList(hides, val);
   const isDisable = val => (!disableds ? false : isFoundInList(disableds, val));
@@ -54,7 +54,7 @@ export const CrudButton = props => {
               color="secondary"
               aria-label="delete"
               disabled={isDisable('delete')}
-              onClick={event => onClick && onClick(ButtonType.delete)}
+              onClick={() => onClick && onClick(ButtonType.delete)}
             >
               <DeleteIcon />
             </IconButton>

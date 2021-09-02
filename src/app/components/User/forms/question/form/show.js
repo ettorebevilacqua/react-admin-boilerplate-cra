@@ -24,11 +24,6 @@ function resize(arr, newSize, defaultValue) {
   ];
 }
 
-const log = (msg, val) => {
-  console.log(msg, val);
-  return true;
-};
-
 const toNumberOr = (val, orVal) =>
   !val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + '');
 
@@ -37,7 +32,6 @@ const CompTrueFalse = ({
   title,
   compProps,
   color,
-  key,
   onClickOptions,
   ...props
 }) => {
@@ -79,7 +73,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow:
       '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
   },
-  main: props => ({
+  main: () => ({
     overflow: 'inherit',
     padding: 16,
     display: 'flex',
@@ -96,7 +90,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function ShowQuestion(props) {
-  const { values, onSend } = props;
+  const { values } = props;
   const classes = useStyles();
   const moduliRisposte =
     !values || !values.moduli || !values.moduli.map
@@ -136,10 +130,11 @@ export function ShowQuestion(props) {
     return risposta && risposta.correlata ? risposta.correlata : null;
   };
 
-  const getUserValCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
+  /* const getUserValCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
     const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
     return valRisposta && valRisposta.correlata ? valRisposta.val : null;
-  };
+  }; */
+
   const getUserVal = (idxModulo, idxDomanda, idxRisposta) => {
     const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
     return valRisposta && valRisposta.correlata ? valRisposta.val : valRisposta;
@@ -161,12 +156,12 @@ export function ShowQuestion(props) {
     return correlata && valCur == valValues;
   };
 
-  const onChangeRating = (idxDomanda, idxRisposta) => e => {
+  /* const onChangeRating = (idxDomanda, idxRisposta) => e => {
     const val = e.target.value;
     const valRisp = risposte[idxDomanda];
     const _risposte = [...risposte];
     console.log('click risposta', idxDomanda, idxRisposta, valRisp);
-  };
+  }; */
 
   const renderScala = (idxModulo, idxDomanda, scalaVal) => (
     <Box
@@ -200,7 +195,7 @@ export function ShowQuestion(props) {
     setRisposte(newRisposte);
   };
 
-  const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta) => e => {
+  const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta) => () => {
     console.log('click risposta', idxDomanda, idxRisposta);
     const valBefore = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const isBool = [2, 3, 4].indexOf(tipo) > -1;

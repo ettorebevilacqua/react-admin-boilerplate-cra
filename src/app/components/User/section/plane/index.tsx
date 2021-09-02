@@ -7,15 +7,15 @@ import Grid from '@material-ui/core/Grid';
 // styles
 import useStyles from './styles';
 
-const planeButton = [
+/* const planeButton = [
   { name: 'Gold ', link: '/catalogo/linee' },
   { name: 'Silver', link: '/users' },
-  { name: 'Base' /*, link: '/app/crm'*/ },
-  { name: 'Prova gratuita' /*, link: ''*/ },
-];
+  { name: 'Base', link: '/app/crm' },
+  { name: 'Prova gratuita', link: '' },
+]; */
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
-function Plane(props) {
+function Plane() {
   var classes = useStyles();
   const commonStyle = {
     background: 'rgb(173 182 235)',

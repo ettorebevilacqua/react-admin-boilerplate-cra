@@ -14,8 +14,7 @@ import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
 
 const MquestionTo = ({
-  formProp: { id, data, saved, stateLoad, meta },
-  queryValue,
+  formProp: { data, saved },
   saveData,
   actions,
   ...props
@@ -24,7 +23,7 @@ const MquestionTo = ({
   const { id: idParam, idquestion } = useParams();
   const { modulo, questions } = data || {};
 
-  function loadData() {
+  const loadData = React.useCallback(() => {
     const questionData = questions && questions.results && questions.results[0];
     const dataToValue = idParam
       ? questionData
@@ -37,7 +36,7 @@ const MquestionTo = ({
     }
     debugger;
     return dataToValue;
-  }
+  }, [idParam, idquestion, questions]);
 
   const [value, setValue] = React.useState();
   const [numPartecipanti, setNumPartecipanti] = React.useState(null);
@@ -56,7 +55,7 @@ const MquestionTo = ({
   };
 
   React.useEffect(init, []);
-  React.useEffect(dataUpdate, [data]);
+  React.useEffect(dataUpdate, [data, loadData]);
 
   if (data && !modulo) {
     //  props.history.push('/app/user/indagini');
@@ -70,7 +69,7 @@ const MquestionTo = ({
   };
 */
 
-  const onSubmitBefore = (values, actions) => {
+  const onSubmitBefore = values => {
     saveData(values).then(res => {
       const idnew = res.payload.id;
       history.push('/app/user/indagini_edit/' + idnew);
@@ -99,7 +98,7 @@ const MquestionTo = ({
         disabled={!propsFormik.isValid}
         variant="contained"
         color="primary"
-        onClick={e =>
+        onClick={() =>
           value && value.id && actions.sendEmail(value.id) && actions.reload()
         }
       >
@@ -108,7 +107,7 @@ const MquestionTo = ({
     </GridChilds>
   );
 
-  const renderTitle = propsFormik => (
+  const renderTitle = () => (
     <div className={classes.paperTitle}>
       <GridChilds
         justify="space-between"
@@ -129,9 +128,11 @@ const MquestionTo = ({
       </GridChilds>
     </div>
   );
-  const formHtmlSub = (formikProp, hamdle) => aa => {
+
+  /*  const formHtmlSub = (formikProp, hamdle) => aa => {
     console.log('ffff', formikProp, hamdle);
-  };
+  }; */
+
   return (
     <div className={classes.root}>
       {!!value && (

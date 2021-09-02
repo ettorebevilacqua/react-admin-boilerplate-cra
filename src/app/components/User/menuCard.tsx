@@ -271,7 +271,7 @@ const svgs = [
 
 function SimpleCard(props) {
   const classes = useStyles(props);
-  let Svg = svgs[props.bgSelectorIndex];
+  // let Svg = svgs[props.bgSelectorIndex];
   const { item } = props;
   return (
     <Grid item>
@@ -295,7 +295,7 @@ const useTStyles = makeStyles({
 
 export default function AnalyticsCards(props) {
   const classes = useTStyles(props);
-  const isHardLink = props.hardLink;
+  // const isHardLink = props.hardLink;
 
   return (
     <React.Fragment>

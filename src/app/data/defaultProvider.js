@@ -22,8 +22,8 @@ export function defaultProvider(id, url, schemas, tags) {
     myProvider,
     (queryValue, results) => {
       return results;
-      const data = results.results || results;
-      return !queryValue ? data : data.filter(queryValue.filter);
+      /* const data = results.results || results;
+      return !queryValue ? data : data.filter(queryValue.filter); */
     },
     {
       id: id + '-filtered',
@@ -44,7 +44,7 @@ export function defaultProvider(id, url, schemas, tags) {
     provider: myProvider,
     create: data => myProvider.create(data),
     save: (id, data) => updateTodo(id, data),
-    list: funzFilt => mySelector,
+    list: () => mySelector,
     query: param => idProvider.query(param).read(),
     get: id => idProvider.query({ urlParams: { id } }).read(),
     delete: id => idProvider.query({ urlParams: { id } }).delete(),

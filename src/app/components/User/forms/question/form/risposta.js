@@ -54,9 +54,8 @@ const CompTrueFalse = ({
   );
 };
 
-const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
+const MRispostaForm = ({ name, fieldProps }) => {
   const arrayManager = fieldProps.arrayManager;
-  const index = fieldProps.index;
   const [tipo, setTipo] = useState(fieldProps.tipo);
   const [valValue, setValValue] = useState(false);
   const { values, setFieldValue } = useFormikContext();
@@ -133,7 +132,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
       <span></span>
     );
 
-  const renderButtonRisposta = e => (
+  const renderButtonRisposta = () => (
     <GridChilds
       key="1aag"
       justify="space-between"
@@ -143,15 +142,12 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
     >
       <Box style={{ float: 'left', marginRight: '6px' }}>
         <Box style={{ float: 'left' }}>
-          <ArrowUpward
-            color="primary"
-            onClick={event => arrayManager('moveup')}
-          />
+          <ArrowUpward color="primary" onClick={() => arrayManager('moveup')} />
         </Box>
         <Box>
           <ArrowDownward
             color="primary"
-            onClick={event => arrayManager('movedown')}
+            onClick={() => arrayManager('movedown')}
           />
         </Box>
       </Box>
@@ -167,7 +163,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
           <DeleteIcon
             style={{ fontSize: '36px' }}
             color="secondary"
-            onClick={event => arrayManager('delete')}
+            onClick={() => arrayManager('delete')}
           />
         )}
       </Box>
@@ -176,7 +172,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
     </GridChilds>
   );
 
-  const renderTipo = val =>
+  const renderTipo = () =>
     tipo !== 5 && tipo !== 1 ? (
       <GridChilds
         key="1aag"
@@ -251,7 +247,7 @@ const MRispostaForm = ({ name, errors, touched, fieldProps, ...props }) => {
               childProps={{ style: { height: '100%' } }}
               style={{ fontSize: '38px' }}
               color="secondary"
-              onClick={e => {
+              onClick={() => {
                 setFieldValue('correlata', false);
                 fieldProps.onSubFormChange({ ...values, correlata: false });
               }}
