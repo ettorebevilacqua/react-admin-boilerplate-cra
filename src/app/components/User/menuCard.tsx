@@ -2,13 +2,9 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import SearchIcon from '@material-ui/icons/Search';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import Layout from './Layout';
 // import Header from 'components/catalogo/layout/header';
-
-import Logo from 'images/logo.png';
 
 // context
 

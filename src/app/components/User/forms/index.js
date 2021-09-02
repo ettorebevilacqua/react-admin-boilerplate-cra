@@ -1,19 +1,15 @@
-import React from 'react';
 import { pick } from 'utils/pick';
-import { questionSlice, moduliSliceCrud, questionViewSlice } from 'app/slice';
+import { questionSlice, moduliSliceCrud } from 'app/slice';
 import { makeContainerRefreshed } from './component/makerCointainer';
 
 import { QuestionTo } from './question/questionTo';
 import GuestQuestionFormWrap from './question/guestQuestionForm';
 import { ModuliFormContainer } from './question';
-import IndaginiContainer from 'app/components/User/section/indagini';
 
 export const QuestionToForm = makeContainerRefreshed(
   QuestionTo,
   questionSlice,
   (matchParam, history, location, saved) => {
-    const { id, idquestion, idcorso } = (saved && saved.data) || {};
-
     const queryParam =
       !saved || !saved.data || !saved.data.id
         ? pick(matchParam, ['id', 'idquestion', 'idcorso'])
@@ -29,12 +25,8 @@ export const GuestQuestionForm = makeContainerRefreshed(
   GuestQuestionFormWrap,
   moduliSliceCrud,
   (matchParam, history, location, saved) => {
-    const { id, idquestion, idcorso } = (saved && saved.data) || {};
+    const { id } = (saved && saved.data) || {};
 
-    const queryParam =
-      !saved || !saved.data || !saved.data.id
-        ? pick(matchParam, ['id', 'idquestion', 'idcorso'])
-        : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
     moduliSliceCrud.actions.reset();
     moduliSliceCrud.actions.get(id);
@@ -44,8 +36,7 @@ export const GuestQuestionForm = makeContainerRefreshed(
 export const ModuliForm = makeContainerRefreshed(
   ModuliFormContainer,
   moduliSliceCrud,
-  (matchParam, history, location, saved, stateLoad) => {
-    const { id, idquestion, idcorso } = (saved && saved.data) || {};
+  () => {
     // console.log('xxxxx queryParam', queryParam);
     moduliSliceCrud.actions.reset();
     moduliSliceCrud.actions.load();

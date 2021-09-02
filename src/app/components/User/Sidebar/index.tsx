@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, IconButton, List, Button } from '@material-ui/core';
+import { Drawer, IconButton, List } from '@material-ui/core';
 
 import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/NotificationsNone';

@@ -1,37 +1,17 @@
 import React from 'react';
-import { useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
-import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
+import { Formik, Form } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
 
-import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
-import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core';
 import QuestionUsersFields from './form/questionUser';
-import {
-  empityParteipante,
-  empityQuestion,
-  schema,
-} from 'app/data/schema/questionSchema';
+import { empityQuestion, schema } from 'app/data/schema/questionSchema';
 
-import {
-  Box,
-  Radio,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select as MuiSelect,
-} from '@material-ui/core';
-
-import TagsInput from './comp/tagInput';
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
-import { CrudButton, ButtonnType } from '../component/crudButtons';
 
 const MquestionTo = ({
   formProp: { id, data, saved, stateLoad, meta },

@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 
-import { AUTH_TOKEN } from './constants';
-
 interface Authorization {
   [x: string]: string[];
 }

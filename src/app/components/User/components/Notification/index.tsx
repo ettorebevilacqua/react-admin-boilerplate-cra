@@ -14,7 +14,6 @@ import DefenceIcon from '@material-ui/icons/Error';
 import CustomerIcon from '@material-ui/icons/AccountBox';
 import ShippedIcon from '@material-ui/icons/Done';
 import UploadIcon from '@material-ui/icons/Publish';
-import EmojyObjectIcon from '@material-ui/icons/EmojiObjects';
 
 import { useTheme, Theme } from '@material-ui/core/styles';
 import classnames from 'classnames';

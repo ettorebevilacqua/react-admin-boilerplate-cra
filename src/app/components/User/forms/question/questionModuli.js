@@ -1,7 +1,6 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import { Box, MenuItem, TextField, Select } from '@material-ui/core';
+import { MenuItem, TextField, Select } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -10,17 +9,12 @@ import { elemStyle } from '../stylesElement';
 import GridChilds from '../component/gridChilds';
 import Switch from '@material-ui/core/Switch';
 
-import { ViewWeek, Email } from '@material-ui/icons';
-import lists from 'app/admin/forms/lists/edit';
+// import { Email } from '@material-ui/icons';
 
 export default function QuestionModuli({
-  formProp: { id, data, saved, stateLoad, meta },
-  queryValue,
-  onSubmit,
-  actions,
+  formProp: { data, saved },
   moduli,
   saveData,
-  ...props
 }) {
   const [values, setValues] = React.useState();
   const [moduloToAdd, setModuloToAdd] = React.useState();
@@ -32,26 +26,6 @@ export default function QuestionModuli({
   // React.useEffect(init, []);
   // React.useEffect(dataUpdate, [data]);
   console.log('ModuliFormContainer', data);
-
-  const renderButtonActionRecord = id => (
-    <GridChilds style={{ textAlign: 'end' }} view={[6, 6]}>
-      <IconButton
-        style={{ fontSize: '36px' }}
-        color="secondary"
-        aria-label="delete"
-        disabled={true}
-      >
-        <Email />
-      </IconButton>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={e => props.history.push(`/app/user/indagini_edit/${id}`)}
-      >
-        <span className={classes.buttonAction}>Vai</span>
-      </Button>
-    </GridChilds>
-  );
 
   const getNewValues = list => list.map(item => item);
 
@@ -95,7 +69,7 @@ export default function QuestionModuli({
     setValues(newValues);
   };
 
-  const deleteModulo = (id, idxquestion, idxModulo) => {
+  const deleteModulo = (id, idxquestion) => {
     if (!values) return false;
     const newValues = getNewValues(values);
     const _moduli =
@@ -113,12 +87,12 @@ export default function QuestionModuli({
     saveData(newValues[idxquestion]);
   };
 
-  const onModuloChange = idx => e => {
+  const onModuloChange = () => e => {
     const val = e.target.value;
     setModuloToAdd(val);
   };
 
-  const renderList = (fields, sizes) => (dataTo, index) => (
+  const renderList = () => (dataTo, index) => (
     <div key={index}>
       <Paper className={`${classes.paperRow}`} key={'paper_' + index}>
         <GridChilds
@@ -165,7 +139,7 @@ export default function QuestionModuli({
               ))}
           </Select>
           <Button
-            onClick={e => addModulo(index)}
+            onClick={() => addModulo(index)}
             variant="contained"
             color="primary"
           >
@@ -190,7 +164,7 @@ export default function QuestionModuli({
                   color="secondary"
                   aria-label="delete"
                   disabled={false}
-                  onClick={e => deleteModulo(modulo.id, index, idxModulo)}
+                  onClick={() => deleteModulo(modulo.id, index, idxModulo)}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -201,7 +175,7 @@ export default function QuestionModuli({
     </div>
   );
 
-  const renderTitle = propsFormik => (
+  const renderTitle = () => (
     <div className={classes.paperTitle}>
       <GridChilds
         justify="space-between"
@@ -215,7 +189,7 @@ export default function QuestionModuli({
           </span>
         </div>
         <Button
-          onClick={e => addQuestion()}
+          onClick={() => addQuestion()}
           variant="contained"
           color="primary"
         >

@@ -8,10 +8,8 @@ import {
   createAsyncThunk,
   createSelector,
 } from '@reduxjs/toolkit';
-import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { initialState, asyncStateReducer, handlePromise } from './helperSlice';
 import store from 'store/configureStore';
-import { setGetObj, mapOrReduceOnKeys, compose } from 'utils/functional';
 
 const init = store =>
   function createCrudSlice(options) {

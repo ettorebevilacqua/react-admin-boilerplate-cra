@@ -1,6 +1,5 @@
 import defaultTheme from './default';
 import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 
 const overrides = {
   typography: {

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import {
-  BooleanField,
   TextField,
   Datagrid,
-  DateField,
   DateInput,
   Filter,
   FilterProps,

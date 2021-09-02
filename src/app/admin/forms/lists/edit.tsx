@@ -1,26 +1,15 @@
 // in src/Corsi.js
-import { Box, Card, CardContent, Typography } from '@material-ui/core';
+import { Box, Card, CardContent } from '@material-ui/core';
 import * as React from 'react';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import {
-  List,
-  Datagrid,
-  TextField,
-  ReferenceField,
-  EditButton,
   Create,
   EditProps,
   Edit,
-  DateInput,
-  ReferenceInput,
-  SelectInput,
   TextInput,
   required,
   FormWithRedirect,
   Toolbar,
-  useGetList,
-  SelectArrayInput,
-  AutocompleteInput,
 } from 'react-admin';
 
 const RenderFields = props => {

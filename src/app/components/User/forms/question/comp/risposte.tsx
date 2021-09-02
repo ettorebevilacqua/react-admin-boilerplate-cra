@@ -1,23 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import {
-  Box,
   RadioGroup,
   Radio,
-  FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select as MuiSelect,
   Checkbox,
 } from '@material-ui/core';
 
-import { ToFieldArray, withField } from '../../lib/formikWithField';
 import GridChilds from '../../component/gridChilds';
 
 const validationSchema = yup.object({

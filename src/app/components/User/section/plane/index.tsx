@@ -1,16 +1,11 @@
 import React from 'react';
-import { Route, Switch, Redirect, withRouter, Link } from 'react-router-dom';
-import classnames from 'classnames';
+import { withRouter, Link } from 'react-router-dom';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 
 // styles
 import useStyles from './styles';
-
-import MenuCard from '../../menuCard';
-import CardInfo from '../../components/CardInfo';
-import { Typography } from '@material-ui/core';
 
 const planeButton = [
   { name: 'Gold ', link: '/catalogo/linee' },

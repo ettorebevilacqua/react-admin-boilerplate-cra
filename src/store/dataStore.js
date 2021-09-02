@@ -1,5 +1,3 @@
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
 import { createStore, combineReducers } from 'redux';
 import { storeManager } from '@data-provider/core';
 

@@ -1,8 +1,5 @@
-import * as selectors from '../selectors';
-import { RootState } from 'types';
-import { RepoErrorType } from '../types';
+export {};
 // import { initialState } from '..';
-import { Repo } from 'types/Repo';
 /*
 describe('GithubRepoForm selectors', () => {
   let state: RootState = {};

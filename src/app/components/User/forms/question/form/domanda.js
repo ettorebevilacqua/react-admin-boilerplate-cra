@@ -1,11 +1,9 @@
 // FIXME: Form Exmaples
 import React from 'react';
-import { useState } from 'react';
 
-import { Form, Field, FieldArray, useFormikContext } from 'formik';
+import { Field, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { withSubForm } from '../../lib/formikSub';
-import { useValues } from '../../lib/useValues';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
@@ -14,8 +12,8 @@ import Typography from '@material-ui/core/Typography';
 
 import Rating from '@material-ui/lab/Rating';
 
-import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core';
-import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
+import { createStyles } from '@material-ui/core';
+import { TextField, Select } from 'formik-material-ui';
 import FormikOnChange from '../../lib/FormikOnChange';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Accordion from '@material-ui/core/Accordion';
@@ -23,16 +21,7 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import CardContent from '@material-ui/core/CardContent';
-import {
-  Box,
-  Radio,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select as MuiSelect,
-} from '@material-ui/core';
+import { Box, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 
 import GridChilds from '../../component/gridChilds';
 import { ToFieldArray } from '../../lib/formikWithField';

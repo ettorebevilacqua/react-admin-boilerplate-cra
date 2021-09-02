@@ -1,7 +1,6 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async'; // Import UI Generator
-import { Link, Typography } from '@material-ui/core';
 
 import MenuUser from '../../components/User/menuCard';
 

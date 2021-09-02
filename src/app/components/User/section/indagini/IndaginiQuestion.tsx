@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, withRouter } from 'react-router-dom';
 import queryString from 'query-string';
-import classnames from 'classnames';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 
 import { ShowQuestion } from 'app/components/User/forms/question/form/show';
 // styles
 import useStyles from './styles';
 
-import MenuCard from '../../menuCard';
 import { Helmet } from 'react-helmet-async';
 
 import {

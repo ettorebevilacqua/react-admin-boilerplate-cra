@@ -1,5 +1,5 @@
 import { Axios } from '@data-provider/axios';
-import { providers, Selector } from '@data-provider/core';
+import { Selector } from '@data-provider/core';
 
 export function defaultProvider(id, url, schemas, tags) {
   const myProvider = new Axios({

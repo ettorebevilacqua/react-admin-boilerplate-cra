@@ -5,11 +5,8 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import { createInjectorsEnhancer } from 'redux-injectors';
 import createSagaMiddleware from 'redux-saga';
-import { storeManager } from '@data-provider/core';
 
 import { createReducer } from './reducers';
-
-const DATA_PROVIDER_NAMESPACE = 'data'; // by etto add storeManager
 
 export function configureAppStore() {
   const reduxSagaMonitorOptions = {};

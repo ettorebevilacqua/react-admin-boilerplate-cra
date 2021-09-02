@@ -1,6 +1,4 @@
-import * as slice from '..';
-import { ContainerState, RepoErrorType } from '../types';
-import { Repo } from 'types/Repo';
+export {};
 /*
 describe('GithubRepoForm slice', () => {
   let state: ContainerState;

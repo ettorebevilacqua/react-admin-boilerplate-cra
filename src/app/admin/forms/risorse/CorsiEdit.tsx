@@ -1,16 +1,9 @@
 // in src/Corsi.js
-import { Box, Card, CardContent, Paper, Typography } from '@material-ui/core';
+import { Box, Card, CardContent, Typography } from '@material-ui/core';
 import Chip from '@material-ui/core/Chip';
-import { PinDropSharp } from '@material-ui/icons';
-import { waitForDebugger } from 'inspector';
 import * as React from 'react';
 import { FC, useEffect, useState } from 'react';
 import {
-  List,
-  Datagrid,
-  TextField,
-  ReferenceField,
-  EditButton,
   Create,
   EditProps,
   Edit,
@@ -22,7 +15,6 @@ import {
   FormWithRedirect,
   Toolbar,
   useGetList,
-  SelectArrayInput,
   useGetOne,
   useGetMany,
   FormDataConsumer,
@@ -32,8 +24,6 @@ import {
 import { useFormState } from 'react-final-form';
 
 // import AnagFields from '../common/anagFields';
-import AndressFields from '../common/andress';
-import ContactFields from '../common/contatti';
 import RelatedInputAddList from '../lists/relatedInputAddList';
 
 /*

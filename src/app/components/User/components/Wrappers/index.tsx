@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import { useTheme, makeStyles } from '@material-ui/core/styles';
 
 // styles
-var useStyles = makeStyles(theme => ({
+var useStyles = makeStyles(() => ({
   badge: {
     fontWeight: 600,
     height: 16,

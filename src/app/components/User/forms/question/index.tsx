@@ -1,6 +1,5 @@
 import React from 'react';
-import { pick } from 'utils/pick';
-import { questionModuliSlice, questionSlice } from 'app/slice';
+import { questionModuliSlice } from 'app/slice';
 
 import { makeContainerRefreshed } from '../component/makerCointainer';
 
@@ -9,17 +8,10 @@ import QuestionModuli from './questionModuli';
 import IndaginiListForm from './form/indaginList';
 import { ListQuestions } from './listQuestions';
 
-export function ModuliFormContainer({
-  formProp: { id, data, saved, stateLoad, meta },
-  queryValue,
-  onSubmit,
-  actions,
-  ...props
-}) {
-  const { modulo, questions } = data || {};
+export function ModuliFormContainer({ formProp: { data }, actions }) {
   // React.useEffect(init, []);
   // React.useEffect(dataUpdate, [data]);
-  const onSendRisposte = (val1, val2) => {
+  const onSendRisposte = () => {
     // console.log('ModuliFormContainer onSendRisposte', val1, val2);
   };
   return (
@@ -30,8 +22,7 @@ export function ModuliFormContainer({
 export const QuestionModuliForm = makeContainerRefreshed(
   QuestionModuli,
   questionModuliSlice,
-  (matchParam, history, location, saved, stateLoad) => {
-    const { id, idquestion, idcorso } = (saved && saved.data) || {};
+  () => {
     // console.log('xxxxx queryParam', queryParam);
     const queryParam = {};
     /* !saved || !saved.data || !saved.data.id
@@ -46,8 +37,7 @@ export const QuestionModuliForm = makeContainerRefreshed(
 export const IndaginiList = makeContainerRefreshed(
   IndaginiListForm,
   questionModuliSlice,
-  (matchParam, history, location, saved, stateLoad) => {
-    const { id, idquestion, idcorso } = (saved && saved.data) || {};
+  () => {
     // console.log('xxxxx queryParam', queryParam);
     const queryParam = {};
     questionModuliSlice.actions.reset();
@@ -58,7 +48,7 @@ export const IndaginiList = makeContainerRefreshed(
 export const QuestionList = makeContainerRefreshed(
   ListQuestions,
   questionModuliSlice,
-  (matchParam, history, location, saved) => {
+  () => {
     questionModuliSlice.actions.reset();
     /* pick({ closeAt: 'false', full: 'true', ...matchParam }, [
       'closeAt',

@@ -8,10 +8,9 @@ import {
   asyncStateReducer,
   handlePromise,
   mapStateToPropsCreator,
-  mapDispatchToPropsCreator,
 } from './helperSlice';
 
-import { setGetObj, mapOrReduceOnKeys, compose } from 'utils/functional';
+import { setGetObj, mapOrReduceOnKeys } from 'utils/functional';
 import store from 'store/configureStore';
 
 function createActionsSlice(name, actionsProviders) {

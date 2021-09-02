@@ -1,11 +1,9 @@
 import React from 'react';
-import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 
 // styles
 import useStyles from './styles';
-
-import Themes from '../themes';
 
 // components
 import Header from '../Header';

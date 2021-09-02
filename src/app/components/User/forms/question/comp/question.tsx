@@ -1,18 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { FieldArray, Form, Formik } from 'formik';
+import { FieldArray, Formik } from 'formik';
 import * as yup from 'yup';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Rating from '@material-ui/lab/Rating';
 
 import {
   Box,
-  RadioGroup,
   Radio,
   FormControl,
   FormControlLabel,
@@ -22,10 +19,7 @@ import {
   Checkbox,
 } from '@material-ui/core';
 
-import Grid from '@material-ui/core/Grid';
-
 import GridChilds from '../../component/gridChilds';
-import Risposte from './risposte';
 
 const validationSchema = yup.object({
   email: yup

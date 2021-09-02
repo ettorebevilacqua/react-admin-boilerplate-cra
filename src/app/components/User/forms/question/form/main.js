@@ -1,23 +1,15 @@
 import React from 'react';
-import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field } from 'formik';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import Card from '@material-ui/core/Card';
-import Box from '@material-ui/core/Card';
-
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 
 import FormikOnChange from '../../lib/FormikOnChange';
 import GridChilds from '../../component/gridChilds';
 import TagsInput from '../comp/tagInput';
-import { withSubForm } from '../../lib/formikSub';
-import { ToFieldArray, withField } from '../../lib/formikWithField';
+import { ToFieldArray } from '../../lib/formikWithField';
 
-import { TextField, Checkbox, RadioGroup, Select } from 'formik-material-ui';
+import { TextField } from 'formik-material-ui';
 
 import { DomandaForm } from './domanda';
 

@@ -15,17 +15,12 @@ import 'react-app-polyfill/stable';
 import * as React from 'react';
 
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
-import { Provider, connect } from 'react-redux';
-import { compose } from 'redux';
+import { Provider } from 'react-redux';
 import store from '../store/configureStore';
 import { useTranslation } from 'react-i18next';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  initUser,
-  mapStateToPropsUser,
-  userSelector,
-} from 'app/slice/userSlice';
+import { useSelector } from 'react-redux';
+import { initUser } from 'app/slice/userSlice';
 import { RootState } from 'types';
 import { UserAuthState } from 'app/slice/types';
 

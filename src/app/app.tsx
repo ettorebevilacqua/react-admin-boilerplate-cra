@@ -12,20 +12,14 @@ import * as React from 'react';
 import 'sanitize.css/sanitize.css';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { GlobalStyle } from '../styles/global-styles';
 
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
-import { HomePage } from './pages/HomePage/Loadable';
-import { FormsPage } from './pages/forms/Loadable';
 import { UserPage } from './pages/User/Loadable';
-import { UserMenu } from './pages/UserMenu/Loadable';
 // import { ThemeProvider } from 'styles/theme/ThemeProvider';
 
-import dataApi from './data';
-
 // BOOKROOT: ROOT App
-import dataStore from '../store/dataStore';
 
 // dataApi.userProvider.login('ettore@bevilacqua.com1', 'password1').then(data=>alert(data));
 

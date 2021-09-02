@@ -1,17 +1,12 @@
 // DEBUG: root Slice
-import * as React from 'react';
 // import { Repo } from 'types/Repo';
-import { createSlice } from 'utils/@reduxjs/toolkit';
-import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-import { userAuthSaga } from './saga';
+import { useInjectReducer } from 'utils/redux-injectors';
 // import { UserAuthState, RepoErrorType } from './types';
 
 import createCrudSlice from './crudSlice';
 import createViewSlice from './viewSlice';
 import createActionsSlice from './actionsSlice';
 import { userSlice } from './userSlice';
-
-import { moduliSlice } from './moduliSlice';
 
 import providers from '../data';
 const {

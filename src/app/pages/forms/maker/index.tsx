@@ -1,19 +1,8 @@
-import React, { createContext, useMemo, useCallback } from 'react';
+import React, { createContext } from 'react';
 import { Helmet } from 'react-helmet-async'; // Import UI Generator
 import { Link, Typography } from '@material-ui/core';
 
-import { widgets } from '@ui-schema/ds-material';
-import {
-  UIGenerator, // main component
-  isInvalid, // for validity checking
-  createEmptyStore,
-  createStore, // for initial data-store creation
-  createMap,
-  createOrderedMap, // for deep immutables
-  storeUpdater,
-} from '@ui-schema/ui-schema';
-
-import { browserT } from '../t';
+import { createStore, createOrderedMap } from '@ui-schema/ui-schema';
 
 import userSchema from './schemas/user';
 import { FormMaker } from './components/formMaker';

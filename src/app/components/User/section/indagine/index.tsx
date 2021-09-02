@@ -5,16 +5,11 @@ import useStyles from './styles';
 
 // Import UI Generator
 import {
-  UIGenerator, // main component
-  isInvalid, // for validity checking
-  createEmptyStore,
-  createStore, // for initial data-store creation
-  createMap,
+  UIGenerator,
+  createStore,
   createOrderedMap, // for deep immutables
 } from '@ui-schema/ui-schema';
 import { storeUpdater } from '@ui-schema/ui-schema/UIStore/storeUpdater';
-
-import { useData, useLoaded } from '@data-provider/react';
 
 // import { todosFiltered } from './../../data/db';
 

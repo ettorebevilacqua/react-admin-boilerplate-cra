@@ -1,16 +1,13 @@
 import * as React from 'react';
 import {
-  BooleanField,
   TextField,
   Datagrid,
-  DateField,
   DateInput,
   Filter,
   FilterProps,
   List,
   ListProps,
   NullableBooleanInput,
-  NumberField,
   SearchInput,
 } from 'react-admin';
 import { useMediaQuery, Theme } from '@material-ui/core';

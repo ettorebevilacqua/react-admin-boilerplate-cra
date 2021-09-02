@@ -3,11 +3,8 @@ import { widgets } from '@ui-schema/ds-material';
 
 // Import UI Generator
 import {
-  UIGenerator, // main component
-  isInvalid, // for validity checking
-  createEmptyStore,
-  createStore, // for initial data-store creation
-  createMap,
+  UIGenerator,
+  createStore,
   createOrderedMap, // for deep immutables
 } from '@ui-schema/ui-schema';
 import { storeUpdater } from '@ui-schema/ui-schema/UIStore/storeUpdater';

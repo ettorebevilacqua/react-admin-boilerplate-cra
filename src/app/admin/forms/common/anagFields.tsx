@@ -1,27 +1,11 @@
-import {
-  Card,
-  CardContent,
-  Box,
-  Grid,
-  Typography,
-  Link,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Box, Typography } from '@material-ui/core';
 import * as React from 'react';
 import {
-  TextField,
-  ReferenceField,
-  SimpleForm,
-  ReferenceInput,
-  SelectInput,
   TextInput,
-  Toolbar,
   useTranslate,
-  FormWithRedirect,
   DateInput,
   required,
   email,
-  NullableBooleanInput,
 } from 'react-admin';
 
 const AnagFields = (props: any) => {

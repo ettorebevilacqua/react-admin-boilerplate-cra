@@ -10,7 +10,6 @@ import 'react-app-polyfill/stable';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import FontFaceObserver from 'fontfaceobserver';
 
 import { App } from 'app';
 

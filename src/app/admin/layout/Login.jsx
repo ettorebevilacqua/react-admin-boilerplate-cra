@@ -16,11 +16,9 @@ import {
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import LockIcon from '@material-ui/icons/Lock';
-import { Notification, useTranslate, useLogin, useNotify } from 'react-admin';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useTranslate } from 'react-admin';
 
-import authProvider from '../authProvider';
-import { loginUser, userSelector, clearState } from 'app/slice/userSlice';
+import { loginUser, userSelector } from 'app/slice/userSlice';
 import { lightTheme } from './themes';
 
 const useStyles = makeStyles(theme => ({
@@ -88,24 +86,17 @@ const Login = () => {
 
   const translate = useTranslate();
   const classes = useStyles();
-  const notify = useNotify();
-  const history = useHistory();
 
   useEffect(() => {
     /*  if (isError) {
         dispatch(clearState());
         // history.push('/login');
       } */
-  }, [dispatch, history, isError]);
+  }, [dispatch, isError]);
 
   const handleSubmit = auth => {
     // dispatch(clearState());
     setLoading(true);
-    const username = { ...auth }.username;
-    const fakeAuth = { username: 'fake@example.com', password: 'password1' };
-    const pushLogin = () => {
-      authProvider.login(auth);
-    };
     dispatch(loginUser(auth));
     /*  login(
         auth,

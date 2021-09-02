@@ -1,13 +1,11 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { shallowEqual, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-import { injectReducer, injectSaga } from 'redux-injectors';
+import { useInjectReducer } from 'utils/redux-injectors';
 import Button from '@material-ui/core/Button';
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 import { handlePromise } from '../../helper';
-import { initial } from 'lodash';
 
 export function makeContainer(
   Component,

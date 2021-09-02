@@ -2,13 +2,7 @@ import React from 'react';
 import { Card } from '@material-ui/core';
 import useStyles from './styles';
 import {
-  UIGenerator, // main component
-  isInvalid, // for validity checking
-  createEmptyStore,
-  createStore, // for initial data-store creation
-  createMap,
-  createOrderedMap,
-  prependKey, // for deep immutables
+  UIGenerator, // for deep immutables
 } from '@ui-schema/ui-schema';
 
 import { widgets } from '@ui-schema/ds-material';

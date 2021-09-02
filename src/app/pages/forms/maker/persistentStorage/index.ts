@@ -1,8 +1,3 @@
-import { useState, SetStateAction } from 'react';
-
-import usePersistedState from './usePersistedState';
-import createStorage from './createStorage';
-
 const getProvider = (): Storage | null => {
   if (typeof global !== 'undefined' && global.localStorage) {
     return global.localStorage;

@@ -1,4 +1,4 @@
-import { Formik, Form, Field, FieldArray, useFormikContext } from 'formik';
+import { Field, FieldArray, useFormikContext } from 'formik';
 
 export const withField = Component => ({ field, form, ...props }) => (
   <Component {...field} {...form} {...props} />

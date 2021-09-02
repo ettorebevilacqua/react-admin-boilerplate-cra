@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  SetStateAction,
-  Dispatch,
-} from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 import useEventListener from './eventListener';
 import createGlobalState, { IGlobalStateStore } from './createGlobalState';

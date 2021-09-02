@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
+import { createSlice } from '@reduxjs/toolkit';
+import { useInjectReducer } from 'utils/redux-injectors';
 
 const initialState = {
   isModuliShow: true,

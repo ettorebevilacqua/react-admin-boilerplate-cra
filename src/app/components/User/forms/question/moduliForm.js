@@ -1,17 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
-
-import { useFormik } from 'formik';
-import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box';
-
-import { makeStyles } from '@material-ui/core/styles';
 
 import { AutoTabs, getParamTab } from 'app/components/Layout/autoTabs';
 import GridChilds from '../component/gridChilds';
@@ -27,15 +16,7 @@ import {
   makeRisposte,
 } from 'app/services/question/moduliModel';
 
-import { providers, Selector } from '@data-provider/core';
-import { saveModulo, dataSelector } from 'app/slice/moduliSlice';
-import {
-  userCompSlice,
-  userCompSelector,
-  toggleModuliShow,
-} from 'app/pages/User/slice/userCompSlice';
-
-import { updateURL } from 'app/services/helper';
+import { saveModulo } from 'app/slice/moduliSlice';
 
 import { QuestionModuliForm } from './';
 

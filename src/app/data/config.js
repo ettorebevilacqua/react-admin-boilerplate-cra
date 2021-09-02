@@ -1,5 +1,4 @@
 import { providers } from '@data-provider/core';
-import { Axios } from '@data-provider/axios';
 /*
 Set baseUrl option for all providers created by the Axios addon,
 which automatically adds the "axios" tag to all instances.

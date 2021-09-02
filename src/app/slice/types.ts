@@ -1,5 +1,3 @@
-import { Repo } from 'types/Repo';
-
 /* --- STATE --- */
 export interface UserAuthState {
   username: string;

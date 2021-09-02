@@ -1,12 +1,9 @@
 // DEBUG: index /app/data
 import './config';
-import { Axios } from '@data-provider/axios';
-import { providers, Selector } from '@data-provider/core';
 import * as userProviderFrom from './usersProvider';
 import { defaultProvider } from './defaultProvider';
 import { queryViews, providersView } from './viewProvider';
 import schemas from './schema';
-import { createListAxio } from './helper.provider';
 
 export const moduliProvider = defaultProvider(
   'moduli',

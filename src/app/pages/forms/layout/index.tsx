@@ -27,7 +27,6 @@ import NavContentEx from './components/NavContentEx';
 import NavHeaderEx from './components/NavHeaderEx';
 import HeaderEx from './components/HeaderEx';
 import ContentForm from './components/ContentForm';
-import ContentEx from './components/ContentEx';
 import FooterEx from './components/FooterEx';
 
 import './styles.css';

@@ -1,14 +1,7 @@
 import React from 'react';
 
-import GridChilds from '../component/gridChilds';
-import { elemStyle } from '../stylesElement';
 import { ShowQuestion } from './form/show';
-import {
-  getIndaginiAperte,
-  getModulo,
-  makeRisposte,
-  saveRisposte,
-} from 'app/services/question/moduliModel';
+import { makeRisposte } from 'app/services/question/moduliModel';
 
 export default function GuestQuestionFormWrap({
   formProp: { id, data, saved, stateLoad, meta },

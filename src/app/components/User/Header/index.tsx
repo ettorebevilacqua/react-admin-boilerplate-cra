@@ -30,7 +30,7 @@ import {
   useLayoutDispatch,
   useLayoutState,
 } from '../LayoutContext';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { logOut, userSelector } from 'app/slice/userSlice';
 // styles
 import useStyles from './styles';

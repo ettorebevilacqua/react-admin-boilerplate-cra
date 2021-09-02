@@ -1,17 +1,9 @@
 import React from 'react';
 
-import {
-  Card,
-  Paper,
-  Box,
-  Typography,
-  Divider,
-  Checkbox,
-} from '@material-ui/core';
+import { Paper, Box, Typography, Checkbox } from '@material-ui/core';
 
 import Rating from '@material-ui/lab/Rating';
 
-import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Button from '@material-ui/core/Button';
 
@@ -23,12 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import GridChilds from '../../component/gridChilds';
 
 import TextField from '@material-ui/core/TextField';
-import {
-  getValues,
-  saveValues,
-  empityModulo,
-  makeRisposte,
-} from 'app/services/question/moduliModel';
+import { makeRisposte } from 'app/services/question/moduliModel';
 
 function resize(arr, newSize, defaultValue) {
   return [

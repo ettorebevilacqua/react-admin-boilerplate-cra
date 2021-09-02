@@ -3,15 +3,9 @@ import { Box, Card, CardContent, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { FC, useEffect } from 'react';
 import {
-  List,
-  Datagrid,
-  TextField,
-  ReferenceField,
-  EditButton,
   Create,
   EditProps,
   Edit,
-  SimpleForm,
   ReferenceInput,
   SelectInput,
   TextInput,
@@ -27,7 +21,6 @@ import {
 // import AnagFields from '../common/anagFields';
 import AndressFields from '../common/andress';
 import ContactFields from '../common/contatti';
-import RelatedInputAddList from '../lists/relatedInputAddList';
 
 /*
 `ID`			int, 

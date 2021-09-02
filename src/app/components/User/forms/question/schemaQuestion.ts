@@ -1,17 +1,8 @@
 import {
-  UIGenerator, // main component
-  isInvalid, // for validity checking
-  createEmptyStore,
-  createStore, // for initial data-store creation
-  createMap,
   createOrderedMap, // for deep immutables
 } from '@ui-schema/ui-schema';
 
 import { widgets } from '@ui-schema/ds-material/widgetsBinding';
-
-import { TransTitle, WidgetProps } from '@ui-schema/ui-schema';
-
-import { NumberSlider } from '@ui-schema/ds-material/Widgets/NumberSlider';
 
 const TipoDomande = [
   { tipo: 'unica' },

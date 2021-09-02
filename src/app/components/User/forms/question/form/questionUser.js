@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 
 import { Field, FieldArray, ErrorMessage } from 'formik';
 
@@ -10,30 +9,16 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
-import { createStyles, withStyles, Theme, WithStyles } from '@material-ui/core';
-import { TextField, Checkbox, RadioGroup } from 'formik-material-ui';
-import {
-  Box,
-  Radio,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select as MuiSelect,
-} from '@material-ui/core';
+import { TextField } from 'formik-material-ui';
+import { Box, MenuItem } from '@material-ui/core';
 
-import TagsInput from '../comp/tagInput';
 import GridChilds from '../../component/gridChilds';
 import { elemStyle } from '../../stylesElement';
 
 import { CrudButton, ButtonType } from '../../component/crudButtons';
-import { ViewWeek, Email, PlaylistAddCheck } from '@material-ui/icons';
+import { Email, PlaylistAddCheck } from '@material-ui/icons';
 
-import {
-  empityParteipante,
-  empityQuestion,
-  schema,
-} from 'app/data/schema/questionSchema';
+import { empityParteipante } from 'app/data/schema/questionSchema';
 
 import Tooltip from '@material-ui/core/Tooltip';
 

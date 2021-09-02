@@ -1,19 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
 
-import { useFormikContext, Field, FieldArray } from 'formik';
+import { useFormikContext, Field } from 'formik';
 
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
-import Radio from '@material-ui/core/Radio';
 // import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -23,12 +17,9 @@ import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 
 import * as Yup from 'yup';
 import { withSubForm } from '../../lib/formikSub';
-import { useValues } from '../../lib/useValues';
 import GridChilds from '../../component/gridChilds';
-import { withField } from '../../lib/formikWithField';
 import FormikOnChange from '../../lib/FormikOnChange';
 import { TextField, Checkbox, RadioGroup } from 'formik-material-ui';
-import { Rating } from 'formik-material-ui-lab';
 import { DomandaForm } from './domanda';
 
 const nameSchema = Yup.object().shape({

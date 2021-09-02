@@ -13,12 +13,7 @@ import {
 } from '@reduxjs/toolkit';
 import { userProvider } from '../data';
 import dataApi from '../data';
-import {
-  asyncStateReducer,
-  handlePromise,
-  mapStateToPropsCreator,
-  mapDispatchToPropsCreator,
-} from './helperSlice';
+import { mapStateToPropsCreator } from './helperSlice';
 
 /* export const signupUser = createAsyncThunk(
   'users/signupUser',
