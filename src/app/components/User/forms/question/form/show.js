@@ -75,9 +75,9 @@ const useStyles = makeStyles(theme => ({
     fontSize: '16px',
     fontWeight: '500',
   },
-  ScalaTxt: {
+  titleModulo: {
     fontSize: '18px',
-    fontWeight: '500',
+    fontWeight: '600',
   },
 }));
 
@@ -347,9 +347,17 @@ export function ShowQuestion(props) {
     return !values || !values.moduli ? (
       <></>
     ) : (
-      values.moduli.map((modulo, idxModulo) => {
-        return modulo.domande.map(renderDomanda(modulo, idxModulo));
-      })
+      values.moduli.map((modulo, idxModulo) => (
+        <>
+          <Box>
+            <Typography variant={'h2'} className={classes.titleModulo} color="textSecondary">
+              {modulo.title}
+            </Typography>
+            <hr />
+          </Box>
+          {modulo.domande.map(renderDomanda(modulo, idxModulo))}
+        </>
+      ))
     );
   };
 
@@ -357,11 +365,10 @@ export function ShowQuestion(props) {
 
   return (
     <div style={{ marginTop: '16px', marginLeft: '8px', width: '80%' }}>
-      <h2>{values.title}</h2>
+      <h1>{values.title}</h1>
       <GridChilds key="gridChildShowMain2" view={[12]} style={{ marginTop: '16px', width: '100%' }}>
         {renderModulo()}
       </GridChilds>
-
       <GridChilds key="gridChildShowMain3" view={[1, 4]} style={{ marginTop: '16px', width: '100%' }}>
         <p> </p>
         {/* <Button
