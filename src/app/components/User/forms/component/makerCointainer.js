@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useInjectReducer } from 'utils/redux-injectors';
@@ -7,48 +7,57 @@ import Button from '@material-ui/core/Button';
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 import { handlePromise } from '../../helper';
 
-export function makeContainer(
-  Component,
-  sliceProvider,
-  loadCallBack,
-  initialState,
-) {
+export function makeContainer(Component, sliceProvider, loadCallBack) {
   const { slice, mapToProps } = sliceProvider;
   const { state: mapStateToProps, dispatch: mapDispatchToProps } = mapToProps;
 
   const Container = props => {
     const history = useHistory();
+    const params = useParams();
+    const location = useLocation();
+
     const toProps = { ...props };
     toProps.actions.reload = () =>
       !stateLoad.isFetching &&
-      loadCallBack(props?.match?.params, history, props?.location, stateLoad);
+      loadCallBack(params, history, location, stateLoad);
 
     const {
       formProp: { stateLoad, saved, data },
       actions,
     } = props;
 
+    const loadData = React.useCallback(
+      () => loadCallBack(params, history, location, saved),
+      [history, location, params, saved],
+    );
+
     React.useEffect(() => {
       !stateLoad.isSuccess &&
         !stateLoad.isFetching &&
         !stateLoad.isError &&
         !data &&
-        loadCallBack(props?.match?.params, history, props?.location);
-    }, []);
+        loadData();
+    }, [
+      data,
+      loadData,
+      stateLoad.isError,
+      stateLoad.isFetching,
+      stateLoad.isSuccess,
+    ]);
 
     React.useEffect(() => {
       !!saved &&
         saved.isSuccess &&
         !stateLoad.isFetching &&
         !stateLoad.isError &&
-        loadCallBack(props?.match?.params, history, props?.location, saved);
-    }, [saved]);
+        loadData();
+    }, [loadData, saved, stateLoad.isError, stateLoad.isFetching]);
 
     const onSubmit = async (
       values,
-      { setSubmitting, setErrors, setStatus, resetForm, ...subMitMethods },
+      { setSubmitting, setStatus, resetForm },
     ) => {
-      const [saved, error] =
+      const [saved] =
         actions && actions.save
           ? await handlePromise(actions.save(values))
           : [];
@@ -93,7 +102,7 @@ export function makeContainer(
         </div>
       </>
     );
-    const renderComp = state => (
+    const renderComp = () => (
       <Component
         queryValue={props?.match?.params || {}}
         onSubmit={onSubmit}
