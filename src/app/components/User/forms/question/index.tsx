@@ -1,12 +1,13 @@
 import React from 'react';
 import { pick } from 'utils/pick';
-import { questionModuliSlice } from 'app/slice';
+import { questionModuliSlice, questionSlice } from 'app/slice';
 
 import { makeContainerRefreshed } from '../component/makerCointainer';
 
 import { ModuliFormMaker } from './moduliForm';
 import QuestionModuli from './questionModuli';
 import IndaginiListForm from './form/indaginList';
+import { ListQuestions } from './listQuestions';
 
 export function ModuliFormContainer({
   formProp: { id, data, saved, stateLoad, meta },
@@ -51,5 +52,19 @@ export const IndaginiList = makeContainerRefreshed(
     const queryParam = {};
     questionModuliSlice.actions.reset();
     questionModuliSlice.actions.query(queryParam, true);
+  },
+);
+
+export const QuestionList = makeContainerRefreshed(
+  ListQuestions,
+  questionModuliSlice,
+  (matchParam, history, location, saved) => {
+    questionModuliSlice.actions.reset();
+    /* pick({ closeAt: 'false', full: 'true', ...matchParam }, [
+      'closeAt',
+      'full',
+      'id',
+    ]), */
+    questionModuliSlice.actions.query({}, true);
   },
 );

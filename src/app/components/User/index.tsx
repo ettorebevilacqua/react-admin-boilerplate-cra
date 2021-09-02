@@ -46,14 +46,9 @@ import IndaginiMenu from './section/indagini/menuIndagini';
 import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
 
-import {
-  ModuliForm,
-  QuestionToForm,
-  QuestionList,
-  GuestQuestionForm,
-} from './forms/';
+import { ModuliForm, QuestionToForm, GuestQuestionForm } from './forms/';
 
-import { IndaginiList } from './forms/question';
+import { IndaginiList, QuestionList } from './forms/question';
 
 const genData: any = []; // generateData();
 const data = { defaultData: genData } as LocalStorageDataProviderParams;
