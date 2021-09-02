@@ -75,6 +75,10 @@ const useStyles = makeStyles(theme => ({
     fontSize: '16px',
     fontWeight: '500',
   },
+  ScalaTxt: {
+    fontSize: '18px',
+    fontWeight: '500',
+  },
 }));
 
 export function ShowQuestion(props) {
@@ -85,8 +89,11 @@ export function ShowQuestion(props) {
 
   const [risposte, setRisposte] = React.useState(moduliRisposte);
 
+  const getRiposteDomanda = (idxModulo, idxDomanda) =>
+    risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda];
+
   const getValueRiposta = (idxModulo, idxDomanda, idxRisposta) =>
-    risposte && risposte[idxModulo][idxDomanda] && risposte[idxModulo][idxDomanda][idxRisposta];
+    risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda] && risposte[idxModulo][idxDomanda][idxRisposta];
 
   const getDomanda = (idxModulo, idx) =>
     values &&
@@ -106,7 +113,7 @@ export function ShowQuestion(props) {
 
   const getCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
     const domanda = getDomanda(idxModulo, idxDomanda);
-    const tipoNum = toNumberOr(domanda.tipo, -1);
+    const tipoNum = toNumberOr(domanda?.tipo, -1);
     if ([5, 6].indexOf(tipoNum) > -1) return null;
     const risposta = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
     return risposta && risposta.correlata ? risposta.correlata : null;
@@ -143,9 +150,7 @@ export function ShowQuestion(props) {
 
   const renderScala = (idxModulo, idxDomanda, scalaVal) => (
     <Box style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}>
-      <Typography variant={'span'} className={classes.domandaTxt}>
-        {scalaVal && scalaVal.ratingStart}
-      </Typography>
+      <span className={classes.domandaTxt}>{scalaVal && scalaVal.ratingStart}</span>
 
       <Rating
         style={{ marginLeft: '26px', marginRight: '26px' }}
@@ -159,19 +164,17 @@ export function ShowQuestion(props) {
           setRisposte(_risposte);
         }}
       />
-      <Typography variant={'span'} className={classes.domandaTxt}>
-        {scalaVal && scalaVal.ratingEnd}
-      </Typography>
+      <span className={classes.domandaTxt}>{scalaVal && scalaVal.ratingEnd}</span>
     </Box>
   );
 
-  const changeRisposte = (idxDomanda, idxRisposta, val) => {
+  const changeRisposte = (idxModulo, idxDomanda, idxRisposta, val) => {
     const newRisposte = [...risposte];
-    newRisposte[idxDomanda][idxRisposta] = val;
+    newRisposte[idxModulo][idxDomanda][idxRisposta] = val;
     setRisposte(newRisposte);
   };
 
-  const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta) => () => {
+  const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta = 0) => () => {
     console.log('click risposta', idxDomanda, idxRisposta);
     const valBefore = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const isBool = [2, 3, 4].indexOf(tipo) > -1;
@@ -180,14 +183,23 @@ export function ShowQuestion(props) {
 
     const valBool = correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
     const _risposte = [...risposte];
-    const _rispostaOptionTmp = !risposte[idxModulo][idxDomanda][idxRisposta]
-      ? resize([], idxRisposta + 1, null)
-      : [...risposte[idxDomanda]];
+    const _domandaRisposte = getRiposteDomanda(idxModulo, idxDomanda);
+    let _rispostaOptionTmp;
+    if (tipo !== 2) {
+      _rispostaOptionTmp =
+        _domandaRisposte.length - 1 < idxRisposta
+          ? resize([], idxRisposta + 1, null)
+          : [...risposte[idxModulo][idxDomanda]];
+    } else {
+      _rispostaOptionTmp = !getValueRiposta(idxModulo, idxDomanda, idxRisposta)
+        ? resize([], idxRisposta + 1, null)
+        : [...risposte[idxModulo][idxDomanda]];
+    }
 
-    _rispostaOptionTmp[idxModulo][idxRisposta] = valBool;
+    _rispostaOptionTmp[idxRisposta] = valBool;
     _risposte[idxModulo][idxDomanda] = _rispostaOptionTmp;
-
-    return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
+    setRisposte(_risposte);
+    // return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
 
   const radioTrueFalse = (val, onClickInner) => (
@@ -207,7 +219,7 @@ export function ShowQuestion(props) {
   const renderTipoInner = (risposta, idxModulo, idxDomanda, idxRisposta, tipo) => {
     if (!risposta) return <span></span>;
     const val = getUserVal(idxModulo, idxDomanda, idxRisposta);
-    const onClickInner = onClickOptions(tipo, idxDomanda, idxRisposta);
+    const onClickInner = onClickOptions(tipo, idxModulo, idxDomanda, idxRisposta);
     console.log('vals', val);
     return (
       <div key={idxRisposta}>
@@ -315,7 +327,7 @@ export function ShowQuestion(props) {
           marginTop: '22px',
         }}
       >
-        <Typography variant={domanda.tipo === 6 ? 'h3' : 'span'} className={classes.domandaTxt} color="textSecondary">
+        <Typography variant={domanda.tipo === 6 ? 'h3' : 'body1'} className={classes.domandaTxt} color="textSecondary">
           {domanda.domanda}
         </Typography>
       </div>
