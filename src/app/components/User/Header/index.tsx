@@ -93,7 +93,7 @@ function Header(props) {
   var classes = useStyles();
 
   // global
-  const { username, email, isFetching, isError } = useSelector(userSelector);
+  const { username, email } = useSelector(userSelector);
 
   var layoutState = useLayoutState();
   var layoutDispatch = useLayoutDispatch();
@@ -106,12 +106,7 @@ function Header(props) {
     true,
   );
   var [profileMenu, setProfileMenu] = useState<any>(null);
-  var [isSearchOpen, setSearchOpen] = useState<boolean>(false);
-  const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(!open);
-  };
   /*  if(window.history.length > 1 &&
     document.referrer.indexOf(window.location.host) !== -1) { */
 

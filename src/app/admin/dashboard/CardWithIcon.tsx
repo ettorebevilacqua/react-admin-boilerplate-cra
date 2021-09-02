@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
       color: 'inherit',
     },
   },
-  main: (props: Props) => ({
+  main: () => ({
     overflow: 'inherit',
     padding: 16,
     background: `url(${
