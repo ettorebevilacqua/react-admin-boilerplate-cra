@@ -30,7 +30,7 @@ export const QuestionModuliForm = makeContainerRefreshed(QuestionModuli, questio
 
 export const IndaginiList = makeContainerRefreshed(IndaginiListForm, questionModuliSlice, () => {
   // console.log('xxxxx queryParam', queryParam);
-  const queryParam = {};
+  const queryParam = { isPublic: true };
   questionModuliSlice.actions.reset();
   questionModuliSlice.actions.query(queryParam, true);
 });
@@ -42,5 +42,5 @@ export const QuestionList = makeContainerRefreshed(ListQuestions, questionModuli
       'full',
       'id',
     ]), */
-  questionModuliSlice.actions.query({}, true);
+  questionModuliSlice.actions.query({ isPublic: true }, true);
 });
