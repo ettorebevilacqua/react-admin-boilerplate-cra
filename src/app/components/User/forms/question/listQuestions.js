@@ -12,7 +12,7 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
   const [values, setValues] = React.useState();
   const classes = elemStyle();
 
-  const loadData = () => data && data.questions && setValues(data.questions);
+  const loadData = () => data && setValues(data);
   React.useEffect(loadData, [data]);
 
   // if (data && !modulo) {
@@ -62,7 +62,7 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
     return (
       <Paper className={`${classes.paperRow} ${classes.width95}`} key={index}>
         <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[...sizes]}>
-          <div className={classes.paperRowElem}>{dataTo['titleIndagine'] || ''}</div>
+          <div className={classes.paperRowElem}>{dataTo['title'] || ''}</div>
           <div className={classes.paperRowElem}>{data['data'] || '10/03/2021'}</div>
           <div className={classes.paperRowElem}>{data['rendeption'] || '10/03/2021'}</div>
           <div>
@@ -83,7 +83,7 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
     <div className={classes.root}>
       {renderTitle()}
       {renderHeaderList(['Indagine', 'Data Apertura', 'Rendeptiom', 'Azioni'], [4, 2, 2, 4])}
-      {!!values && values.map && values.map(renderList(['titleIndagine', 'data', 'rendeption'], [4, 2, 2, 4]))}
+      {!!values && values.map && values.map(renderList(['title', 'data', 'rendeption'], [4, 2, 2, 4]))}
     </div>
   );
 };

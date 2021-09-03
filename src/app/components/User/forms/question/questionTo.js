@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import QuestionUsersFields from './form/questionUser';
-import { empityQuestion, schema } from 'app/data/schema/questionSchema';
+import { empityQuestion, empityParteipante, schema } from 'app/data/schema/questionSchema';
 
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
@@ -19,6 +19,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
   const { modulo, questions } = data || {};
 
   const loadData = React.useCallback(() => {
+    debugger;
     const questionData = questions && questions.results && questions.results[0];
     const dataToValue = idParam
       ? questionData
@@ -26,10 +27,10 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
           ...empityQuestion,
           idquestion,
         };
-    if (!dataToValue.docenti || !!dataToValue.docenti[0]) {
-      // dataToValue.docenti = [empityParteipante];
+    if ((!dataToValue && !dataToValue.docenti) || !dataToValue.docenti[0]) {
+      dataToValue.docenti = [empityParteipante];
     }
-    debugger;
+
     return dataToValue;
   }, [idParam, idquestion, questions]);
 
@@ -38,6 +39,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
   const classes = elemStyle();
 
   const init = () => {
+    loadData();
     // !value && setValue(dataValueState || empityQuestion);
   };
 
@@ -49,7 +51,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
     }
   };
 
-  React.useEffect(init, []);
+  React.useEffect(init, [idquestion]);
   React.useEffect(dataUpdate, [data, loadData]);
 
   if (data && !modulo) {

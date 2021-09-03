@@ -228,6 +228,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               addPartecipante(propsFormik, arrayHelper, value) */}
 
             {propsFormik?.values?.docenti &&
+              propsFormik?.values?.docenti[0] &&
               propsFormik.values.docenti.map((elem, index) => DocentiForm(index, arrayHelper))}
             <GridChilds
               view={[10, 2]}

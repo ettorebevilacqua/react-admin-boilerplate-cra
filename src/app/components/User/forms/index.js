@@ -1,5 +1,5 @@
 import { pick } from 'utils/pick';
-import { questionSlice, moduliSliceCrud } from 'app/slice';
+import { questionSlice, moduliSliceCrud, questionModuliSlice } from 'app/slice';
 import { makeContainerRefreshed } from './component/makerCointainer';
 
 import { QuestionTo } from './question/questionTo';
@@ -10,14 +10,13 @@ export const QuestionToForm = makeContainerRefreshed(
   QuestionTo,
   questionSlice,
   (matchParam, history, location, saved) => {
-    const queryParam =
-      !saved || !saved.data || !saved.data.id
-        ? pick(matchParam, ['id', 'idquestion', 'idcorso'])
-        : { id: saved.data.id };
+    debugger;
+    const { id, idquestion } = pick(matchParam, ['id', 'idquestion', 'idcorso']);
+    const filter = !saved || !saved.data || !saved.data.id ? { idquestion } : { id: saved.data.id };
     // console.log('xxxxx queryParam', queryParam);
 
-    questionSlice.actions.reset();
-    questionSlice.actions.query(queryParam, true);
+    questionModuliSlice.actions.reset();
+    questionModuliSlice.actions.query(filter, true);
   },
 );
 
