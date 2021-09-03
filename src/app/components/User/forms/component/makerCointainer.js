@@ -107,7 +107,8 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     const hasMoreActions = !!sliceProvider?.actionsSlice?.map;
     return (
       <>
-        {hasMoreActions && sliceProvider.actionsSlice.map(sliceDef => <InjectedComp sliceDef={sliceDef} />)}
+        {hasMoreActions &&
+          sliceProvider.actionsSlice.map((sliceDef, idx) => <InjectedComp key={idx} sliceDef={sliceDef} />)}
         <NewContainer {...props} />
       </>
     );
