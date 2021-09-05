@@ -24,6 +24,7 @@ export default makeStyles((theme: Theme) => ({
   toolbar: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    backgroundColor: theme.palette.primary.main,
   },
   hide: {
     display: 'none',
@@ -158,5 +159,8 @@ export default makeStyles((theme: Theme) => ({
   },
   menuButton: {
     marginRight: 36,
+  },
+  activeLink: {
+    backgroundColor: theme.palette.secondary.main,
   },
 }));

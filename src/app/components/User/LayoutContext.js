@@ -7,6 +7,8 @@ function layoutReducer(state, action) {
   switch (action.type) {
     case 'TOGGLE_SIDEBAR':
       return { ...state, isSidebarOpened: !state.isSidebarOpened };
+    case 'MENU_LIST':
+      return { ...state, menuList: action.payload };
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -16,6 +18,7 @@ function layoutReducer(state, action) {
 function LayoutProvider({ children }) {
   var [state, dispatch] = React.useReducer(layoutReducer, {
     isSidebarOpened: true,
+    menuList: [],
   });
   return (
     <LayoutStateContext.Provider value={state}>
@@ -40,7 +43,14 @@ function useLayoutDispatch() {
   return context;
 }
 
-export { LayoutProvider, useLayoutState, useLayoutDispatch, toggleSidebar };
+function setMenuList(dispatch, list) {
+  dispatch({
+    type: 'MENU_LIST',
+    payload: list,
+  });
+}
+
+export { LayoutProvider, useLayoutState, useLayoutDispatch, toggleSidebar, setMenuList };
 
 // ###########################################################
 function toggleSidebar(dispatch) {

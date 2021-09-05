@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography, Fab, Button } from '@material-ui/core';
+import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Typography, Fab, Button } from '@material-ui/core';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsNone';
@@ -7,7 +7,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import MailIcon from '@material-ui/icons/Mail';
 import SendIcon from '@material-ui/icons/Send';
 
-import { withRouter } from 'react-router-dom';
+import { withRouter, NavLink } from 'react-router-dom';
 
 import classNames from 'classnames';
 import Notification from '../components/Notification';
@@ -101,8 +101,9 @@ function Header(props) {
       : browserHistory.goBack();
 
   const isMenu = false;
+
   return (
-    <AppBar position="fixed" className={classes.appBar}>
+    <AppBar position="fixed" color="default" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
         <IconButton
           color="inherit"
@@ -262,6 +263,18 @@ function Header(props) {
             </Typography>
           </div>
         </Menu>
+      </Toolbar>
+      <br />
+      <Toolbar className={classes.toolbar}>
+        {layoutState.menuList.map((item, idx) => (
+          <Box key={idx}>
+            <NavLink to={item.link} activeClassName={classes.activeLink}>
+              <Button style={{ width: '160px', backgroundColor: 'inherit' }} color="primary" variant="contained">
+                {item.label}
+              </Button>{' '}
+            </NavLink>
+          </Box>
+        ))}
       </Toolbar>
     </AppBar>
   );
