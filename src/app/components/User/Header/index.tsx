@@ -16,12 +16,12 @@ import Notification from '../components/Notification';
 import { Badge } from '../components/Wrappers';
 import React, { useState } from 'react';
 // context
-import { toggleSidebar, useLayoutDispatch, useLayoutState } from '../LayoutContext';
 import { useSelector } from 'react-redux';
 import { logOut, userSelector } from 'app/slice/userSlice';
 // styles
 import useStyles from './styles';
 import UserAvatar from '../components/UserAvatar';
+import { menuListSelector, isSidebarOpenedSelector, setIsSidebarOpened } from 'app/slice/layoutSlice';
 
 const messages = [
   {
@@ -81,10 +81,10 @@ function Header(props) {
 
   // global
   const { username, email } = useSelector(userSelector);
+  const menuListState = useSelector(menuListSelector);
+  const isSidebarOpened = useSelector(isSidebarOpenedSelector);
 
-  var layoutState = useLayoutState();
-  var layoutDispatch = useLayoutDispatch();
-
+  debugger;
   // local
   var [mailMenu, setMailMenu] = useState<any>(null);
   var [isMailsUnread, setIsMailsUnread] = useState<boolean>(true);
@@ -124,10 +124,10 @@ function Header(props) {
         {isMenu && (
           <IconButton
             color="inherit"
-            onClick={() => toggleSidebar(layoutDispatch)}
+            onClick={() => setIsSidebarOpened()}
             className={classNames(classes.headerMenuButton, classes.headerMenuButtonCollapse)}
           >
-            {layoutState.isSidebarOpened ? (
+            {isSidebarOpened ? (
               <ArrowBackIcon
                 classes={{
                   root: classNames(classes.headerIcon, classes.headerIconCollapse),
@@ -266,15 +266,16 @@ function Header(props) {
       </Toolbar>
       <br />
       <Toolbar className={classes.toolbar}>
-        {layoutState.menuList.map((item, idx) => (
-          <Box key={idx}>
-            <NavLink to={item.link} activeClassName={classes.activeLink}>
-              <Button style={{ width: '160px', backgroundColor: 'inherit' }} color="primary" variant="contained">
-                {item.label}
-              </Button>{' '}
-            </NavLink>
-          </Box>
-        ))}
+        {menuListState &&
+          menuListState.map((item, idx) => (
+            <Box key={idx}>
+              <NavLink to={item.link} activeClassName={classes.activeLink}>
+                <Button style={{ width: '160px', backgroundColor: 'inherit' }} color="primary" variant="contained">
+                  {item.label}
+                </Button>{' '}
+              </NavLink>
+            </Box>
+          ))}
       </Toolbar>
     </AppBar>
   );

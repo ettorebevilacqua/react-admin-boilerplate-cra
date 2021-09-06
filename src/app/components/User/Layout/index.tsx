@@ -1,6 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import classnames from 'classnames';
+import { useSelector } from 'react-redux';
+import { isSidebarOpenedSelector } from 'app/slice/layoutSlice';
 
 // styles
 import useStyles from './styles';
@@ -9,16 +11,9 @@ import useStyles from './styles';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 
-// pages
-
-// context
-import { useLayoutState } from '../LayoutContext';
-
 function Layout(props) {
   const classes = useStyles();
-
-  // global
-  const layoutState = useLayoutState();
+  const isSidebarOpened = useSelector(isSidebarOpenedSelector);
 
   return (
     <div className={classes.root}>
@@ -27,7 +22,7 @@ function Layout(props) {
         {props.sidebar && <Sidebar />}
         <div
           className={classnames(classes.content, {
-            [classes.contentShift]: layoutState.isSidebarOpened,
+            [classes.contentShift]: isSidebarOpened,
           })}
         >
           <div className={classes.fakeToolbar} />

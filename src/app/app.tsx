@@ -28,9 +28,9 @@ export function AppHome() {
     <>
       <Switch>
         <Route path="/app/user" component={UserPage} />
-
         <Redirect from="/app" to="/app/user" />
         <Route component={NotFoundPage} />
+
         <GlobalStyle />
       </Switch>
     </>
