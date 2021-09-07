@@ -13,6 +13,11 @@ import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
 
 import * as React from 'react';
+import { ThemeProvider } from '@material-ui/core';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import Themes from 'app/components/User/themes';
+import Layout from 'app/components/User/Layout';
 
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -78,11 +83,13 @@ function AppBody() {
     <LoadingOverlay active={isFetching} spinner text="Loading...">
       <BrowserRouter>
         <Switch>
-          {isGuest ? (
-            <Route exact path="/guest" component={GuestRoute} />
-          ) : (
-            <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
-          )}
+          <Layout>
+            {isGuest ? (
+              <Route exact path="/guest" component={GuestRoute} />
+            ) : (
+              <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
+            )}
+          </Layout>
         </Switch>
       </BrowserRouter>
     </LoadingOverlay>
@@ -128,15 +135,23 @@ export function App() {
   const { i18n } = useTranslation();
   return (
     <React.Fragment>
-      <Provider store={store}>
-        <StartSlices />
-        <HelmetProvider context={helmetContext}>
-          <Helmet titleTemplate="%s - React Boilerplate" defaultTitle="Smart" htmlAttributes={{ lang: i18n.language }}>
-            <meta name="description" content="Smart service" />
-          </Helmet>
-          <AppBody />
-        </HelmetProvider>
-      </Provider>
+      <ThemeProvider theme={Themes.default}>
+        <CssBaseline />{' '}
+        <Provider store={store}>
+          <StartSlices />
+          <HelmetProvider context={helmetContext}>
+            <Helmet
+              titleTemplate="%s - React Boilerplate"
+              defaultTitle="Smart"
+              htmlAttributes={{ lang: i18n.language }}
+            >
+              <meta name="description" content="Smart service" />
+            </Helmet>
+
+            <AppBody />
+          </HelmetProvider>
+        </Provider>
+      </ThemeProvider>
     </React.Fragment>
   );
 }

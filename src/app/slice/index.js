@@ -7,6 +7,7 @@ import createCrudSlice from './crudSlice';
 import createViewSlice from './viewSlice';
 import createActionsSlice from './actionsSlice';
 import { userSlice } from './userSlice';
+import { layoutSlice } from './layoutSlice';
 
 import providers from '../data';
 const { questionProvider, providersView, emailProvider, moduliProvider, questionModuliProvider } = providers;
@@ -34,6 +35,7 @@ export const questionSlice2 = createCrudSlice({
 export const moduliSliceCrud = createCrudSlice({
   name: 'moduliSliceCrud',
   provider: moduliProvider,
+  queryProvider: moduliProvider.provider,
 });
 
 export const questionModuliSlice = createCrudSlice({
@@ -46,6 +48,11 @@ export const { actions: userAuthActions, reducer } = userSlice;
 
 export const useUserAuthSlice = () => {
   useInjectReducer({ key: userSlice.name, reducer: userSlice.reducer });
+  useInjectReducer({ key: layoutSlice.name, reducer: layoutSlice.reducer });
+  useInjectReducer({ key: moduliSliceCrud.name, reducer: moduliSliceCrud.slice.reducer });
+  useInjectReducer({ key: questionModuliSlice.name, reducer: questionModuliSlice.slice.reducer });
+  useInjectReducer({ key: questionSlice.name, reducer: questionSlice.slice.reducer });
+  useInjectReducer({ key: questionViewSlice.name, reducer: questionViewSlice.slice.reducer });
   // useInjectReducer({ key: moduliSlice.name, reducer: moduliSlice.reducer });
   /* useInjectReducer({
     key: questionSlice.providerSlice.name,

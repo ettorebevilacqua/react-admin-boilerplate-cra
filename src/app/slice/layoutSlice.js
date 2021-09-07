@@ -3,7 +3,7 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const dispatch = store.dispatch;
 const initialState = {
-  menuList: [{ link: 'aaaa', label: 'bbbb' }],
+  menuList: [],
   isSidebarOpened: false,
 };
 
@@ -23,7 +23,7 @@ export const isSidebarOpenedSelector = state =>
   !state || !state.layoutSlice || !state.layoutSlice.isSidebarOpened
     ? initialState.isSidebarOpened
     : state.layoutSlice.isSidebarOpened;
-
+const { menuList, toggleSideBar } = layoutSlice.actions;
 export const selectMenuList = createSelector([menuListSelector], state => state.menuList);
-export const setMenuList = menuList => dispatch(layoutSlice.menuList(menuList));
-export const setIsSidebarOpened = () => dispatch(layoutSlice.toggleSideBar());
+export const setMenuList = list => dispatch(menuList(list));
+export const setIsSidebarOpened = () => dispatch(toggleSideBar());

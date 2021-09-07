@@ -84,7 +84,6 @@ function Header(props) {
   const menuListState = useSelector(menuListSelector);
   const isSidebarOpened = useSelector(isSidebarOpenedSelector);
 
-  debugger;
   // local
   var [mailMenu, setMailMenu] = useState<any>(null);
   var [isMailsUnread, setIsMailsUnread] = useState<boolean>(true);
