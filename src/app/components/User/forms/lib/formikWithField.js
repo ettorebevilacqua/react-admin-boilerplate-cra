@@ -27,7 +27,7 @@ export const ToFieldArray = ({ name, renderHeader, renderFooter, renderMaxElem, 
       render={arrayHelper => (
         <>
           {renderHeader && renderHeader({ name, arrayHelper })}
-          {values[name].map(renderField(arrayHelper))}
+          {values && values[name] && values[name].map(renderField(arrayHelper))}
           {renderFooter && renderFooter({ name, arrayHelper })}
         </>
       )}
