@@ -2,19 +2,13 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
-import { AutoTabs, getParamTab } from 'app/components/Layout/autoTabs';
-import GridChilds from '../component/gridChilds';
+import { getParamTab } from 'app/components/Layout/autoTabs';
 
-// import { Domande } from './comp/question';
-
-import { Domande } from './form/main';
 import { Moduli } from './form/moduli';
-import { ShowQuestion } from './form/show';
-import { empityModulo, newDomanda, makeRisposte } from 'app/services/question/moduliModel';
+import { empityModulo, newDomanda } from 'app/services/question/moduliModel';
+import { setMenuList } from 'app/slice/layoutSlice';
 
 import { saveModulo } from 'app/slice/moduliSlice';
-
-import { QuestionModuliForm } from './';
 
 const toNumberOr = (val, orVal) => (!val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
@@ -25,17 +19,6 @@ export const ModuliFormMakerC = props => {
   const intiTab = getParamTab(location, 'tabs1');
   const [newId, setNewId] = React.useState();
   const [tabValue, setTabValue] = React.useState(intiTab);
-
-  const getIdxModulo = () => toNumberOr(sessionStorage.getItem('moduliForm'), 0);
-
-  const setterIdxModulo = idx => {
-    sessionStorage.setItem('moduliForm', idx);
-  };
-
-  const editModulo = idx => {
-    setterIdxModulo(idx);
-    setTabValue(2);
-  };
 
   React.useEffect(() => {
     //  data && setValues(data.results);
@@ -58,7 +41,6 @@ export const ModuliFormMakerC = props => {
   const commandModuli = (cmd, payload) => {
     const add = () => {
       // const newModuli = [...values, empityModulo];
-      setterIdxModulo(-1);
       // setValues(newModuli);
       onSaveData(values.lenght)({ ...empityModulo, title: 'Nuovo' });
       // setTimeout(() => setTabValue(2), 50);
@@ -69,7 +51,6 @@ export const ModuliFormMakerC = props => {
       payload > 0 && newValues.splice(payload, 1);
       id && dispatch(saveModulo({ id, _deleted: true }));
       setValues(newValues);
-      setterIdxModulo(0);
       actions.reload();
     };
 
@@ -88,85 +69,30 @@ export const ModuliFormMakerC = props => {
     return modulo;
   };
 
-  const getCurrentModulo = () => {
-    const cur = getIdxModulo();
-    return values && cur > -1 && values[cur] ? initDomande(values[cur]) : empityModulo;
-  };
-
-  const HeaderModuli = () => (
-    <GridChilds
-      view={[8, 2, 2]}
-      style={{
-        marginTop: '16px',
-        width: '100%',
-        alignItems: 'center',
-      }}
-    >
-      <div>
-        <h2>Moduli</h2>
-      </div>
-    </GridChilds>
-  );
-
-  const renserShow = () => (
-    <div style={{ marginLeft: '24px' }}>
-      <HeaderModuli />
-      <ShowQuestion values={{ moduli: [getCurrentModulo()] }} risposte={makeRisposte(values.domande || [])} />
-    </div>
-  );
-
-  const renderDomande = () => (
-    <div style={{ marginLeft: '24px' }}>
-      <HeaderModuli />
-      <Domande initialValues={getCurrentModulo()} command={cmdDomanda} onSaveData={onSaveData(getIdxModulo())} />
-    </div>
-  );
-
-  const compTabs = {
-    moduli: <Moduli values={values} current={getIdxModulo()} command={commandModuli} onEdit={editModulo} />,
-    qModuli: <QuestionModuliForm moduli={values} />,
-    domande: renderDomande,
-    show: renserShow,
-  };
-
-  const tabsElem = [
-    { label: 'Moduli', comp: () => compTabs.moduli },
-    { label: 'Questionari', comp: () => compTabs.qModuli },
-    { label: 'Domande', comp: compTabs.domande },
-    { label: 'Anteprima', comp: compTabs.show },
-  ];
-
-  const visibleTabs = [
-    [0, 1],
-    [0, 1],
-    [0, 1, 2, 3],
-    [0, 1, 2, 3],
-  ];
-
-  return (
-    <div>
-      <AutoTabs
-        tabsName="tabs1"
-        value={tabValue}
-        tabs={tabsElem}
-        visibles={visibleTabs}
-        onChange={newValue => {
-          tabValue && setTabValue(newValue);
-        }}
-      />
-    </div>
-  );
+  return <Moduli values={values} command={commandModuli} />;
 };
 
 export const ModuliFormMaker = props => {
+  debugger;
   const data = props.data && props.data.results ? props.data.results : [];
   const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
+
+  React.useEffect(
+    () =>
+      setMenuList([
+        { link: '/app/user/moduli?isCustomer', label: 'Moduli' },
+        { link: '/app/user/indagini/list', label: 'Questionari' },
+        // { link: '/app/user/domande', label: 'Domande' },
+        // { link: '/app/user/show', label: 'Anteprima' },
+      ]),
+    [],
+  );
 
   data && data[0] && data.length - 1 < storeIdx && sessionStorage.setItem('moduliForm', 0);
 
   const [values, setValues] = React.useState(() => data);
 
-  if (!data) return <h2>Attender</h2>;
+  if (!data) return <h2>Attendere</h2>;
   return <ModuliFormMakerC values={values} setValues={setValues} {...props} />;
 };
 /*

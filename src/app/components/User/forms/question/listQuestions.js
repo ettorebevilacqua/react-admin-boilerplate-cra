@@ -39,8 +39,10 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
     return (
       <Paper className={`${classes.paperRow} ${classes.width95}`} key={'headerFields'}>
         <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={sizes}>
-          {fields.map(field => (
-            <div className={classes.fieldTitle}>{field}</div>
+          {fields.map((field, idx) => (
+            <div key={idx} className={classes.fieldTitle}>
+              {field}
+            </div>
           ))}
         </GridChilds>
       </Paper>

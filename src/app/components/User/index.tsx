@@ -54,7 +54,7 @@ export const GuestRoute = () => (
 
 export default function UserComp() {
   return (
-    <>
+    <div style={{ marginTop: '80px' }}>
       {helmetRender()} {/* place ConnectedRouter under Provider */}
       <Switch>
         <Route exact path="/app/user/" component={() => <IndaginiMenu />} />
@@ -72,6 +72,6 @@ export default function UserComp() {
         <Redirect from="/app/user" to="/app/user" exact />
       </Switch>
       {/* data.content && <ContentEx /> */}
-    </>
+    </div>
   );
 }

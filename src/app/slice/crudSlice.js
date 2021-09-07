@@ -42,7 +42,7 @@ const init = store =>
     const getProvider = createAsyncThunk(name + '/get', async (payload, thunkAPI) => {
       const id = payload;
       const [data, error] = await handlePromise(provider.get(id));
-      return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
+      return error ? thunkAPI.rejectWithValue(error.data) : data;
     });
 
     const gueryProvider = createAsyncThunk(name + '/query', async (payload, thunkAPI) => {
@@ -65,6 +65,7 @@ const init = store =>
         // const autoBuild = buildCaseDefault(builder);
         const autoBuild = asyncStateReducer(builder);
         autoBuild(readProvider, { dataname: 'data' });
+        autoBuild(getProvider, { dataname: 'data' });
         autoBuild(saveProvider, { storeKey: 'saved' });
         autoBuild(gueryProvider, { dataname: 'data' });
       },
@@ -85,19 +86,24 @@ const init = store =>
           ? state.moduliSlice.data.results
           : state.moduliSlice.data.results.filter(item => item.id === id);
       const isFetching =
-        !state || !state.moduliSlice || !state.moduliSlice.isFetching ? false : state.moduliSlice.isFetching;
+        !state || !state[sliceName] || !state[sliceName].isFetching ? false : state[sliceName].isFetching;
 
       return { isFetching, data: cond };
     };
 
-    const selectData = createSelector([dataSelector], dataState => dataState);
+    const selectLoading = createSelector([dataSelector], crudState => crudState.loading);
+    const selectError = createSelector([dataSelector], crudState => crudState.error);
+    const selectData = createSelector([dataSelector], crudState => crudState.data);
+
+    const selectState = createSelector([dataSelector], dataState => dataState);
+    const selectDataItem = createSelector([dataSelector], dataState => dataState);
     const selectItem = createSelector([dataGetSelector], state => state);
 
     // container props must pass id
     const mapStateToProps = (state, ownProps) => {
       // ownProps would look like { "id" : 123 }
       const { id } = ownProps || {};
-      const select = id ? selectItem(id)(state) : selectData(state);
+      const select = id ? selectItem(id)(state) : selectState(state);
       const { data, saved, ...stateLoad } = select;
       return {
         formProp: {
@@ -105,6 +111,11 @@ const init = store =>
           data,
           saved,
           stateLoad,
+          selectDataItem,
+          selectLoading,
+          selectError,
+          selectData,
+          selectItem,
           meta: { schema: provider.schemas },
         },
       };
@@ -118,7 +129,11 @@ const init = store =>
           dispatch(readProvider(id));
         },
         save: id => dispatch(saveProvider(id)),
-        get: id => {
+        get: (id, refresh) => {
+          if (refresh) {
+            (queryProvider || provider.provider).cleanCache();
+            dispatch(clearState());
+          }
           dispatch(getProvider(id));
         },
         query: (queryString, refresh) => {
@@ -127,7 +142,7 @@ const init = store =>
             dispatch(clearState());
           }
 
-          setTimeout(() => dispatch(gueryProvider(queryString)), 10);
+          dispatch(gueryProvider(queryString));
         },
         clearStateAndProvider: () => {
           dispatch(clearStateAndProvider());
@@ -161,6 +176,9 @@ const init = store =>
       },
       selects: {
         dataSelector: selectData,
+        selectLoading,
+        selectError,
+        selectData,
         dataGetSelector,
         selectItem,
       },

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
 import GridChilds from '../../component/gridChilds';
+// import { HistoryRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,9 +22,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function Moduli({ onEdit, values, command }) {
+  const history = useHistory();
   const classes = useStyles();
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
+
+  React.useEffect(() => isFirstTime && setIsFirstTime(false), [isFirstTime]);
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -93,7 +99,7 @@ export function Moduli({ onEdit, values, command }) {
                       variant="contained"
                       fullWidth
                       type="submit"
-                      onClick={() => handleEditBt(idxModulo)}
+                      onClick={() => history.push({ pathname: '/app/user/moduli/' + value.id, state: value })}
                     >
                       Edit
                     </Button>

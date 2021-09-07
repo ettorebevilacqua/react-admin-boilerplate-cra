@@ -24,20 +24,15 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
       actions,
     } = props;
 
-    const loadData = React.useCallback(() => loadCallBack(params, history, location, saved), [
-      history,
-      location,
-      params,
-      saved,
-    ]);
+    const loadData = () => loadCallBack(params, history, location, saved);
 
     React.useEffect(() => {
       !stateLoad.isSuccess && !stateLoad.isFetching && !stateLoad.isError && !data && loadData();
-    }, [data, loadData, stateLoad.isError, stateLoad.isFetching, stateLoad.isSuccess]);
+    }, [data]);
 
     React.useEffect(() => {
       !!saved && saved.isSuccess && !stateLoad.isFetching && !stateLoad.isError && loadData();
-    }, [loadData, saved, stateLoad.isError, stateLoad.isFetching]);
+    }, [saved]);
 
     const onSubmit = async (values, { setSubmitting, setStatus, resetForm }) => {
       const [saved] = actions && actions.save ? await handlePromise(actions.save(values)) : [];
@@ -76,7 +71,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
       </>
     );
     const renderComp = () => (
-      <Component queryValue={props?.match?.params || {}} onSubmit={onSubmit} saveData={saveData} {...toProps} />
+      <Component data={data} queryValue={params} onSubmit={onSubmit} saveData={saveData} {...toProps} />
     );
 
     return stateLoad.isError ? (
@@ -84,7 +79,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     ) : (
       <div>
         <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
-          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : renderComp()}
+          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : data && renderComp()}
         </LoadingOverlay>
       </div>
     );
@@ -103,22 +98,22 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
   };
 
   const Loader = props => {
-    useInjectReducer({ key: slice.name, reducer: slice.reducer });
-    const hasMoreActions = !!sliceProvider?.actionsSlice?.map;
+    /* useInjectReducer({ key: slice.name, reducer: slice.reducer });
+    const hasMoreActions = false; // !!sliceProvider?.actionsSlice?.map;
     return (
       <>
         {hasMoreActions &&
           sliceProvider.actionsSlice.map((sliceDef, idx) => <InjectedComp key={idx} sliceDef={sliceDef} />)}
         <NewContainer {...props} />
       </>
-    );
+    ); */
   };
 
   // Calling the function using the array with apply()
   // compose(injected)(Loader);
   // compose.apply(null, injected)(Loader);
 
-  return Loader; // sliceProvider.actionsSlice ? LoaderTwo : LoaderOne;
+  return NewContainer; // sliceProvider.actionsSlice ? LoaderTwo : LoaderOne;
 }
 
 export function makeContainerRefreshed(Component, sliceProvider, loadCallBack) {
