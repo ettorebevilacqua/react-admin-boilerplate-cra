@@ -33,7 +33,7 @@ import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 
 import { AppHome } from './app';
 import Login from 'app/components/Layout/Login';
-import { NotFoundPage } from './components/NotFoundPage/Loadable';
+// import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
 import { useUserAuthSlice } from 'app/slice';
 import { GuestRoute } from './components/User';
@@ -56,8 +56,8 @@ const AppRoute = ({ isAuthenticated }) => (
   <>
     {isAuthenticated && (
       <>
-        <PrivateRoute path="/app" component={AppHome} isAuthenticated={isAuthenticated}>
-          <Route component={NotFoundPage} />
+        <PrivateRoute path="/app" isAuthenticated={isAuthenticated}>
+          <AppHome />
         </PrivateRoute>
         <Route exact path="/" component={HomePage}>
           <Redirect from="/" to="/app/user" />
