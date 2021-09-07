@@ -2,7 +2,6 @@ import React from 'react';
 import { Formik, Field } from 'formik';
 
 // import { useSelector } from 'react-redux';
-// import { useLocation } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -184,7 +183,7 @@ export const Domande = ({ data, queryValue, actions, formProp: { selectData }, D
         { link: '/app/user/moduli?isCustomer', label: 'Moduli' },
         { link: '/app/user/indagini/list', label: 'Questionari' },
         { link: '/app/user/moduli/' + id, label: 'Domande' },
-        { link: '/app/user/show/' + id, label: 'Anteprima' },
+        { link: '/app/user/show/' + id, label: 'Anteprima', data: dataVal },
       ]),
     [],
   );

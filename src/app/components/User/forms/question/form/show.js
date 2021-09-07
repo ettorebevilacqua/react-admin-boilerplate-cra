@@ -3,7 +3,7 @@ import React from 'react';
 import { Paper, Box, Typography, Checkbox } from '@material-ui/core';
 
 import Rating from '@material-ui/lab/Rating';
-
+import { useLocation } from 'react-router-dom';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Button from '@material-ui/core/Button';
 
@@ -380,4 +380,10 @@ export function ShowQuestion(props) {
       </GridChilds>
     </div>
   );
+}
+
+export function ShowQuestionUrl(props) {
+  const location = useLocation();
+  const values = location.state && location.state.data;
+  return <ShowQuestion values={values} />;
 }

@@ -268,7 +268,7 @@ function Header(props) {
         {menuListState &&
           menuListState.map((item, idx) => (
             <Box key={idx}>
-              <NavLink to={item.link} activeClassName={classes.activeLink}>
+              <NavLink to={{ pathname: item.link, state: { data: item.data } }} activeClassName={classes.activeLink}>
                 <Button style={{ width: '160px', backgroundColor: 'inherit' }} color="primary" variant="contained">
                   {item.label}
                 </Button>{' '}

@@ -47,7 +47,12 @@ function IndaginiListForm(props) {
         </div>
 
         <GridChilds spacing={1} view={[6, 6]} justify="space-between" style={{ alignItems: 'center', padding: '0px' }}>
-          <Button color="primary" variant="contained" fullWidth onClick={() => history.push('/app/user/show/')}>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={() => history.push({ pathname: '/app/user/show/', state: { data: values[index] } })}
+          >
             Anteprima
           </Button>
 

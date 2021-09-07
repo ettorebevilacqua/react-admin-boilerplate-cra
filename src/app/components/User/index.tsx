@@ -22,7 +22,7 @@ import IndaginiQuestion from './section/indagini/IndaginiQuestion';
 import Indagine from './section/indagine';
 
 import { ModuliForm, QuestionToForm, GuestQuestionForm, ModuloDomandeForm } from './forms/';
-
+import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
 import { IndaginiList, QuestionList } from './forms/question';
 
 const buttonData = [
@@ -67,6 +67,7 @@ export default function UserComp() {
         <Route exact path="/app/user/indagini_edit/:id" component={QuestionToForm} />
         <Route exact path="/app/user/indagini/list" component={QuestionList} />
         <Route exact path="/app/user/indagine" component={() => <Indagine />} />
+        <Route exact path="/app/user/show" component={() => <ShowQuestionUrl />} />
         <Route exact path="/app/user/verifyr" component={() => <MenuCard items={buttonData} />} />
         <Route exact path="/app/user/plane" component={() => <Plane />} />
         <Redirect from="/app/user" to="/app/user" exact />
