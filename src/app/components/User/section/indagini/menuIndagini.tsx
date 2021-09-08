@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
+import { userSelector } from 'app/slice/userSlice';
+import { useSelector } from 'react-redux';
 
 // styles
 import useStyles from './styles';
@@ -25,6 +27,7 @@ const data = [
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
 function IndaginiMenu() {
+  const { user } = useSelector(userSelector);
   const classes = useStyles();
   const [menu, setMenu] = useState(data);
 
@@ -37,8 +40,7 @@ function IndaginiMenu() {
       hardLink: false,
     };
 
-    // 'isAdmin' in params && setMenu([AddLink, ...data]);
-    setMenu([AddLink, ...data]);
+    user.role === 'admin' ? setMenu([AddLink, ...data]) : setMenu(data);
   }, []);
 
   /* const commonStyle = {
