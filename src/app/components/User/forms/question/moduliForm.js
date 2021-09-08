@@ -77,12 +77,13 @@ export const ModuliFormMaker = props => {
   const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
 
   React.useEffect(() => {
-    setMenuList([
-      { link: '/app/user/moduli', label: 'Moduli' },
-      { link: '/app/user/questionModuli', label: 'Questionari' },
-      // { link: '/app/user/domande', label: 'Domande' },
-      // { link: '/app/user/show', label: 'Anteprima' },
-    ]);
+    data &&
+      setMenuList([
+        { link: '/app/user/moduli', label: 'Moduli' },
+        { link: '/app/user/questionModuli', label: 'Questionari', data },
+        // { link: '/app/user/domande', label: 'Domande' },
+        // { link: '/app/user/show', label: 'Anteprima' },
+      ]);
   }, []);
 
   data && data[0] && data.length - 1 < storeIdx && sessionStorage.setItem('moduliForm', 0);

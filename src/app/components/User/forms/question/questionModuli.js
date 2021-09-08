@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { elemStyle } from '../stylesElement';
 import GridChilds from '../component/gridChilds';
@@ -13,12 +14,17 @@ import Switch from '@material-ui/core/Switch';
 import { setMenuList } from 'app/slice/layoutSlice';
 // import { Email } from '@material-ui/icons';
 
-export default function QuestionModuli({ formProp: { data, saved }, moduli, saveData }) {
+export default function QuestionModuli({ formProp: { data, saved }, saveData }) {
+  const location = useLocation();
+  const moduli = location.state && location.state.data;
+
   const history = useHistory();
   const [values, setValues] = React.useState();
   const [moduloToAdd, setModuloToAdd] = React.useState();
   const classes = elemStyle();
-
+  if (!moduli) {
+    history.push('app/user/moduli');
+  }
   const loadData = () => {
     data &&
       setMenuList([
@@ -52,7 +58,6 @@ export default function QuestionModuli({ formProp: { data, saved }, moduli, save
     if (!moduloToAdd) return false;
     const moduloFound = moduli.find(item => item.id === moduloToAdd);
     if (!moduloFound) return false;
-
     const newValues = getNewValues(values);
     const _moduli = newValues && newValues[idx] && getNewValues(newValues[idx].moduli);
     const _moduliFound = _moduli.find(item => item.id === moduloToAdd);

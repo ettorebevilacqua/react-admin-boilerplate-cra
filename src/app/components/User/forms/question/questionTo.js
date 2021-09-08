@@ -17,9 +17,8 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
   const history = useHistory();
   const { id: idParam, idquestion } = useParams();
   const { modulo, questions } = data || {};
-  debugger;
+
   const loadData = React.useCallback(() => {
-    debugger;
     const questionData = questions && questions.results && questions.results[0];
     const dataToValue = idParam
       ? questionData
