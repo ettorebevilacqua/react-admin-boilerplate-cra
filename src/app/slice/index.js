@@ -10,7 +10,14 @@ import { userSlice } from './userSlice';
 import { layoutSlice } from './layoutSlice';
 
 import providers from '../data';
-const { questionProvider, providersView, emailProvider, moduliProvider, questionModuliProvider } = providers;
+const {
+  questionProvider,
+  providersView,
+  emailProvider,
+  moduliProvider,
+  moduloProvider,
+  questionModuliProvider,
+} = providers;
 
 export const questionViewSlice = createViewSlice('getQuestion', providersView.getQuestion);
 
@@ -38,6 +45,12 @@ export const moduliSliceCrud = createCrudSlice({
   queryProvider: moduliProvider.provider,
 });
 
+export const moduloSliceCrud = createCrudSlice({
+  name: 'moduloSliceCrud',
+  provider: moduloProvider,
+  queryProvider: moduloProvider.provider,
+});
+
 export const questionModuliSlice = createCrudSlice({
   name: 'questionModuliSlice',
   provider: questionModuliProvider,
@@ -50,6 +63,7 @@ export const useUserAuthSlice = () => {
   useInjectReducer({ key: userSlice.name, reducer: userSlice.reducer });
   useInjectReducer({ key: layoutSlice.name, reducer: layoutSlice.reducer });
   useInjectReducer({ key: moduliSliceCrud.name, reducer: moduliSliceCrud.slice.reducer });
+  useInjectReducer({ key: moduloSliceCrud.name, reducer: moduloSliceCrud.slice.reducer });
   useInjectReducer({ key: questionModuliSlice.name, reducer: questionModuliSlice.slice.reducer });
   useInjectReducer({ key: questionSlice.name, reducer: questionSlice.slice.reducer });
   useInjectReducer({ key: questionViewSlice.name, reducer: questionViewSlice.slice.reducer });

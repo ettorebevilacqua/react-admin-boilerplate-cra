@@ -4,19 +4,29 @@ import { MenuItem, TextField, Select } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { useHistory } from 'react-router-dom';
 
 import { elemStyle } from '../stylesElement';
 import GridChilds from '../component/gridChilds';
 import Switch from '@material-ui/core/Switch';
 
+import { setMenuList } from 'app/slice/layoutSlice';
 // import { Email } from '@material-ui/icons';
 
 export default function QuestionModuli({ formProp: { data, saved }, moduli, saveData }) {
+  const history = useHistory();
   const [values, setValues] = React.useState();
   const [moduloToAdd, setModuloToAdd] = React.useState();
   const classes = elemStyle();
 
-  const loadData = () => data && setValues(data.results ? data.resulta : data);
+  const loadData = () => {
+    data &&
+      setMenuList([
+        { link: '/app/user/moduli', label: 'Moduli' },
+        { link: '/app/user/questionModuli', label: 'Questionari' },
+      ]);
+    data && setValues(data.results ? data.resulta : data);
+  };
   React.useEffect(loadData, [data]);
 
   // React.useEffect(init, []);
@@ -87,8 +97,9 @@ export default function QuestionModuli({ formProp: { data, saved }, moduli, save
   const renderList = () => (dataTo, index) => (
     <div key={index}>
       <Paper className={`${classes.paperRow}`} key={'paper_' + index}>
-        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[8, 2, 2]}>
-          <TextField value={dataTo.title || ''} onChange={e => onChangeTitle(e.target.value, index)} />
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[7, 1, 2, 2]}>
+          <TextField fullWidth value={dataTo.title || ''} onChange={e => onChangeTitle(e.target.value, index)} />
+
           <span style={{ color: dataTo.isPublic ? 'black' : 'red' }}>Pubblicato :</span>
           <Switch
             checked={dataTo.isPublic}
@@ -96,6 +107,13 @@ export default function QuestionModuli({ formProp: { data, saved }, moduli, save
             name="isPublic"
             inputProps={{ 'aria-label': 'secondary checkbox' }}
           />
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => history.push({ pathname: '/app/user/show/', state: { data: values[index] } })}
+          >
+            Anteprima
+          </Button>
         </GridChilds>
       </Paper>
       <div className={`${classes.paperRow} ${classes.width95}`}>

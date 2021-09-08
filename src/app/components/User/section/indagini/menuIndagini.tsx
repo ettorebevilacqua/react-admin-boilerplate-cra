@@ -33,7 +33,7 @@ function IndaginiMenu() {
 
     const AddLink = {
       name: 'Crea Indagine',
-      link: '/app/user/moduli?isCustomer',
+      link: '/app/user/moduli',
       hardLink: false,
     };
 

@@ -54,7 +54,7 @@ export function Moduli({ onEdit, values, command }) {
           variant="contained"
           color="primary"
           style={{ height: '42px', width: '180px' }}
-          onClick={() => command('add')}
+          onClick={() => history.push('/app/user/moduli/' + 0)}
         >
           Nuovo modulo
         </Button>

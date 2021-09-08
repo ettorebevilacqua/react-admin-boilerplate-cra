@@ -346,7 +346,7 @@ export function ShowQuestion(props) {
       <></>
     ) : (
       values.moduli.map((modulo, idxModulo) => (
-        <>
+        <Box key={idxModulo}>
           <Box>
             <Typography variant={'h2'} className={classes.titleModulo} color="textSecondary">
               {modulo.title}
@@ -354,7 +354,7 @@ export function ShowQuestion(props) {
             <hr />
           </Box>
           {modulo.domande.map(renderDomanda(modulo, idxModulo))}
-        </>
+        </Box>
       ))
     );
   };

@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import FormikOnChange from '../../lib/FormikOnChange';
 import GridChilds from '../../component/gridChilds';
-import TagsInput from '../comp/tagInput';
+// import TagsInput from '../comp/tagInput';
 import { ToFieldArray } from '../../lib/formikWithField';
 
 import { TextField } from 'formik-material-ui';
@@ -21,41 +21,60 @@ import { AdjustingInterval } from 'app/services/helper';
 const ticker = new AdjustingInterval(null, 6000);
 
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
-const dataExt = null;
-export const DomandeC = ({ initialValues, saveData, actions, selectDataItem, isFirstTime, setIsFirstTime }) => {
+
+export const DomandeC = ({ initialValues, saveData, isFirstTime, setIsFirstTime }) => {
   // const initialValues  = useLocation().state;
   /*  const temp = useSelector(selectDataItem);
   const tmp = [temp].map(val => ({ ...val }));
   const initialValues = tmp && tmp[0]; */
   const [value, setValue] = React.useState(null);
+  const [valueTmp, setValueTmp] = React.useState(null);
   const [isFirstRender, setIsFirstRender] = React.useState(true);
 
   // React.useEffect(() => actions.reload(), []);
 
-  React.useEffect(() => initialValues && !value && setValue(initialValues), [value, initialValues]);
+  React.useEffect(() => {
+    initialValues && !value && setValue(initialValues);
+    setValueTmp(initialValues);
+  }, [value, initialValues]);
 
-  const onSave = () => {
-    if (isFirstTime) return false;
-    saveData(value).then(res => {
-      const idnew = res.payload.id;
-      setValue({ ...value, id: idnew });
+  const onSave = (oldValue, valueNew) => () => {
+    if (isFirstTime) return setIsFirstTime(false);
+    const valNewTxt = JSON.stringify(valueNew);
+    const valueTxt = JSON.stringify(oldValue);
+    if (valNewTxt === valueTxt) return false;
+
+    saveData(valueNew).then(res => {
+      const idnew = res && res.payload && res.payload.id;
+      if (idnew) {
+        setValue({ ...valueNew, id: idnew });
+        setValueTmp(valueNew);
+      }
     });
-    console.log('main change', value);
+    console.log('main change', valueNew);
     ticker.stop();
   };
-
-  ticker.workFunc = onSave;
 
   const handleSubmit = vals => {
     console.log('form value ', vals);
   };
 
-  const onChangeForm = (valueNew, isFirstTime) => {
+  const onChangeForm = (valueNew, isFirstTime, isSub) => {
     if (isFirstRender) return setIsFirstRender(false);
+    // if (!valueNew.title || !valueNew.title.trim()) return false;
     //  if (!valueNew) return setIsFirstTime(false);
-    setValue(valueNew);
+    const valNewTxt = JSON.stringify(valueNew);
+    const valueTxt = JSON.stringify(value);
+    if (valNewTxt === valueTxt) return false;
+
+    // setValue(valueNew);
+
+    const toSaveValue = isSub ? { ...valueNew, title: valueNew.title } : { ...valueTmp, title: valueNew.title };
+    setValueTmp(toSaveValue);
     ticker.stop();
-    !isFirstTime && ticker.start();
+    ticker.workFunc = onSave(valueTmp, toSaveValue);
+    !isFirstTime && ticker.start(value);
+    setIsFirstTime(false);
   };
 
   const onDeleteDomanda = (arrayHelper, index) => {
@@ -77,7 +96,13 @@ export const DomandeC = ({ initialValues, saveData, actions, selectDataItem, isF
   };
 
   const onSubFormChange = (arrayHelper, index) => subValue => {
-    arrayHelper.replace(index, subValue);
+    if (!value || !subValue || !value.domande || !value.domande[index]) return false;
+
+    const _domande = value.domande.map((dom, idxDomanda) => (idxDomanda === index ? subValue : dom));
+    const _value = { ...valueTmp, domande: _domande };
+    setValueTmp(_value);
+    onChangeForm(_value, false, true);
+    // arrayHelper.replace(index, subValue);
   };
 
   const renderNewDomanda = formikProps => (
@@ -96,8 +121,6 @@ export const DomandeC = ({ initialValues, saveData, actions, selectDataItem, isF
   );
 
   const handleSelecetedTags = () => {};
-  console.log('dddd', initialValues);
-  console.log('ggg', value);
   if (value === null) {
     return <>load</>;
   }
@@ -106,16 +129,26 @@ export const DomandeC = ({ initialValues, saveData, actions, selectDataItem, isF
     <>
       {
         <Formik
-          initialvalue={initialValues}
+          initialValues={value}
           enableReinitialize={true}
           onSubmit={handleSubmit}
+          validateOnChange={false}
           children={propsFormik => (
             <>
               <FormikOnChange delay={500} onChange={onChangeForm} />
-              PPPPPPPPPPPPPPPPPPp{JSON.stringify(value)}
               <GridChilds view={[8, 4]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
                 <Field name={'title'} style={{ width: '100%' }} component={TextField} label="Modulo nome" />
-                <TagsInput
+                <h3>Moduli</h3>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ height: '42px', width: '180px' }}
+                  onClick={() => onSave()}
+                >
+                  Salva
+                </Button>
+                {/*
+             <TagsInput
                   selectedTags={handleSelecetedTags}
                   fullWidth
                   variant="outlined"
@@ -124,6 +157,7 @@ export const DomandeC = ({ initialValues, saveData, actions, selectDataItem, isF
                   placeholder="add Tags"
                   label="tags"
                 />
+              */}
 
                 {renderNewDomanda(propsFormik)}
               </GridChilds>
@@ -168,33 +202,28 @@ export const DomandeC = ({ initialValues, saveData, actions, selectDataItem, isF
   );
 };
 
-export const Domande = ({ data, queryValue, actions, formProp: { selectData }, Domande }) => {
+export const Domande = ({ data, queryValue, actions, formProp: { selectData }, saveData }) => {
   // const stateData = useSelector(selectData);
-  console.log('xxxxxxxxxx', queryValue);
   const id = queryValue.id;
   const [isFirstTime, setIsFirstTime] = React.useState(true);
-  data && isFirstTime && setIsFirstTime(false);
-  const dataStr = JSON.stringify(data);
-  const dataVal = JSON.parse(dataStr);
-
-  React.useEffect(
-    () =>
+  React.useEffect(() => {
+    data &&
       setMenuList([
-        { link: '/app/user/moduli?isCustomer', label: 'Moduli' },
-        { link: '/app/user/indagini/list', label: 'Questionari' },
+        { link: '/app/user/moduli', label: 'Moduli' },
+        { link: '/app/user/questionModuli', label: 'Questionari' },
         { link: '/app/user/moduli/' + id, label: 'Domande' },
-        { link: '/app/user/show/' + id, label: 'Anteprima', data: dataVal },
-      ]),
-    [],
-  );
+        // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
+      ]);
+  }, [data]);
+
   return (
     <DomandeC
-      initialValues={{ ...dataVal }}
+      initialValues={{ ...data }}
       setIsFirstTime={setIsFirstTime}
       isFirstTime={isFirstTime}
       selectDataItem={selectData}
       actions={actions}
-      saveData={Domande}
+      saveData={saveData}
     />
   );
 };

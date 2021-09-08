@@ -23,7 +23,7 @@ import Indagine from './section/indagine';
 
 import { ModuliForm, QuestionToForm, GuestQuestionForm, ModuloDomandeForm } from './forms/';
 import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
-import { IndaginiList, QuestionList } from './forms/question';
+import { IndaginiList, QuestionList, QuestionModuliForm } from './forms/question';
 
 const buttonData = [
   { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
@@ -59,6 +59,7 @@ export default function UserComp() {
       <Switch>
         <Route exact path="/app/user/" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/indagini" component={() => <IndaginiList />} />
+        <Route exact path="/app/user/questionModuli" component={() => <QuestionModuliForm />} />
         <Route exact path="/app/user/indaginiMenu" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/moduli/:id" component={() => <ModuloDomandeForm />} />
         <Route exact path="/app/user/moduli" component={() => <ModuliForm />} />

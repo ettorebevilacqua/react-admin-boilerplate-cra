@@ -1,21 +1,10 @@
-import React from 'react';
 import { questionModuliSlice } from 'app/slice';
 
 import { makeContainerRefreshed } from '../component/makerCointainer';
 
-import { ModuliFormMaker } from './moduliForm';
 import QuestionModuli from './questionModuli';
 import IndaginiListForm from './form/indaginList';
 import { ListQuestions } from './listQuestions';
-
-export function ModuliFormContainer({ formProp: { data }, actions }) {
-  // React.useEffect(init, []);
-  // React.useEffect(dataUpdate, [data]);
-  const onSendRisposte = () => {
-    // console.log('ModuliFormContainer onSendRisposte', val1, val2);
-  };
-  return <ModuliFormMaker actions={actions} data={data} onSend={onSendRisposte} />;
-}
 
 export const QuestionModuliForm = makeContainerRefreshed(QuestionModuli, questionModuliSlice, () => {
   // console.log('xxxxx queryParam', queryParam);

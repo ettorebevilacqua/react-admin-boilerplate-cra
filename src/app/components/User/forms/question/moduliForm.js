@@ -73,20 +73,17 @@ export const ModuliFormMakerC = props => {
 };
 
 export const ModuliFormMaker = props => {
-  debugger;
   const data = props.data && props.data.results ? props.data.results : [];
   const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
 
-  React.useEffect(
-    () =>
-      setMenuList([
-        { link: '/app/user/moduli?isCustomer', label: 'Moduli' },
-        { link: '/app/user/indagini/list', label: 'Questionari' },
-        // { link: '/app/user/domande', label: 'Domande' },
-        // { link: '/app/user/show', label: 'Anteprima' },
-      ]),
-    [],
-  );
+  React.useEffect(() => {
+    setMenuList([
+      { link: '/app/user/moduli', label: 'Moduli' },
+      { link: '/app/user/questionModuli', label: 'Questionari' },
+      // { link: '/app/user/domande', label: 'Domande' },
+      // { link: '/app/user/show', label: 'Anteprima' },
+    ]);
+  }, []);
 
   data && data[0] && data.length - 1 < storeIdx && sessionStorage.setItem('moduliForm', 0);
 

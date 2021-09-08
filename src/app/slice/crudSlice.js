@@ -60,6 +60,7 @@ const init = store =>
         reset: () => clearStateAndProvider(),
         clearStateAndProvider: () => clearStateAndProvider(),
         clearProvider,
+        dataBack: (data, { payload }) => ({ ...initialState, isSuccess: true, data: payload }),
       },
       extraReducers: builder => {
         // const autoBuild = buildCaseDefault(builder);
@@ -71,7 +72,7 @@ const init = store =>
       },
     });
 
-    const { clearState, reset } = providerSlice.actions;
+    const { clearState, reset, dataBack } = providerSlice.actions;
 
     const dataSelector = state => {
       const cond = !state || !state[sliceName] ? initialState : state[sliceName];
@@ -124,6 +125,7 @@ const init = store =>
     const mapDispatchToProps = dispatch => {
       const base = {
         clearState: () => dispatch(clearState()),
+        dataBack: data => dispatch(dataBack(data)),
         reset: () => dispatch(reset()),
         load: id => {
           dispatch(readProvider(id));

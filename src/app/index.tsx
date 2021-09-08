@@ -45,7 +45,7 @@ function PrivateRoute({ children, isAuthenticated, ...rest }) {
   ) : (
     <Route
       {...rest}
-      render={() => {
+      render={(...args) => {
         return isAuthenticated === true ? children : <Login />;
       }}
     />

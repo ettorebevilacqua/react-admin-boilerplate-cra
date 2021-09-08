@@ -21,6 +21,7 @@ import GridChilds from '../../component/gridChilds';
 import FormikOnChange from '../../lib/FormikOnChange';
 import { TextField, Checkbox, RadioGroup } from 'formik-material-ui';
 import { DomandaForm } from './domanda';
+import { AdjustingInterval } from 'app/services/helper';
 
 const nameSchema = Yup.object().shape({
   // risposta: Yup.string().required('Required'),
@@ -34,6 +35,7 @@ const newDomanda = {
 };
 
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
+const ticker = new AdjustingInterval(null, 1000);
 
 const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...props }) => {
   const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
@@ -55,7 +57,18 @@ const MRispostaForm = ({ name, fieldProps }) => {
   const [valValue, setValValue] = useState(false);
   const { values, setFieldValue } = useFormikContext();
 
-  const onChangeForm = (values, isFirstTime) => {
+  const onSave = newVal => () => {
+    fieldProps.onSubFormChange && fieldProps.onSubFormChange(newVal);
+  };
+
+  const onChangeForm = (valueNew, isFirstTime) => {
+    const valNewTxt = JSON.stringify(valueNew);
+    const valueTxt = JSON.stringify(values);
+    // if (isFirstTime || valNewTxt === valueTxt) return false;
+    // ticker.stop();
+    // ticker.workFunc = onSave(valueNew);
+    // ticker.start();
+
     !isFirstTime && fieldProps.onSubFormChange && fieldProps.onSubFormChange(values);
   };
 

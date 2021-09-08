@@ -4,7 +4,7 @@ export const RISPOSTE_DATA_KEY = 'smart_risposte';
 export const newDomanda = {
   domanda: '',
   tipo: 2,
-  risposte: [{ val: null }],
+  risposte: [{ val: null, risposta: '' }],
 };
 
 export const newModulo = {

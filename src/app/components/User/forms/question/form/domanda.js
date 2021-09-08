@@ -28,6 +28,7 @@ import { RispostaForm } from './risposta';
 
 // util Function for
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
+// const ticker = new AdjustingInterval(null, 1000);
 
 const nameSchema = Yup.object().shape({
   // first: Yup.string().required('Required'),
@@ -95,7 +96,13 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
   };
 
   const onSubFormChange = (replace, index) => subValue => {
-    replace(index, subValue);
+    if (!values || !subValue || !values.risposte || !values.risposte[index]) return false;
+
+    const _risposte = values.risposte.map((item, idxRisposte) => (idxRisposte === index ? subValue : item));
+    const _value = { ...values, risposte: _risposte };
+    fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(_value);
+
+    // replace(index, subValue);
   };
 
   const moveRisposta = (op, arrayHelper, index) => {
@@ -273,7 +280,7 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
                 renderMaxElem={
                   values.tipo === TipoQuestionName.aperta || values.tipo === TipoQuestionName.scala ? 1 : 0
                 }
-                values={values.risposte && values.risposte[0] ? values.risposte : [{}]}
+                values={values.risposte && values.risposte[0] ? values.risposte : [{ risposta: '' }]}
                 fieldProps={({ index, arrayHelper }) => {
                   return {
                     renderScala,
