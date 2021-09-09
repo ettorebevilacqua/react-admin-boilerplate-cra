@@ -17,9 +17,10 @@ function IndaginiListForm(props) {
   const history = useHistory();
   const classes = elemStyle();
 
-  const getDataPublic = React.useCallback(() => (data && data.filter ? data.filter(item => item.isPublic) : []), [
-    data,
-  ]);
+  const getDataPublic = React.useCallback(
+    () => (data && data.filter ? data.map(elem => elem).filter(item => item.isPublic) : []),
+    [data],
+  );
   const [values, setValues] = React.useState(getDataPublic());
 
   // React.useEffect(() => props.actions.load(), []);
@@ -60,7 +61,9 @@ function IndaginiListForm(props) {
             color="primary"
             variant="contained"
             fullWidth
-            onClick={() => history.push('/app/user/indagini_invio/' + values[index].id)}
+            onClick={() => {
+              history.push({ pathname: '/app/user/indagini_invio/0', state: { data: { ...values[index] } } });
+            }}
           >
             Crea
           </Button>

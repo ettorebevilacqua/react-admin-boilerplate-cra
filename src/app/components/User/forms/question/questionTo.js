@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Formik, Form } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
@@ -15,8 +15,13 @@ import { elemStyle } from '../stylesElement';
 
 const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
   const history = useHistory();
-  const { id: idParam, idquestion } = useParams();
-  const { modulo, questions } = data || {};
+  const location = useLocation();
+  const idParam = data && data.id;
+  const questionModulo = location.state && location.state.data;
+
+  const idquestion = questionModulo && questionModulo.id;
+  const questions = data;
+  debugger;
 
   const loadData = React.useCallback(() => {
     const questionData = questions && questions.results && questions.results[0];
@@ -50,11 +55,11 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
     }
   };
 
-  React.useEffect(init, [idquestion]);
+  React.useEffect(init, [idquestion, loadData]);
   React.useEffect(dataUpdate, [data, loadData]);
 
-  if (data && !modulo) {
-    //  props.history.push('/app/user/indagini');
+  if (data && !idquestion) {
+    props.history.push('/app/user/indagini');
     // return <span> </span>;
   }
 
@@ -67,8 +72,8 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
 
   const onSubmitBefore = values => {
     saveData(values).then(res => {
-      const idnew = res.payload.id;
-      history.push('/app/user/indagini_edit/' + idnew);
+      const idnew = res && res.payload && res.payload.id;
+      res && res.payload && res.payload.id && history.push('/app/user/indagini_edit/' + idnew);
     });
   };
 
@@ -100,7 +105,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
       <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[9, 3]}>
         <div>
           <Typography variant="h3" color="textSecondary">
-            Indagine : {modulo?.title}
+            Indagine : {questionModulo?.title}
           </Typography>
           <Typography variant="h4" color="error">
             {saved?.isError && saved?.errorMessage}
