@@ -40,18 +40,18 @@ export const DomandeC = ({ initialValues, saveData, isFirstTime, setIsFirstTime 
 
   const onSave = (oldValue, valueNew) => () => {
     if (isFirstTime) return setIsFirstTime(false);
-    const valNewTxt = JSON.stringify(valueNew);
+    /* const valNewTxt = JSON.stringify(valueNew);
     const valueTxt = JSON.stringify(oldValue);
-    if (valNewTxt === valueTxt) return false;
+    if (valNewTxt === valueTxt) return false; */
 
-    saveData(valueNew).then(res => {
+    saveData(valueTmp).then(res => {
       const idnew = res && res.payload && res.payload.id;
       if (idnew) {
-        setValue({ ...valueNew, id: idnew });
-        setValueTmp(valueNew);
+        setValue({ ...res.payload, id: idnew });
+        setValueTmp(res.payload);
       }
     });
-    console.log('main change', valueNew);
+    // console.log('main change', valueNew);
     ticker.stop();
   };
 
@@ -59,7 +59,7 @@ export const DomandeC = ({ initialValues, saveData, isFirstTime, setIsFirstTime 
     console.log('form value ', vals);
   };
 
-  const onChangeForm = (valueNew, isFirstTime, isSub) => {
+  const onChangeForm = (valueNew, isSub) => {
     if (isFirstRender) return setIsFirstRender(false);
     // if (!valueNew.title || !valueNew.title.trim()) return false;
     //  if (!valueNew) return setIsFirstTime(false);
@@ -72,7 +72,7 @@ export const DomandeC = ({ initialValues, saveData, isFirstTime, setIsFirstTime 
     const toSaveValue = isSub ? { ...valueNew, title: valueNew.title } : { ...valueTmp, title: valueNew.title };
     setValueTmp(toSaveValue);
     ticker.stop();
-    ticker.workFunc = onSave(valueTmp, toSaveValue);
+    // ticker.workFunc = onSave(valueTmp, toSaveValue);
     !isFirstTime && ticker.start(value);
     setIsFirstTime(false);
   };
@@ -210,7 +210,7 @@ export const Domande = ({ data, queryValue, actions, formProp: { selectData }, s
     data &&
       setMenuList([
         { link: '/app/user/moduli', label: 'Moduli' },
-        { link: '/app/user/questionModuli', label: 'Questionari' },
+        // { link: '/app/user/questionModuli', label: 'Questionari' },
         { link: '/app/user/moduli/' + id, label: 'Domande' },
         // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
       ]);
