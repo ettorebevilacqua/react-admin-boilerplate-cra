@@ -41,6 +41,13 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
 
   const getNewValues = list => list.map(item => item);
 
+  const save = idx => {
+    const newValues = getNewValues(values);
+    const _moduli = newValues && newValues[idx] && getNewValues(newValues[idx].moduli);
+    const modulListId = _moduli.map(item => item.id);
+    newValues[idx] = { ...newValues[idx], moduli: modulListId };
+    saveData(newValues[idx]);
+  };
   const onPublish = (val, idx) => {
     const newValues = values.map(elem => elem);
     const isPublic = newValues && newValues[idx] && newValues[idx].isPublic;
@@ -102,7 +109,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
   const renderList = () => (dataTo, index) => (
     <div key={index}>
       <Paper className={`${classes.paperRow}`} key={'paper_' + index}>
-        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[7, 1, 2, 2]}>
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[6, 1, 2, 2, 1]}>
           <TextField fullWidth value={dataTo.title || ''} onChange={e => onChangeTitle(e.target.value, index)} />
 
           <span style={{ color: dataTo.isPublic ? 'black' : 'red' }}>Pubblicato :</span>
@@ -118,6 +125,9 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
             onClick={() => history.push({ pathname: '/app/user/show/', state: { data: values[index] } })}
           >
             Anteprima
+          </Button>
+          <Button color="primary" variant="contained" onClick={() => save(index)}>
+            Salva
           </Button>
         </GridChilds>
       </Paper>
