@@ -20,7 +20,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     toProps.actions.reload = () => !stateLoad.isFetching && loadCallBack(params, history, location, stateLoad);
 
     const {
-      formProp: { stateLoad, saved, data },
+      formProp: { stateLoad, saved, data, parent },
       actions,
     } = props;
 
@@ -28,6 +28,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
 
     React.useEffect(() => {
       !stateLoad.isSuccess && !stateLoad.isFetching && !stateLoad.isError && !data && loadData();
+      console.log('dddddddddd', stateLoad);
     }, [data]);
 
     React.useEffect(() => {
@@ -79,7 +80,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     ) : (
       <div>
         <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
-          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : data && renderComp()}
+          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : (data || parent) && renderComp()}
         </LoadingOverlay>
       </div>
     );
@@ -98,7 +99,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
   };
 
   const Loader = props => {
-    /* useInjectReducer({ key: slice.name, reducer: slice.reducer });
+    useInjectReducer({ key: slice.name, reducer: slice.reducer });
     const hasMoreActions = false; // !!sliceProvider?.actionsSlice?.map;
     return (
       <>
@@ -106,7 +107,7 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
           sliceProvider.actionsSlice.map((sliceDef, idx) => <InjectedComp key={idx} sliceDef={sliceDef} />)}
         <NewContainer {...props} />
       </>
-    ); */
+    );
   };
 
   // Calling the function using the array with apply()

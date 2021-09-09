@@ -28,7 +28,7 @@ export const questionActionlSlice = createActionsSlice('questionEmail', [
 export const questionSlice = createCrudSlice({
   name: 'question',
   provider: questionProvider,
-  queryProvider: questionModuliProvider.provider,
+  queryProvider: questionProvider.provider,
   actionsSlice: [questionActionlSlice],
 });
 

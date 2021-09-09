@@ -60,7 +60,10 @@ const init = store =>
         reset: () => clearStateAndProvider(),
         clearStateAndProvider: () => clearStateAndProvider(),
         clearProvider,
-        dataBack: (data, { payload }) => ({ ...initialState, isSuccess: true, data: payload }),
+        dataBack: (state, { payload }) => ({ ...initialState, isSuccess: true, data: payload }),
+        dataBackParent: (state, { payload }) => {
+          return { ...initialState, isSuccess: true, parent: payload };
+        },
       },
       extraReducers: builder => {
         // const autoBuild = buildCaseDefault(builder);
@@ -72,7 +75,7 @@ const init = store =>
       },
     });
 
-    const { clearState, reset, dataBack } = providerSlice.actions;
+    const { clearState, reset, dataBack, dataBackParent } = providerSlice.actions;
 
     const dataSelector = state => {
       const cond = !state || !state[sliceName] ? initialState : state[sliceName];
@@ -105,11 +108,12 @@ const init = store =>
       // ownProps would look like { "id" : 123 }
       const { id } = ownProps || {};
       const select = id ? selectItem(id)(state) : selectState(state);
-      const { data, saved, ...stateLoad } = select;
+      const { data, parent, saved, ...stateLoad } = select;
       return {
         formProp: {
           id,
           data,
+          parent,
           saved,
           stateLoad,
           selectDataItem,
@@ -126,6 +130,7 @@ const init = store =>
       const base = {
         clearState: () => dispatch(clearState()),
         dataBack: data => dispatch(dataBack(data)),
+        dataBackParent: parent => dispatch(dataBackParent(parent)),
         reset: () => dispatch(reset()),
         load: id => {
           dispatch(readProvider(id));

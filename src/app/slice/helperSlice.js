@@ -4,6 +4,7 @@ export const initialState = {
   isFetching: false,
   isSuccess: false,
   isError: false,
+  parent: null,
   errorMessage: '',
 };
 
