@@ -83,8 +83,9 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
     setFieldValue(
       name + '.risposte',
       values.risposte.map((ris, iRis) => {
-        ris.val = iRis === index ? val : false;
-        return ris;
+        const risNes = { ...ris };
+        risNes.val = iRis === index ? val : false;
+        return risNes;
       }),
     );
 
