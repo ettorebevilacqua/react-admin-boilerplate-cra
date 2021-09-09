@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CommentIcon from '@material-ui/icons/Comment';
 import GridChilds from '../../component/gridChilds';
+import { empityModulo } from 'app/services/question/moduliModel';
 // import { HistoryRounded } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
@@ -54,7 +55,7 @@ export function Moduli({ onEdit, values, command }) {
           variant="contained"
           color="primary"
           style={{ height: '42px', width: '180px' }}
-          onClick={() => history.push('/app/user/moduli/' + 0)}
+          onClick={() => history.push({ pathname: '/app/user/moduli/0', state: empityModulo })}
         >
           Nuovo modulo
         </Button>
