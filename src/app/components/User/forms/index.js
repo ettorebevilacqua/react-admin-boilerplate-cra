@@ -42,6 +42,7 @@ export const ModuliForm = makeContainerRefreshed(ModuliFormMaker, moduliSliceCru
 export const ModuloDomandeForm = makeContainerRefreshed(Domande, moduloSliceCrud, (matchParam, saved) => {
   const filter = pick(matchParam, ['id']);
   moduloSliceCrud.actions.reset();
+  console.log('ModuloDomandeForm', filter.id, toNumberOr(filter.id, 0) === 0 ? 'isZero' : 'no Zero');
   toNumberOr(filter.id, 0) !== 0
     ? moduloSliceCrud.actions.get(filter.id, true)
     : moduloSliceCrud.actions.dataBack(empityModulo);

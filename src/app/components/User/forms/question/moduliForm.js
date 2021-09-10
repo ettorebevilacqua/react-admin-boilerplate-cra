@@ -1,8 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-
-import { getParamTab } from 'app/components/Layout/autoTabs';
+// import { useLocation } from 'react-router-dom';
 
 import { Moduli } from './form/moduli';
 import { empityModulo, newDomanda } from 'app/services/question/moduliModel';
@@ -14,11 +12,8 @@ const toNumberOr = (val, orVal) => (!val ? 2 : isNaN(parseInt(val + '')) ? orVal
 
 export const ModuliFormMakerC = props => {
   const { isFetching, actions, values, setValues } = props;
-  const location = useLocation();
   const dispatch = useDispatch();
-  const intiTab = getParamTab(location, 'tabs1');
   const [newId, setNewId] = React.useState();
-  const [tabValue, setTabValue] = React.useState(intiTab);
 
   React.useEffect(() => {
     //  data && setValues(data.results);
@@ -58,11 +53,6 @@ export const ModuliFormMakerC = props => {
     cmds[cmd] && cmds[cmd](payload);
   };
 
-  const cmdDomanda = (cmd, payload) => {
-    const cmds = { list: () => setTabValue(2) };
-    cmds[cmd] && cmds[cmd](payload);
-  };
-
   const initDomande = moduloFrom => {
     const domande = moduloFrom.domande && moduloFrom.domande[0] ? moduloFrom.domande : [newDomanda];
     const modulo = { ...moduloFrom, domande };
@@ -74,8 +64,9 @@ export const ModuliFormMakerC = props => {
 
 export const ModuliFormMaker = props => {
   const data = props.data && props.data.results ? props.data.results : [];
-  const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
 
+  const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
+  React.useEffect(() => !data && props.actions.reload(), []);
   React.useEffect(() => {
     data &&
       setMenuList([

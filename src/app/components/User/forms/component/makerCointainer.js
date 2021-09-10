@@ -17,22 +17,21 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     const location = useLocation();
 
     const toProps = { ...props };
-    toProps.actions.reload = () => !stateLoad.isFetching && loadCallBack(params, history, location, stateLoad);
+    toProps.actions.reload = () => loadCallBack && loadCallBack(params, history, location, stateLoad);
 
     const {
       formProp: { stateLoad, saved, data, parent },
       actions,
     } = props;
 
-    const loadData = () => loadCallBack(params, history, location, saved);
+    const loadData = () => loadCallBack && loadCallBack(params, history, location, saved);
 
     React.useEffect(() => {
       !stateLoad.isSuccess && !stateLoad.isFetching && !stateLoad.isError && !data && loadData();
-      console.log('dddddddddd', stateLoad);
     }, [data]);
 
     React.useEffect(() => {
-      !!saved && saved.isSuccess && !stateLoad.isFetching && !stateLoad.isError && loadData();
+      // !!saved && saved.isSuccess && !stateLoad.isFetching && !stateLoad.isError && loadData();
     }, [saved]);
 
     const onSubmit = async (values, { setSubmitting, setStatus, resetForm }) => {

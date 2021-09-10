@@ -1,20 +1,22 @@
 import React from 'react';
+import { Formik, Field } from 'formik';
+
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
-import { DomandaForm } from './domanda';
 import Divider from '@material-ui/core/Divider';
+import FormikOnChange from '../../lib/FormikOnChange';
 import GridChilds from '../../component/gridChilds';
 // import TagsInput from '../comp/tagInput';
-// import { ToFieldArray } from '../../lib/formikWithField';
+import { ToFieldArray } from '../../lib/formikWithField';
 
-import TextField from '@material-ui/core/TextField';
+import { TextField } from 'formik-material-ui';
 
 import { setMenuList } from 'app/slice/layoutSlice';
+import { DomandaForm } from './domanda';
 
 import { empityModulo, newDomanda } from 'app/services/question/moduliModel';
 import { AdjustingInterval } from 'app/services/helper';
-
 // import { moduliSliceCrud } from 'app/slice';
 
 const ticker = new AdjustingInterval(null, 100);
@@ -100,8 +102,13 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
     const valueTxt = JSON.stringify(value);
     if (valNewTxt === valueTxt) return false;
 
-    const toSaveValue = { ...valueNew }; // isSub ? { ...valueNew, title: valueTmp.title } : { ...valueTmp, title: valueNew.title };
-    console.log('onChangeForm xxx', toSaveValue);
+    // setValue(valueNew);
+    if (!isSub && valueNew.title) {
+      setTitle(valueNew.title);
+    }
+
+    const toSaveValue = { ...valueNew, title }; // isSub ? { ...valueNew, title: valueTmp.title } : { ...valueTmp, title: valueNew.title };
+    console.log('title xxx', toSaveValue);
 
     // checkChanged(valueTmp, toSaveValue) && onSave();
     setValueTmp(toSaveValue);
@@ -119,8 +126,14 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
       _domande.splice(index, 1);
       const valueT = { ..._value, domande: _domande };
       setValueTmp(valueT);
-      onChangeForm(valueT, true);
+      onChangeForm(valueT, true, true);
     }
+
+    return _value.domande && _value.domande[1]
+      ? arrayHelper.remove(index)
+      : !_value.domande[0]
+      ? arrayHelper.push(newDomanda)
+      : arrayHelper.replace(0, newDomanda);
   };
 
   const arrayManager = (arrayHelper, index) => (op, val) => {
@@ -134,18 +147,13 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
   };
 
   const onSubFormChange = (arrayHelper, index) => subValue => {
-    if (!valueTmp || !subValue || !value.domande || !valueTmp.domande[index]) return false;
+    if (!value || !subValue || !value.domande || !value.domande[index]) return false;
 
     const _domande = value.domande.map((dom, idxDomanda) => (idxDomanda === index ? subValue : dom));
     const _value = { ...valueTmp, domande: _domande };
     setValueTmp(_value);
-    onChangeForm(_value, true, false);
+    onChangeForm(_value, true);
     // arrayHelper.replace(index, subValue);
-  };
-
-  const domandaSave = idx => value => {
-    onSubFormChange(null, idx)(value);
-    onSave();
   };
 
   const renderNewDomanda = formikProps => (
@@ -162,95 +170,100 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
         const valueT = { ..._value, domande: _domande };
         setValueTmp(valueT);
         onChangeForm(valueT, true, true);
-        // formikProps.setFieldValue('domande.' + lenDomande, newDomanda);
+        formikProps.setFieldValue('domande.' + lenDomande, newDomanda);
       }}
     >
       <span style={{ fontSize: '11px' }}>Nuova Domanda</span>
     </Button>
   );
 
-  const domandaChange = () => {};
-
   const handleSelecetedTags = () => {};
   if (value === null) {
     return <>load</>;
   }
-  const changeTitle = title => {
-    setTitle(title);
-    setValueTmp({ ...valueTmp, title });
-  };
 
   return (
     <>
-      <GridChilds view={[8, 4]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
-        <TextField
-          fullWidth
-          name="title"
-          value={valueTmp.title}
-          label="Start descrizione"
-          onChange={e => changeTitle(e.target.value)}
-        />
-        <h3>Moduli</h3>
-        {1 === 1 && (
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ height: '42px', width: '180px' }}
-            onClick={() => onSave()}
-          >
-            Salva
-          </Button>
-        )}
-        {/*
-            <TagsInput
-              selectedTags={handleSelecetedTags}
-              fullWidth
-              variant="outlined"
-              id="tags"
-              name="tags"
-              placeholder="add Tags"
-              label="tags"
-            />
-          */}
+      {
+        <Formik
+          initialValues={valueTmp}
+          onSubmit={handleSubmit}
+          validateOnChange={false}
+          children={propsFormik => (
+            <>
+              <FormikOnChange delay={500} onChange={onChangeForm} />
+              <GridChilds view={[8, 4]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
+                <Field name="title" style={{ width: '100%' }} component={TextField} label="Modulo nome" />
+                <h3>Moduli</h3>
+                {1 == 1 && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ height: '42px', width: '180px' }}
+                    onClick={() => onSave()}
+                  >
+                    Salva
+                  </Button>
+                )}
+                {/*
+                  <TagsInput
+                    selectedTags={handleSelecetedTags}
+                    fullWidth
+                    variant="outlined"
+                    id="tags"
+                    name="tags"
+                    placeholder="add Tags"
+                    label="tags"
+                  />
+                */}
 
-        {value.title && renderNewDomanda()}
-      </GridChilds>
-      {valueTmp?.domande.map((domanda, index) => {
-        const fieldProps = {
-          onSubFormChange: onSubFormChange(null, index),
-          arrayManager: arrayManager(null, index),
-          tipo: toNumberOr(value && value.tipo, 0),
-          values: valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda,
-        };
-        return (
-          <DomandaForm
-            key={index}
-            initialValues={
-              valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda
-            }
-            name="domande"
-            setFieldValue={domandaChange}
-            fieldProps={fieldProps}
-            domandaSave={domandaSave(index)}
-          />
-        );
-      })}
-      <div
-        style={{
-          marginTop: '16px',
-          marginLeft: '36px',
-          marginRight: '36px',
-        }}
-      >
-        <span> </span>
-        {value.title && renderNewDomanda()}
-      </div>
-      {1 === 0 && (
-        <Button color="primary" variant="contained" fullWidth type="submit">
-          Submit
-        </Button>
-      )}
-      <Divider style={{ marginTop: '22px' }} />
+                {propsFormik.values.title && renderNewDomanda(propsFormik)}
+              </GridChilds>
+              <div style={{ marginTop: '22px' }}>
+                {!propsFormik.values.title ? (
+                  <h3>Inserire il titolo</h3>
+                ) : (
+                  <ToFieldArray
+                    name="domande"
+                    component={DomandaForm}
+                    fieldProps={({ index, arrayHelper }) => {
+                      if (valueTmp.domande && !valueTmp.domande[0]) {
+                        arrayHelper.push(newDomanda);
+                      }
+
+                      return {
+                        onSubFormChange: onSubFormChange(arrayHelper, index),
+                        arrayManager: arrayManager(arrayHelper, index),
+                        tipo: toNumberOr(value && value.tipo, 0),
+                        values:
+                          valueTmp && valueTmp.domande && valueTmp.domande[index]
+                            ? valueTmp.domande[index]
+                            : newDomanda,
+                      };
+                    }}
+                  />
+                )}
+              </div>
+              <div
+                style={{
+                  marginTop: '16px',
+                  marginLeft: '36px',
+                  marginRight: '36px',
+                }}
+              >
+                <span> </span>
+                {propsFormik.values.title && renderNewDomanda(propsFormik)}
+              </div>
+              {1 === 0 && (
+                <Button color="primary" variant="contained" fullWidth type="submit">
+                  Submit
+                </Button>
+              )}
+              <Divider style={{ marginTop: '22px' }} />
+            </>
+          )}
+        />
+      }
     </>
   );
 };

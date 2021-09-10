@@ -1,19 +1,18 @@
 // FIXME: Form Exmaples
 import React from 'react';
 
-import { Field, useFormikContext } from 'formik';
+import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { withSubForm } from '../../lib/formikSub';
-import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
 
 import Rating from '@material-ui/lab/Rating';
 
-import { TextField, Select } from 'formik-material-ui';
-import FormikOnChange from '../../lib/FormikOnChange';
+import { TextField } from 'formik-material-ui';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
@@ -24,6 +23,7 @@ import { Box, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 
 import GridChilds from '../../component/gridChilds';
 import { ToFieldArray } from '../../lib/formikWithField';
+import { newDomanda } from 'app/services/question/moduliModel';
 import { RispostaForm } from './risposta';
 
 // util Function for
@@ -56,16 +56,26 @@ const TipoQuestion = [
   { id: 6, tipo: 'Titolo' },
 ];
 
-const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
+const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaSave }) => {
   // useValues(name, props)
-  const { values, setFieldValue: setSubFieldValue } = useFormikContext();
-  const [expanded, setExpanded] = React.useState(fieldProps.expanded || toNumberOr(values.tipo, 0) === 0 || false);
+  const domandaVal = initialValues || newDomanda;
+  const startValue = { ...domandaVal, tipo: domandaVal.tipo || 0, risposte: domandaVal.risposte || [] };
+  const [values, setValues] = React.useState(startValue);
+  const [tipo, setTipo] = React.useState(values && values.tipo);
+  const [risposte, setRisposte] = React.useState(domandaVal.risposte);
+  const [isFirstRender, setIsFirstRender] = React.useState(true);
+
+  // const { values, setFieldValue: setSubFieldValue } = useFormikContext();
+
+  const [expanded, setExpanded] = React.useState(
+    fieldProps.expanded || toNumberOr(values && values.tipo, 0) === 0 || false,
+  );
 
   const [isFirstTime, setIsFirstTime] = React.useState(true);
 
   React.useEffect(() => {
     setExpanded(true);
-  }, [values.tipo]);
+  }, [tipo]);
 
   const onChangeForm = newValues => {
     if (isFirstTime) {
@@ -74,9 +84,22 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
     console.log('domanda onChangeForm ', newValues);
 
     fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(newValues);
-
     fieldProps && fieldProps.onCorrelataFormChange && fieldProps.onCorrelataFormChange(newValues);
     // fieldProps.onSubFormChange(values);
+  };
+
+  const submit = formiklProps => {
+    formiklProps.submitForm();
+    formiklProps.setSubmitting(false);
+  };
+  const onSubmit = (valFormik, actions) => {
+    const out = { ...valFormik, risposte };
+    fieldProps.onSubFormChange(out);
+    domandaSave(out);
+  };
+
+  const changeTipo = (formiklProps, value) => {
+    formiklProps.setFieldValue('tipo', value);
   };
 
   const setOptionsTipoUnico = (replace, val, index) =>
@@ -98,11 +121,13 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
 
   const onSubFormChange = (replace, index) => subValue => {
     if (!values || !subValue || !values.risposte || !values.risposte[index]) return false;
-
+    setIsFirstRender(false);
     const _risposte = values.risposte.map((item, idxRisposte) => (idxRisposte === index ? subValue : item));
     const _value = { ...values, risposte: _risposte };
-    fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(_value);
+    setValues(_value);
 
+    setRisposte(_risposte);
+    fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(_value);
     // replace(index, subValue);
   };
 
@@ -132,10 +157,9 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
     setSubFieldValue(`ratingMax`, numValValid);
   }; */
 
-  const onSetRating = e => {
-    const value = e.target.value;
+  const onSetRating = (formiklProps, value) => {
     const numValue = parseInt(value);
-    setSubFieldValue(`risposte.0.rating`, numValue);
+    formiklProps.setFieldValue(`risposte.0.rating`, numValue);
   };
 
   const onChangeAccordion = () => setExpanded(!expanded);
@@ -195,112 +219,128 @@ const MDomandaForm = ({ name, fieldProps, setFieldValue }) => {
         </Button>
       </Box>
     );
-
+  //    enableReinitialize={true}
   return (
-    <div>
-      <FormikOnChange delay={500} onChange={onChangeForm} />
-
-      <Accordion
-        expanded={expanded}
-        id="accordionRoot"
-        onClick={e => e.stopPropagation()}
-        style={{
-          height: '100%',
-          width: '100&',
-          backgroundColor: 'transparent',
-          position: 'inherit',
-          boxShadow: 'none',
-        }}
-      >
-        <AccordionSummary
-          expandIcon={
-            <IconButton aria-label="expand">
-              <ExpandMoreIcon />
-            </IconButton>
-          }
-          IconButtonProps={{ onClick: onChangeAccordion }}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-          style={{
-            height: '100%',
-            width: '100&',
-            backgroundColor: 'transparent',
-            position: 'inherit',
-            boxShadow: 'none',
-            padding: '0px',
-            marginTop: '-22px',
-          }}
-        >
-          <Card
+    <Formik
+      initialValues={values}
+      onSubmit={onSubmit}
+      children={formiklProps => (
+        <>
+          <Accordion
+            expanded={expanded}
+            id="accordionRoot"
+            onClick={e => e.stopPropagation()}
             style={{
-              marginTop: '18px',
-              marginLeft: '8px',
-              marginRight: '8px',
-              padding: '8px',
               height: '100%',
-              width: '100%',
+              width: '100&',
+              backgroundColor: 'transparent',
+              position: 'inherit',
+              boxShadow: 'none',
             }}
           >
-            <GridChilds view={[8, 2, 2]} style={{ alignItems: 'center' }} width="100%">
-              <Field style={{ width: '100%' }} component={TextField} name="domanda" label="Domanda" />
-
-              <FormControl style={{ width: '100%' }}>
-                <InputLabel>Tipo Domanda</InputLabel>
-                <Field name="tipo" component={Select}>
-                  {TipoQuestion.map(el => (
-                    <MenuItem key={el.id} value={el.id}>
-                      {el.tipo}
-                    </MenuItem>
-                  ))}
-                </Field>
-              </FormControl>
-              {(!fieldProps || !fieldProps.parentValues) && (
-                <GridChilds spacing={1} view={[6, 6]} style={{ alignItems: 'center', marginLeft: '12px' }}>
-                  <Box style={{ marginBottom: '1px' }}>
-                    <Button variant="contained" color="primary" onClick={clonaDomanda} style={{ width: '77px' }}>
-                      <span style={{ fontSize: '11px' }}>Clona</span>
-                    </Button>
-                  </Box>
-
-                  <Box>
-                    <Button onClick={() => fieldProps.arrayManager('delete')}>
-                      <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
-                    </Button>
-                  </Box>
-                </GridChilds>
-              )}
-            </GridChilds>
-            {/* values.tipo === 1 && renderScala() */}
-          </Card>
-        </AccordionSummary>
-        <AccordionDetails style={{ flexDirection: 'column' }}>
-          <>
-            {values.risposte && values.tipo !== TipoQuestionName.titolo && values.tipo !== TipoQuestionName.aperta && (
-              <ToFieldArray
-                name={'risposte'}
-                renderMaxElem={
-                  values.tipo === TipoQuestionName.aperta || values.tipo === TipoQuestionName.scala ? 1 : 0
-                }
-                values={values.risposte && values.risposte[0] ? values.risposte : [{ risposta: '' }]}
-                fieldProps={({ index, arrayHelper }) => {
-                  return {
-                    renderScala,
-                    onChange: onClickOption(arrayHelper.replace, index),
-                    onSubFormChange: onSubFormChange(arrayHelper.replace, index),
-                    arrayManager: arrayManager(arrayHelper, index),
-                    tipo: values.tipo,
-                    isCorrelata: fieldProps && fieldProps.parentValues,
-                  };
+            <AccordionSummary
+              expandIcon={
+                <IconButton aria-label="expand">
+                  <ExpandMoreIcon />
+                </IconButton>
+              }
+              IconButtonProps={{ onClick: onChangeAccordion }}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              style={{
+                height: '100%',
+                width: '100&',
+                backgroundColor: 'transparent',
+                position: 'inherit',
+                boxShadow: 'none',
+                padding: '0px',
+                marginTop: '-22px',
+              }}
+            >
+              <Card
+                style={{
+                  marginTop: '18px',
+                  marginLeft: '8px',
+                  marginRight: '8px',
+                  padding: '8px',
+                  height: '100%',
+                  width: '100%',
                 }}
-                renderFooter={renderAddRisposta}
-                component={RispostaForm}
-              />
-            )}
-          </>
-        </AccordionDetails>
-      </Accordion>
-    </div>
+              >
+                <GridChilds view={[8, 2, 2]} style={{ alignItems: 'center' }} width="100%">
+                  <Field style={{ width: '100%' }} component={TextField} name="domanda" label="Domanda" />
+
+                  <FormControl style={{ width: '100%' }}>
+                    <InputLabel>Tipo Domanda</InputLabel>
+                    <Select value={tipo || 2} onChange={e => changeTipo(formiklProps, e.target.value)}>
+                      {TipoQuestion.map(el => (
+                        <MenuItem key={el.id} value={el.id}>
+                          {el.tipo}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  {(!fieldProps || !fieldProps.parentValues) && (
+                    <GridChilds spacing={1} view={[4, 4, 4]} style={{ alignItems: 'center', marginLeft: '12px' }}>
+                      <Box style={{ marginBottom: '1px' }}>
+                        <Button variant="contained" color="primary" onClick={clonaDomanda} style={{ width: '77px' }}>
+                          <span style={{ fontSize: '11px' }}>Clona</span>
+                        </Button>
+                      </Box>
+                      <Box style={{ marginBottom: '1px' }}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => submit(formiklProps)}
+                          style={{ width: '77px' }}
+                        >
+                          <span style={{ fontSize: '11px' }}>Salva</span>
+                        </Button>
+                      </Box>
+                      <Box>
+                        <Button onClick={() => fieldProps.arrayManager('delete')}>
+                          <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
+                        </Button>
+                      </Box>
+                    </GridChilds>
+                  )}
+                </GridChilds>
+              </Card>
+            </AccordionSummary>
+            <AccordionDetails style={{ flexDirection: 'column' }}>
+              <>
+                {values.risposte && values.tipo !== TipoQuestionName.titolo && values.tipo !== TipoQuestionName.aperta && (
+                  <ToFieldArray
+                    name={'risposte'}
+                    renderMaxElem={
+                      values.tipo === TipoQuestionName.aperta || values.tipo === TipoQuestionName.scala ? 1 : 0
+                    }
+                    fieldProps={({ index, arrayHelper }) => {
+                      return {
+                        renderScala,
+                        onChange: onClickOption(arrayHelper.replace, index),
+                        onSubFormChange: onSubFormChange(arrayHelper.replace, index),
+                        arrayManager: arrayManager(arrayHelper, index),
+                        tipo: formiklProps.values.tipo,
+                        risposta: () => {
+                          const _values =
+                            formiklProps.values.risposte && values.risposte[0] ? values.risposte : [{ risposta: '' }];
+                          return values.risposte[index];
+                        },
+                        isCorrelata: fieldProps && fieldProps.parentValues,
+                      };
+                    }}
+                    renderFooter={renderAddRisposta}
+                    component={RispostaForm}
+                  />
+                )}
+              </>
+            </AccordionDetails>
+          </Accordion>
+        </>
+      )}
+    />
   );
 };
 
-export const DomandaForm = withSubForm(MDomandaForm, nameSchema);
+export const DomandaForm = MDomandaForm;

@@ -6,6 +6,7 @@ import { queryViews, providersView } from './viewProvider';
 import schemas from './schema';
 
 export const moduliProvider = defaultProvider('moduli', '/moduli', schemas.moduli, ['axios', 'moduli']);
+export const moduliProviderSave = defaultProvider('moduliSave', '/moduli', schemas.moduli, ['axios', 'moduli']);
 export const moduloProvider = defaultProvider('modulo', '/moduli', schemas.moduli, ['axios', 'modulo']);
 
 export const questionProvider = defaultProvider('questions', '/questions', schemas.questionSchemas, [
@@ -54,6 +55,7 @@ export const moduliQuery = new Selector(
 const dataApi = {
   userProvider: userProviderFrom,
   moduliProvider,
+  moduliProviderSave,
   moduloProvider,
   questionModuliProvider,
   providersView,

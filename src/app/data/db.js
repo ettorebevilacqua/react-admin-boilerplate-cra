@@ -16,7 +16,6 @@ export const todosFiltered = new Selector(
   todos,
   (queryValue, todosResults) => {
     if (queryValue.completed === null) {
-      console.log('ddd', todosResults);
       return todosResults;
     }
     return todosResults.filter(todo => todo.completed === queryValue.completed);

@@ -18,8 +18,6 @@ import { Helmet } from 'react-helmet-async'; // Import UI Generator
 import MenuCard from './menuCard';
 import Plane from './section/plane';
 import IndaginiMenu from './section/indagini/menuIndagini';
-import IndaginiQuestion from './section/indagini/IndaginiQuestion';
-import Indagine from './section/indagine';
 
 import { ModuliForm, QuestionToForm, GuestQuestionForm, ModuloDomandeForm } from './forms/';
 import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
@@ -63,11 +61,11 @@ export default function UserComp() {
         <Route exact path="/app/user/indaginiMenu" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/moduli/:id" component={() => <ModuloDomandeForm />} />
         <Route exact path="/app/user/moduli" component={() => <ModuliForm />} />
-        <Route exact path="/app/user/indagini_question/:id" component={() => <IndaginiQuestion />} />
+        <Route exact path="/app/user/indagini_question/:id" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/indagini_invio/:idquestion/" component={QuestionToForm} />
         <Route exact path="/app/user/indagini_edit/:id" component={QuestionToForm} />
         <Route exact path="/app/user/indagini/list" component={QuestionList} />
-        <Route exact path="/app/user/indagine" component={() => <Indagine />} />
+        <Route exact path="/app/user/indagine" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/show" component={() => <ShowQuestionUrl />} />
         <Route exact path="/app/user/verifyr" component={() => <MenuCard items={buttonData} />} />
         <Route exact path="/app/user/plane" component={() => <Plane />} />
