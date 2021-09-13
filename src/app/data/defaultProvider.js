@@ -47,6 +47,15 @@ export function defaultProvider(id, url, schemas, tags) {
     list: () => mySelector,
     query: param => idProvider.query(param).read(),
     get: id => idProvider.query({ urlParams: { id } }).read(),
+    reset: () => {
+      myProvider.cleanCache();
+      idProvider.cleanCache();
+    },
+    cleanCache: () => {
+      debugger;
+      myProvider.cleanCache();
+      idProvider.cleanCache();
+    },
     delete: id => idProvider.query({ urlParams: { id } }).delete(),
   };
 }

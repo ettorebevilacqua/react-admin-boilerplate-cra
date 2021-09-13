@@ -16,6 +16,7 @@ const init = store =>
     };
 
     const clearStateAndProvider = () => {
+      debugger;
       clearProvider();
       return initialState;
     };
@@ -57,7 +58,7 @@ const init = store =>
       initialState,
       reducers: {
         clearState: () => initialState,
-        reset: () => clearStateAndProvider(),
+        reset: state => clearStateAndProvider(),
         clearStateAndProvider: () => clearStateAndProvider(),
         clearProvider,
         dataBack: (state, { payload }) => ({ ...initialState, isSuccess: true, data: payload }),
@@ -131,31 +132,35 @@ const init = store =>
         clearState: () => dispatch(clearState()),
         dataBack: data => dispatch(dataBack(data)),
         dataBackParent: parent => dispatch(dataBackParent(parent)),
-        reset: () => dispatch(reset()),
-        load: id => {
+        load: (id, refresh) => {
+          if (refresh) {
+            dispatch(reset());
+          }
           dispatch(readProvider(id));
         },
         save: id => dispatch(saveProvider(id)),
         get: (id, refresh) => {
           if (refresh) {
-            (queryProvider || provider.provider).cleanCache();
-            dispatch(clearState());
+            dispatch(reset());
           }
           dispatch(getProvider(id));
         },
         query: (queryString, refresh) => {
           if (refresh) {
-            (queryProvider || provider.provider).cleanCache();
-            dispatch(clearState());
+            dispatch(reset());
           }
 
           dispatch(gueryProvider(queryString));
         },
-        clearStateAndProvider: () => {
-          dispatch(clearStateAndProvider());
+        reset: () => {
+          debugger;
+          dispatch(reset());
+        },
+        clearStateAndProvider2: () => {
+          dispatch(reset());
         },
         clearProvider: () => {
-          dispatch(clearProvider());
+          dispatch(reset());
         },
       };
 
