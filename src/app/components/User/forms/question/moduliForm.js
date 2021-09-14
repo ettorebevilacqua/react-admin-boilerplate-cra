@@ -64,10 +64,15 @@ export const ModuliFormMakerC = props => {
 
 export const ModuliFormMaker = props => {
   const data = props.data && props.data.results ? props.data.results : [];
+  const [isFirstTime, setIsFirstTime] = React.useState(true);
 
   const storeIdx = toNumberOr(sessionStorage.getItem('moduliForm'), 0);
-  React.useEffect(() => !data && props.actions.reload(), []);
+  // React.useEffect(() => !data && props.actions.reload(), []);
   React.useEffect(() => {
+    if (isFirstTime) {
+      setIsFirstTime(false);
+    }
+
     data &&
       setMenuList([
         { link: '/app/user/moduli', label: 'Moduli' },

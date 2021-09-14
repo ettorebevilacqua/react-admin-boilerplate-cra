@@ -34,8 +34,10 @@ export const GuestQuestionForm = makeContainerRefreshed(
 
 export const ModuliForm = makeContainerRefreshed(ModuliFormMaker, moduliSliceCrud, () => {
   // console.log('xxxxx queryParam', queryParam);
+  debugger;
+  const queryParam = {};
   moduliSliceCrud.actions.reset();
-  moduliSliceCrud.actions.load();
+  moduliSliceCrud.actions.query(queryParam, true);
   console.log();
 });
 

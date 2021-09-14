@@ -27,7 +27,6 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     const loadData = () => loadCallBack && loadCallBack(params, history, location, saved);
 
     React.useEffect(() => {
-      debugger;
       !stateLoad.isSuccess && !stateLoad.isFetching && !stateLoad.isError && !data && loadData();
     }, [data]);
 

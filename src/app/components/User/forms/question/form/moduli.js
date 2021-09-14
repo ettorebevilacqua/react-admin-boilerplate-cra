@@ -22,14 +22,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Moduli({ onEdit, values, command }) {
+export function Moduli({ onEdit, actions, values, command, ...rest }) {
   const history = useHistory();
   const classes = useStyles();
   const [isFirstTime, setIsFirstTime] = React.useState(true);
   const [checked, setChecked] = React.useState([0]);
   const icon = false;
+  console.log(rest);
 
-  React.useEffect(() => isFirstTime && setIsFirstTime(false), [isFirstTime]);
+  React.useEffect(() => {
+    if (isFirstTime) {
+      setIsFirstTime(false);
+    }
+  }, []);
+
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
