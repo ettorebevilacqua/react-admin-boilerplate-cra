@@ -16,7 +16,6 @@ import RadioButtonChecked from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 
 import * as Yup from 'yup';
-import { withSubForm } from '../../lib/formikSub';
 import GridChilds from '../../component/gridChilds';
 import FormikOnChange from '../../lib/FormikOnChange';
 import { TextField, Checkbox, RadioGroup } from 'formik-material-ui';
@@ -37,11 +36,11 @@ const newDomanda = {
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 const ticker = new AdjustingInterval(null, 1000);
 
-const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...props }) => {
+const CompTrueFalse = ({ value, title, compProps, color, onClickOption, ...props }) => {
   const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
   const propComp = {
     color,
-    onClick: onClickOptions,
+    onClick: onClickOption,
     ...compProps,
   };
   return (
@@ -51,9 +50,8 @@ const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...prop
   );
 };
 
-const MRispostaForm = ({ name, fieldProps }) => {
-  const arrayManager = fieldProps.arrayManager;
-  const [tipo, setTipo] = useState(toNumberOr(fieldProps.tipo, 0));
+const MRispostaForm = ({ idxList, tipo, renderScala, onClickOption, arrayManager, isCorrelata, fieldProps, name }) => {
+  tipo = toNumberOr(tipo, 0);
   const [valValue, setValValue] = useState(false);
   const { values, setFieldValue } = useFormikContext();
 
@@ -69,21 +67,7 @@ const MRispostaForm = ({ name, fieldProps }) => {
     // ticker.workFunc = onSave(valueNew);
     // ticker.start();
 
-    !isFirstTime && fieldProps.onSubFormChange && fieldProps.onSubFormChange(values);
-  };
-
-  React.useEffect(() => {
-    setValValue(values.val);
-  }, [values.val]);
-
-  React.useEffect(() => {
-    setTipo(fieldProps.tipo);
-  }, [fieldProps.tipo]);
-
-  const onClickOptions = () => {
-    const newVal = !valValue;
-    setValValue(newVal);
-    fieldProps.onChange && fieldProps.onChange(name, newVal);
+    // !isFirstTime && fieldProps.onSubFormChange && fieldProps.onSubFormChange(values);
   };
 
   const radioTrueFalse = val => (
@@ -95,7 +79,7 @@ const MRispostaForm = ({ name, fieldProps }) => {
             value={val === null || val === undefined ? false : !index ? val : !val}
             title={title}
             color={!index ? 'primary' : 'secondary'}
-            onClickOptions={onClickOptions}
+            onClickOption={onClickOption}
           />
         </div>
       ))}
@@ -115,9 +99,9 @@ const MRispostaForm = ({ name, fieldProps }) => {
   const renderTipoInner = () =>
     tipo === 2 ? (
       valValue ? (
-        <RadioButtonChecked color={valValue ? 'primary' : 'secondary'} onClick={onClickOptions} />
+        <RadioButtonChecked color={valValue ? 'primary' : 'secondary'} onClick={onClickOption} />
       ) : (
-        <RadioButtonUnchecked color="secondary" onClick={onClickOptions} />
+        <RadioButtonUnchecked color="secondary" onClick={onClickOption} />
       )
     ) : tipo === 3 ? (
       <Field component={Checkbox} name="val" type="checkbox" />
@@ -144,14 +128,14 @@ const MRispostaForm = ({ name, fieldProps }) => {
         </Box>
       </Box>
       <Box style={{ width: '100%' }}>
-        {!values.correlata && !fieldProps.isCorrelata && (
+        {!values.correlata && !isCorrelata && (
           <Button variant="contained" color="primary" onClick={addCorrelata}>
             <span style={{ fontSize: '11px' }}>Add</span>
           </Button>
         )}
       </Box>
       <Box>
-        {!(fieldProps.index === 0) && (
+        {!(idxList === 0) && (
           <DeleteIcon style={{ fontSize: '36px' }} color="secondary" onClick={() => arrayManager('delete')} />
         )}
       </Box>
@@ -184,16 +168,16 @@ const MRispostaForm = ({ name, fieldProps }) => {
         <FormikOnChange delay={500} onChange={onChangeForm} />
         {tipo === 1 ? (
           <GridChilds key="gg01" style={{ alignItems: 'center' }} view={[8, 4]}>
-            {fieldProps.renderScala()}
+            {renderScala()}
             {renderButtonRisposta()}
           </GridChilds>
         ) : (
           <GridChilds justify="space-between" alignItems="center" spacing={2} key="ss0" view={[8, 4]}>
             <div>
-              <Field component={TextField} fullWidth name={`risposta`} label="Risposta" />
+              <Field component={TextField} fullWidth name={`risposte.${idxList}.risposta`} label="Risposta" />
             </div>
 
-            <div style={{ marginLeft: '8px' }}>{renderTipo()}</div>
+            {tipo !== 5 && <div style={{ marginLeft: '8px' }}>{renderTipo()}</div>}
           </GridChilds>
         )}
         {values.correlata && (
@@ -226,4 +210,9 @@ const MRispostaForm = ({ name, fieldProps }) => {
   );
 };
 
-export const RispostaForm = withSubForm(MRispostaForm, nameSchema);
+export const RispostaForm = MRispostaForm;
+
+/*
+
+
+*/

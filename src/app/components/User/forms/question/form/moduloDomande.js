@@ -40,7 +40,9 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
   const [title, setTitle] = React.useState(null);
   const [currentId, setCurrentId] = React.useState(initialValues.id);
   const [isFirstRender, setIsFirstRender] = React.useState(true);
+  const location = useLocation();
 
+  const idStartValue = toNumberOr(idStart, 0) === 0 ? false : idStart;
   // React.useEffect(() => actions.reload(), []);
 
   const onSave = valFrom => {
@@ -51,21 +53,24 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
     // if (valNewTxt === valueTxt) return false;
     ticker.stop();
     valueNew.title = title ? title : initialValues.title;
-    valueNew.id = initialValues.id ? initialValues.id : sessionStorage.getItem('currentModuloId');
+    /* if (idStartValue) {
+      !!valueNew.id = initialValues.id ? initialValues.id : idStart;
+    } */
+
     saveData(valueNew).then(res => {
       const idnew = res && res.payload && res.payload.id;
+      if (!res || !res.payload) return false;
       if (valueNew.id !== idnew) {
         // window.history.pushState('', 'Modulo', '/app/user/moduli/' + idnew);
         // history.push('/app/user/moduli/' + idnew);
       }
+
       const toStore = { ...valueNew, id: initialValues.id ? initialValues.id : idnew };
       setCurrentId(idnew);
-      if (idnew) {
-        sessionStorage.setItem('currentModuloId', idnew);
-      }
-      // setValueTmp(toStore);
-      // setValue(toStore);
-
+      setValueTmp(toStore);
+      setValue(toStore);
+      window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
+      // history.push(`/app/user/moduli/'${idnew}`);
       console.log('main change', toStore);
     });
 
@@ -265,22 +270,28 @@ export const Domande = ({ data, queryValue, actions, formProp: { selectData }, s
   // const questionModulo = location.state && location.state.data;
   // moduliSliceCrud.actions.reset();
   React.useEffect(() => {
-    data && data.id !== id && toNumberOr(id, -1) !== 0 && actions.reset();
-    if (data && toNumberOr(id, -1) !== 0 && data.id !== id && data.id !== null) {
-      // actions.reload();
-    }
-    console.log('loc', data);
+    // console.log('loc', data);
     // !data && id && actions.get(id, true);
   }, []);
   React.useEffect(() => {
-    data &&
+    if (data) {
+      sessionStorage.removeItem('currentModuloId');
+
+      /*  data && data.id !== id && toNumberOr(id, -1) !== 0 && actions.reset();
+      if (data && toNumberOr(id, -1) !== 0 && data.id !== id && data.id !== null) {
+
+        // actions.reload();
+      }   */
+      console.log('loc', data);
+
       setMenuList([
         { link: '/app/user/moduli', label: 'Moduli' },
         { link: '/app/user/moduli/' + id, label: 'Domande' },
         // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
       ]);
+    }
   }, [data]);
-  sessionStorage.removeItem('currentModuloId');
+
   return (
     <DomandeC
       startValues={{ ...dataParam }}

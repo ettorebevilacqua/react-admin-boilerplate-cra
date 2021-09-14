@@ -1,7 +1,7 @@
 // FIXME: Form Exmaples
 import React from 'react';
 
-import { Formik, Field } from 'formik';
+import { Formik, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
@@ -22,9 +22,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Box, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 
 import GridChilds from '../../component/gridChilds';
-import { ToFieldArray } from '../../lib/formikWithField';
 import { newDomanda } from 'app/services/question/moduliModel';
 import { RispostaForm } from './risposta';
+import FormikOnChange from '../../lib/FormikOnChange';
 
 // util Function for
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
@@ -58,13 +58,30 @@ const TipoQuestion = [
 
 const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaSave }) => {
   // useValues(name, props)
-  const domandaVal = initialValues || newDomanda;
-  const startValue = { ...domandaVal, tipo: domandaVal.tipo || 0, risposte: domandaVal.risposte || [] };
-  const [values, setValues] = React.useState(startValue);
-  const [tipo, setTipo] = React.useState(values && values.tipo);
-  const [risposte, setRisposte] = React.useState(domandaVal.risposte);
-  const [isFirstRender, setIsFirstRender] = React.useState(true);
 
+  const domandaVal = initialValues || newDomanda;
+  const startValue = {
+    ...domandaVal,
+    tipo: domandaVal.tipo || 0,
+    risposte: domandaVal.risposte || [],
+    ratingMax: domandaVal.ratingMax || 2,
+  };
+  const [values, setValues] = React.useState(startValue);
+
+  const [tipo, setTipo] = React.useState(values && values.tipo);
+  const [isFirstRender, setIsFirstRender] = React.useState(true);
+  const [risposte, setRisposte] = React.useState(values && values.risposte);
+  const [ratingStore, setRatingStore] = React.useState({
+    ratingMax: domandaVal.ratingMax || 2,
+    ratingEnd: domandaVal.ratingEnd,
+    ratingStart: domandaVal.ratingEnd,
+  });
+
+  const getRatingStore = newValue => ({
+    ratingMax: newValue.ratingMax || 2,
+    ratingEnd: newValue.ratingEnd,
+    ratingStart: newValue.ratingStart,
+  });
   // const { values, setFieldValue: setSubFieldValue } = useFormikContext();
 
   const [expanded, setExpanded] = React.useState(
@@ -77,12 +94,22 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     setExpanded(true);
   }, [tipo]);
 
+  const onChangeRatingMax = formiklProps => e => {
+    const value = e.target.value;
+    const numValue = parseInt(value);
+    const numValValid = numValue < 2 ? 2 : numValue;
+    e.target.value = numValValid;
+
+    // formiklProps.setFieldValue(`ratingMax`, numValValid);
+  };
+
   const onChangeForm = newValues => {
     if (isFirstTime) {
       return setIsFirstTime(false);
     }
     console.log('domanda onChangeForm ', newValues);
-
+    setRatingStore(getRatingStore(newValues));
+    setRisposte(newValues.risposte);
     fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(newValues);
     fieldProps && fieldProps.onCorrelataFormChange && fieldProps.onCorrelataFormChange(newValues);
     // fieldProps.onSubFormChange(values);
@@ -99,12 +126,13 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
   };
 
   const changeTipo = (formiklProps, value) => {
+    setTipo(value);
     formiklProps.setFieldValue('tipo', value);
   };
 
   const setOptionsTipoUnico = (replace, val, index) =>
     setFieldValue(
-      name + '.risposte',
+      'risposte',
       values.risposte.map((ris, iRis) => {
         const risNes = { ...ris };
         risNes.val = iRis === index ? val : false;
@@ -113,22 +141,10 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     );
 
   const onClickOption = (replace, index) => (field, val) => {
-    values.tipo === TipoQuestionName.unica
+    tipo === TipoQuestionName.unica
       ? setOptionsTipoUnico(replace, val, index)
       : replace(index, { ...values.risposte[index], val });
-    setFieldValue(name + '._tmp', index);
-  };
-
-  const onSubFormChange = (replace, index) => subValue => {
-    if (!values || !subValue || !values.risposte || !values.risposte[index]) return false;
-    setIsFirstRender(false);
-    const _risposte = values.risposte.map((item, idxRisposte) => (idxRisposte === index ? subValue : item));
-    const _value = { ...values, risposte: _risposte };
-    setValues(_value);
-
-    setRisposte(_risposte);
-    fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(_value);
-    // replace(index, subValue);
+    setFieldValue(`risposte.${index}._tmp`, index);
   };
 
   const moveRisposta = (op, arrayHelper, index) => {
@@ -140,6 +156,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
   const clonaDomanda = () => fieldProps.arrayManager('clone', values);
 
   const arrayManager = (arrayHelper, index) => op => {
+    debugger;
     return op === 'delete'
       ? index === 0
         ? arrayHelper.replace(index, {})
@@ -148,14 +165,6 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
       ? moveRisposta(op, arrayHelper, index)
       : () => 1;
   };
-
-  /* const onChangeRatingMax = e => {
-    const value = e.target.value;
-    const numValue = parseInt(value);
-    const numValValid = numValue < 2 ? 2 : numValue;
-    e.target.value = numValValid;
-    setSubFieldValue(`ratingMax`, numValValid);
-  }; */
 
   const onSetRating = (formiklProps, value) => {
     const numValue = parseInt(value);
@@ -166,10 +175,10 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
   const getRatingVals = key =>
     values && values.risposte && values.risposte[0] && values.risposte[0][key] && values.risposte[0][key];
 
-  const renderScala = () => (
+  const renderScala = formiklProps => () => (
     <Box component="fieldset" mb={3} borderColor="transparent">
       <GridChilds view={[12]}>
-        {values.tipo === TipoQuestionName.scala && (
+        {tipo === TipoQuestionName.scala && (
           <GridChilds view={[5, 5, 2]}>
             <Field component={TextField} name="ratingStart" label="Descrizione Minimo" />
             <Field component={TextField} name="ratingEnd" label="Descrizione Massimo" />
@@ -188,33 +197,40 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
           marginTop: '16px',
         }}
       >
-        <Typography variant="subtitle2">{getRatingVals('ratingStart') || ''}</Typography>
+        <Typography variant="subtitle2">{ratingStore.ratingStart || ''}</Typography>
         <span> </span>
         <Box style={{ marginLeft: '16px', marginRight: '16px' }}>
           <Rating
             name="rating"
-            max={toNumberOr(getRatingVals('ratingMax'), 2)}
+            max={toNumberOr(ratingStore.ratingMax, 2)}
             value={toNumberOr(getRatingVals('rating'), 0)}
             onChange={event => {
-              onSetRating(event);
+              onSetRating(formiklProps, event.target.value);
             }}
           />
         </Box>
         <span> </span>
-        <Typography variant="subtitle2">{getRatingVals('ratingEnd') || ''}</Typography>
+        <Typography variant="subtitle2">{ratingStore.ratingEnd || ''}</Typography>
       </Grid>
     </Box>
   );
 
-  const renderAddRisposta = ({ arrayHelper }) =>
-    values.tipo !== TipoQuestionName.aperta &&
-    values.tipo !== TipoQuestionName.scala && (
+  const renderAddRisposta = arrayHelper =>
+    tipo !== TipoQuestionName.aperta &&
+    tipo !== TipoQuestionName.scala && (
       <Box
         style={{ width: '100%', margin: '16px', marginLeft: '60px' }}
         alignContent="flex-end"
         justifyContent="flex-end"
       >
-        <Button variant="contained" color="primary" onClick={() => arrayHelper.push({ risposta: '', val: null })}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            debugger;
+            arrayHelper.push({ risposta: '', val: null });
+          }}
+        >
           <span style={{ fontSize: '11px' }}>Nuova Risposta</span>
         </Button>
       </Box>
@@ -226,6 +242,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
       onSubmit={onSubmit}
       children={formiklProps => (
         <>
+          <FormikOnChange delay={500} onChange={onChangeForm} />
           <Accordion
             expanded={expanded}
             id="accordionRoot"
@@ -309,6 +326,49 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column' }}>
               <>
+                {risposte && (
+                  <FieldArray
+                    name="risposte"
+                    render={arrayHelper => (
+                      <>
+                        {risposte
+                          .filter((elRisp, idxFilt) =>
+                            (tipo === TipoQuestionName.aperta || tipo === TipoQuestionName.scala) && idxFilt > 0
+                              ? false
+                              : true,
+                          )
+                          .map((elem, index) => (
+                            <RispostaForm
+                              name={`risposte.${index}`}
+                              onClickOption={onClickOption}
+                              key={index}
+                              idxList={index}
+                              tipo={tipo}
+                              numStelle={ratingStore}
+                              renderScala={renderScala(formiklProps)}
+                              arrayManager={arrayManager(arrayHelper, index)}
+                            />
+                          ))}
+                        {renderAddRisposta(arrayHelper)}
+                      </>
+                    )}
+                  />
+                )}
+              </>
+            </AccordionDetails>
+          </Accordion>
+        </>
+      )}
+    />
+  );
+};
+
+export const DomandaForm = MDomandaForm;
+
+/*
+
+ <AccordionDetails style={{ flexDirection: 'column' }}>
+              <>
                 {values.risposte && values.tipo !== TipoQuestionName.titolo && values.tipo !== TipoQuestionName.aperta && (
                   <ToFieldArray
                     name={'risposte'}
@@ -336,11 +396,4 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
                 )}
               </>
             </AccordionDetails>
-          </Accordion>
-        </>
-      )}
-    />
-  );
-};
-
-export const DomandaForm = MDomandaForm;
+*/
