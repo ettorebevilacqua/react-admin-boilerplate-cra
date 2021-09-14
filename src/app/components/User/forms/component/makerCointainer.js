@@ -27,12 +27,13 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     const loadData = () => loadCallBack && loadCallBack(params, history, location, saved);
 
     React.useEffect(() => {
+      debugger;
       !stateLoad.isSuccess && !stateLoad.isFetching && !stateLoad.isError && !data && loadData();
     }, [data]);
 
     React.useEffect(() => {
-      // !!saved && saved.isSuccess && !stateLoad.isFetching && !stateLoad.isError && loadData();
-    }, [saved]);
+      !stateLoad.isFetching && loadData();
+    }, []);
 
     const onSubmit = async (values, { setSubmitting, setStatus, resetForm }) => {
       const [saved] = actions && actions.save ? await handlePromise(actions.save(values)) : [];
@@ -117,6 +118,5 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
 }
 
 export function makeContainerRefreshed(Component, sliceProvider, loadCallBack) {
-  sliceProvider.actions.reset();
   return makeContainer(Component, sliceProvider, loadCallBack, sliceProvider.initialState);
 }

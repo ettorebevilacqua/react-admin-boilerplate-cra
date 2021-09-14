@@ -9,19 +9,26 @@ import store from 'store/configureStore';
 
 const init = store =>
   function createCrudSlice(options) {
+    const storeProv = {
+      query: null,
+    };
     const { name, provider, queryProvider, actionsSlice } = options;
     const clearProvider = () => {
+      storeProv && storeProv.query && storeProv.query.cleanCache();
+      /*  provider && provider.cleanCache && provider.cleanCache();
+      queryProvider && queryProvider.cleanCache && queryProvider.cleanCache();
       provider && provider?.provider?.cleanCache();
-      gueryProvider && gueryProvider?.provider?.cleanCache();
+      queryProvider && queryProvider?.provider?.cleanCache();
+      */
     };
 
     const clearStateAndProvider = () => {
-      debugger;
       clearProvider();
       return initialState;
     };
 
     const readProvider = createAsyncThunk(name + '/all', async (payload, thunkAPI) => {
+      storeProv.query = (queryProvider || provider).query({ queryString: payload });
       const [data, error] = await handlePromise(provider.list().read());
       return error ? thunkAPI.rejectWithValue(error.data) : { ...data };
     });
@@ -47,7 +54,9 @@ const init = store =>
     });
 
     const gueryProvider = createAsyncThunk(name + '/query', async (payload, thunkAPI) => {
-      const [data, error] = await handlePromise((queryProvider || provider).query({ queryString: payload }).read());
+      storeProv.query = (queryProvider || provider).query({ queryString: payload });
+
+      const [data, error] = await handlePromise(storeProv.query.read());
       return error ? thunkAPI.rejectWithValue(error.data) : data;
     });
 
@@ -153,8 +162,7 @@ const init = store =>
           dispatch(gueryProvider(queryString));
         },
         reset: () => {
-          debugger;
-          dispatch(reset());
+          dispatch && dispatch(reset());
         },
         clearStateAndProvider2: () => {
           dispatch(reset());
