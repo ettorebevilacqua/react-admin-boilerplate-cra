@@ -14,6 +14,7 @@ import { setMenuList } from 'app/slice/layoutSlice';
 
 import { empityModulo, newDomanda } from 'app/services/question/moduliModel';
 import { AdjustingInterval } from 'app/services/helper';
+import { elemStyle } from '../../stylesElement';
 
 // import { moduliSliceCrud } from 'app/slice';
 
@@ -32,6 +33,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
   }
   const initialValues = { ...initialValuesTmp, domande: initialValuesTmp.domande.filter(dom => !!dom) };
   const history = useHistory();
+  const classes = elemStyle();
   const param = useParams();
   const idStart = param.id;
 
@@ -195,8 +197,8 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
   };
 
   return (
-    <>
-      <GridChilds view={[8, 4]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
+    <div className={classes.root}>
+      <GridChilds view={[9, 3]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>
         <TextField
           fullWidth
           name="title"
@@ -204,7 +206,6 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
           label="Start descrizione"
           onChange={e => changeTitle(e.target.value)}
         />
-        <h3>Moduli</h3>
         {1 === 1 && (
           <Button
             variant="contained"
@@ -265,7 +266,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
         </Button>
       )}
       <Divider style={{ marginTop: '22px' }} />
-    </>
+    </div>
   );
 };
 

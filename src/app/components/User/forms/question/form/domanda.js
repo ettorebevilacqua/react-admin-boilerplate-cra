@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Formik, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
-import Card from '@material-ui/core/Card';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -304,17 +304,16 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
                 marginTop: '-22px',
               }}
             >
-              <Card
+              <Paper
                 style={{
-                  marginTop: '18px',
-                  marginLeft: '8px',
-                  marginRight: '8px',
+                  marginTop: '1px',
+                  marginLeft: '5%',
                   padding: '8px',
-                  height: '100%',
-                  width: '100%',
+                  paddingBotton: '18px',
+                  width: '95%',
                 }}
               >
-                <GridChilds view={[8, 2, 2]} style={{ alignItems: 'center' }} width="100%">
+                <GridChilds view={[6, 2, 4]} style={{ alignItems: 'center' }} width="100%">
                   <Field style={{ width: '100%' }} component={TextField} name="domanda" label="Domanda" />
 
                   <FormControl style={{ width: '100%' }}>
@@ -327,32 +326,35 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
                       ))}
                     </Select>
                   </FormControl>
-                  {(!fieldProps || !fieldProps.parentValues) && (
-                    <GridChilds spacing={1} view={[4, 4, 4]} style={{ alignItems: 'center', marginLeft: '12px' }}>
+                  <GridChilds spacing={1} view={[4, 4, 4]} style={{ alignItems: 'center', marginLeft: '12px' }}>
+                    {!(fieldProps && fieldProps.parentValues) ? (
                       <Box style={{ marginBottom: '1px' }}>
                         <Button variant="contained" color="primary" onClick={clonaDomanda} style={{ width: '77px' }}>
                           <span style={{ fontSize: '11px' }}>Clona</span>
                         </Button>
                       </Box>
-                      <Box style={{ marginBottom: '1px' }}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => submit(formiklProps)}
-                          style={{ width: '77px' }}
-                        >
-                          <span style={{ fontSize: '11px' }}>Salva</span>
-                        </Button>
-                      </Box>
-                      <Box>
-                        <Button onClick={() => fieldProps.arrayManager('delete')}>
-                          <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
-                        </Button>
-                      </Box>
-                    </GridChilds>
-                  )}
+                    ) : (
+                      <span> </span>
+                    )}
+
+                    <Box style={{ marginBottom: '1px' }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => submit(formiklProps)}
+                        style={{ width: '77px' }}
+                      >
+                        <span style={{ fontSize: '11px' }}>Salva</span>
+                      </Button>
+                    </Box>
+                    <Box>
+                      <Button onClick={() => fieldProps.arrayManager('delete')}>
+                        <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
+                      </Button>
+                    </Box>
+                  </GridChilds>
                 </GridChilds>
-              </Card>
+              </Paper>
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column' }}>
               <>
