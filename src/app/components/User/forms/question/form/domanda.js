@@ -56,6 +56,8 @@ const TipoQuestion = [
   { id: 6, tipo: 'Titolo' },
 ];
 
+const resize = (arr, newSize, defaultValue) => [...arr, ...Array(Math.max(newSize - arr.length, 0)).fill(defaultValue)];
+
 const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaSave }) => {
   // useValues(name, props)
 
@@ -71,6 +73,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
   const [tipo, setTipo] = React.useState(values && values.tipo);
   const [isFirstRender, setIsFirstRender] = React.useState(true);
   const [risposte, setRisposte] = React.useState(values && values.risposte);
+  const [valChange, setValChange] = React.useState(true);
   const [ratingStore, setRatingStore] = React.useState({
     ratingMax: domandaVal.ratingMax || 2,
     ratingEnd: domandaVal.ratingEnd,
@@ -140,11 +143,39 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
       }),
     );
 
-  const onClickOption = (replace, index) => (field, val) => {
+  /* const onClickOption = (replace, index) => (field, val) => {
     tipo === TipoQuestionName.unica
       ? setOptionsTipoUnico(replace, val, index)
       : replace(index, { ...values.risposte[index], val });
-    setFieldValue(`risposte.${index}._tmp`, index);
+    setFieldValue(`risposte.${index}.val`, val);
+  }; */
+
+  const getCorrelata = idx => {
+    if ([5, 6].indexOf(tipo) > -1) return null;
+    const _risposta = risposte[idx];
+    return _risposta && _risposta.correlata ? _risposta.correlata : null;
+  };
+
+  const onClickOption = (formiklProps, idxRisposta) => () => {
+    // console.log('click risposta', idxRisposta);
+    const valBefore = risposte[idxRisposta].val;
+    const isBool = [2, 3, 4].indexOf(tipo) > -1;
+    const valBoolTmp = isBool ? !valBefore : valBefore;
+    const correlata = getCorrelata(idxRisposta);
+
+    const valBool = correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
+    const _risposteResizedTmp = risposte.length - 1 < idxRisposta ? resize([], idxRisposta + 1, null) : [...risposte];
+    const _risposte = _risposteResizedTmp.map((el, idx) => ({ ...el, val: tipo === 2 ? null : el.val }));
+    // const resizeIf = val => (val ? resize([], idxRisposta + 1, null) : _risposte[idxRisposta]);
+    // const _rispostaOptionTmp = tipo === 2  ? valBoolTmp : resizeIf(_risposte.length - 1 < idxRisposta);
+    _risposte[idxRisposta].val = tipo === 2 ? valBool : valBool; // { ..._risposte[idxRisposta], val: tipo === 2 ? !valBool : !valBool };
+    setRisposte(_risposte);
+    // formiklProps.setFieldValue(`risposte.${idxRisposta}.val`, valBool);
+    formiklProps.setFieldValue(`risposte`, _risposte);
+    setValChange(false);
+    setTimeout(() => setValChange(true), 20);
+    // replace(`risposte.${idxRisposta}.rating`, { ..._risposte[idxRisposta] });
+    // return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
 
   const moveRisposta = (op, arrayHelper, index) => {
@@ -172,8 +203,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
   };
 
   const onChangeAccordion = () => setExpanded(!expanded);
-  const getRatingVals = key =>
-    values && values.risposte && values.risposte[0] && values.risposte[0][key] && values.risposte[0][key];
+  const getRatingVals = key => risposte && risposte[0] && risposte[0].rating;
 
   const renderScala = formiklProps => () => (
     <Box component="fieldset" mb={3} borderColor="transparent">
@@ -326,23 +356,22 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column' }}>
               <>
-                {risposte && (
+                {risposte && tipo !== TipoQuestionName.titolo && tipo !== TipoQuestionName.aperta && (
                   <FieldArray
                     name="risposte"
                     render={arrayHelper => (
                       <>
                         {risposte
-                          .filter((elRisp, idxFilt) =>
-                            (tipo === TipoQuestionName.aperta || tipo === TipoQuestionName.scala) && idxFilt > 0
-                              ? false
-                              : true,
-                          )
+                          .filter((elRisp, idxFilt) => (tipo === TipoQuestionName.scala && idxFilt > 0 ? false : true))
                           .map((elem, index) => (
                             <RispostaForm
                               name={`risposte.${index}`}
-                              onClickOption={onClickOption}
+                              risposte={risposte}
+                              valChange={valChange}
+                              onClickOption={onClickOption(formiklProps, index)}
                               key={index}
                               idxList={index}
+                              valRisposta={risposte[index]}
                               tipo={tipo}
                               numStelle={ratingStore}
                               renderScala={renderScala(formiklProps)}

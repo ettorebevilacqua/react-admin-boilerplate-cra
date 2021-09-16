@@ -128,11 +128,20 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
     }
   };
 
+  const onCloneDomanda = val => {
+    const _value = { ...valueTmp };
+    const _domande = _value.domande.map(dom => dom);
+    _domande.push(val);
+    const valueT = { ..._value, domande: _domande };
+    setValueTmp(valueT);
+    onChangeForm(valueT, true);
+  };
+
   const arrayManager = (arrayHelper, index) => (op, val) => {
     return op === 'delete'
       ? onDeleteDomanda(arrayHelper, index)
       : op === 'clone'
-      ? arrayHelper.push(val)
+      ? onCloneDomanda(val)
       : op === 'add'
       ? arrayHelper.push(newDomanda)
       : () => 1;

@@ -50,14 +50,30 @@ const CompTrueFalse = ({ value, title, compProps, color, onClickOption, ...props
   );
 };
 
-const MRispostaForm = ({ idxList, tipo, renderScala, onClickOption, arrayManager, isCorrelata, fieldProps, name }) => {
+const MRispostaForm = ({
+  idxList,
+  tipo,
+  risposte,
+  valRisposta,
+  renderScala,
+  onClickOption,
+  arrayManager,
+  isCorrelata,
+  fieldProps,
+  name,
+}) => {
   tipo = toNumberOr(tipo, 0);
-  const [valValue, setValValue] = useState(false);
-  const { values, setFieldValue } = useFormikContext();
 
+  const [values, setValues] = useState(risposte[idxList]);
+  const [valValue, setValValue] = useState(true);
+  const { values: valueCtx, setFieldValue } = useFormikContext();
+
+  React.useEffect(() => setValues(risposte), [risposte]);
   const onSave = newVal => () => {
     fieldProps.onSubFormChange && fieldProps.onSubFormChange(newVal);
   };
+  // console.log('valRisposta', values);
+  // console.log('valRisposta valueCtx ', valueCtx);
 
   const onChangeForm = (valueNew, isFirstTime) => {
     const valNewTxt = JSON.stringify(valueNew);
@@ -70,16 +86,22 @@ const MRispostaForm = ({ idxList, tipo, renderScala, onClickOption, arrayManager
     // !isFirstTime && fieldProps.onSubFormChange && fieldProps.onSubFormChange(values);
   };
 
+  const onClickOptionInternal = () => {
+    const newVal = !valValue;
+    // setValValue(newVal);
+    onClickOption();
+  };
+
   const radioTrueFalse = val => (
     <>
       {['Vero', 'Falso'].map((title, index) => (
         <div key={index}>
           <CompTrueFalse
             key={index}
-            value={val === null || val === undefined ? false : !index ? val : !val}
+            value={val === null || val === undefined ? false : index === 0 ? val : !val}
             title={title}
             color={!index ? 'primary' : 'secondary'}
-            onClickOption={onClickOption}
+            onClickOption={onClickOptionInternal}
           />
         </div>
       ))}
@@ -98,18 +120,18 @@ const MRispostaForm = ({ idxList, tipo, renderScala, onClickOption, arrayManager
 
   const renderTipoInner = () =>
     tipo === 2 ? (
-      valValue ? (
-        <RadioButtonChecked color={valValue ? 'primary' : 'secondary'} onClick={onClickOption} />
+      valRisposta.val ? (
+        <RadioButtonChecked color={valRisposta.val ? 'primary' : 'secondary'} onClick={onClickOptionInternal} />
       ) : (
-        <RadioButtonUnchecked color="secondary" onClick={onClickOption} />
+        <RadioButtonUnchecked color="secondary" onClick={onClickOptionInternal} />
       )
     ) : tipo === 3 ? (
-      <Field component={Checkbox} name="val" type="checkbox" />
+      <Field component={Checkbox} indeterminate={false} name={`risposte.${idxList}.val`} type="checkbox" />
     ) : tipo === 1 ? (
       <Box component="fieldset" mb={3} borderColor="transparent"></Box>
     ) : tipo === 4 ? (
       <Field component={RadioGroup} aria-label="gender" name="gender1">
-        {radioTrueFalse(valValue, [true, false])}
+        {radioTrueFalse(valRisposta.val, [true, false])}
       </Field>
     ) : tipo === 5 || tipo === 6 ? (
       <span></span>
