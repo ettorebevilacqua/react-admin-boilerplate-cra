@@ -80,6 +80,11 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     ratingStart: domandaVal.ratingEnd,
   });
 
+  if (fieldProps.parentValues) {
+    debugger;
+    console.log('id child', values);
+  }
+
   const getRatingStore = newValue => ({
     ratingMax: newValue.ratingMax || 2,
     ratingEnd: newValue.ratingEnd,
@@ -124,8 +129,9 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
   };
   const onSubmit = (valFormik, actions) => {
     const out = { ...valFormik, risposte };
-    fieldProps.onSubFormChange(out);
-    domandaSave(out);
+    fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(out);
+    fieldProps && fieldProps.onCorrelataFormChange && fieldProps.onCorrelataFormChange(out);
+    (!fieldProps || !fieldProps.onCorrelataFormChange) && domandaSave(out);
   };
 
   const changeTipo = (formiklProps, value) => {
@@ -347,7 +353,9 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
                       </Button>
                     </Box>
                     <Box>
-                      <Button onClick={() => fieldProps.arrayManager('delete')}>
+                      <Button
+                        onClick={() => fieldProps && fieldProps.arrayManager && fieldProps.arrayManager('delete')}
+                      >
                         <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
                       </Button>
                     </Box>

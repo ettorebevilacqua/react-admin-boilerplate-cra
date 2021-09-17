@@ -109,7 +109,9 @@ const MRispostaForm = ({
   );
 
   const addCorrelata = () => {
-    setFieldValue(`risposte.${idxList}.correlata`, newDomanda);
+    !valRisposta.correlata
+      ? setFieldValue(`risposte.${idxList}.correlata`, newDomanda)
+      : setFieldValue(`risposte.${idxList}.correlata`, false);
     //  fieldProps.onSubFormChange({ ...values, correlata: newDomanda });
   };
 
@@ -140,7 +142,13 @@ const MRispostaForm = ({
     );
 
   const renderButtonRisposta = () => (
-    <GridChilds key="1aag" justify="space-between" alignItems="center" spacing={2} view={[2, 4, 1, 1, 1]}>
+    <GridChilds key="1aag" justify="space-between" alignItems="center" spacing={2} view={[8, 2, 2]}>
+      <Box>
+        <Button style={{ width: '100px' }} variant="contained" color="primary" onClick={addCorrelata}>
+          <span style={{ fontSize: '11px' }}>{valRisposta && valRisposta.correlata ? 'Rimuovi' : 'Correlata'}</span>
+        </Button>
+      </Box>
+
       <Box style={{ float: 'left', marginRight: '6px' }}>
         <Box style={{ float: 'left' }}>
           <ArrowUpward color="primary" onClick={() => arrayManager('moveup')} />
@@ -149,20 +157,12 @@ const MRispostaForm = ({
           <ArrowDownward color="primary" onClick={() => arrayManager('movedown')} />
         </Box>
       </Box>
-      <Box style={{ width: '100%' }}>
-        {!valRisposta.correlata && (
-          <Button variant="contained" color="primary" onClick={addCorrelata}>
-            <span style={{ fontSize: '11px' }}>Add</span>
-          </Button>
-        )}
-      </Box>
+
       <Box>
         {!(idxList === 0) && (
           <DeleteIcon style={{ fontSize: '36px' }} color="secondary" onClick={() => arrayManager('delete')} />
         )}
       </Box>
-
-      <span> </span>
     </GridChilds>
   );
 
@@ -204,10 +204,8 @@ const MRispostaForm = ({
         )}
         {valRisposta.correlata && (
           <GridChilds key="ss04" style={{ alignItems: 'center' }} view={[11, 1]}>
-            <Field
-              component={DomandaForm}
-              name="correlata"
-              label="Correlata"
+            <DomandaForm
+              initialValues={valRisposta.correlata}
               fieldProps={{
                 onCorrelataFormChange: onCorrelataFormChange,
                 expanded: true,
@@ -222,7 +220,7 @@ const MRispostaForm = ({
               color="secondary"
               onClick={() => {
                 setFieldValue('correlata', false);
-                fieldProps.onSubFormChange({ ...values, correlata: false });
+                fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange({ ...values, correlata: false });
               }}
             />
           </GridChilds>
