@@ -172,8 +172,6 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     setRisposte(_risposte);
     // formiklProps.setFieldValue(`risposte.${idxRisposta}.val`, valBool);
     formiklProps.setFieldValue(`risposte`, _risposte);
-    setValChange(false);
-    setTimeout(() => setValChange(true), 20);
     // replace(`risposte.${idxRisposta}.rating`, { ..._risposte[idxRisposta] });
     // return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
@@ -313,7 +311,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
                   width: '95%',
                 }}
               >
-                <GridChilds view={[6, 2, 4]} style={{ alignItems: 'center' }} width="100%">
+                <GridChilds view={[6, 3, 3]} style={{ alignItems: 'center' }} width="100%">
                   <Field style={{ width: '100%' }} component={TextField} name="domanda" label="Domanda" />
 
                   <FormControl style={{ width: '100%' }}>
@@ -343,6 +341,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
                         color="primary"
                         onClick={() => submit(formiklProps)}
                         style={{ width: '77px' }}
+                        disabled={!formiklProps.dirty}
                       >
                         <span style={{ fontSize: '11px' }}>Salva</span>
                       </Button>

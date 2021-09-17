@@ -49,7 +49,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
 
   const onSave = valFrom => {
     const valueNew = valFrom ? { ...valFrom } : { ...valueTmp };
-    if (isFirstTime) return setIsFirstTime(false);
+    // if (isFirstTime) return setIsFirstTime(false);
     // const valNewTxt = JSON.stringify(valueNew);
     // const valueTxt = JSON.stringify(oldValue);
     // if (valNewTxt === valueTxt) return false;
@@ -126,7 +126,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
       _domande.splice(index, 1);
       const valueT = { ..._value, domande: _domande };
       setValueTmp(valueT);
-      onChangeForm(valueT, true);
+      onChangeForm(valueT, true, true);
     }
   };
 

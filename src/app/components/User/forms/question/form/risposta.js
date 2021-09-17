@@ -109,12 +109,12 @@ const MRispostaForm = ({
   );
 
   const addCorrelata = () => {
-    setFieldValue('correlata', newDomanda);
+    setFieldValue(`risposte.${idxList}.correlata`, newDomanda);
     //  fieldProps.onSubFormChange({ ...values, correlata: newDomanda });
   };
 
   const onCorrelataFormChange = subValue => {
-    setFieldValue('correlata', subValue);
+    setFieldValue(`risposte.${idxList}.correlata`, subValue);
     // fieldProps.onSubFormChange({ ...values, correlata: subValue });
   };
 
@@ -150,7 +150,7 @@ const MRispostaForm = ({
         </Box>
       </Box>
       <Box style={{ width: '100%' }}>
-        {!values.correlata && !isCorrelata && (
+        {!valRisposta.correlata && (
           <Button variant="contained" color="primary" onClick={addCorrelata}>
             <span style={{ fontSize: '11px' }}>Add</span>
           </Button>
@@ -202,7 +202,7 @@ const MRispostaForm = ({
             {tipo !== 5 && <div style={{ marginLeft: '8px' }}>{renderTipo()}</div>}
           </GridChilds>
         )}
-        {values.correlata && (
+        {valRisposta.correlata && (
           <GridChilds key="ss04" style={{ alignItems: 'center' }} view={[11, 1]}>
             <Field
               component={DomandaForm}
