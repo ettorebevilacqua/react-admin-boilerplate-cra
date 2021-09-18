@@ -230,26 +230,33 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
 
         {value.title && renderNewDomanda()}
       </GridChilds>
-      {valueTmp?.domande.map((domanda, index) => {
-        const fieldProps = {
-          onSubFormChange: onSubFormChange(null, index),
-          arrayManager: arrayManager(null, index),
-          tipo: toNumberOr(value && value.tipo, 0),
-          values: valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda,
-        };
-        return (
-          <DomandaForm
-            key={index}
-            initialValues={
-              valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda
-            }
-            name="domande"
-            setFieldValue={domandaChange}
-            fieldProps={fieldProps}
-            domandaSave={domandaSave(index)}
-          />
-        );
-      })}
+      {!valueTmp.id ? (
+        valueTmp.title && <span>Salvare il documento prima di proseguire</span>
+      ) : (
+        <>
+          {valueTmp?.domande.map((domanda, index) => {
+            const fieldProps = {
+              onSubFormChange: onSubFormChange(null, index),
+              arrayManager: arrayManager(null, index),
+              tipo: toNumberOr(value && value.tipo, 0),
+              values: valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda,
+            };
+            return (
+              <DomandaForm
+                key={index}
+                initialValues={
+                  valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda
+                }
+                name="domande"
+                setFieldValue={domandaChange}
+                fieldProps={fieldProps}
+                domandaSave={domandaSave(index)}
+              />
+            );
+          })}
+          {valueTmp?.domande.length === 0 && renderNewDomanda()}
+        </>
+      )}
       <div
         style={{
           marginTop: '16px',
@@ -258,7 +265,6 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
         }}
       >
         <span> </span>
-        {value.title && renderNewDomanda()}
       </div>
       {1 === 0 && (
         <Button color="primary" variant="contained" fullWidth type="submit">
