@@ -1,6 +1,6 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { MenuItem, TextField, Select } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -12,6 +12,7 @@ import GridChilds from '../component/gridChilds';
 import Switch from '@material-ui/core/Switch';
 
 import { setMenuList } from 'app/slice/layoutSlice';
+import ModuliboxList from './moduliList';
 // import { Email } from '@material-ui/icons';
 
 export default function QuestionModuli({ formProp: { data, saved }, saveData }) {
@@ -132,7 +133,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
         </GridChilds>
       </Paper>
       <div className={`${classes.paperRow} ${classes.width95}`}>
-        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[4, 6, 2]}>
+        {/*  <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[4, 6, 2]}>
           <span>Moduli :</span>
 
           <Select
@@ -154,6 +155,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
             Add
           </Button>
         </GridChilds>
+             */}
         {dataTo.moduli &&
           dataTo.moduli.map &&
           dataTo.moduli.map((modulo, idxModulo) => (
@@ -208,7 +210,12 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
     <div className={classes.root}>
       {renderTitle()}
       {1 == 0 && renderHeaderList(['Titolo', 'Pubblicato'], [4, 2])}
-      {!!values && values.map && values.map(renderList(['title'], [4]))}
+      <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[3, 9]}>
+        <div>
+          <ModuliboxList values={moduli || []} />
+        </div>
+        <div> {!!values && values.map && values.map(renderList(['title'], [4]))} </div>
+      </GridChilds>
     </div>
   );
 }

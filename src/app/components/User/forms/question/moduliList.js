@@ -1,15 +1,19 @@
-import * as React from 'react';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemButton from '@material-ui/core/ListItemButton';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import { CommentIcon } from '@material-ui/icons';
 
-export default function ModuliboxList({ values, onChange }) {
-  const [checked, setChecked] = React.useState([0]);
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+export default function ModuliboxList({ values }) {
+  const classes = useStyles();
+  const [checked, setChecked] = React.useState([]);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -22,36 +26,23 @@ export default function ModuliboxList({ values, onChange }) {
     }
 
     setChecked(newChecked);
-    onChange(newChecked);
+  };
+
+  const isChecked = id => {
+    const val = checked.indexOf(id) > -1;
+    return val ? 'blue' : 'white';
   };
 
   return (
-    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {values.map(value => {
-        const labelId = `checkbox-list-label-${value}`;
+    <List className={classes.root}>
+      {values.map((item, idx) => {
+        const labelId = `checkbox-list-label-${item.title}`;
 
         return (
-          <ListItem
-            key={value}
-            secondaryAction={
-              <IconButton edge="end" aria-label="comments">
-                <CommentIcon />
-              </IconButton>
-            }
-            disablePadding
-          >
-            <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-            </ListItemButton>
+          <ListItem key={idx} role={undefined} dense button onClick={handleToggle(item.id)}>
+            <p id={labelId} style={{ color: 'black', backGround: isChecked(item.id) }}>
+              {item.title}
+            </p>
           </ListItem>
         );
       })}
