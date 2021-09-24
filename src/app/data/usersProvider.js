@@ -60,7 +60,7 @@ export const login = (user, password) =>
     configWithAuth,
   );
 
-export const getUser = id => userProvider.query({ urlParams: { id } }).read();
+export const getUser = id => userProvider.query({ urlParams: { id } }, true).read();
 /* .then(data => {
       console.log('user result', data);
     })
