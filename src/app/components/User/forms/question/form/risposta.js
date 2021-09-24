@@ -184,12 +184,12 @@ const MRispostaForm = ({
           marginTop: '18px',
           padding: '8px',
           height: '100%',
-          width: '95%',
+          width: '100%',
         }}
       >
         <FormikOnChange delay={500} onChange={onChangeForm} />
         {tipo === 1 ? (
-          <GridChilds key="gg01" style={{ alignItems: 'center' }} view={[8, 4]}>
+          <GridChilds key="gg01" style={{ alignItems: 'center' }} view={[7, 3, 1]}>
             {renderScala()}
             {renderButtonRisposta()}
           </GridChilds>
