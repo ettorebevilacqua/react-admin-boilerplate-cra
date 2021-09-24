@@ -59,6 +59,12 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
 
   const getNewValues = list => list.map(item => item);
 
+  const moduliToId = val => {
+    const _moduli = val.moduli;
+    const modulListId = _moduli.map(item => item.id);
+    return { ...val, moduli: modulListId };
+  };
+
   const save = idx => {
     const newValues = getNewValues(values);
     const _moduli = newValues && newValues[idx] && getNewValues(newValues[idx].moduli);
@@ -69,8 +75,10 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
   const onPublish = (val, idx) => {
     const newValues = values.map(elem => elem);
     const isPublic = newValues && newValues[idx] && newValues[idx].isPublic;
+    const toSave = moduliToId({ ...newValues[idx], isPublic: !isPublic });
     newValues[idx] = { ...newValues[idx], isPublic: !isPublic };
     setValues(newValues);
+    saveData(toSave);
   };
 
   const onChangeTitle = (valTitle, idx) => {
@@ -84,21 +92,6 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
     const dataToSave = { title: '', isPublic: false, moduli: [] };
     newValues.push(dataToSave);
     setValues(newValues);
-  };
-
-  const deleteModulo = (id, idxquestion) => {
-    if (!values) return false;
-    const newValues = getNewValues(values);
-    const _moduli =
-      newValues[idxquestion] && getNewValues(newValues[idxquestion].moduli).filter(item => item.id !== id);
-    newValues[idxquestion] = {
-      ...newValues[idxquestion],
-      moduli: _moduli,
-    };
-    setValues(newValues);
-    const modulListId = _moduli.map(item => item.id);
-    newValues[idxquestion] = { ...newValues[idxquestion], moduli: modulListId };
-    save(idxquestion);
   };
 
   const editQuestion = idxQuestion => {
@@ -152,38 +145,6 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
         </GridChilds>
       </Paper>
       <div className={`${classes.paperRow} ${classes.width95}`}>
-        {/*  <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[4, 6, 2]}>
-          <span>Moduli :</span>
-
-          <Select
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
-            value={moduloToAdd || ''}
-            style={{ width: '100%' }}
-            onChange={onModuloChange(index)}
-          >
-            {moduli &&
-              moduli.map &&
-              moduli.map((item, idx) => (
-                <MenuItem key={idx} value={item.id}>
-                  {item.title}
-                </MenuItem>
-              ))}
-          </Select>
-          <Button onClick={() => addModulo(index)} variant="contained" color="primary">
-            Add
-          </Button>
-        </GridChilds>
-                        <IconButton
-                  style={{ fontSize: '36px' }}
-                  color="secondary"
-                  aria-label="delete"
-                  disabled={false}
-                  onClick={() => deleteModulo(modulo.id, index, idxModulo)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-             */}
         {dataTo.moduli &&
           dataTo.moduli.map &&
           dataTo.moduli.map((modulo, idxModulo) => (
