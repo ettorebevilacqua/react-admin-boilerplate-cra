@@ -97,4 +97,7 @@ export const elemStyle = makeStyles(theme => ({
   buttonAction: {
     fontSize: '14px',
   },
+  chip: {
+    margin: theme.spacing(0.5, 0.25),
+  },
 }));

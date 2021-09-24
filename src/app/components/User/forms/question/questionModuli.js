@@ -1,8 +1,9 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { TextField } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useHistory } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -12,16 +13,27 @@ import GridChilds from '../component/gridChilds';
 import Switch from '@material-ui/core/Switch';
 
 import { setMenuList } from 'app/slice/layoutSlice';
-import ModuliboxList from './moduliList';
+import DualListBox from 'react-dual-listbox';
+import 'react-dual-listbox/lib/react-dual-listbox.css';
+import 'font-awesome/css/font-awesome.min.css';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+
 // import { Email } from '@material-ui/icons';
 
 export default function QuestionModuli({ formProp: { data, saved }, saveData }) {
   const location = useLocation();
   const moduli = location.state && location.state.data;
-
   const history = useHistory();
   const [values, setValues] = React.useState();
   const [moduloToAdd, setModuloToAdd] = React.useState();
+  const [isModuliChoise, setIsModuliChoise] = React.useState(false);
+  const [selected, setSelected] = React.useState([]);
+  const [currentIdxQuestion, setCurrentIdxQuestion] = React.useState();
+
   const classes = elemStyle();
   if (!moduli) {
     history.push('app/user/moduli');
@@ -39,6 +51,11 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
   // React.useEffect(init, []);
   // React.useEffect(dataUpdate, [data]);
   console.log('ModuliFormContainer', data);
+
+  const findModulo = (id, key) => {
+    const mod = moduli && moduli.find(mod => mod.id === id);
+    return !mod ? null : key ? mod[key] : mod;
+  };
 
   const getNewValues = list => list.map(item => item);
 
@@ -102,15 +119,17 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
     saveData(newValues[idxquestion]);
   };
 
-  const onModuloChange = () => e => {
-    const val = e.target.value;
-    setModuloToAdd(val);
+  const editQuestion = idxQuestion => {
+    if (!values || !values[idxQuestion] || !values[idxQuestion].moduli) return false;
+    setIsModuliChoise(true);
+    setSelected(values[idxQuestion].moduli);
+    setCurrentIdxQuestion(idxQuestion);
   };
 
   const renderList = () => (dataTo, index) => (
     <div key={index}>
       <Paper className={`${classes.paperRow}`} key={'paper_' + index}>
-        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[6, 1, 2, 2, 1]}>
+        <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[5, 1, 2, 2, 1, 1]}>
           <TextField fullWidth value={dataTo.title || ''} onChange={e => onChangeTitle(e.target.value, index)} />
 
           <span style={{ color: dataTo.isPublic ? 'black' : 'red' }}>Pubblicato :</span>
@@ -127,9 +146,27 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
           >
             Anteprima
           </Button>
-          <Button color="primary" variant="contained" onClick={() => save(index)}>
-            Salva
+          <Button color="primary" variant="contained" onClick={() => editQuestion(index)}>
+            Moduli
           </Button>
+          {dataTo && dataTo.id ? (
+            <Button
+              onClick={() => {
+                const editQuestion = { ...values[index] };
+                const editQuestionNew = { ...editQuestion, _deleted: true };
+                saveData(editQuestionNew);
+                const _values = values.map(val => val);
+                _values.splice(index, 1);
+                setValues(_values);
+              }}
+            >
+              <DeleteIcon color="secondary" style={{ fontSize: '36px' }} />
+            </Button>
+          ) : (
+            <Button color="primary" variant="contained" onClick={() => save(index)}>
+              Salva
+            </Button>
+          )}
         </GridChilds>
       </Paper>
       <div className={`${classes.paperRow} ${classes.width95}`}>
@@ -155,14 +192,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
             Add
           </Button>
         </GridChilds>
-             */}
-        {dataTo.moduli &&
-          dataTo.moduli.map &&
-          dataTo.moduli.map((modulo, idxModulo) => (
-            <Paper className={`${classes.paperRow} ${classes.width95}`} key={idxModulo}>
-              <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[10, 2]}>
-                <div className={classes.paperRowElem}>{modulo.title || ''}</div>
-                <IconButton
+                        <IconButton
                   style={{ fontSize: '36px' }}
                   color="secondary"
                   aria-label="delete"
@@ -171,8 +201,16 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
                 >
                   <DeleteIcon />
                 </IconButton>
-              </GridChilds>
-            </Paper>
+             */}
+        {dataTo.moduli &&
+          dataTo.moduli.map &&
+          dataTo.moduli.map((modulo, idxModulo) => (
+            <Chip
+              key={idxModulo}
+              tabIndex={-1}
+              label={findModulo(modulo && modulo.id ? modulo.id : modulo, 'title') || ''}
+              className={classes.chip}
+            />
           ))}
       </div>
     </div>
@@ -206,16 +244,48 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
     );
   };
 
+  const moduliChange = moduli => {
+    if (!values || !values[currentIdxQuestion]) return false;
+    setSelected(moduli);
+    const newValues = values.map(el => el);
+    const question = { ...newValues[currentIdxQuestion] };
+    const moduliFull = moduli.reduce((acc, idmodulo) => {
+      const mod = findModulo(idmodulo);
+      mod && acc.push(mod);
+      return acc;
+    }, []);
+    const questionNew = { ...question, moduli: moduliFull };
+    newValues[currentIdxQuestion] = questionNew;
+    setValues(newValues);
+
+    console.log('onChange', moduli);
+  };
+
+  const closeModal = () => {
+    setIsModuliChoise(false);
+    saveData(values[currentIdxQuestion]);
+  };
+
   return (
     <div className={classes.root}>
       {renderTitle()}
       {1 == 0 && renderHeaderList(['Titolo', 'Pubblicato'], [4, 2])}
-      <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[3, 9]}>
-        <div>
-          <ModuliboxList values={moduli || []} />
-        </div>
-        <div> {!!values && values.map && values.map(renderList(['title'], [4]))} </div>
-      </GridChilds>
+      <Dialog open={isModuliChoise} onEnter={console.log('Hey.')} fullWidth={true} maxWidth="lg">
+        <DialogTitle>Moduli</DialogTitle>
+        <DialogContent>
+          <DualListBox
+            selected={selected}
+            onSelected={setSelected}
+            onChange={moduliChange}
+            options={!moduli ? [] : moduli.map(mod => ({ label: mod.title, value: mod.id }))}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => closeModal()}>Chiudi</Button>
+        </DialogActions>
+      </Dialog>
+
+      {!!values && values.map && values.map(renderList(['title'], [4]))}
     </div>
   );
 }
