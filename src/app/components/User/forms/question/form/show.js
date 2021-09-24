@@ -243,11 +243,11 @@ export function ShowQuestion(props) {
     );
   };
 
-  const renderRisposte = (idxModulo, tipo, idxDomanda) => (risposta, idxRisposta) =>
+  const renderRisposte = (idxModulo, domanda, tipo, idxDomanda) => (risposta, idxRisposta) =>
     risposta &&
     (tipo !== 1 ? risposta.risposta : idxRisposta === 0) && (
-      <Box className={classes.cardDomanda}>
-        <GridChilds key={idxModulo + idxRisposta} view={[1, 11]}>
+      <Box key={idxModulo + idxRisposta} className={classes.cardDomanda}>
+        <GridChilds view={[1, 11]}>
           <span> </span>
           {[1].indexOf(tipo) < 0 ? (
             <GridChilds view={[10, 2]} style={{ alignItems: 'center' }}>
@@ -264,7 +264,7 @@ export function ShowQuestion(props) {
             </GridChilds>
           ) : tipo === 1 ? (
             <>
-              {renderScala(idxModulo, idxDomanda, risposta)}
+              {renderScala(idxModulo, idxDomanda, domanda, risposta)}
               {isCorrelata(idxModulo, idxDomanda, idxRisposta) && (
                 <ShowQuestion
                   values={{
@@ -280,7 +280,7 @@ export function ShowQuestion(props) {
       </Box>
     );
 
-  const renderDomandaAperta = (idxModulo, idxDomanda) => {
+  const renderDomandaAperta = (domanda, idxModulo, idxDomanda) => {
     const risposta = risposte[idxModulo][idxDomanda];
     return (
       <>
@@ -289,7 +289,7 @@ export function ShowQuestion(props) {
           <TextField
             style={{ width: '100%' }}
             label="Risposta"
-            value={risposte[idxDomanda][0] || ''}
+            value={''}
             onChange={e => {
               const _risposte = [...risposte];
               const valEvent = e.currentTarget.value;
@@ -307,36 +307,38 @@ export function ShowQuestion(props) {
   const renderDomanda = (modulo, idxModulo) => (domanda, idx, margin) => {
     console.log('domanda', domanda);
     const tipo = toNumberOr(domanda.tipo, 0);
-    return !getDomanda(idxModulo, idx) || !domanda || !domanda.tipo ? (
-      <></>
-    ) : tipo === 6 ? (
-      <div
-        key={idxModulo + idx}
-        className={classes.cardDomanda}
-        style={{
-          marginLeft: margin || '0px',
-          marginBotton: '22px',
-          marginTop: '22px',
-        }}
-      >
-        <Typography variant={domanda.tipo === 6 ? 'h3' : 'body1'} className={classes.domandaTxt} color="textSecondary">
-          {domanda.domanda}
-        </Typography>
-      </div>
-    ) : (
+    return (
       <div key={idxModulo + idx}>
-        <Paper style={{ marginTop: '26px', marginBottom: '12px' }}>
-          <GridChilds className={classes.cardDomanda} view={[12]} style={{ height: '48px' }}>
-            <Typography variant={tipo === 6 ? 'h3' : 'body1'} className={classes.domandaTxt} color="textSecondary">
-              {domanda.domanda}
-            </Typography>
-          </GridChilds>
-        </Paper>
-        {domanda.tipo !== 6 && domanda.tipo === 5
-          ? renderDomandaAperta(idxModulo, idx)
-          : domanda.risposte &&
-            domanda.risposte.map &&
-            domanda.risposte.map(renderRisposte(idxModulo, toNumberOr(domanda.tipo, -1), idx))}
+        {!getDomanda(idxModulo, idx) || !domanda || !domanda.tipo ? (
+          <div key={idxModulo + idx}></div>
+        ) : tipo === 6 ? (
+          <div
+            key={idxModulo + idx}
+            className={classes.cardDomanda}
+            style={{
+              marginLeft: margin || '0px',
+              marginBotton: '22px',
+              marginTop: '22px',
+            }}
+          >
+            <span style={{ fontSize: '24px', fontWeight: '600' }}> {domanda.domanda} </span>
+          </div>
+        ) : (
+          <div key={idxModulo + idx}>
+            <Paper style={{ marginTop: '26px', marginBottom: '12px' }}>
+              <GridChilds className={classes.cardDomanda} view={[12]} style={{ height: '48px' }}>
+                <Typography variant={tipo === 6 ? 'h3' : 'body1'} className={classes.domandaTxt} color="textSecondary">
+                  {domanda.domanda}
+                </Typography>
+              </GridChilds>
+            </Paper>
+            {domanda.tipo !== 6 && domanda.tipo === 5
+              ? renderDomandaAperta(domanda, idxModulo, idx)
+              : domanda.risposte &&
+                domanda.risposte.map &&
+                domanda.risposte.map(renderRisposte(idxModulo, domanda, toNumberOr(domanda.tipo, -1), idx))}
+          </div>
+        )}
       </div>
     );
   };
