@@ -79,24 +79,6 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
     setValues(newValues);
   };
 
-  const addModulo = idx => {
-    if (!moduloToAdd) return false;
-    const moduloFound = moduli.find(item => item.id === moduloToAdd);
-    if (!moduloFound) return false;
-    const newValues = getNewValues(values);
-    const _moduli = newValues && newValues[idx] && getNewValues(newValues[idx].moduli);
-    const _moduliFound = _moduli.find(item => item.id === moduloToAdd);
-    if (!_moduliFound) {
-      _moduli.push(moduloFound);
-      newValues[idx] = { ...newValues[idx], moduli: _moduli };
-      setValues(newValues);
-      setModuloToAdd(null);
-      const modulListId = _moduli.map(item => item.id);
-      newValues[idx] = { ...newValues[idx], moduli: modulListId };
-      saveData(newValues[idx]);
-    }
-  };
-
   const addQuestion = () => {
     const newValues = getNewValues(values);
     const dataToSave = { title: '', isPublic: false, moduli: [] };
@@ -116,13 +98,13 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
     setValues(newValues);
     const modulListId = _moduli.map(item => item.id);
     newValues[idxquestion] = { ...newValues[idxquestion], moduli: modulListId };
-    saveData(newValues[idxquestion]);
+    save(idxquestion);
   };
 
   const editQuestion = idxQuestion => {
     if (!values || !values[idxQuestion] || !values[idxQuestion].moduli) return false;
     setIsModuliChoise(true);
-    setSelected(values[idxQuestion].moduli);
+    setSelected(values[idxQuestion].moduli.map(mod => mod.id));
     setCurrentIdxQuestion(idxQuestion);
   };
 
@@ -153,7 +135,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
             <Button
               onClick={() => {
                 const editQuestion = { ...values[index] };
-                const editQuestionNew = { ...editQuestion, _deleted: true };
+                const editQuestionNew = { ...editQuestion, _deleted: true, moduli: [] };
                 saveData(editQuestionNew);
                 const _values = values.map(val => val);
                 _values.splice(index, 1);
@@ -263,7 +245,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
 
   const closeModal = () => {
     setIsModuliChoise(false);
-    saveData(values[currentIdxQuestion]);
+    save(currentIdxQuestion);
   };
 
   return (
