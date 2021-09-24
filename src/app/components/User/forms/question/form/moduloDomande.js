@@ -302,7 +302,7 @@ export const Domande = ({ data, queryValue, actions, formProp: { selectData }, s
 
       setMenuList([
         { link: '/app/user/moduli', label: 'Moduli' },
-        { link: '/app/user/moduli/' + id, label: 'Domande' },
+        // { link: '/app/user/questionModuli', label: 'Questionari', data },
         // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
       ]);
     }
