@@ -47,7 +47,7 @@ export const schema = Yup.object().shape({
     .min(1, 'inserire almeno un partecipante')
     .when('partecipanti', (partecipanti, schema) =>
       schema.test({
-        test: numPartecipanti => partecipanti.length === numPartecipanti,
+        test: numPartecipanti => partecipanti && partecipanti.length === numPartecipanti,
         message: 'il numero di partecipanti deve essere',
       }),
     ),
