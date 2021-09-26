@@ -96,12 +96,15 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
 
   const anagSubmit = index => anagVal => {
     setIsDialogAnag(false);
+    setTimeout(() => setIsDialogAnag(false), 30);
+
     Object.keys(anagVal).map(field => propsFormik.setFieldValue(`partecipanti.${index}.${field}`, anagVal[field]));
     // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
   };
 
   const docentiSubmit = index => docenteVal => {
     setIsDialogDocenti(false);
+    setTimeout(() => setIsDialogDocenti(false), 30);
     Object.keys(docenteVal).map(field => propsFormik.setFieldValue(`docenti.${index}.${field}`, docenteVal[field]));
     // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
   };
@@ -230,7 +233,10 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               </div>
               <AnagraficaForm
                 value={values.partecipanti[index]}
-                onExit={() => setIsDialogAnag(false)}
+                onExit={() => {
+                  setIsDialogDocenti(false);
+                  setTimeout(() => setIsDialogDocenti(false), 30);
+                }}
                 onSubmit={anagSubmit(index)}
               />
             </>
