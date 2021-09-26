@@ -16,12 +16,12 @@ import { elemStyle } from '../stylesElement';
 const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
   const history = useHistory();
   const location = useLocation();
+  const [error, setError] = React.useState(null);
   const idParam = data && data.id;
   const questionModulo = location.state && location.state.data;
 
   const idquestion = questionModulo && questionModulo.id;
   const questions = data;
-  debugger;
 
   const loadData = React.useCallback(() => {
     const questionData = questions && questions.results && questions.results[0];
@@ -69,11 +69,25 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
     setFormValue({ ...formValue, [name]: value });
   };
 */
-
-  const onSubmitBefore = values => {
-    saveData(values).then(res => {
-      const idnew = res && res.payload && res.payload.id;
-      res && res.payload && res.payload.id && history.push('/app/user/indagini_edit/' + idnew);
+  const save = values => {
+    setError(null);
+    saveData(values)
+      .then((res, error) => {
+        if (res.error) {
+          setError(res.error.message ? res.error.message : res.error);
+        }
+        const idnew = res && res.payload && res.payload.id;
+        res && res.payload && res.payload.id && history.push('/app/user/indagini_edit/' + idnew);
+        console.log('error ', error);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  const onSubmitBefore = (values, actions) => {
+    actions.setSubmitting(false);
+    setTimeout(() => {
+      save(values);
     });
   };
 
@@ -108,7 +122,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
             Indagine : {questionModulo?.title}
           </Typography>
           <Typography variant="h4" color="error">
-            {saved?.isError && saved?.errorMessage}
+            {error}
           </Typography>
         </div>
         {

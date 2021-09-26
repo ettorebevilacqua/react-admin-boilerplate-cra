@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { Field, FieldArray, ErrorMessage } from 'formik';
+import { Field, useFormikContext, FieldArray, ErrorMessage } from 'formik';
 
 import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
@@ -8,19 +8,25 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { TextField } from 'formik-material-ui';
 import { Box, MenuItem } from '@material-ui/core';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+// import DialogTitle from '@material-ui/core/DialogTitle';
+// import DialogActions from '@material-ui/core/DialogActions';
 
 import GridChilds from '../../component/gridChilds';
 import { elemStyle } from '../../stylesElement';
 
 import { CrudButton, ButtonType } from '../../component/crudButtons';
 import { Email, PlaylistAddCheck } from '@material-ui/icons';
+import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 
 import { empityParteipante } from 'app/data/schema/questionSchema';
-
-import Tooltip from '@material-ui/core/Tooltip';
+import { setTimeout } from 'timers';
 
 const renderField = (props = {}, name, component, label, type) => {
   return (
@@ -63,6 +69,9 @@ const getPartecipantiByNum = (list, val) => {
 
 const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
+  const { values, setFieldValue } = useFormikContext();
+  const [isDialogAnag, setIsDialogAnag] = React.useState(false);
+  const [isDialogDocenti, setIsDialogDocenti] = React.useState(false);
   const propValue = propsFormik?.values || {};
 
   const getPartecipanti = useCallback(values => getPartecipantiByNum(values, numPartecipanti || 1), [numPartecipanti]);
@@ -85,24 +94,70 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     }
   }, [numPartecipanti, getPartecipanti, partecipanti.length, propValue.partecipanti]);
 
+  const anagSubmit = index => anagVal => {
+    setIsDialogAnag(false);
+    Object.keys(anagVal).map(field => propsFormik.setFieldValue(`partecipanti.${index}.${field}`, anagVal[field]));
+    // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
+  };
+
+  const docentiSubmit = index => docenteVal => {
+    setIsDialogDocenti(false);
+    Object.keys(docenteVal).map(field => propsFormik.setFieldValue(`docenti.${index}.${field}`, docenteVal[field]));
+    // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
+  };
+
   const DocentiForm = (index, arrayHelper) => {
     return (
-      <Paper className={`${classes.paperTitle} ${classes.width95}`} key={'docenti' + index}>
-        <GridChilds justify="space-between" view={[4, 4, 3, 1]} spacing={1} style={{ width: '100%' }}>
-          {renderField({}, `docenti.${index}.nome`, TextField, 'Nome')}
-          {renderField({}, `docenti.${index}.email`, TextField, 'Email')}
-          {renderField({}, `docenti.${index}.phone`, TextField, 'Telefono')}
+      <Paper
+        onClick={() => setIsDialogDocenti(true)}
+        className={`${classes.paperTitle} ${classes.width95}`}
+        key={'docenti' + index}
+      >
+        <Dialog open={isDialogDocenti} fullWidth={true} maxWidth="lg">
+          <DialogContent>
+            <>
+              <div>
+                <h3>Docente</h3>
+              </div>
+              <AnagraficaForm
+                value={values.docenti[index]}
+                onExit={() => {
+                  setIsDialogDocenti(false);
+                  setTimeout(() => setIsDialogDocenti(false), 30);
+                }}
+                onSubmit={docentiSubmit(index)}
+              />
+            </>
+          </DialogContent>
+        </Dialog>
 
-          <CrudButton
-            show={['delete']}
-            onClick={docentiAction(arrayHelper)}
-            disableds={
-              index === 0 && arrayHelper?.form?.values?.docenti && arrayHelper?.form?.values?.docenti.length < 1
-                ? ['delete']
-                : null
-            }
-          />
-        </GridChilds>
+        {values && values.docenti && values.docenti[index] && (
+          <GridChilds justify="space-between" view={[3, 3, 3, 2, 1]} spacing={1} style={{ width: '100%' }}>
+            <span>
+              {values.docenti[index].nome || ''} {values.docenti[index].cognome || ''}
+            </span>
+            <span> {values.docenti[index].email || ''} </span>
+            <span> {values.docenti[index].phone || ''} </span>
+
+            <Box style={{ width: '100%' }}>
+              <Tooltip title="Edit">
+                <Button color="primary" variant="contained" onClick={() => setIsDialogDocenti(true)}>
+                  Modifica
+                </Button>
+              </Tooltip>
+            </Box>
+
+            <CrudButton
+              show={['delete']}
+              onClick={docentiAction(arrayHelper)}
+              disableds={
+                index === 0 && arrayHelper?.form?.values?.docenti && arrayHelper?.form?.values?.docenti.length < 1
+                  ? ['delete']
+                  : null
+              }
+            />
+          </GridChilds>
+        )}
       </Paper>
     );
   };
@@ -117,7 +172,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
           flexDirection: 'row',
           textAlign: 'end',
         }}
-        view={[6, 6]}
+        view={[3, 6, 3]}
         key={'gridPart' + index}
       >
         <Box style={{ width: '100%' }}>
@@ -134,6 +189,13 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                 <PlaylistAddCheck />
               </IconButton>
             </span>
+          </Tooltip>
+        </Box>
+        <Box style={{ width: '100%' }}>
+          <Tooltip title="Edit">
+            <Button color="primary" variant="contained" onClick={() => setIsDialogAnag(true)}>
+              Modifica
+            </Button>
           </Tooltip>
         </Box>
         <Box style={{ width: '100%' }}>
@@ -159,15 +221,35 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       </GridChilds>
     );
     return (
-      <Paper className={`${classes.paperTitle} ${classes.width95}`} key={index}>
-        <GridChilds view={[3, 4, 3, 2]} spacing={3} style={{ width: '100%' }}>
-          {renderField({}, `partecipanti.${index}.nome`, TextField, 'Nome')}
-          {renderField({}, `partecipanti.${index}.email`, TextField, 'Email')}
-          {renderField({}, `partecipanti.${index}.phone`, TextField, 'Telefono')}
+      <>
+        <Dialog open={isDialogAnag} fullWidth={true} maxWidth="lg">
+          <DialogContent>
+            <>
+              <div>
+                <h3>Partecipante</h3>
+              </div>
+              <AnagraficaForm
+                value={values.partecipanti[index]}
+                onExit={() => setIsDialogAnag(false)}
+                onSubmit={anagSubmit(index)}
+              />
+            </>
+          </DialogContent>
+        </Dialog>
+        <Paper onClick={() => setIsDialogAnag(true)} className={`${classes.paperTitle} ${classes.width95}`} key={index}>
+          {values && values.partecipanti && values.partecipanti[index] && (
+            <GridChilds view={[3, 3, 3, 3]} spacing={3} style={{ width: '100%' }}>
+              <span>
+                {values.partecipanti[index].nome || ''} {values.partecipanti[index].cognome || ''}
+              </span>
+              <span> {values.partecipanti[index].email || ''} </span>
+              <span> {values.partecipanti[index].phone || ''} </span>
 
-          {renderButtonActionRecord(elem.token)}
-        </GridChilds>
-      </Paper>
+              {renderButtonActionRecord(elem.token)}
+            </GridChilds>
+          )}
+        </Paper>
+      </>
     );
   };
 
@@ -230,6 +312,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
             {propsFormik?.values?.docenti &&
               propsFormik?.values?.docenti[0] &&
               propsFormik.values.docenti.map((elem, index) => DocentiForm(index, arrayHelper))}
+
             <GridChilds
               view={[10, 2]}
               justify="space-between"
