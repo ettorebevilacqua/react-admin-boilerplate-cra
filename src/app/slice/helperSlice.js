@@ -45,7 +45,7 @@ export const asyncStateReducer = builder => (thunk, param = {}) => {
       isFetching: false,
       isError: true,
       isSuccess: false,
-      errorMessage: payload?.message,
+      errorMessage: payload,
     });
   });
 
