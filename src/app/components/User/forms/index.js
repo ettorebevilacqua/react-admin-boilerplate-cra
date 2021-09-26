@@ -12,12 +12,10 @@ const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt
 
 export const QuestionToForm = makeContainerRefreshed(QuestionTo, questionSlice, (matchParam, saved) => {
   const { id, idquestion } = pick(matchParam, ['id', 'idquestion', 'idcorso']);
-  const filter = !saved || !saved.data || !saved.data.id ? { idquestion } : { id: saved.data.id };
+  // const filter = !saved || !saved.data || !saved.data.id ? { idquestion } : { id: saved.data.id };
   // console.log('xxxxx queryParam', queryParam);
   questionSlice.actions.reset();
-  toNumberOr(filter.id, 0) !== 0
-    ? questionSlice.actions.get(filter.id, true)
-    : questionSlice.actions.dataBack(empityModulo);
+  !!id ? questionSlice.actions.get(id, true) : questionSlice.actions.dataBack(empityModulo);
 });
 
 export const GuestQuestionForm = makeContainerRefreshed(

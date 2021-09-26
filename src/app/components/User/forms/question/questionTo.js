@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { Formik, Form } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
@@ -16,68 +16,63 @@ import { elemStyle } from '../stylesElement';
 const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
   const history = useHistory();
   const location = useLocation();
+  const { id, idquestion } = useParams();
   const [error, setError] = React.useState(null);
   const idParam = data && data.id;
   const questionModulo = location.state && location.state.data;
 
-  const idquestion = questionModulo && questionModulo.id;
   const questions = data;
 
-  const loadData = React.useCallback(() => {
-    const questionData = questions && questions.results && questions.results[0];
-    const dataToValue = idParam
-      ? questionData
-      : {
-          ...empityQuestion,
-          idquestion,
-        };
-    if ((!dataToValue && !dataToValue.docenti) || !dataToValue.docenti[0]) {
-      dataToValue.docenti = [empityParteipante];
-    }
+  const loadData = React.useCallback(
+    idquestion => {
+      const dataToValue = idParam
+        ? questions
+        : {
+            ...empityQuestion,
+            idquestion,
+            titoloQuestion: questionModulo && questionModulo.title ? questionModulo.title : '',
+          };
 
-    return dataToValue;
-  }, [idParam, idquestion, questions]);
+      if ((!dataToValue && !dataToValue.docenti) || !dataToValue.docenti[0]) {
+        dataToValue.docenti = [empityParteipante];
+      }
+
+      return dataToValue;
+    },
+    [idParam, questions],
+  );
 
   const [value, setValue] = React.useState();
   const [numPartecipanti, setNumPartecipanti] = React.useState(null);
   const classes = elemStyle();
 
-  const init = () => {
-    loadData();
-    // !value && setValue(dataValueState || empityQuestion);
-  };
-
   const dataUpdate = () => {
     if (data) {
-      const quest = loadData();
+      const quest = loadData(idquestion);
+      /*  if (!data.id && !questionModulo) {
+        return props.history.push('/app/user/indagini');
+      } */
       setValue(quest);
       setNumPartecipanti(quest?.numPartecipanti || 1);
     }
   };
 
-  React.useEffect(init, [idquestion, loadData]);
-  React.useEffect(dataUpdate, [data, loadData]);
+  React.useEffect(dataUpdate, []);
 
-  if (data && !idquestion) {
-    props.history.push('/app/user/indagini');
-    // return <span> </span>;
-  }
-
-  /*
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValue({ ...formValue, [name]: value });
-  };
-*/
   const save = values => {
     setError(null);
-    saveData(values)
+    const valToSave = { ...values, id: value.id };
+    saveData(valToSave)
       .then((res, error) => {
         if (res.error) {
-          setError(res.error.message ? res.error.message : res.error);
+          return setError(res.error.message ? res.error.message : res.error);
         }
         const idnew = res && res.payload && res.payload.id;
-        res && res.payload && res.payload.id && history.push('/app/user/indagini_edit/' + idnew);
+        res &&
+          res.payload &&
+          res.payload.id &&
+          window.history.replaceState(null, null, `/app/user/indagini_edit/${idnew}`);
+        setValue(res.payload);
         console.log('error ', error);
       })
       .catch(err => {
@@ -119,7 +114,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
       <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[9, 3]}>
         <div>
           <Typography variant="h3" color="textSecondary">
-            Indagine : {questionModulo?.title}
+            Indagine : {value.titoloQuestion}
           </Typography>
           <Typography variant="h4" color="error">
             {error}
