@@ -35,16 +35,14 @@ const init = store =>
 
     const saveProvider = createAsyncThunk(name + '/save', async (payload, thunkAPI) => {
       const id = payload.id;
-      try {
-        let data = !id
-          ? await provider.create(payload)
-          : payload._deleted
-          ? await provider.delete(id)
-          : await provider.save(id, payload);
-        return Promise.resolve({ ...data });
-      } catch (e) {
-        return Promise.reject(thunkAPI.rejectWithValue(e));
-      }
+
+      const [data, error] = !id
+        ? await handlePromise(provider.create(payload))
+        : payload._deleted
+        ? await handlePromise(provider.delete(id))
+        : await handlePromise(provider.save(id, payload));
+      error && thunkAPI.rejectWithValue(error ? error || error : null);
+      return error ? Promise.reject(error) : Promise.resolve({ ...data });
     });
 
     const getProvider = createAsyncThunk(name + '/get', async (payload, thunkAPI) => {

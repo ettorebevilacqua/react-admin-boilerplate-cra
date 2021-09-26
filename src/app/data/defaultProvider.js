@@ -35,14 +35,34 @@ export function defaultProvider(id, url, schemas, tags) {
     },
   );
 
-  const updateTodo = (id, data) => {
-    return idProvider.query({ urlParams: { id } }).update(data);
-  };
+  const wrapMethod = (prov, method, data) =>
+    new Promise((resolve, reject) => {
+      prov[method](data)
+        .then(res => {
+          resolve(res, null);
+        })
+        .catch(err => {
+          reject(err.data ? err.data : err);
+        });
+    });
+
+  const updateTodo = (id, data) =>
+    new Promise((resolve, reject) => {
+      return idProvider
+        .query({ urlParams: { id } })
+        .update(data)
+        .then(res => {
+          resolve(res, null);
+        })
+        .catch(err => {
+          reject(err.data ? err.data : err);
+        });
+    });
 
   return {
     schemas,
     provider: myProvider,
-    create: data => myProvider.create(data),
+    create: data => wrapMethod(myProvider, 'create', data),
     save: (id, data) => updateTodo(id, data),
     list: () => mySelector,
     query: param => idProvider.query(param).read(),
