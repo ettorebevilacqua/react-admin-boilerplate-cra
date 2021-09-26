@@ -62,7 +62,10 @@ function IndaginiListForm(props) {
             variant="contained"
             fullWidth
             onClick={() => {
-              history.push({ pathname: '/app/user/indagini_invio/0', state: { data: { ...values[index] } } });
+              history.push({
+                pathname: '/app/user/indagini_invio/' + values[index].id,
+                state: { data: { ...values[index] } },
+              });
             }}
           >
             Crea
@@ -74,6 +77,7 @@ function IndaginiListForm(props) {
 
   return (
     <>
+      <br />
       <h2>Crea Indagine</h2>
       {values && values.map(renderIndagine)}
     </>
