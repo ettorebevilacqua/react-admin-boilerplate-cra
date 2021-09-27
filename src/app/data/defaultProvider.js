@@ -6,6 +6,7 @@ export function defaultProvider(id, url, schemas, tags) {
     id: id + '/list',
     url,
     tags,
+    cache: false,
     initialState: {
       loading: false,
       data: [],
@@ -15,6 +16,7 @@ export function defaultProvider(id, url, schemas, tags) {
   const idProvider = new Axios({
     id: id + '/id',
     url: url + '/:id',
+    cache: false,
     tags,
   });
 
@@ -58,6 +60,9 @@ export function defaultProvider(id, url, schemas, tags) {
           reject(err.data ? err.data : err);
         });
     });
+
+  console.log(' providder xxxx ', myProvider.options);
+  console.log(' providder xxxx get', idProvider.options);
 
   return {
     schemas,

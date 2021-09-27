@@ -15,7 +15,6 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     const history = useHistory();
     const params = useParams();
     const location = useLocation();
-
     const toProps = { ...props };
     toProps.actions.reload = () => loadCallBack && loadCallBack(params, history, location, stateLoad);
 
@@ -29,6 +28,10 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     React.useEffect(() => {
       !stateLoad.isSuccess && !stateLoad.isFetching && !stateLoad.isError && !data && loadData();
     }, [data]);
+
+    React.useEffect(() => {
+      loadData();
+    }, [saved.isSuccess]);
 
     React.useEffect(() => {
       !stateLoad.isFetching && loadData();
@@ -71,23 +74,15 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
       </>
     );
     const renderComp = () => (
-      <Component
-        data={saved && saved.isSuccess && saved.data ? saved.data : data}
-        queryValue={params}
-        onSubmit={onSubmit}
-        saveData={saveData}
-        {...toProps}
-      />
+      <Component data={data} queryValue={params} onSubmit={onSubmit} saveData={saveData} {...toProps} />
     );
 
     return stateLoad.isError ? (
       rendereError()
     ) : (
       <div>
-        <LoadingOverlay active={stateLoad.isFetching || saved.isFetching} spinner text="Loading...">
-          {!stateLoad.isFetching && !data
-            ? stateLoad.isError && rendereError()
-            : (data || parent) && !stateLoad.isFetching && !saved.isFetching && renderComp()}
+        <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
+          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : (data || parent) && renderComp()}
         </LoadingOverlay>
       </div>
     );
