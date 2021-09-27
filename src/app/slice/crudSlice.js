@@ -106,6 +106,7 @@ const init = store =>
     const selectLoading = createSelector([dataSelector], crudState => crudState.loading);
     const selectError = createSelector([dataSelector], crudState => crudState.error);
     const selectData = createSelector([dataSelector], crudState => crudState.data);
+    const selectSaved = createSelector([dataSelector], crudState => crudState.saved);
 
     const selectState = createSelector([dataSelector], dataState => dataState);
     const selectDataItem = createSelector([dataSelector], dataState => dataState);
@@ -128,6 +129,7 @@ const init = store =>
           selectLoading,
           selectError,
           selectData,
+          selectSaved,
           selectItem,
           meta: { schema: provider.schemas },
         },
