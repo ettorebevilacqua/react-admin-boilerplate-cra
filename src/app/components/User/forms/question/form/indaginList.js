@@ -26,7 +26,7 @@ function IndaginiListForm(props) {
   // React.useEffect(() => props.actions.load(), []);
   React.useEffect(() => setValues(getDataPublic()), [data, getDataPublic]);
 
-  React.useEffect(() => setMenuList([{ link: '/app/user/moduli/app/user/indagini', label: 'Questionari' }]), []);
+  React.useEffect(() => setMenuList([{ link: '/app/user/indagini', label: 'Indagini' }]), []);
   /* const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
