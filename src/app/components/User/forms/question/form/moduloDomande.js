@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import { DomandaForm } from './domanda';
 import Divider from '@material-ui/core/Divider';
@@ -22,12 +22,14 @@ const ticker = new AdjustingInterval(null, 100);
 sessionStorage.removeItem('currentModuloId');
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
-export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime }) => {
+export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime, selectDataItem, selectSaved }) => {
   // const initialValues  = useLocation().state;
-  /*  const temp = useSelector(selectDataItem);
+  const saved = useSelector(selectSaved);
+  /*
   const tmp = [temp].map(val => ({ ...val }));
   const initialValues = tmp && tmp[0]; */
-  const initialValuesTmp = !startValues ? empityModulo : startValues;
+  const initialValuesTmp =
+    saved && !saved.isLoading && saved.data ? saved.data : !startValues ? empityModulo : startValues;
   if (!initialValuesTmp.domande) {
     initialValuesTmp.domande = newDomanda;
   }
@@ -73,7 +75,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
       setValue(toStore);
       window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
       // history.push(`/app/user/moduli/'${idnew}`);
-      console.log('main change', toStore);
+      // console.log('main change', toStore);
     });
 
     ticker.stop();
@@ -108,7 +110,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
     // if (valNewTxt === valueTxt) return false;
 
     const toSaveValue = { ...valueNew }; // isSub ? { ...valueNew, title: valueTmp.title } : { ...valueTmp, title: valueNew.title };
-    console.log('onChangeForm xxx', toSaveValue);
+    // console.log('onChangeForm xxx', toSaveValue);
 
     // checkChanged(valueTmp, toSaveValue) && onSave();
     setValueTmp(toSaveValue);
@@ -171,7 +173,6 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
       style={{ height: '42px', width: '120px' }}
       onClick={() => {
         const lenDomande = value.domande.length;
-        console.log('', formikProps);
         const _value = { ...valueTmp };
         const _domande = _value.domande.map(dom => dom);
         _domande.push(newDomanda);
@@ -277,7 +278,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
   );
 };
 
-export const Domande = ({ data, queryValue, actions, formProp: { selectData }, saveData }) => {
+export const Domande = ({ data, queryValue, actions, formProp, saveData, ...rest }) => {
   // const stateData = useSelector(selectData);
   const id = queryValue.id;
   const [isFirstTime, setIsFirstTime] = React.useState(true);
@@ -299,7 +300,7 @@ export const Domande = ({ data, queryValue, actions, formProp: { selectData }, s
 
         // actions.reload();
       }   */
-      console.log('loc', data);
+      // console.log('loc', data);
 
       setMenuList([
         { link: '/app/user/moduli', label: 'Moduli' },
@@ -314,7 +315,8 @@ export const Domande = ({ data, queryValue, actions, formProp: { selectData }, s
       startValues={{ ...dataParam }}
       setIsFirstTime={setIsFirstTime}
       isFirstTime={isFirstTime}
-      selectDataItem={selectData}
+      selectDataItem={formProp.selectData}
+      selectSaved={formProp.selectSaved}
       actions={actions}
       saveData={saveData}
     />

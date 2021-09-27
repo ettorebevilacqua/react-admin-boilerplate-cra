@@ -78,6 +78,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     ratingMax: domandaVal.ratingMax || 2,
     ratingEnd: domandaVal.ratingEnd,
     ratingStart: domandaVal.ratingEnd,
+    rating: domandaVal.rating,
   });
 
   if (fieldProps.parentValues) {
@@ -89,6 +90,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     ratingMax: newValue.ratingMax || 2,
     ratingEnd: newValue.ratingEnd,
     ratingStart: newValue.ratingStart,
+    rating: newValue.rating,
   });
   // const { values, setFieldValue: setSubFieldValue } = useFormikContext();
 
@@ -204,11 +206,12 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
 
   const onSetRating = (formiklProps, value) => {
     const numValue = parseInt(value);
-    formiklProps.setFieldValue(`risposte.0.rating`, numValue);
+    setRatingStore({ ...ratingStore, rating: numValue });
+    formiklProps.setFieldValue(`rating`, numValue);
   };
 
   const onChangeAccordion = () => setExpanded(!expanded);
-  const getRatingVals = key => risposte && risposte[0] && risposte[0].rating;
+  const getRatingVals = key => values.rating;
 
   const renderScala = formiklProps => () => (
     <Box component="fieldset" mb={3} borderColor="transparent">
@@ -238,7 +241,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
           <Rating
             name="rating"
             max={toNumberOr(ratingStore.ratingMax, 2)}
-            value={toNumberOr(getRatingVals('rating'), 0)}
+            value={toNumberOr(ratingStore.rating, 0)}
             onChange={event => {
               onSetRating(formiklProps, event.target.value);
             }}
