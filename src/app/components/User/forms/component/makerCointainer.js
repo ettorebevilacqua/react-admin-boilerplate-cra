@@ -71,15 +71,23 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
       </>
     );
     const renderComp = () => (
-      <Component data={data} queryValue={params} onSubmit={onSubmit} saveData={saveData} {...toProps} />
+      <Component
+        data={saved && saved.isSuccess && saved.data ? saved.data : data}
+        queryValue={params}
+        onSubmit={onSubmit}
+        saveData={saveData}
+        {...toProps}
+      />
     );
 
     return stateLoad.isError ? (
       rendereError()
     ) : (
       <div>
-        <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
-          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : (data || parent) && renderComp()}
+        <LoadingOverlay active={stateLoad.isFetching || saved.isFetching} spinner text="Loading...">
+          {!stateLoad.isFetching && !data
+            ? stateLoad.isError && rendereError()
+            : (data || parent) && !stateLoad.isFetching && !saved.isFetching && renderComp()}
         </LoadingOverlay>
       </div>
     );
