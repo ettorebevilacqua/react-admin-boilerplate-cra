@@ -132,6 +132,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(out);
     fieldProps && fieldProps.onCorrelataFormChange && fieldProps.onCorrelataFormChange(out);
     (!fieldProps || !fieldProps.onCorrelataFormChange) && domandaSave(out);
+    actions.resetForm();
   };
 
   const changeTipo = (formiklProps, value) => {

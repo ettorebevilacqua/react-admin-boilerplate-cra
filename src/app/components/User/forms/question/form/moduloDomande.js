@@ -100,12 +100,12 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
   };
 
   const onChangeForm = (valueNew, isSub, isToSave) => {
-    if (isFirstRender) return setIsFirstRender(false);
+    // if (isFirstRender) return setIsFirstRender(false);
     // if (!valueNew.title || !valueNew.title.trim()) return false;
     //  if (!valueNew) return setIsFirstTime(false);
     const valNewTxt = JSON.stringify(valueNew);
     const valueTxt = JSON.stringify(value);
-    if (valNewTxt === valueTxt) return false;
+    // if (valNewTxt === valueTxt) return false;
 
     const toSaveValue = { ...valueNew }; // isSub ? { ...valueNew, title: valueTmp.title } : { ...valueTmp, title: valueNew.title };
     console.log('onChangeForm xxx', toSaveValue);
@@ -152,7 +152,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
   const onSubFormChange = (arrayHelper, index) => subValue => {
     if (!valueTmp || !subValue || !value.domande || !valueTmp.domande[index]) return false;
 
-    const _domande = value.domande.map((dom, idxDomanda) => (idxDomanda === index ? subValue : dom));
+    const _domande = valueTmp.domande.map((dom, idxDomanda) => (idxDomanda === index ? subValue : dom));
     const _value = { ...valueTmp, domande: _domande };
     setValueTmp(_value);
     onChangeForm(_value, true, false);
@@ -177,7 +177,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
         _domande.push(newDomanda);
         const valueT = { ..._value, domande: _domande };
         setValueTmp(valueT);
-        onChangeForm(valueT, true, true);
+        // onChangeForm(valueT, true, true);
         // formikProps.setFieldValue('domande.' + lenDomande, newDomanda);
       }}
     >
@@ -206,7 +206,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
           label="Start descrizione"
           onChange={e => changeTitle(e.target.value)}
         />
-        {1 === 1 && (
+        {!valueTmp.id && (
           <Button
             variant="contained"
             color="primary"
@@ -266,6 +266,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime })
       >
         <span> </span>
       </div>
+      {valueTmp.id && renderNewDomanda()}
       {1 === 0 && (
         <Button color="primary" variant="contained" fullWidth type="submit">
           Submit
