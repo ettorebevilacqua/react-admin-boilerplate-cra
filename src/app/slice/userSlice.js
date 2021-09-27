@@ -50,6 +50,7 @@ export const loginUser = createAsyncThunk('users/login', async (payload, thunkAP
     localStorage.setItem('token', token);
     localStorage.setItem('userId', userId);
     userProvider.authBear(token);
+    window.location.href = window.location.href;
     return { ...data };
   } catch (e) {
     return thunkAPI.rejectWithValue(e.data || e);
