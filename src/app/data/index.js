@@ -24,6 +24,7 @@ export const questionModuliProvider = defaultProvider('questionModuli', '/moduli
   'questionModuli',
 ]);
 
+export const corsiProvider = defaultProvider('corsi', '/corsi', schemas.corsi, ['axios', 'corsi']);
 /*
 
 export const moduliProvider = new Axios({
@@ -57,6 +58,7 @@ const dataApi = {
   moduliProvider,
   moduliProviderSave,
   moduloProvider,
+  corsiProvider,
   questionModuliProvider,
   providersView,
   queryViews,

@@ -18,6 +18,7 @@ const {
   moduliProviderSave,
   moduloProvider,
   questionModuliProvider,
+  corsiProvider,
 } = providers;
 
 export const questionViewSlice = createViewSlice('getQuestion', providersView.getQuestion);
@@ -62,6 +63,12 @@ export const questionModuliSlice = createCrudSlice({
   name: 'questionModuliSlice',
   provider: questionModuliProvider,
   queryProvider: questionModuliProvider.provider,
+});
+
+export const corsiSlice = createCrudSlice({
+  name: 'corsiSlice',
+  provider: corsiProvider,
+  queryProvider: corsiProvider.provider,
 });
 
 export const { actions: userAuthActions, reducer } = userSlice;

@@ -1,5 +1,5 @@
 import { pick } from 'utils/pick';
-import { questionSlice, moduliSliceCrud, moduloSliceCrud } from 'app/slice';
+import { questionSlice, moduliSliceCrud, moduloSliceCrud, corsiSlice } from 'app/slice';
 import { makeContainerRefreshed } from './component/makerCointainer';
 
 import { QuestionTo } from './question/questionTo';
@@ -7,8 +7,19 @@ import GuestQuestionFormWrap from './question/guestQuestionForm';
 import { ModuliFormMaker } from './question/moduliForm';
 import { Domande } from './question/form/moduloDomande';
 import { empityModulo } from 'app/services/question/moduliModel';
+import { CorsiForm } from './common/corsi';
 
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
+
+console.log('CorsiForm ', CorsiForm);
+export const CorsiDataForm = makeContainerRefreshed(CorsiForm, corsiSlice, (matchParam, saved) => {
+  const { id, idquestion } = pick(matchParam, ['id']);
+  // const filter = !saved || !saved.data || !saved.data.id ? { idquestion } : { id: saved.data.id };
+  // console.log('xxxxx queryParam', queryParam);
+  debugger;
+  corsiSlice.actions.reset();
+  id ? corsiSlice.actions.get(id, true) : corsiSlice.actions.query({}, true);
+});
 
 export const QuestionToForm = makeContainerRefreshed(QuestionTo, questionSlice, (matchParam, saved) => {
   const { id, idquestion } = pick(matchParam, ['id', 'idquestion', 'idcorso']);
@@ -32,7 +43,6 @@ export const GuestQuestionForm = makeContainerRefreshed(
 
 export const ModuliForm = makeContainerRefreshed(ModuliFormMaker, moduliSliceCrud, () => {
   // console.log('xxxxx queryParam', queryParam);
-  debugger;
   const queryParam = {};
   moduliSliceCrud.actions.reset();
   moduliSliceCrud.actions.query(queryParam, true);
