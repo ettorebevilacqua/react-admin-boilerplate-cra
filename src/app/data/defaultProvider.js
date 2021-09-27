@@ -61,9 +61,6 @@ export function defaultProvider(id, url, schemas, tags) {
         });
     });
 
-  console.log(' providder xxxx ', myProvider.options);
-  console.log(' providder xxxx get', idProvider.options);
-
   return {
     schemas,
     provider: myProvider,

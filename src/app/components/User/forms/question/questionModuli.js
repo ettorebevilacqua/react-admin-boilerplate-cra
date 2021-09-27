@@ -5,8 +5,8 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 // import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useHistory } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { elemStyle } from '../stylesElement';
 import GridChilds from '../component/gridChilds';
@@ -22,11 +22,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 
+import { moduliSliceCrud } from 'app/slice';
+
+const dataSelector = moduliSliceCrud.selects.dataSelector;
+
 // import { Email } from '@material-ui/icons';
 
 export default function QuestionModuli({ formProp: { data, saved }, saveData }) {
+  const dataModuli = useSelector(dataSelector);
   const location = useLocation();
-  const moduli = location.state && location.state.data;
+  const moduli = dataModuli && dataModuli.results; // || (location.state && location.state.data);
   const history = useHistory();
   const [values, setValues] = React.useState();
   const [moduloToAdd, setModuloToAdd] = React.useState();
@@ -36,7 +41,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
 
   const classes = elemStyle();
   if (!moduli) {
-    history.push('app/user/moduli');
+    // history.push('app/user/moduli');
   }
   const loadData = () => {
     data &&
@@ -48,7 +53,9 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
   };
   React.useEffect(loadData, [data]);
 
-  // React.useEffect(init, []);
+  React.useEffect(() => {
+    moduliSliceCrud.actions.query({}, true);
+  }, []);
   // React.useEffect(dataUpdate, [data]);
   console.log('ModuliFormContainer', data);
 
