@@ -21,7 +21,7 @@ function resize(arr, newSize, defaultValue) {
   return [...arr, ...Array(Math.max(newSize - arr.length, 0)).fill(defaultValue)];
 }
 
-const toNumberOr = (val, orVal) => (!val ? 2 : isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
+const toNumberOr = (val, orVal) => (!val ? orVal : isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
 const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...props }) => {
   const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
@@ -82,6 +82,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export function ShowQuestion(props) {
   const { values } = props;
   const classes = useStyles();
@@ -90,12 +94,11 @@ export function ShowQuestion(props) {
 
   const [risposte, setRisposte] = React.useState(moduliRisposte);
 
-  const getRiposteDomanda = (idxModulo, idxDomanda) =>
-    risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda];
-
-  const getValueRiposta = (idxModulo, idxDomanda, idxRisposta) =>
-    risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda] && risposte[idxModulo][idxDomanda][idxRisposta];
-
+  const getValueRiposta = (idxModulo, idxDomanda, idxRisposta) => {
+    return (
+      risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda] && risposte[idxModulo][idxDomanda][idxRisposta]
+    );
+  };
   const getDomanda = (idxModulo, idx) =>
     values &&
     values.moduli &&
@@ -107,47 +110,62 @@ export function ShowQuestion(props) {
       ? values.moduli[idxModulo].domande[idx]
       : null;
 
+  const getTipoDomanda = (idxModulo, idxDomanda) => {
+    const domanda = getDomanda(idxModulo, idxDomanda);
+    return !domanda ? 0 : toNumberOr(domanda.tipo, 0);
+  };
+
   const getRispostaOfValues = (idxModulo, idxDomanda, idxRisposta) => {
     const domanda = getDomanda(idxModulo, idxDomanda);
-    return !domanda || !domanda.risposte || !domanda.risposte[idxRisposta] ? null : domanda.risposte[idxRisposta];
+    if (!domanda || !domanda.risposte) return null;
+    if (domanda.tipo === 1) return domanda.rating;
+    return !domanda.risposte[idxRisposta] || !domanda.risposte[idxRisposta]
+      ? null
+      : domanda.risposte[idxRisposta].val && domanda.risposte[idxRisposta].val.val
+      ? domanda.risposte[idxRisposta].val.val
+      : domanda.risposte[idxRisposta].val;
   };
 
   const getCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
     const domanda = getDomanda(idxModulo, idxDomanda);
     const tipoNum = toNumberOr(domanda?.tipo, -1);
     if ([5, 6].indexOf(tipoNum) > -1) return null;
-    const risposta = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
+    if (!domanda || !domanda.risposte || !domanda.risposte[idxRisposta]) return null;
+    const risposta = domanda.risposte[idxRisposta];
     return risposta && risposta.correlata ? risposta.correlata : null;
   };
 
-  /* const getUserValCorrelata = (idxModulo, idxDomanda, idxRisposta) => {
-    const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
-    return valRisposta && valRisposta.correlata ? valRisposta.val : null;
-  }; */
-
   const getUserVal = (idxModulo, idxDomanda, idxRisposta) => {
     const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
-    return valRisposta && valRisposta.correlata ? valRisposta.val : valRisposta;
+    return valRisposta && valRisposta.val;
   };
 
   const isCorrelata = (idxModulo, idxDomanda, idxRisposta, val) => {
     const correlata = getCorrelata(idxModulo, idxDomanda, idxRisposta);
     if (!correlata) return false;
-    const userVal = getUserVal(idxModulo, idxDomanda, idxRisposta);
-    const valCur = val === undefined ? userVal : val;
-    const valValuesTmp = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
-    const domanda = getDomanda(idxModulo, idxDomanda);
-    const tipo = toNumberOr(domanda && domanda.tipo, 0);
-    const valValues = tipo === 1 ? toNumberOr(valValuesTmp.rating, 1) : toNumberOr(valValuesTmp.val, 1);
-    return correlata && valCur === valValues;
+    const rispostaUser = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
+    const valCur = rispostaUser && rispostaUser.val;
+    if (!valCur) return false;
+    const valValues = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
+    const tipo = getTipoDomanda(idxModulo, idxDomanda);
+    // const ratingVal = toNumberOr(domanda.rating, 0);
+    return tipo === 1 ? valValues !== 0 && valCur <= valValues : valCur === valValues;
   };
 
-  /* const onChangeRating = (idxDomanda, idxRisposta) => e => {
-    const val = e.target.value;
-    const valRisp = risposte[idxDomanda];
+  const changeRisposta = async (idxModulo, idxDomanda, idxRisposta, newValue, reset) => {
+    const _domandaRisposte = [...risposte[idxModulo][idxDomanda]];
     const _risposte = [...risposte];
-    console.log('click risposta', idxDomanda, idxRisposta, valRisp);
-  }; */
+    const _risposta =
+      _domandaRisposte.length - 1 < idxRisposta
+        ? resize([], idxRisposta + 1, null)
+        : [...risposte[idxModulo][idxDomanda]];
+
+    _risposte[idxModulo][idxDomanda] = _risposta;
+    _risposte[idxModulo][idxDomanda][idxRisposta] = { val: newValue };
+    setRisposte(_risposte);
+    await timeout(50);
+    console.log('changeRisposta', _risposte);
+  };
 
   const renderScala = (idxModulo, idxDomanda, scalaVal) => (
     <Box style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}>
@@ -157,13 +175,8 @@ export function ShowQuestion(props) {
         style={{ marginLeft: '26px', marginRight: '26px' }}
         name="ratingRisposta"
         max={toNumberOr(scalaVal && scalaVal.ratingMax, 2)}
-        value={toNumberOr(risposte[idxModulo][idxDomanda], 0)}
-        onChange={(event, newValue) => {
-          console.log('risposta rating ', scalaVal, newValue);
-          const _risposte = [...risposte];
-          _risposte[idxModulo][idxDomanda][0] = newValue;
-          setRisposte(_risposte);
-        }}
+        value={toNumberOr(getUserVal(idxModulo, idxDomanda, 0), 0)}
+        onChange={(event, newValue) => changeRisposta(idxModulo, idxDomanda, 0, newValue)}
       />
       <span className={classes.domandaTxt}>{scalaVal && scalaVal.ratingEnd}</span>
     </Box>
@@ -173,12 +186,12 @@ export function ShowQuestion(props) {
     console.log('click risposta', idxDomanda, idxRisposta);
     const valBefore = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const isBool = [2, 3, 4].indexOf(tipo) > -1;
-    const valBoolTmp = isBool ? !valBefore : valBefore;
-    const correlata = getCorrelata(idxModulo, idxDomanda, idxRisposta);
+    const valBool = isBool ? !valBefore : valBefore;
+    //const correlata = getCorrelata(idxModulo, idxDomanda, idxRisposta);
+    //const valBool = correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
 
-    const valBool = correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
     const _risposte = [...risposte];
-    const _domandaRisposte = getRiposteDomanda(idxModulo, idxDomanda);
+    const _domandaRisposte = risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda];
     let _rispostaOptionTmp;
     if (tipo !== 2) {
       _rispostaOptionTmp =
@@ -189,9 +202,11 @@ export function ShowQuestion(props) {
       _rispostaOptionTmp = !getValueRiposta(idxModulo, idxDomanda, idxRisposta)
         ? resize([], idxRisposta + 1, null)
         : [...risposte[idxModulo][idxDomanda]];
+      _rispostaOptionTmp = _rispostaOptionTmp.map(el => null);
     }
 
-    _rispostaOptionTmp[idxRisposta] = valBool;
+    // changeRisposta(idxModulo, idxDomanda, idxRisposta, valBool);
+    _rispostaOptionTmp[idxRisposta] = { val: valBool };
     _risposte[idxModulo][idxDomanda] = _rispostaOptionTmp;
     setRisposte(_risposte);
     // return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
@@ -243,6 +258,12 @@ export function ShowQuestion(props) {
     );
   };
 
+  const checkRenderDomandaCorrelata = (risposta, idxModulo, idxDomanda, idxRisposta) => {
+    const domandaHtml =
+      isCorrelata(idxModulo, idxDomanda, idxRisposta) && renderDomanda(null, idxModulo)(risposta.correlata, 0, '32px');
+    return domandaHtml;
+  };
+
   const renderRisposte = (idxModulo, domanda, tipo, idxDomanda) => (risposta, idxRisposta) =>
     risposta &&
     (tipo !== 1 ? risposta.risposta : idxRisposta === 0) && (
@@ -260,18 +281,12 @@ export function ShowQuestion(props) {
                 tipo,
                 getValueRiposta(idxModulo, idxDomanda, idxRisposta),
               )}
-              {isCorrelata(idxModulo, idxDomanda, idxRisposta) && renderDomanda(risposta.correlata, 0, '32px')}
+              {checkRenderDomandaCorrelata(risposta, idxModulo, idxDomanda, idxRisposta)}
             </GridChilds>
           ) : tipo === 1 ? (
             <>
               {renderScala(idxModulo, idxDomanda, domanda, risposta)}
-              {isCorrelata(idxModulo, idxDomanda, idxRisposta) && (
-                <ShowQuestion
-                  values={{
-                    domande: [getCorrelata(idxModulo, idxDomanda, idxRisposta)],
-                  }}
-                />
-              )}
+              {checkRenderDomandaCorrelata(risposta, idxModulo, idxDomanda, idxRisposta)}
             </>
           ) : (
             <span></span>
@@ -281,7 +296,6 @@ export function ShowQuestion(props) {
     );
 
   const renderDomandaAperta = (domanda, idxModulo, idxDomanda) => {
-    const risposta = risposte[idxModulo][idxDomanda];
     return (
       <>
         <GridChilds key={idxModulo + idxDomanda} view={[1, 10]}>
@@ -290,14 +304,7 @@ export function ShowQuestion(props) {
             style={{ width: '100%' }}
             label="Risposta"
             value={''}
-            onChange={e => {
-              const _risposte = [...risposte];
-              const valEvent = e.currentTarget.value;
-              const correlata = getCorrelata(idxDomanda, 0);
-              const val = correlata ? { val: valEvent, correlata: {} } : valEvent;
-              risposta[0] = val;
-              setRisposte(_risposte);
-            }}
+            onChange={e => changeRisposta(idxModulo, idxDomanda, 0, e.currentTarget.value)}
           />
         </GridChilds>
       </>
@@ -305,7 +312,7 @@ export function ShowQuestion(props) {
   };
 
   const renderDomanda = (modulo, idxModulo) => (domanda, idx, margin) => {
-    console.log('domanda', domanda);
+    // console.log('domanda', domanda);
     const tipo = toNumberOr(domanda.tipo, 0);
     return (
       <div key={idxModulo + idx}>

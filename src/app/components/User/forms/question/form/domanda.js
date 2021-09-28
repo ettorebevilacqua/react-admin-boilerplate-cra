@@ -82,8 +82,8 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
   });
 
   if (fieldProps.parentValues) {
-    debugger;
-    console.log('id child', values);
+    // debugger;
+    //  console.log('id child', values);
   }
 
   const getRatingStore = newValue => ({
@@ -117,7 +117,7 @@ const MDomandaForm = ({ initialValues, name, fieldProps, setFieldValue, domandaS
     if (isFirstTime) {
       return setIsFirstTime(false);
     }
-    console.log('domanda onChangeForm ', newValues);
+    // console.log('domanda onChangeForm ', newValues);
     setRatingStore(getRatingStore(newValues));
     setRisposte(newValues.risposte);
     fieldProps && fieldProps.onSubFormChange && fieldProps.onSubFormChange(newValues);
