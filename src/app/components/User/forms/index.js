@@ -1,5 +1,5 @@
 import { pick } from 'utils/pick';
-import { questionSlice, moduliSliceCrud, moduloSliceCrud, corsiSlice } from 'app/slice';
+import { questionSlice, moduliSliceCrud, corsiSlice } from 'app/slice';
 import { makeContainerRefreshed } from './component/makerCointainer';
 
 import { QuestionTo } from './question/questionTo';
@@ -49,14 +49,6 @@ export const ModuliForm = makeContainerRefreshed(ModuliFormMaker, moduliSliceCru
   console.log();
 });
 
-export const ModuloDomandeForm = makeContainerRefreshed(Domande, moduloSliceCrud, (matchParam, saved) => {
-  const filter = pick(matchParam, ['id']);
-  moduloSliceCrud.actions.reset();
-  console.log('ModuloDomandeForm', filter.id, toNumberOr(filter.id, 0) === 0 ? 'isZero' : 'no Zero');
-  toNumberOr(filter.id, 0) !== 0
-    ? moduloSliceCrud.actions.get(filter.id, true)
-    : moduloSliceCrud.actions.dataBack(empityModulo);
-  console.log();
-});
+export const ModuloDomandeForm = Domande;
 
 // Paga abbonamento annuale, genera tutte le indagini  che desidera e ottiene anche il report annuale
