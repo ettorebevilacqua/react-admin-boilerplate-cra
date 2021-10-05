@@ -209,6 +209,7 @@ const MDomandaForm = ({
 
   const onClickOption = (formiklProps, idRisposta, idxRisposta) => () => {
     // console.log('click risposta', idxRisposta);
+    if (isSaving) return false;
     const valBefore = risposte[idxRisposta].val;
     const isBool = [2, 3, 4].indexOf(tipo) > -1;
     const valBoolTmp = isBool ? !valBefore : valBefore;
@@ -259,6 +260,7 @@ const MDomandaForm = ({
   const getRatingVals = key => domandaVal.rating;
 
   const changeRisposta = (id, index) => newValue => {
+    if (isSaving) return false;
     // console.log('onChangeRisposta', onChangeRisposta);
     onChangeRisposta && onChangeRisposta(id, index, newValue.risposte);
     /* const _domanda = { ...domandaVal };
