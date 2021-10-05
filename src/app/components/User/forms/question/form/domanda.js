@@ -136,7 +136,6 @@ const MDomandaForm = ({
 
   const onChangeForm = newValues => {
     if (isSaving || isFirstTime) {
-      setIsSaving(false);
       setIsFirstTime(false);
       return false;
     }
@@ -259,8 +258,8 @@ const MDomandaForm = ({
   const onChangeAccordion = () => setExpanded(!expanded);
   const getRatingVals = key => domandaVal.rating;
 
-  const changeRisposta = (id, index) => newValue => {
-    if (isSaving) return false;
+  const changeRisposta = (formiklProps, id, index) => newValue => {
+    if (isSaving || !formiklProps.dirty) return false;
     // console.log('onChangeRisposta', onChangeRisposta);
     onChangeRisposta && onChangeRisposta(id, index, newValue.risposte);
     /* const _domanda = { ...domandaVal };
@@ -462,8 +461,8 @@ const MDomandaForm = ({
                                   tipo={formiklProps.values.tipo}
                                   numStelle={ratingStore}
                                   renderScala={renderScala(formiklProps)}
-                                  onChange={changeRisposta(onChangeRisposta, elem._id, index)}
-                                  changeRisposta={changeRisposta(elem._id, index)}
+                                  onChange={changeRisposta(formiklProps, elem._id, index)}
+                                  changeRisposta={changeRisposta(formiklProps, elem._id, index)}
                                   changeCorrelata={changeCorrelata(elem._id, index)}
                                   domandaCommand={domandaCommand}
                                   arrayManager={arrayManager(arrayHelper, index)}
