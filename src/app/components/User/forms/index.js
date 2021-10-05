@@ -16,7 +16,6 @@ export const CorsiDataForm = makeContainerRefreshed(CorsiForm, corsiSlice, (matc
   const { id, idquestion } = pick(matchParam, ['id']);
   // const filter = !saved || !saved.data || !saved.data.id ? { idquestion } : { id: saved.data.id };
   // console.log('xxxxx queryParam', queryParam);
-  debugger;
   corsiSlice.actions.reset();
   id ? corsiSlice.actions.get(id, true) : corsiSlice.actions.query({}, true);
 });

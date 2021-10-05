@@ -1,8 +1,7 @@
 import React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Button from '@material-ui/core/Button';
-import { DomandaForm } from './domanda';
 import Divider from '@material-ui/core/Divider';
 import GridChilds from '../../component/gridChilds';
 // import TagsInput from '../comp/tagInput';
@@ -13,189 +12,156 @@ import TextField from '@material-ui/core/TextField';
 import { setMenuList } from 'app/slice/layoutSlice';
 
 import { empityModulo, newDomanda } from 'app/services/question/moduliModel';
+import { DomandaForm } from './domanda';
 import { AdjustingInterval } from 'app/services/helper';
 import { elemStyle } from '../../stylesElement';
 
-// import { moduliSliceCrud } from 'app/slice';
+import { useInjectReducer } from 'utils/redux-injectors';
+import { moduloSlice, actions, getModulo, saveModulo, selector } from 'app/slice/modulo.slice';
+import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 
 const ticker = new AdjustingInterval(null, 100);
 sessionStorage.removeItem('currentModuloId');
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
-export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime, selectDataItem, selectSaved }) => {
-  // const initialValues  = useLocation().state;
-  const saved = useSelector(selectSaved);
-  /*
-  const tmp = [temp].map(val => ({ ...val }));
-  const initialValues = tmp && tmp[0]; */
-  const initialValuesTmp =
-    saved && !saved.isLoading && saved.data ? saved.data : !startValues ? empityModulo : startValues;
-  if (!initialValuesTmp.domande) {
-    initialValuesTmp.domande = newDomanda;
-  }
-  const initialValues = { ...initialValuesTmp, domande: initialValuesTmp.domande.filter(dom => !!dom) };
-  const history = useHistory();
-  const classes = elemStyle();
-  const param = useParams();
-  const idStart = param.id;
+function DomandeList({ domandeList, saveModulo }) {
+  const dispatch = useDispatch();
+  const modulo = useSelector(selector.selectModulo);
+  const [domande, setDomande] = React.useState();
+  const selectSaved = useSelector(selector.selectSaved);
+  const [isSaving, setIsSaving] = React.useState(false);
 
-  const [value, setValue] = React.useState(initialValues);
-  const [valueTmp, setValueTmp] = React.useState(initialValues);
-  const [title, setTitle] = React.useState(null);
-  const [currentId, setCurrentId] = React.useState(initialValues.id);
-  const [isFirstRender, setIsFirstRender] = React.useState(true);
-  const location = useLocation();
+  const getDomande = () => [...(domande ? domande : [])];
 
-  const idStartValue = toNumberOr(idStart, 0) === 0 ? false : idStart;
-  // React.useEffect(() => actions.reload(), []);
+  React.useEffect(() => {
+    // setDomande(getDomande());
+  }, [modulo, selectSaved]);
 
-  const onSave = valFrom => {
-    const valueNew = valFrom ? { ...valFrom } : { ...valueTmp };
-    // if (isFirstTime) return setIsFirstTime(false);
-    // const valNewTxt = JSON.stringify(valueNew);
-    // const valueTxt = JSON.stringify(oldValue);
-    // if (valNewTxt === valueTxt) return false;
-    ticker.stop();
-    valueNew.title = title ? title : initialValues.title;
-    /* if (idStartValue) {
-      !!valueNew.id = initialValues.id ? initialValues.id : idStart;
-    } */
+  React.useEffect(() => {
+    modulo && modulo.domande && !domande && setDomande(modulo.domande);
+  }, [modulo]);
 
-    saveData(valueNew).then(res => {
-      const idnew = res && res.payload && res.payload.id;
-      if (!res || !res.payload) return false;
-      if (valueNew.id !== idnew) {
-        // window.history.pushState('', 'Modulo', '/app/user/moduli/' + idnew);
-        // history.push('/app/user/moduli/' + idnew);
-      }
+  const onChange = (id, index) => domanda => dispatch(actions.upDateDomanda({ domanda, id, index }));
+  const onChangeRisposta = (domandaId, idxDomanda) => (rispostaId, idxRisposta, risposte) => {
+    dispatch(actions.changeRisposta({ domandaId, idxDomanda, rispostaId, idxRisposta, risposte }));
+  };
+  const domandaSave = (id, index) => domanda => {
+    dispatch(actions.upDateDomanda({ domanda, id, index }));
+    setIsSaving(true);
+    setTimeout(() => {
+      dispatch(saveModulo()).then(res => {
+        console.log('gas saved', res);
 
-      const toStore = { ...valueNew, id: initialValues.id ? initialValues.id : idnew };
-      setCurrentId(idnew);
-      setValueTmp(toStore);
-      setValue(toStore);
-      window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
-      // history.push(`/app/user/moduli/'${idnew}`);
-      // console.log('main change', toStore);
-    });
-
-    ticker.stop();
+        if (res && res.payload) {
+          setDomande([...res.payload.domande]);
+        }
+        setTimeout(() => setIsSaving(false), 40);
+      });
+    }, 30);
   };
 
-  const handleSubmit = vals => {
-    console.log('form value ', vals);
+  const onChangeCorrelata = (domandaId, idxDomanda) => (rispostaId, idxRisposta, val) => {
+    dispatch(actions.changeCorrelata({ domandaId, idxDomanda, rispostaId, idxRisposta, val }));
+    // setTimeout(() => forceUpdate(), 50);
   };
 
-  const checkChanged = (before, after) => {
-    let isChange = false;
-    if (before.domande.length !== after.domande.length) return true;
-    after.domande.map((item, idx) => {
-      if (!before || !before.domande || !before.domande[idx]) return true;
-      const beforeDom = before.domande[idx];
-      if (item && item.tipo !== beforeDom.tipo) {
-        isChange = true;
-      }
-      if (item && item.risposte && item.risposte.length !== beforeDom.risposte.length) {
-        isChange = true;
-      }
-    });
-    return isChange;
+  const deleteDomanda = (domandaId, idxDomanda) => {
+    dispatch(actions.deleteDomanda({ domandaId, idxDomanda }));
+    setTimeout(() => saveModulo(), 40);
   };
 
-  const onChangeForm = (valueNew, isSub, isToSave) => {
-    // if (isFirstRender) return setIsFirstRender(false);
-    // if (!valueNew.title || !valueNew.title.trim()) return false;
-    //  if (!valueNew) return setIsFirstTime(false);
-    const valNewTxt = JSON.stringify(valueNew);
-    const valueTxt = JSON.stringify(value);
-    // if (valNewTxt === valueTxt) return false;
-
-    const toSaveValue = { ...valueNew }; // isSub ? { ...valueNew, title: valueTmp.title } : { ...valueTmp, title: valueNew.title };
-    // console.log('onChangeForm xxx', toSaveValue);
-
-    // checkChanged(valueTmp, toSaveValue) && onSave();
-    setValueTmp(toSaveValue);
-    isToSave && onSave(toSaveValue);
-    ticker.stop();
-    // ticker.workFunc = onSave(valueTmp, toSaveValue);
-    // !isFirstTime && checkChanged(valueTmp, toSaveValue) && ticker.start();
-    setIsFirstTime(false);
-  };
-
-  const onDeleteDomanda = (arrayHelper, index) => {
-    const _value = { ...valueTmp };
-    const _domande = _value.domande.map(dom => dom);
-    if (_value.domande && _value.domande[1]) {
-      _domande.splice(index, 1);
-      const valueT = { ..._value, domande: _domande };
-      setValueTmp(valueT);
-      onChangeForm(valueT, true, true);
-    }
-  };
-
-  const onCloneDomanda = val => {
-    const _value = { ...valueTmp };
-    const _domande = _value.domande.map(dom => dom);
-    _domande.push(val);
-    const valueT = { ..._value, domande: _domande };
-    setValueTmp(valueT);
-    onChangeForm(valueT, true);
-  };
-
-  const arrayManager = (arrayHelper, index) => (op, val) => {
+  const domandaCommand = (domandaId, idxDomanda) => (op, val) => {
     return op === 'delete'
-      ? onDeleteDomanda(arrayHelper, index)
+      ? deleteDomanda(domandaId, idxDomanda)
       : op === 'clone'
-      ? onCloneDomanda(val)
+      ? dispatch(actions.cloneDomanda(val))
       : op === 'add'
-      ? arrayHelper.push(newDomanda)
+      ? actions.addDomanda(newDomanda)
       : () => 1;
   };
 
-  const onSubFormChange = (arrayHelper, index) => subValue => {
-    if (!valueTmp || !subValue || !value.domande || !valueTmp.domande[index]) return false;
-
-    const _domande = valueTmp.domande.map((dom, idxDomanda) => (idxDomanda === index ? subValue : dom));
-    const _value = { ...valueTmp, domande: _domande };
-    setValueTmp(_value);
-    onChangeForm(_value, true, false);
-    // arrayHelper.replace(index, subValue);
+  const renderDomande = () => {
+    return modulo.domande.map((domanda, index) => (
+      <DomandaForm
+        key={domanda._id || index}
+        idDomanda={domanda._id}
+        indexDomanda={index}
+        onChange={onChange(domanda._id, index)}
+        onChangeRisposta={onChangeRisposta(domanda._id, index)}
+        domandaCommand={domandaCommand(domanda._id, index)}
+        kkinitialValues={domanda}
+        isCorrelata={false}
+        onChangeCorrelata={onChangeCorrelata(domanda._id, index)}
+        domandaSave={domandaSave(domanda._id, index)}
+      />
+    ));
   };
 
-  const domandaSave = idx => value => {
-    onSubFormChange(null, idx)(value);
-    onSave();
+  if (isSaving || !domande) return <span> </span>;
+
+  return <>{renderDomande()}</>;
+}
+
+export const DomandeC = () => {
+  const classes = elemStyle();
+  const history = useHistory();
+
+  const initialValue = useSelector(selector.selectModulo);
+  const dispatch = useDispatch();
+
+  const [modulo, setModulo] = React.useState(initialValue);
+  const [domande, setDomande] = React.useState(modulo && modulo.domande);
+  const [currentId, setCurrentId] = React.useState(initialValue.id);
+  const [title, setTitle] = React.useState(null);
+
+  const onSave = () => {
+    dispatch(saveModulo()).then(res => {
+      console.log('gas saved', res);
+      if (res && res.payload) {
+        const idnew = res.payload.id;
+        setModulo(res.payload);
+        setCurrentId(idnew);
+        dispatch(actions.setModulo(res.payload));
+        window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
+      }
+    });
   };
 
-  const renderNewDomanda = formikProps => (
+  React.useEffect(() => {
+    if (initialValue) {
+      setModulo(initialValue);
+      setTitle(initialValue.title);
+    }
+    // console.log('xxxx', initialValue);
+  }, [initialValue]);
+
+  const changeTitle = _title => {
+    if (modulo.title !== _title) {
+      setModulo({ ...modulo, title: _title });
+      dispatch(actions.setModulo({ title }));
+    }
+  };
+
+  const handleTitle = React.useCallback(val => setTitle(val), [setTitle]);
+
+  const renderBtDomanda = formikProps => (
     <Button
       variant="contained"
       color="primary"
       style={{ height: '42px', width: '120px' }}
       onClick={() => {
-        const lenDomande = value.domande.length;
-        const _value = { ...valueTmp };
-        const _domande = _value.domande.map(dom => dom);
-        _domande.push(newDomanda);
-        const valueT = { ..._value, domande: _domande };
-        setValueTmp(valueT);
-        // onChangeForm(valueT, true, true);
-        // formikProps.setFieldValue('domande.' + lenDomande, newDomanda);
+        const _value = { ...modulo };
+        const _domande = domande.map(dom => dom);
+        const domandeNew = [..._domande, newDomanda];
+        const valueT = { ..._value, domande: domandeNew };
+        setModulo(valueT);
+        setDomande(domandeNew);
+        dispatch(actions.setModulo(valueT));
       }}
     >
       <span style={{ fontSize: '11px' }}>Nuova Domanda</span>
     </Button>
   );
-
-  const domandaChange = () => {};
-
-  const handleSelecetedTags = () => {};
-  if (value === null) {
-    return <>load</>;
-  }
-  const changeTitle = title => {
-    setTitle(title);
-    setValueTmp({ ...valueTmp, title });
-  };
 
   return (
     <div className={classes.root}>
@@ -203,11 +169,12 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime, s
         <TextField
           fullWidth
           name="title"
-          value={valueTmp.title}
+          value={title}
           label="Start descrizione"
-          onChange={e => changeTitle(e.target.value)}
+          onChange={e => handleTitle(e.target.value)}
+          onBlur={e => changeTitle(title)}
         />
-        {!valueTmp.id && (
+        {!modulo.id && (
           <Button
             variant="contained"
             color="primary"
@@ -229,34 +196,12 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime, s
             />
           */}
 
-        {value.title && renderNewDomanda()}
+        {modulo.title && renderBtDomanda()}
       </GridChilds>
-      {!valueTmp.id ? (
-        valueTmp.title && <span>Salvare il documento prima di proseguire</span>
+      {modulo.id ? (
+        <DomandeList saveModulo={onSave} modulo={{ ...modulo }} domandeList={[...domande]} />
       ) : (
-        <>
-          {valueTmp?.domande.map((domanda, index) => {
-            const fieldProps = {
-              onSubFormChange: onSubFormChange(null, index),
-              arrayManager: arrayManager(null, index),
-              tipo: toNumberOr(value && value.tipo, 0),
-              values: valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda,
-            };
-            return (
-              <DomandaForm
-                key={index}
-                initialValues={
-                  valueTmp && valueTmp.domande && valueTmp.domande[index] ? valueTmp.domande[index] : newDomanda
-                }
-                name="domande"
-                setFieldValue={domandaChange}
-                fieldProps={fieldProps}
-                domandaSave={domandaSave(index)}
-              />
-            );
-          })}
-          {valueTmp?.domande.length === 0 && renderNewDomanda()}
-        </>
+        modulo.title && <span>Salvare il documento prima di proseguire</span>
       )}
       <div
         style={{
@@ -267,7 +212,7 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime, s
       >
         <span> </span>
       </div>
-      {valueTmp.id && renderNewDomanda()}
+      {modulo.id && renderBtDomanda()}
       {1 === 0 && (
         <Button color="primary" variant="contained" fullWidth type="submit">
           Submit
@@ -278,47 +223,63 @@ export const DomandeC = ({ startValues, saveData, isFirstTime, setIsFirstTime, s
   );
 };
 
-export const Domande = ({ data, queryValue, actions, formProp, saveData, ...rest }) => {
-  // const stateData = useSelector(selectData);
-  const id = queryValue.id;
-  const [isFirstTime, setIsFirstTime] = React.useState(true);
+export const Domande = () => {
+  useInjectReducer({
+    key: moduloSlice.name,
+    reducer: moduloSlice.reducer,
+  });
+  const stateData = useSelector(selector.selectModulo);
+  const isLoading = useSelector(selector.selectLoading);
+  const error = useSelector(selector.selectError);
+  const history = useHistory();
+
+  const dispatch = useDispatch();
+  const params = useParams();
+  const id = params.id;
+  const [modulo, setModulo] = React.useState(null);
   const location = useLocation();
 
-  const dataParam = toNumberOr(id, -1) === 0 ? empityModulo : data;
-  // const questionModulo = location.state && location.state.data;
-  // moduliSliceCrud.actions.reset();
+  const upDateModulo = newModulo => {
+    setModulo(newModulo);
+    dispatch(actions.setModulo(newModulo));
+  };
+
   React.useEffect(() => {
-    // console.log('loc', data);
-    // !data && id && actions.get(id, true);
-  }, []);
+    toNumberOr(params.id, -1) === 0 ? upDateModulo(null) : dispatch(getModulo(params.id));
+  }, [dispatch, params.id]);
+
   React.useEffect(() => {
-    if (data) {
-      sessionStorage.removeItem('currentModuloId');
-
-      /*  data && data.id !== id && toNumberOr(id, -1) !== 0 && actions.reset();
-      if (data && toNumberOr(id, -1) !== 0 && data.id !== id && data.id !== null) {
-
-        // actions.reload();
-      }   */
-      // console.log('loc', data);
-
-      setMenuList([
-        { link: '/app/user/moduli', label: 'Moduli' },
-        // { link: '/app/user/questionModuli', label: 'Questionari', data },
-        // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
-      ]);
+    if (!isLoading && stateData && !modulo) {
+      setModulo(stateData);
+      dispatch(actions.setModulo(stateData));
     }
-  }, [data]);
+  }, [stateData, isLoading]);
+
+  React.useEffect(() => {
+    setMenuList([
+      { link: '/app/user/moduli', label: 'Moduli' },
+      // { link: '/app/user/questionModuli', label: 'Questionari', data },
+      // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
+    ]);
+  }, []);
+
+  const rendereError = () => (
+    <>
+      <h2>Errrore nel Caricamento</h2>
+      <p> {error}</p>
+      <div>
+        <Button color="primary" variant="contained" fullWidth onClick={() => history.push('/app/user')}>
+          Torna Indietro
+        </Button>
+      </div>
+    </>
+  );
 
   return (
-    <DomandeC
-      startValues={{ ...dataParam }}
-      setIsFirstTime={setIsFirstTime}
-      isFirstTime={isFirstTime}
-      selectDataItem={formProp.selectData}
-      selectSaved={formProp.selectSaved}
-      actions={actions}
-      saveData={saveData}
-    />
+    <LoadingOverlay active={isLoading || !modulo} spinner text="Loading...">
+      {!isLoading && !modulo
+        ? error && rendereError()
+        : modulo && <DomandeC initialValue={{ ...(modulo || empityModulo) }} />}
+    </LoadingOverlay>
   );
 };

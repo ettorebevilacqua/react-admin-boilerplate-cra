@@ -36,7 +36,7 @@ const newDomanda = {
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 const ticker = new AdjustingInterval(null, 1000);
 
-const CompTrueFalse = ({ value, title, compProps, color, onClickOption, ...props }) => {
+const CompTrueFalse = ({ value, title, onChange, compProps, color, onClickOption, ...props }) => {
   const Comp = value ? RadioButtonChecked : RadioButtonUnchecked;
   const propComp = {
     color,
@@ -53,12 +53,16 @@ const CompTrueFalse = ({ value, title, compProps, color, onClickOption, ...props
 const MRispostaForm = ({
   idxList,
   tipo,
+  domanda,
+  risposta,
   risposte,
-  valRisposta,
   renderScala,
   onClickOption,
   arrayManager,
   isCorrelata,
+  onChange,
+  changeRisposta,
+  changeCorrelata,
   fieldProps,
   name,
 }) => {
@@ -66,23 +70,27 @@ const MRispostaForm = ({
 
   const [values, setValues] = useState(risposte[idxList]);
   const [valValue, setValValue] = useState(true);
+  const [isFirstTime, setIsFirstTime] = useState(true);
   const { values: valueCtx, setFieldValue } = useFormikContext();
+
+  const idDomanda = domanda && domanda._id;
+  if (idDomanda === '6152131aed4d7651a672e71d') {
+    //  console.log('idex xxxx ', risposta, values); //);
+  }
 
   React.useEffect(() => setValues(risposte), [risposte]);
   const onSave = newVal => () => {
     fieldProps.onSubFormChange && fieldProps.onSubFormChange(newVal);
   };
-  // console.log('valRisposta', values);
-  // console.log('valRisposta valueCtx ', valueCtx);
+  // console.log('risposta', values);
+  // console.log('risposta valueCtx ', valueCtx);
 
-  const onChangeForm = (valueNew, isFirstTime) => {
-    const valNewTxt = JSON.stringify(valueNew);
-    const valueTxt = JSON.stringify(values);
-    // if (isFirstTime || valNewTxt === valueTxt) return false;
-    // ticker.stop();
-    // ticker.workFunc = onSave(valueNew);
-    // ticker.start();
-
+  const onChangeForm = valueNew => {
+    if (isFirstTime) {
+      setIsFirstTime(false);
+    }
+    changeRisposta && changeRisposta(valueNew);
+    // console.log('risposta change form ', valueNew);
     // !isFirstTime && fieldProps.onSubFormChange && fieldProps.onSubFormChange(values);
   };
 
@@ -109,21 +117,23 @@ const MRispostaForm = ({
   );
 
   const addCorrelata = () => {
-    !valRisposta.correlata
-      ? setFieldValue(`risposte.${idxList}.correlata`, newDomanda)
-      : setFieldValue(`risposte.${idxList}.correlata`, false);
-    //  fieldProps.onSubFormChange({ ...values, correlata: newDomanda });
+    const val = !risposta.correlata ? newDomanda : false;
+
+    setFieldValue(`risposte.${idxList}.correlata`, val);
+    changeCorrelata({ ...risposta, correlata: val });
+    // fieldProps.onSubFormChange({ ...values, correlata: newDomanda });
   };
 
   const onCorrelataFormChange = subValue => {
     setFieldValue(`risposte.${idxList}.correlata`, subValue);
+    changeRisposta && changeRisposta(subValue);
     // fieldProps.onSubFormChange({ ...values, correlata: subValue });
   };
 
   const renderTipoInner = () =>
     tipo === 2 ? (
-      valRisposta.val ? (
-        <RadioButtonChecked color={valRisposta.val ? 'primary' : 'secondary'} onClick={onClickOptionInternal} />
+      risposta.val ? (
+        <RadioButtonChecked color={risposta.val ? 'primary' : 'secondary'} onClick={onClickOptionInternal} />
       ) : (
         <RadioButtonUnchecked color="secondary" onClick={onClickOptionInternal} />
       )
@@ -133,7 +143,7 @@ const MRispostaForm = ({
       <Box component="fieldset" mb={3} borderColor="transparent"></Box>
     ) : tipo === 4 ? (
       <Field component={RadioGroup} aria-label="gender" name="gender1">
-        {radioTrueFalse(valRisposta.val, [true, false])}
+        {radioTrueFalse(risposta.val, [true, false])}
       </Field>
     ) : tipo === 5 || tipo === 6 ? (
       <span></span>
@@ -142,12 +152,20 @@ const MRispostaForm = ({
     );
 
   const renderButtonRisposta = () => (
-    <GridChilds key="1aag" justify="space-between" alignItems="center" spacing={2} view={[8, 2, 2]}>
-      <Box>
-        <Button style={{ width: '100px' }} variant="contained" color="primary" onClick={addCorrelata}>
-          <span style={{ fontSize: '11px' }}>{valRisposta && valRisposta.correlata ? 'Rimuovi' : 'Correlata'}</span>
-        </Button>
-      </Box>
+    <GridChilds
+      key="1aag"
+      justify="space-between"
+      alignItems="center"
+      spacing={2}
+      view={isCorrelata ? [2, 2] : [8, 2, 2]}
+    >
+      {!isCorrelata && (
+        <Box>
+          <Button style={{ width: '100px' }} variant="contained" color="primary" onClick={addCorrelata}>
+            <span style={{ fontSize: '11px' }}>{risposta && risposta.correlata ? 'Rimuovi' : 'Correlata'}</span>
+          </Button>
+        </Box>
+      )}
 
       <Box style={{ float: 'left', marginRight: '6px' }}>
         <Box style={{ float: 'left' }}>
@@ -176,6 +194,8 @@ const MRispostaForm = ({
       <span></span>
     );
 
+  if (!risposta) return <span> </span>;
+
   return (
     <GridChilds key="gg01" style={{ alignItems: 'center' }} view={[1, 11]}>
       <span> </span>
@@ -187,7 +207,7 @@ const MRispostaForm = ({
           width: '100%',
         }}
       >
-        <FormikOnChange delay={500} onChange={onChangeForm} />
+        <FormikOnChange delay={400} onChange={onChangeForm} />
         {tipo === 1 ? (
           <GridChilds key="gg01" style={{ alignItems: 'center' }} view={[7, 3, 1]}>
             {renderScala()}
@@ -202,20 +222,18 @@ const MRispostaForm = ({
             {tipo !== 5 && <div style={{ marginLeft: '8px' }}>{renderTipo()}</div>}
           </GridChilds>
         )}
-        {valRisposta.correlata && (
+        {risposta.correlata && (
           <GridChilds key="ss04" style={{ alignItems: 'center' }} view={[11, 1]}>
-            <DomandaForm
-              initialValues={valRisposta.correlata}
-              fieldProps={{
-                onCorrelataFormChange: onCorrelataFormChange,
-                expanded: true,
-                tipo: tipo,
-                parentValues: values,
-              }}
-            />
-
+            {!isCorrelata && (
+              <DomandaForm
+                initialValues={risposta.correlata}
+                isCorrelata={true}
+                correlataVal={domanda}
+                onCorrelataFormChange={onCorrelataFormChange}
+              />
+            )}
             <DeleteIcon
-              childProps={{ style: { height: '100%' } }}
+              childprops={{ style: { height: '100%' } }}
               style={{ fontSize: '38px' }}
               color="secondary"
               onClick={() => {

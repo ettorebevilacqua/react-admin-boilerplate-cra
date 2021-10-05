@@ -17,6 +17,8 @@ const dispatch = store.dispatch;
 const getModuloOnState = state => state.modulo;
 const getDomande = state => state.modulo.domande;
 
+const getIndex = (list, id, index) => (id ? list.findIndex(el => el._id === id) : index);
+
 const getIndexDomanda = (state, id, index) => (id ? state.modulo.domande.findIndex(el => el._id === id) : index);
 export const getDomanda = (state, id, index) => {
   const idxDomanda = getIndexDomanda(state, id, index);
@@ -52,6 +54,7 @@ const loadingSState = {
 
 const initialState = {
   modulo: empityModulo,
+  catchError: null,
   saved: { data: null, ...loadingSState },
   ...loadingSState,
 };
@@ -61,11 +64,80 @@ const setStateModulo = (state, newModulo) => {
 };
 
 const upDateDomanda = (state, payload) => {
+  if (!state || !state.modulo || !state.modulo.domande) return state;
   const { domanda, id, index } = payload;
   const idxDomanda = getIndexDomanda(state, id, index);
-  if (idxDomanda < 0) return state;
-  state.modulo.domande[idxDomanda] = domanda;
-  return state;
+  const moduloRow = { ...state.modulo };
+  const domande = moduloRow.domande.map(el => ({ ...el }));
+  if (!domande[idxDomanda] || !domande[idxDomanda].risposte) return state;
+  const _risposte = [...domande[idxDomanda].risposte];
+  if (!_risposte || !_risposte.map) return state;
+  const risposte = _risposte.map(el => ({ ...el }));
+  const domandaNew = { ...domanda, risposte };
+  domande[idxDomanda] = domandaNew;
+  const modulo = { ...moduloRow, domande };
+  const newState = { ...state, modulo };
+  return newState;
+};
+
+const changeRisposta = (state, payload) => {
+  if (!state || !state.modulo || !state.modulo.domande) return state;
+  const { domandaId, idxDomanda, rispostaId, idxRisposta, risposte } = payload;
+  const domandeRow = getDomande(state);
+  const domande = domandeRow.map(el => ({ ...el }));
+  const _idxDomanda = getIndexDomanda(state, domandaId, idxDomanda);
+  if (!domande || !domande[_idxDomanda] || !domande[_idxDomanda].risposte || !risposte || !risposte.map) return state;
+
+  const domanda = { ...domande[_idxDomanda] };
+  const _idxRisposta = getIndex(domanda.risposte, rispostaId, idxRisposta);
+  if (!domanda.risposte[_idxRisposta] || !risposte[_idxRisposta]) return state;
+
+  // const risposteOld = domanda.risposte.map(el => ({ ...el }));
+  // const risposta = { ...risposte[_idxRisposta] };
+  // const newRipsosta = { ...val };
+
+  // risposte[_idxRisposta] = newRipsosta;
+  const newDomanda = { ...domanda, risposte };
+  const modulo = { ...state.modulo, domande };
+  modulo.domande[_idxDomanda] = newDomanda;
+  const newState = { ...state, modulo };
+  return newState;
+};
+
+const changeCorrelata = (state, payload) => {
+  const { domandaId, idxDomanda, rispostaId, idxRisposta, val } = payload;
+  const domandeRow = getDomande(state);
+  const domande = domandeRow.map(el => ({ ...el }));
+  const _idxDomanda = getIndexDomanda(state, domandaId, idxDomanda);
+  if (!domande || !domande[_idxDomanda] || !domande[_idxDomanda].risposte) return state;
+
+  const domanda = { ...domande[_idxDomanda] };
+  const _idxRisposta = getIndex(domanda.risposte, rispostaId, idxRisposta);
+  if (!domanda.risposte[_idxRisposta]) return state;
+
+  const risposte = domanda.risposte.map(el => ({ ...el }));
+  const risposta = { ...risposte[_idxRisposta] };
+  const newRipsosta = { ...risposta, correlata: val };
+
+  risposte[_idxRisposta] = newRipsosta;
+  const newDomanda = { ...domanda, risposte };
+  domande[idxDomanda] = newDomanda;
+  const modulo = { ...state.modulo, domande };
+  modulo.domande[_idxDomanda] = newDomanda;
+  const newState = { ...state, modulo };
+  return newState;
+};
+
+const deleteDomanda = (state, payload) => {
+  const { domandaId, idxDomanda } = payload;
+  const domandeRow = getDomande(state);
+  const domande = domandeRow.map(el => ({ ...el }));
+  const _idxDomanda = getIndexDomanda(state, domandaId, idxDomanda);
+  if (!domande || !domande[_idxDomanda] || !domande[_idxDomanda].risposte) return state;
+  const newDomande = domande.filter((el, idx) => idx !== _idxDomanda);
+  const modulo = { ...state.modulo, domande: newDomande };
+  const newState = { ...state, modulo };
+  return newState;
 };
 
 export const moduloSlice = createSlice({
@@ -78,7 +150,10 @@ export const moduloSlice = createSlice({
       return upDateDomanda(state, payload);
     },
     setModulo: (state, { payload }) => setStateModulo(state, payload),
+    changeCorrelata: (state, { payload }) => changeCorrelata(state, payload),
+    changeRisposta: (state, { payload }) => changeRisposta(state, payload),
     domandaCommand: (state, { payload }) => setStateModulo(state, payload),
+    deleteDomanda: (state, { payload }) => deleteDomanda(state, payload),
   },
   extraReducers: builder => {
     builder.addCase(getModulo.fulfilled, (state, { payload }) => {
@@ -129,18 +204,82 @@ export const moduloSlice = createSlice({
   },
 });
 
-export const { clearState, mustAuth } = moduloSlice.actions;
+// export const { clearState, mustAuth } = moduloSlice.actions;
 
 const dataSelector = state => {
   const cond = !state || !state[moduloSlice.name] ? initialState : state[moduloSlice.name];
   return cond;
 };
 
-export const selectModulo = createSelector([dataSelector], dataState => dataState.modulo);
+export const getDomandeState = state => !state || !state[moduloSlice.name] || !state[moduloSlice.name].modulo.domande;
+// selector for todos
+
+const dataSelectDomande = state => {
+  const cond =
+    !state || !state[moduloSlice.name] || !state[moduloSlice.name].modulo || !state[moduloSlice.name].modulo.domande
+      ? null
+      : state[moduloSlice.name].modulo.domande;
+  return cond ? cond.map(el => ({ ...el })) : cond;
+};
+
+const domandeGetter = (domande, domandaId, index) => {
+  const idxDomanda = !domande ? -1 : getIndex(domande, domandaId, index);
+  if (idxDomanda < 0 || !domande[idxDomanda]) return null;
+  return { ...domande[idxDomanda] };
+};
+
+const dataSelectDomanda = (state, domandaId, index) => {
+  const domande = dataSelectDomande(state);
+  if (!domande) return null;
+  const domanda = domandeGetter(domande, domandaId, index);
+  if (!domanda) return null;
+  const risposte =
+    !domanda.risposte || !domanda.risposte.map ? domanda.risposte : domanda.risposte.map(el => ({ ...el }));
+  const newDomanda = { ...domanda, risposte };
+  return newDomanda;
+};
+
+const selectDomande = createSelector([dataSelectDomande], domande => {
+  const out = [...domande];
+  return out;
+});
+
+export const selectModulo = createSelector([dataSelector], dataState => ({ ...dataState.modulo }));
 export const selectLoading = createSelector([dataSelector], crudState => crudState.isFetching);
 export const selectError = createSelector([dataSelector], crudState => crudState.error);
 export const selectSaved = createSelector([dataSelector], crudState => crudState.saved);
 export const selectState = createSelector([dataSelector], crudState => crudState);
+
+// selector for filtered todos
+/* const selectDomanda = createSelector([dataSelector], state => (domandaId, index) => {
+  if (index === undefined || index === null || !state) return null;
+  const moduloState =
+    !state || !state[moduloSlice.name] || !state[moduloSlice.name].modulo ? null : state[moduloSlice.name.modulo];
+  if (!moduloState || !moduloState.domande) return false;
+  const modulo = { ...moduloState };
+  const domande = modulo.map(el => ({ ...el }));
+  const idxDomanda = !domande ? -1 : getIndex(domande, domandaId, index);
+  if (idxDomanda < 0 || !domande[idxDomanda]) return null;
+  return domande[idxDomanda];
+}); */
+
+const domandeSelectGetter = (domandaId, index) => domande => {
+  const idxDomanda = !domande ? -1 : getIndex(domande, domandaId, index);
+  if (idxDomanda < 0 || !domande[idxDomanda]) return null;
+  return domande[idxDomanda];
+};
+
+const selectDomanda = (domandaId, index) =>
+  createSelector(
+    [
+      dataSelectDomande,
+      state => {
+        const _domande = dataSelectDomande(state);
+        return _domande;
+      },
+    ],
+    domandeSelectGetter(domandaId, index),
+  );
 export const actions = moduloSlice.actions;
 export const selector = {
   selectModulo,
@@ -148,4 +287,8 @@ export const selector = {
   selectError,
   selectSaved,
   selectState,
+  selectDomande,
+  dataSelectDomande,
+  dataSelectDomanda,
+  selectDomanda,
 };

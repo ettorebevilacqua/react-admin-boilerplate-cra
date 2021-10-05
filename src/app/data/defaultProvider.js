@@ -74,7 +74,6 @@ export function defaultProvider(id, url, schemas, tags) {
       idProvider.cleanCache();
     },
     cleanCache: () => {
-      debugger;
       myProvider.cleanCache();
       idProvider.cleanCache();
     },
