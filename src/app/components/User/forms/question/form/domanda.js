@@ -183,6 +183,17 @@ const MDomandaForm = ({
     // onChange && onChange(_domanda);
   };
 
+  const arrayManager = (arrayHelper, index) => op => {
+    debugger;
+    return op === 'delete'
+      ? index === 0
+        ? arrayHelper.replace(index, {})
+        : arrayHelper.remove(index)
+      : op === 'moveup' || op === 'movedown'
+      ? moveRisposta(op, arrayHelper, index)
+      : () => 1;
+  };
+
   /* const onClickOption = (replace, index) => (field, val) => {
     tipo === TipoQuestionName.unica
       ? setOptionsTipoUnico(replace, val, index)
@@ -453,6 +464,7 @@ const MDomandaForm = ({
                                   changeRisposta={changeRisposta(elem._id, index)}
                                   changeCorrelata={changeCorrelata(elem._id, index)}
                                   domandaCommand={domandaCommand}
+                                  arrayManager={arrayManager(arrayHelper, index)}
                                 />
                               ))}
                           {!isCorrelata && renderAddRisposta(arrayHelper)}

@@ -47,7 +47,12 @@ function DomandeList({ domandeList, saveModulo }) {
   };
   const domandaSave = (id, index) => domanda => {
     dispatch(actions.upDateDomanda({ domanda, id, index }));
-    setIsSaving(true);
+    // setIsSaving(true);
+    setTimeout(() => saveModulo(), 40);
+    // setTimeout(() => setIsSaving(false), 100);
+
+    // dispatch(saveModulo());
+    /*
     setTimeout(() => {
       dispatch(saveModulo()).then(res => {
         console.log('gas saved', res);
@@ -57,7 +62,7 @@ function DomandeList({ domandeList, saveModulo }) {
         }
         setTimeout(() => setIsSaving(false), 40);
       });
-    }, 30);
+    }, 30); */
   };
 
   const onChangeCorrelata = (domandaId, idxDomanda) => (rispostaId, idxRisposta, val) => {
@@ -110,13 +115,17 @@ export const DomandeC = () => {
   const dispatch = useDispatch();
 
   const [modulo, setModulo] = React.useState(initialValue);
+  const [isSaving, setIsSaving] = React.useState(false);
   const [domande, setDomande] = React.useState(modulo && modulo.domande);
   const [currentId, setCurrentId] = React.useState(initialValue.id);
   const [title, setTitle] = React.useState(null);
 
   const onSave = () => {
+    setIsSaving(true);
+    setTimeout(() => setIsSaving(false), 3000);
     dispatch(saveModulo()).then(res => {
       console.log('gas saved', res);
+      setIsSaving(false);
       if (res && res.payload) {
         const idnew = res.payload.id;
         setModulo(res.payload);
@@ -199,7 +208,11 @@ export const DomandeC = () => {
         {modulo.title && renderBtDomanda()}
       </GridChilds>
       {modulo.id ? (
-        <DomandeList saveModulo={onSave} modulo={{ ...modulo }} domandeList={[...domande]} />
+        <>
+          {!isSaving && (
+            <DomandeList saveModulo={onSave} isSaving={isSaving} modulo={{ ...modulo }} domandeList={[...domande]} />
+          )}
+        </>
       ) : (
         modulo.title && <span>Salvare il documento prima di proseguire</span>
       )}
