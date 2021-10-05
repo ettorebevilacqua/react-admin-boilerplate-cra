@@ -121,6 +121,7 @@ export const DomandeC = () => {
   const [title, setTitle] = React.useState(null);
 
   const onSave = () => {
+    if (isSaving) return false;
     setIsSaving(true);
     setTimeout(() => setIsSaving(false), 3000);
     dispatch(saveModulo()).then(res => {
@@ -241,24 +242,34 @@ export const Domande = () => {
     key: moduloSlice.name,
     reducer: moduloSlice.reducer,
   });
-  const stateData = useSelector(selector.selectModulo);
-  const isLoading = useSelector(selector.selectLoading);
-  const error = useSelector(selector.selectError);
-  const history = useHistory();
-
   const dispatch = useDispatch();
+  const history = useHistory();
   const params = useParams();
   const id = params.id;
+
+  const stateDataSelector = useSelector(selector.selectModulo);
+  const isLoading = useSelector(selector.selectLoading);
+  const error = useSelector(selector.selectError);
+
+  const stateData = toNumberOr(params.id, -1) === 0 ? empityModulo : stateDataSelector;
+
   const [modulo, setModulo] = React.useState(null);
   const location = useLocation();
 
+  React.useEffect(() => {
+    if (toNumberOr(params.id, -1) === 0) {
+      setModulo(empityModulo);
+      dispatch(actions.clearState());
+    }
+  }, []);
+
   const upDateModulo = newModulo => {
     setModulo(newModulo);
-    dispatch(actions.setModulo(newModulo));
+    newModulo ? dispatch(actions.setModulo(newModulo)) : !newModulo && dispatch(actions.clearState());
   };
 
   React.useEffect(() => {
-    toNumberOr(params.id, -1) === 0 ? upDateModulo(null) : dispatch(getModulo(params.id));
+    toNumberOr(params.id, -1) === 0 ? upDateModulo() : dispatch(getModulo(params.id));
   }, [dispatch, params.id]);
 
   React.useEffect(() => {
