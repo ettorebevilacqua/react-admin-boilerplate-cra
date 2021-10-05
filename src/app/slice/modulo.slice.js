@@ -63,6 +63,16 @@ const setStateModulo = (state, newModulo) => {
   return { ...state, modulo: { ...state.modulo, ...newModulo } };
 };
 
+const addDomanda = state => {
+  if (!state || !state.modulo || !state.modulo.domande) return state;
+  const moduloRow = { ...state.modulo };
+  const domandeNew = moduloRow.domande.map(el => ({ ...el }));
+  const domande = [...domandeNew, newDomanda];
+  const modulo = { ...moduloRow, domande };
+  const newState = { ...state, modulo };
+  return newState;
+};
+
 const upDateDomanda = (state, payload) => {
   if (!state || !state.modulo || !state.modulo.domande) return state;
   const { domanda, id, index } = payload;
@@ -154,6 +164,7 @@ export const moduloSlice = createSlice({
     changeRisposta: (state, { payload }) => changeRisposta(state, payload),
     domandaCommand: (state, { payload }) => setStateModulo(state, payload),
     deleteDomanda: (state, { payload }) => deleteDomanda(state, payload),
+    addDomanda: state => addDomanda(state),
   },
   extraReducers: builder => {
     builder.addCase(getModulo.fulfilled, (state, { payload }) => {

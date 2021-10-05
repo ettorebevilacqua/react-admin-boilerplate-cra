@@ -166,7 +166,9 @@ export const DomandeC = () => {
         const valueT = { ..._value, domande: domandeNew };
         setModulo(valueT);
         setDomande(domandeNew);
-        dispatch(actions.setModulo(valueT));
+        const tmp = dispatch(actions.addDomanda());
+        setTimeout(() => onSave(), 40);
+        console.log('xxxx', tmp);
       }}
     >
       <span style={{ fontSize: '11px' }}>Nuova Domanda</span>
