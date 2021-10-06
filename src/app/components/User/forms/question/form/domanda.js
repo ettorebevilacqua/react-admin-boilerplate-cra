@@ -159,14 +159,14 @@ const MDomandaForm = ({
     formiklProps.submitForm();
     formiklProps.setSubmitting(false);
   };
-  const onSubmit = (valFormik, actions) => {
+  const onSubmit = (valFormik, _actions) => {
     const out = { ...valFormik };
     // onChange && onChange(out);
     //fieldProps.onCorrelataFormChange(out);
     setIsSaving(true);
     onChange && onChange(out);
     domandaSave(out);
-    actions.resetForm();
+    _actions.resetForm();
   };
 
   const changeCorrelata = (id, index) => newValue => {
