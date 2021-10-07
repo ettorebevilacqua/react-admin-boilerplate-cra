@@ -12,5 +12,6 @@ export interface RootState {
   theme?: ThemeState;
   userAuth?: UserAuthState;
   addKeyToStore?: String;
+  dataProvider?: any;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }
