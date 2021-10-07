@@ -195,6 +195,7 @@ export const moduloSlice = createSlice({
       state.saved.isError = false;
       state.saved.error = null;
       state.saved.data = payload;
+      state.modulo = payload;
     });
 
     builder.addCase(saveModulo.rejected, (state, { payload }) => {
