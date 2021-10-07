@@ -24,12 +24,11 @@ const ticker = new AdjustingInterval(null, 100);
 sessionStorage.removeItem('currentModuloId');
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
-function DomandeList({ domandeList, saveModulo }) {
+function DomandeList({ onSave, saveModulo }) {
   const dispatch = useDispatch();
   const modulo = useSelector(selector.selectModulo);
   const [domande, setDomande] = React.useState();
   const selectSaved = useSelector(selector.selectSaved);
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const getDomande = () => [...(domande ? domande : [])];
 
@@ -46,9 +45,10 @@ function DomandeList({ domandeList, saveModulo }) {
     dispatch(actions.changeRisposta({ domandaId, idxDomanda, rispostaId, idxRisposta, risposte }));
   };
   const domandaSave = (id, index) => domanda => {
-    dispatch(actions.upDateDomanda({ domanda, id, index }));
+    onSave(id, index, domanda);
+    // dispatch(actions.upDateDomanda({ domanda, id, index }));
     // setIsSaving(true);
-    setTimeout(() => saveModulo(), 40);
+    // setTimeout(() => onSave(id, index, domanda), 40);
     // setTimeout(() => setIsSaving(false), 100);
 
     // dispatch(saveModulo());
@@ -72,7 +72,7 @@ function DomandeList({ domandeList, saveModulo }) {
 
   const deleteDomanda = (domandaId, idxDomanda) => {
     dispatch(actions.deleteDomanda({ domandaId, idxDomanda }));
-    setTimeout(() => saveModulo(), 40);
+    setTimeout(() => onSave(), 40);
   };
 
   const domandaCommand = (domandaId, idxDomanda) => (op, val) => {
@@ -102,39 +102,27 @@ function DomandeList({ domandeList, saveModulo }) {
     ));
   };
 
-  if (isSaving || !domande) return <span> </span>;
+  // if (isSaving || !domande) return <span> </span>;
 
   return <>{renderDomande()}</>;
 }
 
-export const DomandeC = () => {
+export const DomandeC = ({ onSave, isSaving, initialValue }) => {
   const classes = elemStyle();
   const history = useHistory();
 
-  const initialValue = useSelector(selector.selectModulo);
+  // const initialValue = useSelector(selector.selectModulo);
   const dispatch = useDispatch();
 
   const [modulo, setModulo] = React.useState(initialValue);
-  const [isSaving, setIsSaving] = React.useState(false);
+  // const [isSaving, setIsSaving] = React.useState(false);
+
   const [domande, setDomande] = React.useState(modulo && modulo.domande);
-  const [currentId, setCurrentId] = React.useState(initialValue.id);
   const [title, setTitle] = React.useState(null);
 
-  const onSave = () => {
-    if (isSaving) return false;
-    setIsSaving(true);
-    setTimeout(() => setIsSaving(false), 3000);
-    dispatch(saveModulo()).then(res => {
-      console.log('gas saved', res);
-      setIsSaving(false);
-      if (res && res.payload) {
-        const idnew = res.payload.id;
-        setModulo(res.payload);
-        setCurrentId(idnew);
-        dispatch(actions.setModulo(res.payload));
-        window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
-      }
-    });
+  const onSaveDomanda = (id, index, domanda) => {
+    dispatch(actions.upDateDomanda({ domanda, id, index }));
+    setTimeout(() => onSave(id, index, domanda), 40);
   };
 
   React.useEffect(() => {
@@ -211,11 +199,7 @@ export const DomandeC = () => {
         {modulo.title && renderBtDomanda()}
       </GridChilds>
       {modulo.id ? (
-        <>
-          {!isSaving && (
-            <DomandeList saveModulo={onSave} isSaving={isSaving} modulo={{ ...modulo }} domandeList={[...domande]} />
-          )}
-        </>
+        <DomandeList onSave={onSaveDomanda} isSaving={isSaving} modulo={{ ...modulo }} domandeList={[...domande]} />
       ) : (
         modulo.title && <span>Salvare il documento prima di proseguire</span>
       )}
@@ -247,6 +231,7 @@ export const Domande = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const params = useParams();
+  const location = useLocation();
   const id = params.id;
 
   const stateDataSelector = useSelector(selector.selectModulo);
@@ -256,7 +241,8 @@ export const Domande = () => {
   const stateData = toNumberOr(params.id, -1) === 0 ? empityModulo : stateDataSelector;
 
   const [modulo, setModulo] = React.useState(null);
-  const location = useLocation();
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [isDomandeHide, setIsDomandeHide] = React.useState(false);
 
   React.useEffect(() => {
     if (toNumberOr(params.id, -1) === 0) {
@@ -268,6 +254,25 @@ export const Domande = () => {
   const upDateModulo = newModulo => {
     setModulo(newModulo);
     newModulo ? dispatch(actions.setModulo(newModulo)) : !newModulo && dispatch(actions.clearState());
+  };
+
+  const onSave = () => {
+    if (isSaving) return false;
+    setIsSaving(true);
+    setTimeout(() => setIsSaving(false), 3000);
+    dispatch(saveModulo()).then(res => {
+      console.log('gas saved', res);
+      setIsSaving(false);
+      if (res && res.payload) {
+        const idnew = res.payload.id;
+        setModulo(res.payload);
+        // res.payload.domande && setDomande(res.payload.domande);
+        dispatch(actions.setModulo(res.payload));
+        window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
+        setIsDomandeHide(true);
+        setTimeout(() => setIsDomandeHide(false), 30);
+      }
+    });
   };
 
   React.useEffect(() => {
@@ -305,7 +310,10 @@ export const Domande = () => {
     <LoadingOverlay active={isLoading || !modulo} spinner text="Loading...">
       {!isLoading && !modulo
         ? error && rendereError()
-        : modulo && <DomandeC initialValue={{ ...(modulo || empityModulo) }} />}
+        : modulo &&
+          !isDomandeHide && (
+            <DomandeC onSave={onSave} isSaving={isSaving} initialValue={{ ...(modulo || empityModulo) }} />
+          )}
     </LoadingOverlay>
   );
 };
