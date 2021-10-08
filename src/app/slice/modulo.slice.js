@@ -1,8 +1,8 @@
 /*
-https://cloudnweb.dev/2021/02/modern-react-redux-tutotials-redux-toolkit-login-user-registration/
 
-auth with provate route
-https://ui.dev/react-router-v5-protected-routes-authentication/
+normalizzare redux IMPORTANTE
+https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
+https://github.com/paularmstrong/normalizr
 
 */
 
@@ -73,6 +73,20 @@ const addDomanda = state => {
   return newState;
 };
 
+const clonaDomanda = (state, payload) => {
+  const { domandaId, idxDomanda } = payload;
+  const indexDomanda = getIndexDomanda(state, domandaId, idxDomanda);
+  const moduloRow = { ...state.modulo };
+  const _domande = moduloRow.domande.map(el => ({ ...el }));
+  if (!_domande[indexDomanda]) return state;
+  const _newDomanda = _domande[indexDomanda];
+  delete _newDomanda._id;
+  const domande = [..._domande, _newDomanda];
+  const modulo = { ...moduloRow, domande };
+  const newState = { ...state, modulo };
+  return newState;
+};
+
 const upDateDomanda = (state, payload) => {
   if (!state || !state.modulo || !state.modulo.domande) return state;
   const { domanda, id, index } = payload;
@@ -80,11 +94,8 @@ const upDateDomanda = (state, payload) => {
   const moduloRow = { ...state.modulo };
   const domande = moduloRow.domande.map(el => ({ ...el }));
   if (!domande[idxDomanda] || !domande[idxDomanda].risposte) return state;
-  const _risposte = [...domande[idxDomanda].risposte];
-  if (!_risposte || !_risposte.map) return state;
-  const risposte = _risposte.map(el => ({ ...el }));
-  const domandaNew = { ...domanda, risposte };
-  domande[idxDomanda] = domandaNew;
+  const _domanda = { ...domanda };
+  domande[idxDomanda] = _domanda;
   const modulo = { ...moduloRow, domande };
   const newState = { ...state, modulo };
   return newState;
@@ -119,7 +130,9 @@ const changeCorrelata = (state, payload) => {
   const domandeRow = getDomande(state);
   const domande = domandeRow.map(el => ({ ...el }));
   const _idxDomanda = getIndexDomanda(state, domandaId, idxDomanda);
-  if (!domande || !domande[_idxDomanda] || !domande[_idxDomanda].risposte) return state;
+  if (!domande || !domande[_idxDomanda] || !domande[_idxDomanda].risposte || !val.hasOwnProperty('correlata')) {
+    return state;
+  }
 
   const domanda = { ...domande[_idxDomanda] };
   const _idxRisposta = getIndex(domanda.risposte, rispostaId, idxRisposta);
@@ -127,7 +140,7 @@ const changeCorrelata = (state, payload) => {
 
   const risposte = domanda.risposte.map(el => ({ ...el }));
   const risposta = { ...risposte[_idxRisposta] };
-  const newRipsosta = { ...risposta, correlata: val };
+  const newRipsosta = { ...risposta, correlata: val.correlata };
 
   risposte[_idxRisposta] = newRipsosta;
   const newDomanda = { ...domanda, risposte };
@@ -165,6 +178,7 @@ export const moduloSlice = createSlice({
     domandaCommand: (state, { payload }) => setStateModulo(state, payload),
     deleteDomanda: (state, { payload }) => deleteDomanda(state, payload),
     addDomanda: state => addDomanda(state),
+    clonaDomanda: (state, { payload }) => clonaDomanda(state, payload),
   },
   extraReducers: builder => {
     builder.addCase(getModulo.fulfilled, (state, { payload }) => {

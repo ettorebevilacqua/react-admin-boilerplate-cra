@@ -19,7 +19,7 @@ import * as Yup from 'yup';
 import GridChilds from '../../component/gridChilds';
 import FormikOnChange from '../../lib/FormikOnChange';
 import { TextField, Checkbox, RadioGroup } from 'formik-material-ui';
-import { DomandaForm } from './domanda';
+import { MDomandaForm } from './domanda';
 import { AdjustingInterval } from 'app/services/helper';
 
 const nameSchema = Yup.object().shape({
@@ -57,47 +57,93 @@ const MRispostaForm = ({
   risposta,
   risposte,
   renderScala,
-  onClickOption,
   arrayManager,
   isCorrelata,
-  onChange,
-  changeRisposta,
-  changeCorrelata,
   fieldProps,
+  arrayHelper,
   name,
 }) => {
   tipo = toNumberOr(tipo, 0);
 
-  const [values, setValues] = useState(risposte[idxList]);
+  // const [values, setValues] = useState(risposte[idxList]);
+  const { values, setFieldValue } = useFormikContext();
   const [valValue, setValValue] = useState(true);
+  const [correlata, setCorrelata] = useState(
+    isCorrelata || !risposta || !risposta.correlata ? false : risposta.correlata,
+  );
   const [isFirstTime, setIsFirstTime] = useState(true);
-  const { values: valueCtx, setFieldValue } = useFormikContext();
+  const [disableChange, setDisableChange] = useState(false);
 
   const idDomanda = domanda && domanda._id;
   if (idDomanda === '6152131aed4d7651a672e71d') {
     //  console.log('idex xxxx ', risposta, values); //);
   }
 
-  React.useEffect(() => setValues(risposte), [risposte]);
-  const onSave = newVal => () => {
-    fieldProps.onSubFormChange && fieldProps.onSubFormChange(newVal);
-  };
-  // console.log('risposta', values);
-  // console.log('risposta valueCtx ', valueCtx);
+  // React.useEffect(() => setValues(risposte), [risposte]);
 
   const onChangeForm = valueNew => {
-    if (isFirstTime) {
+    if (isFirstTime || disableChange) {
       setIsFirstTime(false);
+      setDisableChange(false);
+      return false;
     }
-    changeRisposta && changeRisposta(valueNew);
+    // changeRisposta && changeRisposta(valueNew);
     // console.log('risposta change form ', valueNew);
     // !isFirstTime && fieldProps.onSubFormChange && fieldProps.onSubFormChange(values);
+  };
+
+  const getCorrelata = idx => {
+    if ([5, 6].indexOf(tipo) > -1) return null;
+    const _risposta = risposte[idx];
+    return _risposta && _risposta.correlata ? _risposta.correlata : null;
+  };
+
+  const resize = (arr, newSize, defaultValue) => [
+    ...arr,
+    ...Array(Math.max(newSize - arr.length, 0)).fill(defaultValue),
+  ];
+
+  const onClickOption = () => {
+    // console.log('click risposta', idxRisposta);
+    if (isCorrelata || !values || !values.risposte || !values.risposte[idxList]) return false;
+    const valBefore = risposte[idxList].val;
+    const isBool = [2, 3, 4].indexOf(tipo) > -1;
+    const valBoolTmp = isBool ? !valBefore : valBefore;
+    const correlata = getCorrelata(idxList);
+
+    const valBool = valBoolTmp; //correlata ? { val: valBoolTmp, correlata: {} } : valBoolTmp;
+    const _risposteResizedTmp = risposte.length - 1 < idxList ? resize([], idxList + 1, null) : [...risposte];
+    const _risposte = _risposteResizedTmp.map((el, idx) => ({ ...el, val: tipo === 2 ? null : el.val }));
+    // const resizeIf = val => (val ? resize([], idxRisposta + 1, null) : _risposte[idxRisposta]);
+    // const _rispostaOptionTmp = tipo === 2  ? valBoolTmp : resizeIf(_risposte.length - 1 < idxRisposta);
+    _risposte[idxList].val = tipo === 2 ? valBool : valBool; // { ..._risposte[idxRisposta], val: tipo === 2 ? !valBool : !valBool };
+    // setRisposte(_risposte);
+    // formiklProps.setFieldValue(`risposte.${idxRisposta}.val`, valBool);
+    // arrayHelper.replace(idxList, _risposte);
+    setFieldValue(`risposte`, _risposte);
+    // onChangeRisposta && onChangeRisposta(idRisposta, idxRisposta, _risposte);
+    // replace(`risposte.${idxRisposta}.rating`, { ..._risposte[idxRisposta] });
+    // return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
 
   const onClickOptionInternal = () => {
     const newVal = !valValue;
     // setValValue(newVal);
     onClickOption();
+  };
+
+  const addCorrelata = () => {
+    const val = !risposta.correlata ? newDomanda : false;
+    setFieldValue(`risposte.${idxList}.correlata`, val);
+    return false;
+    setDisableChange(true);
+    setCorrelata(val);
+    setTimeout(() => {
+      setFieldValue(`risposte.${idxList}.correlata`, val);
+      // changeCorrelata({ ...risposta, correlata: val });
+    }, 40);
+
+    // fieldProps.onSubFormChange({ ...values, correlata: newDomanda });
   };
 
   const radioTrueFalse = val => (
@@ -116,17 +162,9 @@ const MRispostaForm = ({
     </>
   );
 
-  const addCorrelata = () => {
-    const val = !risposta.correlata ? newDomanda : false;
-
-    setFieldValue(`risposte.${idxList}.correlata`, val);
-    changeCorrelata({ ...risposta, correlata: val });
-    // fieldProps.onSubFormChange({ ...values, correlata: newDomanda });
-  };
-
   const onCorrelataFormChange = subValue => {
     setFieldValue(`risposte.${idxList}.correlata`, subValue);
-    changeRisposta && changeRisposta(subValue);
+    return false;
     // fieldProps.onSubFormChange({ ...values, correlata: subValue });
   };
 
@@ -225,10 +263,11 @@ const MRispostaForm = ({
         {risposta.correlata && (
           <GridChilds key="ss04" style={{ alignItems: 'center' }} view={[11, 1]}>
             {!isCorrelata && (
-              <DomandaForm
+              <MDomandaForm
                 initialValues={risposta.correlata}
                 isCorrelata={true}
-                correlataVal={domanda}
+                correlataVal={risposta.correlata}
+                formikPath={`risposte.${idxList}.correlata.`}
                 onCorrelataFormChange={onCorrelataFormChange}
               />
             )}

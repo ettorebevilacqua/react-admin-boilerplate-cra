@@ -24,7 +24,7 @@ const ticker = new AdjustingInterval(null, 100);
 sessionStorage.removeItem('currentModuloId');
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
-function DomandeList({ onSave, saveModulo }) {
+function DomandeList({ isDomandeHide, onSave, saveModulo }) {
   const dispatch = useDispatch();
   const modulo = useSelector(selector.selectModulo);
   const [domande, setDomande] = React.useState();
@@ -40,7 +40,9 @@ function DomandeList({ onSave, saveModulo }) {
     modulo && modulo.domande && !domande && setDomande(modulo.domande);
   }, [modulo]);
 
-  const onChange = (id, index) => domanda => dispatch(actions.upDateDomanda({ domanda, id, index }));
+  const onChange = (id, index) => domanda => {
+    dispatch(actions.upDateDomanda({ domanda, id, index }));
+  };
   const onChangeRisposta = (domandaId, idxDomanda) => (rispostaId, idxRisposta, risposte) => {
     dispatch(actions.changeRisposta({ domandaId, idxDomanda, rispostaId, idxRisposta, risposte }));
   };
@@ -75,31 +77,39 @@ function DomandeList({ onSave, saveModulo }) {
     setTimeout(() => onSave(), 40);
   };
 
+  const clonaDomanda = (domandaId, idxDomanda) => {
+    dispatch(actions.clonaDomanda({ domandaId, idxDomanda }));
+    setTimeout(() => onSave(), 40);
+  };
+
   const domandaCommand = (domandaId, idxDomanda) => (op, val) => {
     return op === 'delete'
       ? deleteDomanda(domandaId, idxDomanda)
       : op === 'clone'
-      ? dispatch(actions.cloneDomanda(val))
+      ? clonaDomanda(domandaId, idxDomanda)
       : op === 'add'
       ? actions.addDomanda(newDomanda)
       : () => 1;
   };
 
   const renderDomande = () => {
-    return modulo.domande.map((domanda, index) => (
-      <DomandaForm
-        key={domanda._id || index}
-        idDomanda={domanda._id}
-        indexDomanda={index}
-        onChange={onChange(domanda._id, index)}
-        onChangeRisposta={onChangeRisposta(domanda._id, index)}
-        domandaCommand={domandaCommand(domanda._id, index)}
-        kkinitialValues={domanda}
-        isCorrelata={false}
-        onChangeCorrelata={onChangeCorrelata(domanda._id, index)}
-        domandaSave={domandaSave(domanda._id, index)}
-      />
-    ));
+    return modulo.domande.map(
+      (domanda, index) =>
+        !(isDomandeHide && (isDomandeHide.id === domanda._id || isDomandeHide.index === index)) && (
+          <DomandaForm
+            key={domanda._id || index}
+            idDomanda={domanda._id}
+            indexDomanda={index}
+            // onChange={onChange(domanda._id, index)}
+            onChangeRisposta={onChangeRisposta(domanda._id, index)}
+            domandaCommand={domandaCommand(domanda._id, index)}
+            kkinitialValues={domanda}
+            isCorrelata={false}
+            onChangeCorrelata={onChangeCorrelata(domanda._id, index)}
+            domandaSave={domandaSave(domanda._id, index)}
+          />
+        ),
+    );
   };
 
   // if (isSaving || !domande) return <span> </span>;
@@ -107,7 +117,7 @@ function DomandeList({ onSave, saveModulo }) {
   return <>{renderDomande()}</>;
 }
 
-export const DomandeC = ({ onSave, isSaving, initialValue }) => {
+export const DomandeC = ({ onSave, isDomandeHide, isSaving, initialValue }) => {
   const classes = elemStyle();
   const history = useHistory();
 
@@ -121,7 +131,7 @@ export const DomandeC = ({ onSave, isSaving, initialValue }) => {
   const [title, setTitle] = React.useState(null);
 
   const onSaveDomanda = (id, index, domanda) => {
-    dispatch(actions.upDateDomanda({ domanda, id, index }));
+    // dispatch(actions.upDateDomanda({ domanda, id, index }));
     setTimeout(() => onSave(id, index, domanda), 40);
   };
 
@@ -199,7 +209,7 @@ export const DomandeC = ({ onSave, isSaving, initialValue }) => {
         {modulo.title && renderBtDomanda()}
       </GridChilds>
       {modulo.id ? (
-        <DomandeList onSave={onSaveDomanda} isSaving={isSaving} modulo={{ ...modulo }} domandeList={[...domande]} />
+        <DomandeList onSave={onSaveDomanda} isSaving={isSaving} modulo={{ ...modulo }} isDomandeHide={isDomandeHide} />
       ) : (
         modulo.title && <span>Salvare il documento prima di proseguire</span>
       )}
@@ -256,7 +266,7 @@ export const Domande = () => {
     newModulo ? dispatch(actions.setModulo(newModulo)) : !newModulo && dispatch(actions.clearState());
   };
 
-  const onSave = () => {
+  const onSave = (id, index, domanda) => {
     if (isSaving) return false;
     setIsSaving(true);
     setTimeout(() => setIsSaving(false), 3000);
@@ -269,7 +279,7 @@ export const Domande = () => {
         // res.payload.domande && setDomande(res.payload.domande);
         dispatch(actions.setModulo(res.payload));
         window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
-        setIsDomandeHide(true);
+        setIsDomandeHide({ id, index });
         setTimeout(() => setIsDomandeHide(false), 30);
       }
     });
@@ -310,9 +320,13 @@ export const Domande = () => {
     <LoadingOverlay active={isLoading || !modulo} spinner text="Loading...">
       {!isLoading && !modulo
         ? error && rendereError()
-        : modulo &&
-          !isDomandeHide && (
-            <DomandeC onSave={onSave} isSaving={isSaving} initialValue={{ ...(modulo || empityModulo) }} />
+        : modulo && (
+            <DomandeC
+              onSave={onSave}
+              isDomandeHide={isDomandeHide}
+              isSaving={isSaving}
+              initialValue={{ ...(modulo || empityModulo) }}
+            />
           )}
     </LoadingOverlay>
   );
