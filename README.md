@@ -1,3 +1,6 @@
+importantissimo linreria per creare quiz / question :
+https://surveyjs.io/Examples/Library/?id=trigger-runexpression&platform=Reactjs&theme=modern
+
 COME GESTIRE BENE I COMPONENTI e MVC :
 https://blog.testdouble.com/posts/2019-11-04-react-mvc/
 
