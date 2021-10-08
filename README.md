@@ -1,6 +1,10 @@
 COME GESTIRE BENE I COMPONENTI e MVC :
 https://blog.testdouble.com/posts/2019-11-04-react-mvc/
 
+normalizzare redux IMPORTANTE
+https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
+https://github.com/paularmstrong/normalizr
+
 pdf e table :
 
 o uso jspdf in abbinato con il plugin autotable js praticamente la tabella me la sono ricreata io portando i valori direttamente tramite variabile …
