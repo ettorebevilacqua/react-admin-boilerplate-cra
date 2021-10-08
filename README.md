@@ -4,9 +4,16 @@ https://surveyjs.io/Examples/Library/?id=trigger-runexpression&platform=Reactjs&
 COME GESTIRE BENE I COMPONENTI e MVC :
 https://blog.testdouble.com/posts/2019-11-04-react-mvc/
 
+best componenti WITH GRAFICI
+
+https://www.primefaces.org/primereact/
+
 normalizzare redux IMPORTANTE
 https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
 https://github.com/paularmstrong/normalizr
+
+BEST FLEXBOX GUIDE
+http://tympanus.net/codrops/css_reference/flexbox/
 
 pdf e table :
 
