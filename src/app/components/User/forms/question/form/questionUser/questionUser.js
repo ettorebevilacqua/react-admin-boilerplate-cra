@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
 
 import Button from '@material-ui/core/Button';
+import { Button as ButtonPrime } from 'primereact/button';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -15,13 +16,16 @@ import { Box, MenuItem } from '@material-ui/core';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 // import DialogTitle from '@material-ui/core/DialogTitle';
 // import DialogActions from '@material-ui/core/DialogActions';
 
 import GridChilds from '../../../component/gridChilds';
 import { elemStyle } from '../../../stylesElement';
 
-import { CrudButton, ButtonType } from '../../../component/crudButtons';
+// import { CrudButton, ButtonType } from '../../../component/crudButtons';
 import { Email, PlaylistAddCheck } from '@material-ui/icons';
 import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 
@@ -79,10 +83,6 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
 
   const [partecipanti, setPartecipanti] = React.useState(getPartecipanti(propValue?.partecipanti));
 
-  const docentiAction = arrayHelper => type => {
-    type === ButtonType.delete && arrayHelper.remove();
-  };
-
   const init = () => {
     // setPartecip anti(getPartecipanti());
   };
@@ -110,60 +110,70 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
   };
 
-  const DocentiForm = (index, arrayHelper) => {
+  const closeDocenti = () => {
+    setIsDialogDocenti(false);
+    setTimeout(() => setIsDialogDocenti(false), 30);
+  };
+
+  const DocentiForm = arrayHelper => {
+    const _docenti = !propsFormik.values.docenti
+      ? []
+      : propsFormik.values.docenti.map(el => ({ ...el, nome: (el.nome || '') + ' ' + (el.cognome || '') }));
+
+    debugger;
+    const onSelectDocente = docente => {
+      arrayHelper.push(docente);
+      setTimeout(() => setIsDialogDocenti(false), 30);
+    };
+
+    const actionBodyTemplate = rowData => {
+      const idxDocente = propsFormik.values.docenti.findIndex(el => el.email === rowData.email);
+      return (
+        <React.Fragment>
+          <ButtonPrime
+            icon="pi pi-trash"
+            className="p-button-rounded p-button-warning"
+            onClick={() => idxDocente > -1 && arrayHelper.remove(idxDocente)}
+            style={{ height: '2rem', width: '2rem' }}
+          />
+        </React.Fragment>
+      );
+    };
+
+    const myNewTheme = {
+      rows: {
+        fontSize: '12px',
+      },
+    };
+    const renderList = () => (
+      <DataTable
+        value={_docenti}
+        emptyMessage=""
+        showGridlines
+        stripedRows
+        autoLayout
+        className="p-datatable-sm"
+        bodyStyle={{ fontSize: '14px', height: '100%' }}
+        scrollHeight="100%"
+        scrollable
+        customTheme={myNewTheme}
+      >
+        <Column field="nome" header="Nome"></Column>
+        <Column field="email" className="noWrap" header="Email"></Column>
+        <Column field="cf" header="Cod. Fisc"></Column>
+        <Column field="phone" header="Tel"></Column>
+        <Column body={actionBodyTemplate}></Column>
+      </DataTable>
+    );
+
     return (
       <Paper
         onClick={() => setIsDialogDocenti(true)}
         className={`${classes.paperTitle} ${classes.width95}`}
-        key={'docenti' + index}
+        key={'docentiList'}
       >
-        {/*  <Dialog open={isDialogDocenti} fullWidth={true} maxWidth="lg">
-          <DialogContent>
-            <>
-              <div>
-                <h3>Docente</h3>
-              </div>
-              <AnagraficaForm
-                value={values.docenti[index]}
-                onExit={() => {
-                  setIsDialogDocenti(false);
-                  setTimeout(() => setIsDialogDocenti(false), 30);
-                }}
-                onSubmit={docentiSubmit(index)}
-              />
-            </>
-          </DialogContent>
-        </Dialog>
-  */}
-        <DialogPersonList open={isDialogDocenti} />
-
-        {values && values.docenti && values.docenti[index] && (
-          <GridChilds justify="space-between" view={[3, 3, 3, 2, 1]} spacing={1} style={{ width: '100%' }}>
-            <span>
-              {values.docenti[index].nome || ''} {values.docenti[index].cognome || ''}
-            </span>
-            <span> {values.docenti[index].email || ''} </span>
-            <span> {values.docenti[index].phone || ''} </span>
-
-            <Box style={{ width: '100%' }}>
-              <Tooltip title="Edit">
-                <Button color="primary" variant="contained" onClick={() => setIsDialogDocenti(true)}>
-                  Modifica
-                </Button>
-              </Tooltip>
-            </Box>
-
-            <CrudButton
-              show={['delete']}
-              onClick={docentiAction(arrayHelper)}
-              disableds={
-                index === 0 && arrayHelper?.form?.values?.docenti && arrayHelper?.form?.values?.docenti.length < 1
-                  ? ['delete']
-                  : null
-              }
-            />
-          </GridChilds>
-        )}
+        <DialogPersonList open={isDialogDocenti} onSelect={onSelectDocente} close={closeDocenti} />
+        {renderList()}
       </Paper>
     );
   };
@@ -318,9 +328,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                 !value.partecipanti[0] &&
               addPartecipante(propsFormik, arrayHelper, value) */}
 
-            {propsFormik?.values?.docenti &&
-              propsFormik?.values?.docenti[0] &&
-              propsFormik.values.docenti.map((elem, index) => DocentiForm(index, arrayHelper))}
+            {propsFormik?.values?.docenti && DocentiForm(arrayHelper)}
 
             <GridChilds
               view={[10, 2]}
@@ -329,7 +337,15 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               style={{ textAlign: 'end', marginTop: '16px', width: '100%' }}
             >
               <span> </span>
-              <Button color="primary" variant="contained" fullWidth onClick={() => arrayHelper.push(empityParteipante)}>
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                onClick={() => {
+                  setIsDialogDocenti(true);
+                  setTimeout(() => setIsDialogDocenti(true), 30);
+                }}
+              >
                 Nuovo Docente
               </Button>
             </GridChilds>

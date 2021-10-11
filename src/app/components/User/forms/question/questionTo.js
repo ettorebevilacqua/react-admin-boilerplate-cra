@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import { QuestionUsersFields } from './form/questionUser';
-import { empityQuestion, empityParteipante, schema } from 'app/data/schema/questionSchema';
+import { empityQuestion, schema } from 'app/data/schema/questionSchema';
 
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
@@ -33,9 +33,9 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
             titoloQuestion: questionModulo && questionModulo.title ? questionModulo.title : '',
           };
 
-      if ((!dataToValue && !dataToValue.docenti) || !dataToValue.docenti[0]) {
+      /* if ((!dataToValue && !dataToValue.docenti) || !dataToValue.docenti[0]) {
         dataToValue.docenti = [empityParteipante];
-      }
+      } */
 
       return dataToValue;
     },
