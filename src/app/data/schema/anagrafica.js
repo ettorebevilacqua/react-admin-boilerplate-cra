@@ -23,6 +23,7 @@ export const schema = Yup.object().shape({
   phone: Yup.string(),
   email: Yup.string().email('Email non valida.').required('Required'),
   dateBorn: Yup.string(),
+  ambito: Yup.string(),
   cf: Yup.string(),
 });
 
@@ -37,5 +38,6 @@ export const empityAnagrafica = {
   phone: '',
   email: '',
   dateBorn: '',
+  ambito: '',
   cf: '',
 };

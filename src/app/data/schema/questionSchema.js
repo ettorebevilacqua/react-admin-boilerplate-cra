@@ -20,14 +20,14 @@ Yup.addMethod(Yup.array, 'unique', function (message, path) {
   });
 });
 export const schema = Yup.object().shape({
-  titolo: Yup.string().required('Required'),
-  idcorso: Yup.string().required('Required'),
-  idquestion: Yup.string().required('Required'),
+  titolo: Yup.string().required('Richiesto'),
+  idcorso: Yup.string().required('Richiesto'),
+  idquestion: Yup.string().required('Richiesto'),
   docenti: Yup.array()
     .of(
       Yup.object().shape({
         nome: Yup.string().required('Required'),
-        email: Yup.string().email('Email non valida.').required('Required'),
+        email: Yup.string().email('Email non valida.').required('Richiesto'),
         phone: Yup.string(),
       }),
     )
@@ -35,12 +35,12 @@ export const schema = Yup.object().shape({
   partecipanti: Yup.array()
     .of(
       Yup.object().shape({
-        nome: Yup.string().required('Required'),
-        email: Yup.string().email('Email non valida.').required('Required'),
+        nome: Yup.string().required('Richiesto'),
+        email: Yup.string().email('Email non valida.').required('Richiesto'),
         phone: Yup.string(),
       }),
     )
-    .required('Required')
+    .required('Richiesto')
     .unique('email ripetuta', 'email')
     .min(1, 'inserire almeno un partecipante'),
   numPartecipanti: Yup.number()
@@ -48,13 +48,13 @@ export const schema = Yup.object().shape({
     .when('partecipanti', (partecipanti, schema) =>
       schema.test({
         test: numPartecipanti => partecipanti && partecipanti.length === numPartecipanti,
-        message: 'il numero di partecipanti deve essere',
+        message: 'inserire i dati per ogni partecipante per raggiungere il umero indicato',
       }),
     ),
 });
 
 export const questionModulischema = Yup.object().shape({
-  title: Yup.string().required('Required'),
+  title: Yup.string().required('Richiesto'),
   isPublic: Yup.boolean(),
   moduli: Yup.array(),
 });
