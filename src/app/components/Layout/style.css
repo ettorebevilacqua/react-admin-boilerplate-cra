@@ -1,0 +1,8 @@
+.lastCol {
+    width: 1px;
+    white-space: nowrap;
+}
+
+.fullCol {
+    width: 100%;
+}
