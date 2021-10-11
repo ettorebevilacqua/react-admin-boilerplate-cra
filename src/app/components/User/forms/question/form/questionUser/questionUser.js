@@ -101,7 +101,6 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     const _partecipanti = partecipanti.map((el, idx) => (idx === index ? anagVal : el));
     setPartecipanti(_partecipanti);
     setIsDialogAnag(false);
-    debugger;
     setTimeout(
       () => arrayHelper.replace(index, anagVal),
       // Object.keys(anagVal).map(field => propsFormik.setFieldValue(`partecipanti.${index}.${field}`, anagVal[field])),
@@ -127,7 +126,6 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       ? []
       : propsFormik.values.docenti.map(el => ({ ...el, nome: (el.nome || '') + ' ' + (el.cognome || '') }));
 
-    debugger;
     const onSelectDocente = docente => {
       arrayHelper.push(docente);
       setTimeout(() => setIsDialogDocenti(false), 30);
