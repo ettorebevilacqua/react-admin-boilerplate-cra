@@ -1,5 +1,5 @@
 import React from 'react';
-import './style.css';
+import styles from './style';
 
 export default function BarTwoColumn({ tableProps, trProps, td1Props, td2Props, children }) {
   const childs = children || [];
@@ -8,14 +8,16 @@ export default function BarTwoColumn({ tableProps, trProps, td1Props, td2Props, 
 
   return (
     <table {...tableProps}>
-      <tr {...trProps}>
-        <td {...td1Props} class="fullCol">
-          {child1}
-        </td>
-        <td {...td2Props} class="lastCol">
-          {child2}
-        </td>
-      </tr>
+      <tbody>
+        <tr {...trProps}>
+          <td {...td1Props} style={styles.fullCol}>
+            {child1}
+          </td>
+          <td {...td2Props} style={styles.lastCol}>
+            {child2}
+          </td>
+        </tr>
+      </tbody>
     </table>
   );
 }
