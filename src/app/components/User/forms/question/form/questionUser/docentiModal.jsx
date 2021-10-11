@@ -14,6 +14,8 @@ import { Column } from 'primereact/column';
 // import GridChilds from 'app/components/User/forms/component/gridChilds';
 import { ConfirmDialog } from 'app/components/dialogs/dialogMenu';
 import BarTwoColumn from 'app/components/Layout/barTwoColumn';
+import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
+import { empityAnagrafica } from 'app/data/schema/anagrafica';
 
 // import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import useStyle from './style';
@@ -32,25 +34,28 @@ const BtnCellRenderer = ({ value, context, node }) => {
   );
 };
 
-export const DataList = ({ onExit, onSubmit, list }) => {
+export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
-
+  const listData = list.map(el => ({ ...el, _nome: el.nome + ' ' + el.cognome }));
   const [isList, setIsList] = useState(true);
   const [editValue, setEditValue] = useState(true);
+  const [editValueForm, setEditValueForm] = useState(true);
   const [globalFilter, setGlobalFilter] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const dataTable = useRef(null);
 
   const editProduct = item => {
-    setEditValue({ ...item });
+    const editItem = { ...item };
+    delete editItem._nome;
+    setEditValueForm({ ...editItem });
     setIsList(false);
   };
 
   const confirmDeleteProduct = item => {
-    setEditValue(item);
-    setConfirmDelete(true);
+    setEditValue({ ...item });
+    setTimeout(() => setConfirmDelete(true), 30);
   };
 
   const actionBodyTemplate = rowData => {
@@ -62,11 +67,20 @@ export const DataList = ({ onExit, onSubmit, list }) => {
           onClick={() => editProduct(rowData)}
           style={{ height: '2rem', width: '2rem' }}
         />
+        <span>&nbsp;&nbsp;</span>
         <ButtonPrime
           icon="pi pi-trash"
           className="p-button-rounded p-button-warning"
           onClick={() => confirmDeleteProduct(rowData)}
           style={{ height: '2rem', width: '2rem' }}
+        />
+        <span>&nbsp;&nbsp;</span>
+        <ButtonPrime
+          label="Inserisci"
+          onClick={() => {
+            onSelect(rowData);
+          }}
+          style={{ height: '2rem', width: '6rem' }}
         />
       </React.Fragment>
     );
@@ -90,14 +104,25 @@ export const DataList = ({ onExit, onSubmit, list }) => {
             style={{ fontSize: '14px' }}
           />
         </span>
-        <div style={{ width: '100%', display: 'grid' }}>
+        <div style={{ width: '100%', display: 'inline' }}>
           <Button
             style={{ width: '150px', justifySelf: 'flex-end' }}
             color="primary"
             variant="contained"
-            onClick={() => false}
+            onClick={() => editProduct(empityAnagrafica)}
           >
-            Modifica
+            Nuovo
+          </Button>
+          <span>&nbsp;&nbsp;</span>
+          <Button
+            style={{ width: '150px', justifySelf: 'flex-end' }}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              closeModal();
+            }}
+          >
+            Chiudi
           </Button>
         </div>
       </BarTwoColumn>
@@ -111,39 +136,51 @@ export const DataList = ({ onExit, onSubmit, list }) => {
     },
   };
 
+  const renderDataTable = () => (
+    <DataTable
+      ref={dataTable}
+      value={listData}
+      globalFilter={globalFilter}
+      emptyMessage="Lista docenti vuota"
+      showGridlines
+      stripedRows
+      autoLayout
+      className="p-datatable-sm"
+      bodyStyle={{ fontSize: '14px', height: '100%' }}
+      scrollHeight="98%"
+      scrollable
+      customTheme={myNewTheme}
+    >
+      <Column field="_nome" header="Nome"></Column>
+      <Column field="email" className="noWrap" header="Email"></Column>
+      <Column field="cf" header="Cod. Fisc"></Column>
+      <Column field="phone" header="Tel"></Column>
+      <Column body={actionBodyTemplate}></Column>
+    </DataTable>
+  );
+  const renderAnagrafica = () => (
+    <AnagraficaForm
+      value={editValueForm}
+      onExit={() => {
+        setEditValueForm(null);
+        setIsList(false);
+      }}
+      onSubmit={() => {
+        setEditValueForm(null);
+        setIsList(false);
+      }}
+    />
+  );
   return (
     <>
       {header()}
       <div className="ag-theme-alpine" style={{ height: '92%', width: '100%' }}>
-        <div style={{ height: '100%' }}>
-          {isList && (
-            <DataTable
-              ref={dataTable}
-              value={list}
-              globalFilter={globalFilter}
-              emptyMessage="Lista docenti vuota"
-              showGridlines
-              stripedRows
-              autoLayout
-              className="p-datatable-sm"
-              bodyStyle={{ fontSize: '14px', height: '100%' }}
-              scrollHeight="98%"
-              scrollable
-              customTheme={myNewTheme}
-            >
-              <Column field="nome" header="nome"></Column>
-              <Column field="email" className="noWrap" header="email"></Column>
-              <Column field="cf" header="Cod. Fisc"></Column>
-              <Column field="city" header="Città"></Column>
-              <Column body={actionBodyTemplate}></Column>
-            </DataTable>
-          )}
-        </div>
+        <div style={{ height: '100%' }}> {isList || !editValueForm ? renderDataTable() : renderAnagrafica()}</div>
         <ConfirmDialog
           open={confirmDelete}
           setOpen={setConfirmDelete}
           onConfirm={setConfirmDelete}
-          title={'sei sicuro di eliminare ' + editValue.nome}
+          title={'sei sicuro di eliminare ' + !editValue ? '' : editValue._nome}
         />
         <br />
       </div>
@@ -151,13 +188,13 @@ export const DataList = ({ onExit, onSubmit, list }) => {
   );
 };
 
-export function DialogPersonList({ open, onSubmit, ...rest }) {
+export function DialogPersonList({ open, close, onSelect, onSubmit, ...rest }) {
   const classes = useStyle();
   debugger;
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg" classes={{ paper: classes.dialogPaper }}>
       <DialogContent>
-        <DataList onSubmit={onSubmit} list={dataFake} {...rest} />
+        <DataList onSubmit={onSubmit} onSelect={onSelect} closeModal={close} list={dataFake} {...rest} />
       </DialogContent>
     </Dialog>
   );

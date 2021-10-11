@@ -25,3 +25,17 @@ export const schema = Yup.object().shape({
   dateBorn: Yup.string(),
   cf: Yup.string(),
 });
+
+export const empityAnagrafica = {
+  nome: '',
+  cognome: '',
+  indirizzo: '',
+  cap: '',
+  city: '',
+  prov: '',
+  country: '',
+  phone: '',
+  email: '',
+  dateBorn: '',
+  cf: '',
+};
