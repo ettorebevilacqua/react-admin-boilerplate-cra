@@ -10,9 +10,10 @@ import 'react-app-polyfill/stable';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import 'primereact/resources/themes//md-light-indigo/theme.css';
+
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import 'primereact/resources/themes/md-light-indigo/theme.css';
 
 import { App } from 'app';
 
