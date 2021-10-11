@@ -18,15 +18,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 // import DialogTitle from '@material-ui/core/DialogTitle';
 // import DialogActions from '@material-ui/core/DialogActions';
 
-import GridChilds from '../../component/gridChilds';
-import { elemStyle } from '../../stylesElement';
+import GridChilds from '../../../component/gridChilds';
+import { elemStyle } from '../../../stylesElement';
 
-import { CrudButton, ButtonType } from '../../component/crudButtons';
+import { CrudButton, ButtonType } from '../../../component/crudButtons';
 import { Email, PlaylistAddCheck } from '@material-ui/icons';
 import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 
 import { empityParteipante } from 'app/data/schema/questionSchema';
 import { setTimeout } from 'timers';
+import { DialogPersonList } from './docentiModal';
 
 const renderField = (props = {}, name, component, label, type) => {
   return (
@@ -116,7 +117,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         className={`${classes.paperTitle} ${classes.width95}`}
         key={'docenti' + index}
       >
-        <Dialog open={isDialogDocenti} fullWidth={true} maxWidth="lg">
+        {/*  <Dialog open={isDialogDocenti} fullWidth={true} maxWidth="lg">
           <DialogContent>
             <>
               <div>
@@ -133,6 +134,8 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
             </>
           </DialogContent>
         </Dialog>
+  */}
+        <DialogPersonList open={isDialogDocenti} />
 
         {values && values.docenti && values.docenti[index] && (
           <GridChilds justify="space-between" view={[3, 3, 3, 2, 1]} spacing={1} style={{ width: '100%' }}>
@@ -224,7 +227,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       </GridChilds>
     );
     return (
-      <>
+      <div key={index}>
         <Dialog open={isDialogAnag} fullWidth={true} maxWidth="lg">
           <DialogContent>
             <>
@@ -255,7 +258,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
             </GridChilds>
           )}
         </Paper>
-      </>
+      </div>
     );
   };
 

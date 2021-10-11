@@ -7,7 +7,7 @@ import FormikOnChange from '../lib/FormikOnChange';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-import QuestionUsersFields from './form/questionUser';
+import { QuestionUsersFields } from './form/questionUser';
 import { empityQuestion, empityParteipante, schema } from 'app/data/schema/questionSchema';
 
 import GridChilds from '../component/gridChilds';
