@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { Field, useFormikContext, FieldArray, ErrorMessage } from 'formik';
+import { Field, useFormikContext, FieldArray } from 'formik';
 
 import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
@@ -29,7 +29,7 @@ import { elemStyle } from '../../../stylesElement';
 import { Email, PlaylistAddCheck } from '@material-ui/icons';
 import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 
-import { empityParteipante } from 'app/data/schema/questionSchema';
+import { empityAnagrafica } from 'app/data/schema/anagrafica';
 import { setTimeout } from 'timers';
 import { DialogPersonList } from './docentiModal';
 
@@ -44,7 +44,6 @@ const renderField = (props = {}, name, component, label, type) => {
         component={component}
         label={label}
       />
-      <ErrorMessage name={name} />
     </div>
   );
 };
@@ -54,17 +53,17 @@ const renderField = (props = {}, name, component, label, type) => {
 const getPartecipantiByNum = (list, val) => {
   // const val = e.target.value;
 
-  const partecipanti = !list ? [empityParteipante] : [...list];
+  const partecipanti = !list ? [empityAnagrafica] : [...list];
   const valToNum = !val ? 1 : Number(val);
   const valNum = isNaN(valToNum) ? partecipanti.length : valToNum;
   const newVal = valNum > 99 ? 99 : valNum < 1 ? 1 : valNum;
 
   if (partecipanti.length === newVal) return partecipanti;
 
-  const empityList = partecipanti.length < newVal ? Array(newVal - partecipanti.length).fill(empityParteipante) : [];
+  const empityList = partecipanti.length < newVal ? Array(newVal - partecipanti.length).fill(empityAnagrafica) : [];
   const refList = [...(partecipanti || []), ...empityList];
   const partecipantiNew = refList.length > newVal ? refList.slice(0, newVal) : refList;
-  partecipantiNew.length === 0 && partecipantiNew.push(empityParteipante);
+  partecipantiNew.length === 0 && partecipantiNew.push(empityAnagrafica);
   // setValue();
   return partecipantiNew;
   // s
@@ -77,6 +76,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const { values, setFieldValue } = useFormikContext();
   const [isDialogAnag, setIsDialogAnag] = React.useState(false);
   const [isDialogDocenti, setIsDialogDocenti] = React.useState(false);
+  const [idxPartecipante, setIdxPartecipante] = React.useState(-1);
   const propValue = propsFormik?.values || {};
 
   const getPartecipanti = useCallback(values => getPartecipantiByNum(values, numPartecipanti || 1), [numPartecipanti]);
@@ -95,11 +95,18 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     }
   }, [numPartecipanti, getPartecipanti, partecipanti.length, propValue.partecipanti]);
 
-  const anagSubmit = index => anagVal => {
+  const anagSubmit = (arrayHelper, index) => anagVal => {
     setIsDialogAnag(false);
-    setTimeout(() => setIsDialogAnag(false), 30);
-
-    Object.keys(anagVal).map(field => propsFormik.setFieldValue(`partecipanti.${index}.${field}`, anagVal[field]));
+    // setTimeout(() => setIsDialogAnag(false), 30);
+    const _partecipanti = partecipanti.map((el, idx) => (idx === index ? anagVal : el));
+    setPartecipanti(_partecipanti);
+    setIsDialogAnag(false);
+    debugger;
+    setTimeout(
+      () => arrayHelper.replace(index, anagVal),
+      // Object.keys(anagVal).map(field => propsFormik.setFieldValue(`partecipanti.${index}.${field}`, anagVal[field])),
+      30,
+    );
     // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
   };
 
@@ -162,6 +169,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         <Column field="email" className="noWrap" header="Email"></Column>
         <Column field="cf" header="Cod. Fisc"></Column>
         <Column field="phone" header="Tel"></Column>
+        <Column field="ambito" header="Ambito"></Column>
         <Column body={actionBodyTemplate}></Column>
       </DataTable>
     );
@@ -171,6 +179,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         onClick={() => setIsDialogDocenti(true)}
         className={`${classes.paperTitle} ${classes.width95}`}
         key={'docentiList'}
+        style={{ height: '500px' }}
       >
         <DialogPersonList open={isDialogDocenti} onSelect={onSelectDocente} close={closeDocenti} />
         {renderList()}
@@ -238,31 +247,21 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     );
     return (
       <div key={index}>
-        <Dialog open={isDialogAnag} fullWidth={true} maxWidth="lg">
-          <DialogContent>
-            <>
-              <div>
-                <h3>Partecipante</h3>
-              </div>
-              <AnagraficaForm
-                value={values.partecipanti[index]}
-                onExit={() => {
-                  setIsDialogDocenti(false);
-                  setTimeout(() => setIsDialogDocenti(false), 30);
-                }}
-                onSubmit={anagSubmit(index)}
-              />
-            </>
-          </DialogContent>
-        </Dialog>
-        <Paper onClick={() => setIsDialogAnag(true)} className={`${classes.paperTitle} ${classes.width95}`} key={index}>
-          {values && values.partecipanti && values.partecipanti[index] && (
+        <Paper
+          onClick={() => {
+            setIdxPartecipante(index);
+            setIsDialogAnag(true);
+          }}
+          className={`${classes.paperTitle} ${classes.width95}`}
+          key={index}
+        >
+          {partecipanti && partecipanti[index] && (
             <GridChilds view={[3, 3, 3, 3]} spacing={3} style={{ width: '100%' }}>
               <span>
-                {values.partecipanti[index].nome || ''} {values.partecipanti[index].cognome || ''}
+                {partecipanti[index].nome || ''} {partecipanti[index].cognome || ''}
               </span>
-              <span> {values.partecipanti[index].email || ''} </span>
-              <span> {values.partecipanti[index].phone || ''} </span>
+              <span> {partecipanti[index].email || ''} </span>
+              <span> {partecipanti[index].phone || ''} </span>
 
               {renderButtonActionRecord(elem.token)}
             </GridChilds>
@@ -360,11 +359,29 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       <GridChilds view={[12]} spacing={1}>
         <FieldArray
           name="partecipanti"
-          render={() => (
+          render={arrayHelper => (
             <>
               {/* value.partecipanti &&
                 !value.partecipanti[0] &&
               addPartecipante(propsFormik, arrayHelper, value) */}
+
+              <Dialog open={isDialogAnag} fullWidth={true} maxWidth="lg">
+                <DialogContent>
+                  <>
+                    <div>
+                      <h3>Partecipante</h3>
+                    </div>
+                    <AnagraficaForm
+                      value={values.partecipanti[idxPartecipante]}
+                      onExit={() => {
+                        setIsDialogAnag(false);
+                        setTimeout(() => setIsDialogAnag(false), 30);
+                      }}
+                      onSubmit={anagSubmit(arrayHelper, idxPartecipante)}
+                    />
+                  </>
+                </DialogContent>
+              </Dialog>
 
               {partecipanti && partecipanti.map((elem, index) => PartecipanteForm(elem, index, classes))}
               <GridChilds view={[4, 2]} spacing={3} style={{ marginTop: '16px', width: '100%' }}>

@@ -155,6 +155,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       <Column field="email" className="noWrap" header="Email"></Column>
       <Column field="cf" header="Cod. Fisc"></Column>
       <Column field="phone" header="Tel"></Column>
+      <Column field="ambito" header="Ambito"></Column>
       <Column body={actionBodyTemplate}></Column>
     </DataTable>
   );
@@ -190,7 +191,6 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
 
 export function DialogPersonList({ open, close, onSelect, onSubmit, ...rest }) {
   const classes = useStyle();
-  debugger;
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg" classes={{ paper: classes.dialogPaper }}>
       <DialogContent>

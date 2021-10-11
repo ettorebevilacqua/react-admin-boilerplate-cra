@@ -151,7 +151,6 @@ export const MDomandaForm = ({
   };
 
   const arrayManager = (arrayHelper, index) => op => {
-    debugger;
     return op === 'delete'
       ? index === 0
         ? arrayHelper.replace(index, {})
@@ -168,7 +167,6 @@ export const MDomandaForm = ({
   };
 
   /*  const domandaCommand =  op => {
-    debugger;
  return op === 'delete'
       ? index === 0
         ? arrayHelper.replace(index, {})
