@@ -18,6 +18,9 @@ http://tympanus.net/codrops/css_reference/flexbox/
 best ide for crete react app, AUTO MANAGE ROUTE AND REDUX
 https://rekit.js.org/
 
+state machine library : 
+https://github.com/bluebill1049/little-state-machine
+
 pdf e table :
 
 o uso jspdf in abbinato con il plugin autotable js praticamente la tabella me la sono ricreata io portando i valori direttamente tramite variabile …
