@@ -11,7 +11,6 @@ import { CorsiForm } from './common/corsi';
 
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
-console.log('CorsiForm ', CorsiForm);
 export const CorsiDataForm = makeContainerRefreshed(CorsiForm, corsiSlice, (matchParam, saved) => {
   const { id, idquestion } = pick(matchParam, ['id']);
   // const filter = !saved || !saved.data || !saved.data.id ? { idquestion } : { id: saved.data.id };
