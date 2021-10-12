@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useInjectReducer } from 'utils/redux-injectors';
 
 import { Formik, Form } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
@@ -12,8 +13,10 @@ import { empityQuestion, schema } from 'app/data/schema/questionSchema';
 
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
+import { corsiSlice } from 'app/slice';
 
 const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
+  useInjectReducer({ key: corsiSlice.name, reducer: corsiSlice.slice.reducer });
   const history = useHistory();
   const location = useLocation();
   const { id, idquestion } = useParams();

@@ -5,7 +5,7 @@ import { TextField } from 'formik-material-ui';
 
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { schema } from 'app/data/schema/anagrafica';
+import { schema } from 'app/data/schema/corsiSchema';
 
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
@@ -28,7 +28,6 @@ const renderField = (props = {}, name, component, label, type) => {
 
 export const CorsiForm = ({ value, onSubmit, onExit, saved }) => {
   const classes = elemStyle();
-  debugger;
   const onSubmitBefore = (valFormik, actions) => {
     actions.setSubmitting(false);
     onSubmit && onSubmit(valFormik);

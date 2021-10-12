@@ -65,11 +65,12 @@ export const AnagraficaForm = ({ value, onSubmit, onExit, saved }) => {
                 </GridChilds>
                 <GridChilds justify="space-between" view={[7, 5]} spacing={3} style={{ width: '100%' }}>
                   {renderField({}, `indirizzo`, TextField, 'Indirizzo')}
-                  {renderField({}, `city`, TextField, 'Città')}
+                  {renderField({}, `ambito`, TextField, 'Ambito')}
                 </GridChilds>
-                <GridChilds justify="space-between" view={[4, 4, 4]} spacing={3} style={{ width: '100%' }}>
+                <GridChilds justify="space-between" view={[2, 2, 4, 4]} spacing={3} style={{ width: '100%' }}>
                   {renderField({}, `cap`, TextField, 'Cap')}
                   {renderField({}, `prov`, TextField, 'Prov')}
+                  {renderField({}, `city`, TextField, 'Città')}
                   {renderField({}, `country`, TextField, 'Nazione')}
                 </GridChilds>
                 <GridChilds justify="space-between" view={[2, 4, 6]} spacing={3} style={{ width: '100%' }}>

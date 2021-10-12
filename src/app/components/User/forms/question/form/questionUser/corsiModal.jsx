@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,11 +14,13 @@ import { Column } from 'primereact/column';
 // import GridChilds from 'app/components/User/forms/component/gridChilds';
 import { ConfirmDialog } from 'app/components/dialogs/dialogMenu';
 import BarTwoColumn from 'app/components/Layout/barTwoColumn';
-import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
-import { empityAnagrafica } from 'app/data/schema/anagrafica';
-
+import { CorsiForm } from 'app/components/User/forms/common/corsi';
+import { empityCorso } from 'app/data/schema/corsiSchema';
 // import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import useStyle from './style';
+
+import { useSelector } from 'react-redux';
+import { corsiSlice } from 'app/slice';
 
 const dataFake = createRowData(100);
 
@@ -37,7 +39,7 @@ const BtnCellRenderer = ({ value, context, node }) => {
 export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
-  const listData = list.map(el => ({ ...el, _nome: el.cognome + ' ' + el.nome }));
+  const [listData, setListData] = useState(list);
   const [isList, setIsList] = useState(true);
   const [editValue, setEditValue] = useState(true);
   const [editValueForm, setEditValueForm] = useState(true);
@@ -46,15 +48,44 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
 
   const dataTable = useRef(null);
 
-  const editProduct = item => {
+  const saveData = data => {
+    setEditValueForm(null);
+    setIsList(false);
+    corsiSlice.actions.save(data).then(res => {
+      if (!res || !res.payload) return false;
+      const savedData = res.payload;
+      const datatmp = [...listData];
+      if (!data.id) {
+        const newData = [...datatmp, savedData];
+        return setListData(newData);
+      }
+      const idx = datatmp.findIndex(item => item.id === data.id);
+      if (idx < 0) return false;
+      if (data._deleted) {
+        datatmp.splice(idx, 1);
+      } else datatmp[idx] = savedData;
+
+      setListData(datatmp);
+    });
+  };
+
+  const editItem = item => {
     const editItem = { ...item };
     delete editItem._nome;
-    setEditValueForm({ ...editItem });
+    setEditValueForm({ ...editItem, _deleted: true });
     setIsList(false);
+  };
+
+  const onConfirmDelete = val => {
+    if (!editValue) return false;
+    const deleteValue = { ...editValue, _deleted: true };
+    saveData(deleteValue);
+    console.log(val);
   };
 
   const confirmDeleteProduct = item => {
     setEditValue({ ...item });
+
     setTimeout(() => setConfirmDelete(true), 30);
   };
 
@@ -64,7 +95,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
         <ButtonPrime
           icon="pi pi-pencil"
           className="p-button-rounded p-button-success p-mr-2"
-          onClick={() => editProduct(rowData)}
+          onClick={() => editItem(rowData)}
           style={{ height: '2rem', width: '2rem' }}
         />
         <span>&nbsp;&nbsp;</span>
@@ -79,6 +110,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
           label="Inserisci"
           onClick={() => {
             onSelect(rowData);
+            closeModal();
           }}
           style={{ height: '2rem', width: '6rem' }}
         />
@@ -109,7 +141,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
             style={{ width: '150px', justifySelf: 'flex-end' }}
             color="primary"
             variant="contained"
-            onClick={() => editProduct(empityAnagrafica)}
+            onClick={() => editItem(empityCorso)}
           >
             Nuovo
           </Button>
@@ -151,25 +183,21 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       scrollable
       customTheme={myNewTheme}
     >
-      <Column field="_nome" header="Nome" sortable></Column>
-      <Column field="email" className="noWrap" header="Email"></Column>
-      <Column field="cf" header="Cod. Fisc"></Column>
-      <Column field="phone" header="Tel"></Column>
-      <Column field="ambito" header="Ambito" sortable></Column>
-      <Column body={actionBodyTemplate}></Column>
+      <Column field="ente" header="Ente" sortable />
+      <Column field="titolo" className="noWrap" header="Titolo" sortable />
+      <Column field="dataInizio" header="Data" sortable />
+      <Column field="ambito" header="ambito" sortable />
+      <Column body={actionBodyTemplate} />
     </DataTable>
   );
   const renderAnagrafica = () => (
-    <AnagraficaForm
+    <CorsiForm
       value={editValueForm}
       onExit={() => {
         setEditValueForm(null);
         setIsList(false);
       }}
-      onSubmit={() => {
-        setEditValueForm(null);
-        setIsList(false);
-      }}
+      onSubmit={data => saveData(data)}
     />
   );
   return (
@@ -180,8 +208,8 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
         <ConfirmDialog
           open={confirmDelete}
           setOpen={setConfirmDelete}
-          onConfirm={setConfirmDelete}
-          title={'sei sicuro di eliminare ' + !editValue ? '' : editValue._nome}
+          onConfirm={onConfirmDelete}
+          title={'sei sicuro di eliminare ' + !editValue ? '' : editValue.titolo}
         />
         <br />
       </div>
@@ -189,12 +217,27 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
   );
 };
 
-export function DialogPersonList({ open, close, onSelect, onSubmit, ...rest }) {
+export function DialogCorsi({ open, close, onSelect, onSubmit, ...rest }) {
+  const corsiSelector = useSelector(corsiSlice.selects.dataSelector);
+  const [corsi, setCorsi] = useState(null);
   const classes = useStyle();
+
+  useEffect(() => {
+    corsiSlice.actions.query({}, true);
+  }, []);
+
+  useEffect(() => {
+    !!corsiSelector && setCorsi(corsiSelector.results);
+  }, [corsiSelector]);
+
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg" classes={{ paper: classes.dialogPaper }}>
       <DialogContent>
-        <DataList onSubmit={onSubmit} onSelect={onSelect} closeModal={close} list={dataFake} {...rest} />
+        {!corsi ? (
+          <h3>Loading...</h3>
+        ) : (
+          <DataList onSubmit={onSubmit} onSelect={onSelect} closeModal={close} list={corsi} {...rest} />
+        )}
       </DialogContent>
     </Dialog>
   );

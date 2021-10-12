@@ -100,4 +100,7 @@ export const elemStyle = makeStyles(theme => ({
   chip: {
     margin: theme.spacing(0.5, 0.25),
   },
+  column: {
+    fontSize: '14px',
+  },
 }));
