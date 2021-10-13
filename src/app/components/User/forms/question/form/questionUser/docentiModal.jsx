@@ -143,12 +143,12 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       globalFilter={globalFilter}
       emptyMessage="Lista docenti vuota"
       showGridlines
-      stripedRows
       autoLayout
       className="p-datatable-sm"
       bodyStyle={{ fontSize: '14px', height: '100%' }}
       scrollHeight="98%"
       scrollable
+      selectionMode="single"
       customTheme={myNewTheme}
     >
       <Column field="_nome" header="Nome" sortable></Column>
