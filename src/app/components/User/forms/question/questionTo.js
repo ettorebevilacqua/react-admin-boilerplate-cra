@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useInjectReducer } from 'utils/redux-injectors';
 
-import { Formik, Form } from 'formik';
+import { Formik } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
 
 import Button from '@material-ui/core/Button';
@@ -98,7 +98,16 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
   };
   const renderButtonActionRecord = propsFormik => (
     <GridChilds style={{ textAlign: 'end' }} view={[6, 6]}>
-      <Button color="primary" variant="contained" fullWidth disabled={!propsFormik.dirty} type="submit">
+      <Button
+        color="primary"
+        variant="contained"
+        fullWidth
+        disabled={!propsFormik.dirty || !propsFormik.isValid}
+        onClick={() => {
+          propsFormik.submitForm();
+          propsFormik.setSubmitting(false);
+        }}
+      >
         <span className={classes.buttonAction}>Salva</span>
       </Button>
       <Button
@@ -144,27 +153,25 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
           children={propsFormik => (
             <>
               {renderTitle(propsFormik)}
-              <Form onSubmit={propsFormik.handleSubmit}>
-                <FormikOnChange delay={500} onChange={onChangeForm(propsFormik)} />
+              <FormikOnChange delay={500} onChange={onChangeForm(propsFormik)} />
 
-                {
-                  <QuestionUsersFields
-                    propsFormik={propsFormik}
-                    numPartecipanti={numPartecipanti}
-                    parentValue={propsFormik.values}
-                    {...props}
-                  />
-                }
-                <GridChilds
-                  view={[9, 3]}
-                  justify="space-between"
-                  spacing={3}
-                  style={{ marginTop: '16px', width: '100%' }}
-                >
-                  <div>{propsFormik.errors.submit} </div>
-                  {renderButtonActionRecord(propsFormik)}
-                </GridChilds>
-              </Form>
+              {
+                <QuestionUsersFields
+                  propsFormik={propsFormik}
+                  numPartecipanti={numPartecipanti}
+                  parentValue={propsFormik.values}
+                  {...props}
+                />
+              }
+              <GridChilds
+                view={[9, 3]}
+                justify="space-between"
+                spacing={3}
+                style={{ marginTop: '16px', width: '100%' }}
+              >
+                <div>{propsFormik.errors.submit} </div>
+                {renderButtonActionRecord(propsFormik)}
+              </GridChilds>
             </>
           )}
         />

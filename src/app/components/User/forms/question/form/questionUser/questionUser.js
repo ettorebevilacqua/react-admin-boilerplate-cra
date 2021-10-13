@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Field, useFormikContext, FieldArray } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField as FtextField } from 'formik-material-ui';
+import TextField from '@material-ui/core/TextField';
 
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
@@ -25,24 +26,26 @@ import { elemStyle } from '../../../stylesElement';
 import { Email, PlaylistAddCheck } from '@material-ui/icons';
 import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 
-import { empityAnagrafica } from 'app/data/schema/anagrafica';
 import { setTimeout } from 'timers';
 import { DialogPersonList } from './docentiModal';
 import { DialogCorsi } from './corsiModal';
 import BarTwoColumn from 'app/components/Layout/barTwoColumn';
 
+const empityPartecipante = { cognome: '', nome: '', email: '', phone: '' };
+
+const MyInput = style => ({ field, form, ...props }) => {
+  return <TextField {...field} {...props} styel={style} />;
+};
 const renderField = (props = {}, name, component, label, type, width) => {
   return (
-    <div>
-      <Field
-        {...props}
-        name={name}
-        style={{ width: width ? width : '100%' }}
-        type={type || 'text'}
-        component={component}
-        label={label}
-      />
-    </div>
+    <Field
+      {...props}
+      name={name}
+      type={type || 'text'}
+      component={component}
+      label={label}
+      style={{ width: width || '100%' }}
+    />
   );
 };
 
@@ -51,17 +54,17 @@ const renderField = (props = {}, name, component, label, type, width) => {
 const getPartecipantiByNum = (list, val) => {
   // const val = e.target.value;
 
-  const partecipanti = !list ? [empityAnagrafica] : [...list];
+  const partecipanti = !list ? [empityPartecipante] : [...list];
   const valToNum = !val ? 1 : Number(val);
   const valNum = isNaN(valToNum) ? partecipanti.length : valToNum;
   const newVal = valNum > 99 ? 99 : valNum < 1 ? 1 : valNum;
 
   if (partecipanti.length === newVal) return partecipanti;
 
-  const empityList = partecipanti.length < newVal ? Array(newVal - partecipanti.length).fill(empityAnagrafica) : [];
+  const empityList = partecipanti.length < newVal ? Array(newVal - partecipanti.length).fill(empityPartecipante) : [];
   const refList = [...(partecipanti || []), ...empityList];
   const partecipantiNew = refList.length > newVal ? refList.slice(0, newVal) : refList;
-  partecipantiNew.length === 0 && partecipantiNew.push(empityAnagrafica);
+  partecipantiNew.length === 0 && partecipantiNew.push(empityPartecipante);
   // setValue();
   return partecipantiNew;
   // s
@@ -193,7 +196,12 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
           renderList()
         ) : (
           <Typography variant="body1" color="primary">
-            <span style={{ cursor: 'pointer', fontSize: 'large', textDecoration: 'underline' }}>Inserisci docente</span>
+            <span
+              onClick={() => setIsDialogDocenti(true)}
+              style={{ cursor: 'pointer', fontSize: 'large', textDecoration: 'underline' }}
+            >
+              Inserisci docente
+            </span>
           </Typography>
         )}
       </Paper>
@@ -204,6 +212,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     const isPartecipanteEmpity = partecipante => (!partecipante ? true : !partecipante.cognome && !partecipante.email);
     const renderButtonActionRecord = token => (
       <div style={{}}>
+        <span>&nbsp;&nbsp;</span>
         <span style={{}}>
           <Tooltip title="Vai alle domande">
             <span>
@@ -222,16 +231,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         </span>
 
         <span style={{}}>
-          <span>&nbsp;&nbsp;</span>
-          <Tooltip title="Edit">
-            <Button color="primary" variant="contained" onClick={() => setIsDialogAnag(true)}>
-              {isPartecipanteEmpity(partecipanti[index]) ? 'Inserisci' : 'Modifica'}
-            </Button>
-          </Tooltip>
-        </span>
-
-        <span style={{}}>
-          <span>&nbsp;&nbsp;</span>
+          <span>&nbsp;</span>
           <Tooltip title="invia mail">
             <span>
               <IconButton
@@ -253,42 +253,38 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         </span>
       </div>
     );
-
+    const fieldCustom = (styleField, name, label) => (
+      <Field name={name}>
+        {({ field, form, meta }) => (
+          <div style={{ width: '100%' }}>
+            <TextField
+              type="text"
+              fullWidth
+              {...field}
+              placeholder={label}
+              InputProps={{
+                style: { fontSize: '14px', width: '100%' },
+              }}
+            />
+            {meta.touched && meta.error && <div style={{ color: 'red', fontSize: '1' }}>{meta.error}</div>}
+          </div>
+        )}
+      </Field>
+    );
     return (
       <div key={index}>
-        <Paper
-          onClick={() => {
-            setIdxPartecipante(index);
-            setIsDialogAnag(true);
-          }}
-          className={`${classes.paperTitle} ${classes.width95}`}
-          key={index}
-        >
-          {partecipanti && partecipanti[index] && (
-            <BarTwoColumn>
-              {isPartecipanteEmpity(partecipanti[index]) ? (
-                <div onClick={() => setIsDialogAnag(true)}>
-                  <Typography variant="body1" color="primary">
-                    <span style={{ cursor: 'pointer', fontSize: 'large', textDecoration: 'underline' }}>
-                      Inserisci partecipante
-                    </span>
-                  </Typography>
-                </div>
-              ) : (
-                <Typography variant="body1">
-                  <GridChilds view={[5, 4, 3]} spacing={3} justify="space-between" style={{ fontSize: '16px' }}>
-                    <span>
-                      {partecipanti[index].nome || ''} {partecipanti[index].cognome || ''}
-                    </span>
-                    <span> {partecipanti[index].email || ''} </span>
-                    <span> {partecipanti[index].phone || ''} </span>
-                  </GridChilds>
-                </Typography>
-              )}
-
-              {renderButtonActionRecord(elem.token)}
-            </BarTwoColumn>
-          )}
+        <Paper className={`${classes.paperTitle} ${classes.width95}`} key={index}>
+          <BarTwoColumn>
+            <Typography variant="body1">
+              <GridChilds view={[3, 4, 3, 2]} spacing={0} style={{ fontSize: '14px' }}>
+                {fieldCustom({ fontSize: '11px' }, `partecipanti.${index}.nome`, 'Nome')}
+                {fieldCustom({ fontSize: '11px' }, `partecipanti.${index}.cognome`, 'Cognome')}
+                {fieldCustom({ fontSize: '11px' }, `partecipanti.${index}.email`, 'email')}
+                {fieldCustom({ fontSize: '11px' }, `partecipanti.${index}.phone`, 'phone')}
+              </GridChilds>
+            </Typography>
+            {renderButtonActionRecord(elem.token)}
+          </BarTwoColumn>
         </Paper>
       </div>
     );
@@ -305,11 +301,18 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
           width: '95%',
         }}
       >
-        <GridChilds view={[9, 3]} spacing={3} style={{ padding: '4px', width: '100%' }}>
+        <BarTwoColumn>
           <GridChilds view={[7, 3, 2]} spacing={3} justify="space-between" style={{ width: '100%' }}>
             <div>
               <span style={{ fontSize: '16px' }}>
-                Corso: <b>{propValue?.titolo}</b>
+                Corso:{' '}
+                <b>
+                  {propsFormik.errors?.idcorso ? (
+                    <span style={{ color: 'red' }}>Selezionare un corso</span>
+                  ) : (
+                    propValue?.titolo
+                  )}
+                </b>
               </span>
               <br />
               <span style={{ fontSize: '16px' }}>
@@ -329,15 +332,18 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               </span>
             </Button>
           </GridChilds>
-          {renderField(
-            { max: 99, min: 1, onKeyUp: e => e },
-            'numPartecipanti',
-            TextField,
-            'Num. Partecipanti',
-            'number',
-            '200px',
-          )}
-        </GridChilds>
+          <>
+            {renderField(
+              { max: 99, min: 1, onKeyUp: e => e, style: { with: '100px' } },
+              'numPartecipanti',
+              FtextField,
+              'Num. Partecipanti',
+              'number',
+              '100px',
+            )}
+            <span>&nbsp;&nbsp;</span>
+          </>
+        </BarTwoColumn>
         <DialogCorsi open={isDialogCorsi} onSelect={onSelectCorsi} close={closeCorsi} />
       </Paper>
 
