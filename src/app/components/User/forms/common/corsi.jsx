@@ -10,13 +10,13 @@ import { schema } from 'app/data/schema/corsiSchema';
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
 
-const renderField = (props = {}, name, component, label, type) => {
+const renderField = (props = {}, name, component, label, type, width) => {
   return (
     <div>
       <Field
         {...props}
         name={name}
-        style={{ width: '100%' }}
+        style={{ width: width || '100%' }}
         type={type || 'text'}
         component={component}
         label={label}
@@ -60,7 +60,6 @@ export const CorsiForm = ({ value, onSubmit, onExit, saved }) => {
               {renderTitle(propsFormik)}
               <Form onReset={propsFormik.handleReset} onSubmit={propsFormik.handleSubmit}>
                 <GridChilds justify="space-between" view={[6, 6]} spacing={3} style={{ width: '100%' }}>
-                  {renderField({}, `ente`, TextField, 'Ente')}
                   {renderField({}, `titolo`, TextField, 'Titolo')}
                 </GridChilds>
                 <GridChilds justify="space-between" view={[7, 5]} spacing={3} style={{ width: '100%' }}>
@@ -70,7 +69,6 @@ export const CorsiForm = ({ value, onSubmit, onExit, saved }) => {
                 <GridChilds justify="space-between" view={[4, 4, 4]} spacing={3} style={{ width: '100%' }}>
                   {renderField({}, `ambito`, TextField, 'Ambito')}
                   {renderField({}, `durata`, TextField, 'Durata')}
-                  {renderField({}, `durataOre`, TextField, 'Durata Ore')}
                 </GridChilds>
                 <GridChilds justify="space-between" view={[2, 4, 6]} spacing={3} style={{ width: '100%' }}>
                   {renderField({}, `coordinatore`, TextField, 'Coordinatore')}
