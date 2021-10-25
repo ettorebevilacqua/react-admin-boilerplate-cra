@@ -75,6 +75,7 @@ const getPartecipantiByNum = (list, val) => {
 const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
   const { values, setFieldValue } = useFormikContext();
+  const [editValueDocente, setEditValueDocente] = React.useState(true);
   const [isDialogAnag, setIsDialogAnag] = React.useState(false);
   const [isDialogDocenti, setIsDialogDocenti] = React.useState(false);
   const [isDialogCorsi, setIsDialogCorsi] = React.useState(false);
@@ -120,6 +121,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
 
   const closeDocenti = () => {
     setIsDialogDocenti(false);
+    setEditValueDocente(null);
     setTimeout(() => setIsDialogDocenti(false), 30);
   };
 
@@ -145,9 +147,18 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     };
 
     const actionBodyTemplate = rowData => {
-      const idxDocente = propsFormik.values.docenti.findIndex(el => el.email === rowData.email);
+      const idxDocente = propsFormik.values.docenti.findIndex(el => el._id === rowData._id);
       return (
         <React.Fragment>
+          <ButtonPrime
+            icon="pi pi-pencil"
+            className="p-button-rounded p-button-success p-mr-2"
+            onClick={() => {
+              setIsDialogDocenti(true);
+              setEditValueDocente(rowData);
+            }}
+            style={{ height: '2rem', width: '2rem' }}
+          />
           <ButtonPrime
             icon="pi pi-trash"
             className="p-button-rounded p-button-warning"
@@ -180,7 +191,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         scrollable
         customTheme={myNewTheme}
       >
-        <Column field="nome" onClick={() => setIsDialogDocenti(true)} className={classes.column} header="Nome"></Column>
+        <Column field="nome" className={classes.column} header="Nome"></Column>
         <Column field="email" className={classes.column} header="Email"></Column>
         <Column field="cf" className={classes.column} header="Cod. Fisc"></Column>
         <Column field="phone" className={classes.column} header="Tel"></Column>
@@ -191,7 +202,12 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
 
     return (
       <Paper className={`${classes.paperTitle} ${classes.width95}`} key={'docentiList'} style={{ height: '500px' }}>
-        <DialogPersonList open={isDialogDocenti} onSelect={onSelectDocente} close={closeDocenti} />
+        <DialogPersonList
+          open={isDialogDocenti}
+          value={editValueDocente}
+          onSelect={onSelectDocente}
+          close={closeDocenti}
+        />
         {!!_docenti && !!_docenti[0] ? (
           renderList()
         ) : (
@@ -303,36 +319,39 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       >
         <BarTwoColumn>
           <GridChilds view={[7, 3, 2]} spacing={3} justify="space-between" style={{ width: '100%' }}>
-            <div>
-              <span style={{ fontSize: '16px' }}>
-                Corso:{' '}
-                <b>
-                  {propsFormik.errors?.idcorso ? (
-                    <span style={{ color: 'red' }}>Selezionare un corso</span>
-                  ) : (
-                    propValue?.titolo
-                  )}
-                </b>
-              </span>
-              <br />
-              <span style={{ fontSize: '16px' }}>
-                Id Corso: <b>{propValue?.idcorso}</b>
-              </span>
+            <div style={{ display: 'inline' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ width: '134px', float: 'left', fontSize: '12px' }}
+                onClick={() => {
+                  setIsDialogCorsi(true);
+                }}
+              >
+                <span style={{ fontSize: '11px' }} className={classes.buttonAction}>
+                  Seleziona corso
+                </span>
+              </Button>
+
+              <span style={{ float: 'left' }}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <div style={{ float: 'left' }}>
+                <span style={{ fontSize: '16px' }}>
+                  Corso:{' '}
+                  <b>
+                    {propsFormik.errors?.idcorso ? (
+                      <span style={{ color: 'red' }}>Selezionare un corso</span>
+                    ) : (
+                      propValue?.titolo
+                    )}
+                  </b>
+                </span>
+                <br />
+                <span style={{ fontSize: '16px' }}>
+                  Id Corso: <b>{propValue?.idcorso}</b>
+                </span>
+              </div>
             </div>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ width: '110px' }}
-              onClick={() => {
-                setIsDialogCorsi(true);
-              }}
-            >
-              <span style={{ fontSize: '11px' }} className={classes.buttonAction}>
-                Seleziona corso
-              </span>
-            </Button>
-          </GridChilds>
-          <>
+
             {renderField(
               { max: 99, min: 1, onKeyUp: e => e, style: { with: '100px' } },
               'numPartecipanti',
@@ -341,6 +360,10 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               'number',
               '100px',
             )}
+
+            <span>&nbsp;</span>
+          </GridChilds>
+          <>
             <span>&nbsp;&nbsp;</span>
           </>
         </BarTwoColumn>

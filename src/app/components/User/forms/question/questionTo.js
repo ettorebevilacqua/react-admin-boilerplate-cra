@@ -13,10 +13,13 @@ import { empityQuestion, schema } from 'app/data/schema/questionSchema';
 
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
-import { corsiSlice } from 'app/slice';
+import { corsiSlice, docentiSlice, ambitiSlice } from 'app/slice';
 
 const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
   useInjectReducer({ key: corsiSlice.name, reducer: corsiSlice.slice.reducer });
+  useInjectReducer({ key: docentiSlice.name, reducer: docentiSlice.slice.reducer });
+  useInjectReducer({ key: ambitiSlice.name, reducer: ambitiSlice.slice.reducer });
+
   const history = useHistory();
   const location = useLocation();
   const { id, idquestion } = useParams();

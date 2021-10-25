@@ -25,34 +25,9 @@ export const questionModuliProvider = defaultProvider('questionModuli', '/moduli
 ]);
 
 export const corsiProvider = defaultProvider('corsi', '/corsi', schemas.corsi, ['axios', 'corsi']);
-/*
+export const docentiProvider = defaultProvider('docenti', '/docenti', schemas.docenti, ['axios', 'docenti']);
+export const ambitiProvider = defaultProvider('ambiti', '/ambiti', schemas.docenti, ['axios', 'ambiti']);
 
-export const moduliProvider = new Axios({
-  id: 'moduli/all',
-  url: '/moduli',
-  tags: ['moduli', 'need-auth'],
-});
-
-
-
-export const moduliQuery = new Selector(
-  moduliProvider,
-  (queryValue, reesults) =>
-    !queryValue ? reesults : reesults.filter(queryValue),
-  {
-    id: 'moduli-filtered',
-    tags: ['axios', 'moduli'],
-    initialState: {
-      data: [],
-    },
-     config: {
-        headers: {
-          Authorization: 'Bearer ' + token,
-        },
-      }, 
-  },
-);
-*/
 const dataApi = {
   userProvider: userProviderFrom,
   moduliProvider,
@@ -64,6 +39,8 @@ const dataApi = {
   queryViews,
   questionProvider,
   emailProvider,
+  docentiProvider,
+  ambitiProvider,
 };
 export const userProvider = userProviderFrom;
 export default dataApi;

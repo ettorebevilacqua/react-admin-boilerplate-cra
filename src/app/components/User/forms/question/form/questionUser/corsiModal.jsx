@@ -5,8 +5,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import { Button as ButtonPrime } from 'primereact/button';
 
-import createRowData from './fakeDocentiData';
-
 import { InputText } from 'primereact/inputtext';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -21,20 +19,6 @@ import useStyle from './style';
 
 import { useSelector } from 'react-redux';
 import { corsiSlice } from 'app/slice';
-
-const dataFake = createRowData(100);
-
-const BtnCellRenderer = ({ value, context, node }) => {
-  const invokeParentMethod = () => {
-    context.methodFromParent(value, node.rowIndex);
-  };
-
-  return (
-    <Button color="primary" variant="contained" onClick={invokeParentMethod}>
-      Modifica
-    </Button>
-  );
-};
 
 export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
   const [gridApi, setGridApi] = useState(null);
@@ -72,7 +56,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
   const editItem = item => {
     const editItem = { ...item };
     delete editItem._nome;
-    setEditValueForm({ ...editItem, _deleted: true });
+    setEditValueForm({ ...editItem });
     setIsList(false);
   };
 
@@ -133,7 +117,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
             value={globalFilter}
             onChange={e => setGlobalFilter(e.target.value)}
             placeholder="Cerca"
-            style={{ fontSize: '14px' }}
+            style={{ fontSize: '14px', width: '100%' }}
           />
         </span>
         <div style={{ width: '100%', display: 'inline' }}>
@@ -167,13 +151,15 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       fontSize: '12px',
     },
   };
+  const ambitoTemplate = rowData =>
+    rowData && rowData.ambito && rowData.ambito.filter((ambito, idx) => idx < 3).map(el => <span>{el + ' '}</span>);
 
   const renderDataTable = () => (
     <DataTable
       ref={dataTable}
       value={listData}
       globalFilter={globalFilter}
-      emptyMessage="Lista docenti vuota"
+      emptyMessage="Lista corsi vuota"
       showGridlines
       stripedRows
       autoLayout
@@ -183,13 +169,14 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       scrollable
       customTheme={myNewTheme}
     >
-      <Column field="ente" header="Ente" sortable />
+      <Column field="id" className="noWrap" header="ID corso" sortable />
       <Column field="titolo" className="noWrap" header="Titolo" sortable />
       <Column field="dataInizio" header="Data" sortable />
-      <Column field="ambito" header="ambito" sortable />
+      <Column field="ambito" header="ambito" body={ambitoTemplate} sortable />
       <Column body={actionBodyTemplate} />
     </DataTable>
   );
+
   const renderAnagrafica = () => (
     <CorsiForm
       value={editValueForm}
@@ -231,8 +218,14 @@ export function DialogCorsi({ open, close, onSelect, onSubmit, ...rest }) {
   }, [corsiSelector]);
 
   return (
-    <Dialog open={open} fullWidth={true} maxWidth="lg" classes={{ paper: classes.dialogPaper }}>
-      <DialogContent>
+    <Dialog
+      open={open}
+      fullWidth={true}
+      maxWidth="lg"
+      classes={{ paper: classes.dialogPaper }}
+      style={{ height: '690px', overflow: 'hidden' }}
+    >
+      <DialogContent style={{ overflow: 'hidden' }}>
         {!corsi ? (
           <h3>Loading...</h3>
         ) : (

@@ -19,6 +19,8 @@ const {
   moduloProvider,
   questionModuliProvider,
   corsiProvider,
+  docentiProvider,
+  ambitiProvider,
 } = providers;
 
 export const questionViewSlice = createViewSlice('getQuestion', providersView.getQuestion);
@@ -69,6 +71,18 @@ export const corsiSlice = createCrudSlice({
   name: 'corsiSlice',
   provider: corsiProvider,
   queryProvider: corsiProvider.provider,
+});
+
+export const docentiSlice = createCrudSlice({
+  name: 'docentiSlice',
+  provider: docentiProvider,
+  queryProvider: docentiProvider.provider,
+});
+
+export const ambitiSlice = createCrudSlice({
+  name: 'ambitiSlice',
+  provider: ambitiProvider,
+  queryProvider: ambitiProvider.provider,
 });
 
 export const { actions: userAuthActions, reducer } = userSlice;
