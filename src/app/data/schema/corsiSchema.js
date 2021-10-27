@@ -15,6 +15,7 @@ export const empityModulo = {
 export const schema = Yup.object().shape({
   titolo: Yup.string().required('Required'),
   dataInizio: Yup.string(),
+  codice: Yup.number(),
   sede: Yup.string(),
   finanziatore: Yup.string(),
   ambito: Yup.array(),
@@ -33,4 +34,5 @@ export const empityCorso = {
   sede: '',
   coordinatore: '',
   tutor: '',
+  codice: 0,
 };

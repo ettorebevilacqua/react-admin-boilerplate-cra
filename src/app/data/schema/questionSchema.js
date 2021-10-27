@@ -22,6 +22,7 @@ Yup.addMethod(Yup.array, 'unique', function (message, path) {
 export const schema = Yup.object().shape({
   titolo: Yup.string().required('Richiesto'),
   idcorso: Yup.string().required('Richiesto'),
+  codiceCorso: Yup.number(),
   idquestion: Yup.string().required('Richiesto'),
   docenti: Yup.array()
     .of(

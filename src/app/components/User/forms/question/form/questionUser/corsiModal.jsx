@@ -169,7 +169,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       scrollable
       customTheme={myNewTheme}
     >
-      <Column field="id" className="noWrap" header="ID corso" sortable />
+      <Column field="codice" className="noWrap" header="ID corso" sortable />
       <Column field="titolo" className="noWrap" header="Titolo" sortable />
       <Column field="dataInizio" header="Data" sortable />
       <Column field="ambito" header="ambito" body={ambitoTemplate} sortable />

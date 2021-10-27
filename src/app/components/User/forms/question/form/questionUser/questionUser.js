@@ -131,9 +131,10 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   };
 
   const onSelectCorsi = corso => {
-    setIsDialogCorsi(true);
+    setIsDialogCorsi(false);
     propsFormik.setFieldValue(`titolo`, corso.titolo);
     propsFormik.setFieldValue(`idcorso`, corso.id);
+    propsFormik.setFieldValue(`codiceCorso`, corso.codice);
   };
 
   const DocentiForm = arrayHelper => {
@@ -347,7 +348,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                 </span>
                 <br />
                 <span style={{ fontSize: '16px' }}>
-                  Id Corso: <b>{propValue?.idcorso}</b>
+                  Id Corso: <b>{propValue?.codiceCorso}</b>
                 </span>
               </div>
             </div>
