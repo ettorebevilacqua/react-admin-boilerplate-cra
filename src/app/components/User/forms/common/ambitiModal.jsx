@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useInjectReducer } from 'utils/redux-injectors';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -14,8 +15,13 @@ import { Column } from 'primereact/column';
 
 // import GridChilds from 'app/components/User/forms/component/gridChilds';
 import BarTwoColumn from 'app/components/Layout/barTwoColumn';
-import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import { ambitiSlice } from 'app/slice';
+
+const myNewTheme = {
+  rows: {
+    fontSize: '12px',
+  },
+};
 
 const renderBtClose = closeFunz => (
   <Button
@@ -33,14 +39,15 @@ const renderBtClose = closeFunz => (
 export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list }) => {
   const [listData, setListData] = useState(list);
   const [isList, setIsList] = useState(true);
-  const [editValue, setEditValue] = useState(true);
   const [editValueForm, setEditValueForm] = useState(true);
   const [globalFilter, setGlobalFilter] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [selected, setSelected] = useState(list.filter(el => el.ambito && ambitiSelected.indexOf(el.ambito) > -1));
+  const [editingRows, setEditingRows] = useState(null);
 
   const dataTable = useRef(null);
   let originalRow = null;
+  let originalRowIndex = null;
 
   const saveData = data => {
     setEditValueForm(null);
@@ -49,10 +56,11 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
       if (!res || !res.payload) return false;
       const savedData = res.payload;
       const datatmp = [...listData];
-      if (!data.id) {
+      /* crea un doppione if (!data.id) {
         const newData = [...datatmp, savedData];
         return setListData(newData);
-      }
+      } */
+      ambitiSlice.actions.query({}, true);
       const idx = datatmp.findIndex(item => item.id === data.id);
       if (idx < 0) return false;
       if (data._deleted) {
@@ -63,16 +71,45 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
     });
   };
 
+  const beforeClose = () => {
+    if (!!editingRows) {
+      saveData(editingRows);
+    }
+    closeModal();
+  };
+
+  const onChangeValue = (props, field, val) => {
+    // console.log('edit ambiti EditingRows ', editingRows);
+    const _listData = [...listData];
+    const rowEdit = _listData[props.rowIndex];
+    const _rowEdit = { ...rowEdit, [field]: val };
+    _listData[props.rowIndex] = _rowEdit;
+    setListData(_listData);
+  };
+
+  const onRowEditSave = event => {
+    saveData(event.data);
+  };
+
+  const onRowEditChange = event => {
+    setEditingRows(event.data);
+  };
+
   const onRowEditInit = event => {
     originalRow = { ...listData[event.index] };
+    originalRowIndex = event.index;
   };
 
   const onRowEditCancel = event => {
     originalRow = null;
+    originalRowIndex = null;
   };
 
   const deleteItem = item => {
     const toSave = { ...item, _deleted: true };
+    if (editingRows && editingRows.id === item.id) {
+      setEditingRows(null);
+    }
     saveData(toSave);
   };
 
@@ -97,21 +134,6 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
     );
   };
 
-  const myNewTheme = {
-    rows: {
-      fontSize: '12px',
-    },
-  };
-
-  const onChangeValue = (props, field, val) => {
-    console.log('edit ambiti ', props);
-    const _listData = [...listData];
-    const rowEdit = _listData[props.rowIndex];
-    const _rowEdit = { ...rowEdit, [field]: val };
-    _listData[props.rowIndex] = _rowEdit;
-    setListData(_listData);
-  };
-
   const AmbitoTextEd = (props, field) => (
     <InputText type="text" value={props.rowData[field]} onChange={e => onChangeValue(props, field, e.target.value)} />
   );
@@ -129,6 +151,10 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
       scrollable
       selectionMode="single"
       customTheme={myNewTheme}
+      editMode="row"
+      editingRows={editingRows}
+      onRowEditSave={onRowEditSave}
+      onRowEditChange={onRowEditChange}
       onRowEditInit={onRowEditInit}
       onRowEditCancel={onRowEditCancel}
       selection={selected}
@@ -137,28 +163,13 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
     >
       <Column selectionMode="multiple" headerStyle={{ width: '3em' }}></Column>
 
-      <Column
-        style={{ width: '60%' }}
-        field="ambito"
-        header="Ambito"
-        sortable
-        editor={props => AmbitoTextEd(props, 'ambito')}
-      />
-      <Column field="descr" className="noWrap" header="Descr" />
-      <Column body={actionBodyTemplate} headerStyle={{ width: '7rem' }} bodyStyle={{ textAlign: 'center' }} />
+      <Column style={{ width: '70%' }} field="ambito" header="Ambito" editor={props => AmbitoTextEd(props, 'ambito')} />
+      <Column style={{ width: '28px' }} rowEditor></Column>
+      <Column style={{ width: '56px' }} body={actionBodyTemplate} bodyStyle={{ textAlign: 'center', width: '126px' }} />
     </DataTable>
   );
 
-  const renderAnagrafica = () => (
-    <AnagraficaForm
-      value={editValueForm}
-      onExit={() => {
-        setEditValueForm(null);
-        setIsList(false);
-      }}
-      onSubmit={data => saveData(data)}
-    />
-  );
+  const renderForm = () => <h3>No form </h3>;
 
   return (
     <div className="ag-theme-alpine" style={{ height: '580px', width: '100%' }}>
@@ -187,7 +198,7 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
             Nuovo
           </Button>
           <span>&nbsp; &nbsp; </span>
-          {renderBtClose(closeModal)}
+          {renderBtClose(beforeClose)}
         </div>
       </BarTwoColumn>
       <div className={``}>
@@ -197,7 +208,7 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
           variant="contained"
           onClick={() => {
             onSelect(selected.map(el => el.ambito));
-            closeModal();
+            beforeClose();
           }}
         >
           Inserisci
@@ -208,7 +219,7 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
       </div>
       <br />
       <div className="ag-theme-alpine" style={{ height: '100%', width: '100%' }}>
-        <div style={{ height: '100%' }}> {isList || !editValueForm ? renderDataTable() : renderAnagrafica()}</div>
+        <div style={{ height: '100%' }}> {isList || !editValueForm ? renderDataTable() : renderForm()}</div>
         <br />
       </div>
     </div>
@@ -216,16 +227,23 @@ export const DataList = ({ ambitiSelected, closeModal, onSelect, onSubmit, list 
 };
 
 export default function AmbitiDialg({ ambitiSelected, open, close, onSelect, onSubmit, ...rest }) {
+  useInjectReducer({ key: ambitiSlice.name, reducer: ambitiSlice.slice.reducer });
   const ambitiSelector = useSelector(ambitiSlice.selects.dataSelector);
   const [ambiti, setAmbiti] = useState(null);
 
   useEffect(() => {
     console.log('sss');
-    ambitiSlice.actions.query({}, true);
-  }, []);
+    open && ambitiSlice.actions.query({}, true);
+  }, [open]);
 
   useEffect(() => {
-    !!ambitiSelector && setAmbiti(ambitiSelector.results);
+    !!ambitiSelector &&
+      ambitiSelector.results &&
+      setAmbiti(
+        [...ambitiSelector.results].sort(
+          (a, b) => a && a.ambito && b && b.ambito && a.ambito.localeCompare(b.ambito) < b.ambito,
+        ),
+      );
   }, [ambitiSelector]);
 
   return (
