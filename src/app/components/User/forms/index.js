@@ -8,6 +8,9 @@ import { ModuliFormMaker } from './question/moduliForm';
 import { Domande } from './question/form/moduloDomande';
 import { empityModulo } from 'app/services/question/moduliModel';
 import { CorsiForm } from './common/corsi';
+import { CorsiList as _CorsiList } from './question/form/questionUser/corsiList';
+
+export const CorsiList = _CorsiList;
 
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 

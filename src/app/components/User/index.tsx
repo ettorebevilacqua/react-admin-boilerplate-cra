@@ -19,7 +19,7 @@ import MenuCard from './menuCard';
 import Plane from './section/plane';
 import IndaginiMenu from './section/indagini/menuIndagini';
 
-import { ModuliForm, QuestionToForm, GuestQuestionForm, ModuloDomandeForm, CorsiDataForm } from './forms/';
+import { ModuliForm, QuestionToForm, GuestQuestionForm, ModuloDomandeForm, CorsiList, CorsiDataForm } from './forms/';
 import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
 import { IndaginiList, QuestionList, QuestionModuliForm } from './forms/question';
 
@@ -52,7 +52,7 @@ export const GuestRoute = () => (
 
 export default function UserComp() {
   return (
-    <div style={{ marginTop: '80px' }}>
+    <div style={{ marginTop: '80px', height: '100%'}}>
       {helmetRender()} {/* place ConnectedRouter under Provider */}
       <Switch>
         <Route exact path="/app/user/" component={() => <IndaginiMenu />} />
@@ -67,6 +67,7 @@ export default function UserComp() {
         <Route exact path="/app/user/indagini/list" component={QuestionList} />
         <Route exact path="/app/user/indagine" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/show" component={() => <ShowQuestionUrl />} />
+        <Route exact path="/app/user/corsi" component={CorsiList} />
         <Route exact path="/app/user/corsi/:id" component={() => <CorsiDataForm />} />
         <Route exact path="/app/user/verifyr" component={() => <MenuCard items={buttonData} />} />
         <Route exact path="/app/user/plane" component={() => <Plane />} />

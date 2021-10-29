@@ -152,7 +152,7 @@ export const CorsiForm = ({ value, onSubmit, onExit, saved }) => {
                   <span className={classes.buttonAction}>Salva</span>
                 </Button>{' '}
                 <Button color="primary" variant="contained" style={{ width: '27%' }} onClick={() => onExit()}>
-                  <span className={classes.buttonAction}>Annulla</span>
+                  <span className={classes.buttonAction}>Chiudi</span>
                 </Button>
               </Form>
             </>
