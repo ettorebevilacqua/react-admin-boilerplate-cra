@@ -232,7 +232,6 @@ export default function AmbitiDialg({ ambitiSelected, open, close, onSelect, onS
   const [ambiti, setAmbiti] = useState(null);
 
   useEffect(() => {
-    console.log('sss');
     open && ambitiSlice.actions.query({}, true);
   }, [open]);
 
