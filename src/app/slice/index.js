@@ -21,6 +21,7 @@ const {
   corsiProvider,
   docentiProvider,
   ambitiProvider,
+  listsProvider,
 } = providers;
 
 export const questionViewSlice = createViewSlice('getQuestion', providersView.getQuestion);
@@ -85,11 +86,18 @@ export const ambitiSlice = createCrudSlice({
   queryProvider: ambitiProvider.provider,
 });
 
+export const listsSlice = createCrudSlice({
+  name: 'listsSlice',
+  provider: listsProvider,
+  queryProvider: listsProvider.provider,
+});
+
 export const { actions: userAuthActions, reducer } = userSlice;
 
 export const useUserAuthSlice = () => {
   useInjectReducer({ key: userSlice.name, reducer: userSlice.reducer });
   useInjectReducer({ key: layoutSlice.name, reducer: layoutSlice.reducer });
+  useInjectReducer({ key: listsSlice.name, reducer: listsSlice.slice.reducer });
   useInjectReducer({ key: moduliSliceCrud.name, reducer: moduliSliceCrud.slice.reducer });
   useInjectReducer({ key: moduloSliceCrud.name, reducer: moduloSliceCrud.slice.reducer });
   useInjectReducer({ key: questionModuliSlice.name, reducer: questionModuliSlice.slice.reducer });

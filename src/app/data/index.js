@@ -27,6 +27,7 @@ export const questionModuliProvider = defaultProvider('questionModuli', '/moduli
 export const corsiProvider = defaultProvider('corsi', '/corsi', schemas.corsi, ['axios', 'corsi']);
 export const docentiProvider = defaultProvider('docenti', '/docenti', schemas.docenti, ['axios', 'docenti']);
 export const ambitiProvider = defaultProvider('ambiti', '/ambiti', schemas.docenti, ['axios', 'ambiti']);
+export const listsProvider = defaultProvider('lists', '/lists', schemas.docenti, ['axios', 'ambiti']);
 
 const dataApi = {
   userProvider: userProviderFrom,
@@ -41,6 +42,8 @@ const dataApi = {
   emailProvider,
   docentiProvider,
   ambitiProvider,
+  listsProvider,
 };
+
 export const userProvider = userProviderFrom;
 export default dataApi;
