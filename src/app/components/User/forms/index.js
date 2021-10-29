@@ -9,8 +9,10 @@ import { Domande } from './question/form/moduloDomande';
 import { empityModulo } from 'app/services/question/moduliModel';
 import { CorsiForm } from './common/corsi';
 import { CorsiList as _CorsiList } from './question/form/questionUser/corsiList';
+import { PersonaleList as _PersonaleList } from './question/form/questionUser/personaleList';
 
 export const CorsiList = _CorsiList;
+export const PersonaleList = _PersonaleList;
 
 const toNumberOr = (val, orVal) => (isNaN(parseInt(val + '')) ? orVal : parseInt(val + ''));
 
