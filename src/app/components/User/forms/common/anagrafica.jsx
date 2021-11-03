@@ -19,12 +19,12 @@ import { schema } from 'app/data/schema/anagrafica';
 import AmbitiDialg from './ambitiModal';
 
 const modalitaQualifica = [
-  'Analisi del curriculum vitae',
-  'Colloquio',
-  'Storica collaborazione',
-  'Segnalato da collaboratore',
-  'Scelto dal cliente',
-  'Altro (specificare)',
+  { id: 1, label: 'Analisi del curriculum vitae' },
+  { id: 2, label: 'Colloquio' },
+  { id: 3, label: 'Storica collaborazione' },
+  { id: 4, label: 'Segnalato da collaboratore' },
+  { id: 5, label: 'Scelto dal cliente' },
+  { id: 0, label: 'Altro (specificare)' },
 ];
 
 const getIsAmbito = val =>
@@ -196,22 +196,31 @@ export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }
                 <GridChilds justify="space-between" view={[2, 7, 3]} spacing={3} style={{ width: '100%' }}>
                   {fieldCustom(propsFormik, {}, `qualifica.data`, 'Data')}
                   {fieldCustom(propsFormik, {}, `qualifica.responsabile`, 'Responsabile')}
-
+                </GridChilds>
+                <GridChilds justify="space-between" view={[4, 8]} spacing={3} style={{ width: '100%' }}>
                   <FormControl style={{ width: '100%' }}>
                     <InputLabel>Tipo Domanda</InputLabel>
                     <Select
-                      value={propsFormik.values.modalita}
-                      onChange={e => {
+                      value={propsFormik.values?.qualifica?.modalita}
+                      renderValue={selected => {
+                        const found = modalitaQualifica.find(el => el.id == propsFormik.values?.qualifica?.modalita);
+                        return found ? found.label : '';
+                      }}
+                      onChange={(e, valSel) => {
                         propsFormik.setFieldValue('qualifica.modalita', e.target.value);
+                        propsFormik.setFieldValue('qualifica.altro', ' ');
                       }}
                     >
                       {modalitaQualifica.map(el => (
-                        <MenuItem key={el} value={el}>
-                          {el}
+                        <MenuItem key={el.id} value={el.id}>
+                          {el.label}
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
+                  {propsFormik.values?.qualifica?.modalita == 0 && (
+                    <div>{fieldCustom(propsFormik, {}, `qualifica.altro`, 'Inserire la modalità di qualifica')}</div>
+                  )}
                 </GridChilds>
                 <br />
                 <Button
