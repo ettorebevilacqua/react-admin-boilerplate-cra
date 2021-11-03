@@ -1,4 +1,4 @@
-import { questionModuliSlice } from 'app/slice';
+import { questionModuliSlice, questionSlice } from 'app/slice';
 
 import { makeContainerRefreshed } from '../component/makerCointainer';
 
@@ -24,12 +24,12 @@ export const IndaginiList = makeContainerRefreshed(IndaginiListForm, questionMod
   questionModuliSlice.actions.query(queryParam, true);
 });
 
-export const QuestionList = makeContainerRefreshed(ListQuestions, questionModuliSlice, () => {
-  questionModuliSlice.actions.reset();
+export const QuestionList = makeContainerRefreshed(ListQuestions, questionSlice, () => {
+  questionSlice.actions.reset();
   /* pick({ closeAt: 'false', full: 'true', ...matchParam }, [
       'closeAt',
       'full',
       'id',
     ]), */
-  questionModuliSlice.actions.query({ isPublic: true }, true);
+   questionSlice.actions.query({}, true);
 });
