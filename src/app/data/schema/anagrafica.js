@@ -30,6 +30,7 @@ export const schema = Yup.object().shape({
     data: Yup.string(),
     responsabile: Yup.string(),
     modalita: Yup.string(),
+    altro: Yup.string(),
   }),
 });
 
