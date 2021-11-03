@@ -153,12 +153,12 @@ export const DataList = ({ list, personaleTipo }) => {
         selectionMode="single"
         customTheme={myNewTheme}
       >
-        <Column field="_nome" header="Nome" sortable></Column>
-        <Column field="email" className="noWrap" header="Email"></Column>
-        <Column field="cf" header="Cod. Fisc"></Column>
-        <Column field="phone" header="Tel"></Column>
-        <Column field="ambito" header="Ambito" sortable></Column>
-        <Column body={actionBodyTemplate}></Column>
+        <Column field="_nome" header="Nome" style={{ fontSize: '13px', width: '25%' }} sortable />
+        <Column field="email" className="noWrap" style={{ fontSize: '13px', width: '25%' }} header="Email" />
+        <Column field="cf" header="Cod. Fisc" style={{ fontSize: '13px', width: '120px' }} />
+        <Column field="phone" header="Tel" style={{ fontSize: '13px', width: '120px' }} />
+        <Column field="tipologia" header="Tipologia" sortable style={{ fontSize: '13px', width: '140px' }} />
+        <Column body={actionBodyTemplate} style={{ textAlign: 'center', width: '110px' }} />
       </DataTable>
     </div>
   );
