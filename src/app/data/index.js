@@ -29,6 +29,8 @@ export const docentiProvider = defaultProvider('docenti', '/docenti', schemas.do
 export const ambitiProvider = defaultProvider('ambiti', '/ambiti', schemas.docenti, ['axios', 'ambiti']);
 export const listsProvider = defaultProvider('lists', '/lists', schemas.docenti, ['axios', 'ambiti']);
 
+export const guestProvider = defaultProvider('guest', '/guest', schemas.docenti, ['axios', 'guest']);
+
 const dataApi = {
   userProvider: userProviderFrom,
   moduliProvider,
@@ -43,6 +45,7 @@ const dataApi = {
   docentiProvider,
   ambitiProvider,
   listsProvider,
+  guestProvider,
 };
 
 export const userProvider = userProviderFrom;

@@ -22,6 +22,7 @@ const {
   docentiProvider,
   ambitiProvider,
   listsProvider,
+  guestProvider,
 } = providers;
 
 export const questionViewSlice = createViewSlice('getQuestion', providersView.getQuestion);
@@ -90,6 +91,12 @@ export const listsSlice = createCrudSlice({
   name: 'listsSlice',
   provider: listsProvider,
   queryProvider: listsProvider.provider,
+});
+
+export const guestSlice = createCrudSlice({
+  name: 'guestSlice',
+  provider: guestProvider,
+  queryProvider: guestProvider.provider,
 });
 
 export const { actions: userAuthActions, reducer } = userSlice;
