@@ -157,6 +157,26 @@ const bgColors = [
     // textColorHover: '#4C5656',
     // boxShadowColor: 'rgba(220, 233, 255, 0.48)',
   },
+  {
+    bgColor: '#E6F4F1',
+    bgColorLight: '#A9CEC2',
+    textColorHover: '#4C5656',
+    boxShadowColor: 'rgba(220, 233, 255, 0.48)',
+    // bgColor: '#DCE9FF',
+    // bgColorLight: '#f1f7ff',
+    // textColorHover: '#4C5656',
+    // boxShadowColor: 'rgba(220, 233, 255, 0.48)',
+  },
+  {
+    bgColor: '#E6F4F1',
+    bgColorLight: '#A9CEC2',
+    textColorHover: '#4C5656',
+    boxShadowColor: 'rgba(220, 233, 255, 0.48)',
+    // bgColor: '#DCE9FF',
+    // bgColorLight: '#f1f7ff',
+    // textColorHover: '#4C5656',
+    // boxShadowColor: 'rgba(220, 233, 255, 0.48)',
+  },
 ];
 const svgs = [
   <svg key={0} width="60px" height="60px" viewBox="0 0 64 64">
