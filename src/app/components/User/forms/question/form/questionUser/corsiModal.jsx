@@ -41,6 +41,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       const datatmp = [...listData];
       if (!data.id) {
         const newData = [...datatmp, savedData];
+        setIsList(true);
         return setListData(newData);
       }
       const idx = datatmp.findIndex(item => item.id === data.id);
@@ -48,7 +49,7 @@ export const DataList = ({ closeModal, onSelect, onSubmit, list }) => {
       if (data._deleted) {
         datatmp.splice(idx, 1);
       } else datatmp[idx] = savedData;
-
+      setIsList(true);
       setListData(datatmp);
     });
   };

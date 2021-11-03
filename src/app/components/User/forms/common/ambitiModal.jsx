@@ -246,7 +246,12 @@ export default function AmbitiDialg({ ambitiSelected, open, close, onSelect, onS
   }, [ambitiSelector]);
 
   return (
-    <Dialog open={open} fullWidth={true} maxWidth="lg" style={{ height: '100%', width: '80%', margin: 'auto' }}>
+    <Dialog
+      open={open}
+      fullWidth={true}
+      maxWidth="lg"
+      style={{ height: '100%', width: '80%', margin: 'auto', zIndex: '1999' }}
+    >
       <DialogContent style={{ height: '100%' }}>
         {!ambiti ? (
           <>

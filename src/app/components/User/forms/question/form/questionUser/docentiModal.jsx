@@ -15,18 +15,27 @@ import { ConfirmDialog } from 'app/components/dialogs/dialogMenu';
 import BarTwoColumn from 'app/components/Layout/barTwoColumn';
 import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import { empityAnagrafica } from 'app/data/schema/anagrafica';
-import { docentiSlice } from 'app/slice';
+import { docentiSlice, listsSlice } from 'app/slice';
+import { useInjectReducer } from 'utils/redux-injectors';
 
 // import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import useStyle from './style';
+const findIdOnList = (list, id) => list.findIndex(el => el.id === id);
+const findItemById = (list, id) => {
+  const idx = findIdOnList(list, id);
+  if (idx < 0) return null;
+  return list[idx];
+};
 
-export const DataList = ({ closeModal, onSelect, value, onSubmit, list }) => {
+export const DataList = ({ closeModal, personaleTipo, onSelect, value, onSubmit, list }) => {
   const docentiSelector = useSelector(docentiSlice.selects.dataSelector);
+  const editValueFind = list && value && value.id ? findItemById(list, value.id) : null;
+
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
   const [listData, setListData] = useState(list.map(el => ({ ...el, _nome: el.cognome + ' ' + el.nome })));
   const [isList, setIsList] = useState(true);
-  const [editValue, setEditValue] = useState(true);
+  const [editValue, setEditValue] = useState(editValueFind ? { ...editValueFind } : null);
   const [editValueForm, setEditValueForm] = useState(true);
   const [globalFilter, setGlobalFilter] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -40,26 +49,31 @@ export const DataList = ({ closeModal, onSelect, value, onSubmit, list }) => {
     isList && setEditValueForm({ ...value });
   };
 
-  useEffect(setToForm, [editValueForm, value]);
+  useEffect(setToForm, [value]);
 
-  const saveData = data => {
-    setEditValueForm(null);
-    setIsList(false);
+  const saveData = (data, close) => {
+    setIsList(true);
     docentiSlice.actions.save(data).then(res => {
       if (!res || !res.payload) return false;
-      const savedData = res.payload;
+      const savedData = { ...res.payload };
       const datatmp = [...listData];
+      savedData._nome = savedData.cognome + ' ' + savedData.nome;
+      setIsList(true);
       if (!data.id) {
         const newData = [...datatmp, savedData];
+        value && close && closeModal(value ? { ...res.payload } : null);
         return setListData(newData);
       }
+
       const idx = datatmp.findIndex(item => item.id === data.id);
       if (idx < 0) return false;
+
       if (data._deleted) {
         datatmp.splice(idx, 1);
       } else datatmp[idx] = savedData;
 
       setListData(datatmp);
+      value && close && closeModal(value ? { ...res.payload } : null);
     });
   };
 
@@ -98,15 +112,19 @@ export const DataList = ({ closeModal, onSelect, value, onSubmit, list }) => {
           onClick={() => confirmDeleteDocente(rowData)}
           style={{ height: '2rem', width: '2rem' }}
         />
-        <span>&nbsp;&nbsp;</span>
-        <ButtonPrime
-          label="Inserisci"
-          onClick={() => {
-            onSelect(rowData);
-          }}
-          style={{ height: '2rem', width: '6rem' }}
-        />
       </React.Fragment>
+    );
+  };
+
+  const actionBodyTemplate2 = rowData => {
+    return (
+      <ButtonPrime
+        label="Inserisci"
+        onClick={() => {
+          onSelect(rowData);
+        }}
+        style={{ height: '2rem', width: '6rem' }}
+      />
     );
   };
 
@@ -143,7 +161,8 @@ export const DataList = ({ closeModal, onSelect, value, onSubmit, list }) => {
             color="primary"
             variant="contained"
             onClick={() => {
-              closeModal();
+              const found = value && value.id ? findItemById(listData, value.id) : null;
+              closeModal(found);
             }}
           >
             Chiudi
@@ -160,68 +179,88 @@ export const DataList = ({ closeModal, onSelect, value, onSubmit, list }) => {
     },
   };
 
+  const ambitoTemplate = rowData =>
+    rowData && rowData.ambito && rowData.ambito.filter((ambito, idx) => idx < 3).map(el => <span>{el + ' '}</span>);
+
   const renderDataTable = () => (
-    <DataTable
-      ref={dataTable}
-      value={listData}
-      globalFilter={globalFilter}
-      emptyMessage="Lista docenti vuota"
-      showGridlines
-      autoLayout
-      className="p-datatable-sm"
-      bodyStyle={{ fontSize: '14px', height: '100%' }}
-      scrollHeight="98%"
-      scrollable
-      selectionMode="single"
-      customTheme={myNewTheme}
-    >
-      <Column field="_nome" header="Nome" sortable></Column>
-      <Column field="email" className="noWrap" header="Email"></Column>
-      <Column field="cf" header="Cod. Fisc"></Column>
-      <Column field="phone" header="Tel"></Column>
-      <Column field="ambito" header="Ambito" sortable></Column>
-      <Column body={actionBodyTemplate}></Column>
-    </DataTable>
+    <div style={{ height: '100%' }}>
+      {header()}
+      <DataTable
+        ref={dataTable}
+        value={listData}
+        globalFilter={globalFilter}
+        emptyMessage="Lista docenti vuota"
+        showGridlines
+        autoLayout
+        className="p-datatable-sm"
+        bodyStyle={{ fontSize: '14px', height: '100%' }}
+        scrollHeight="98%"
+        scrollable
+        selectionMode="single"
+        customTheme={myNewTheme}
+      >
+        <Column field="_nome" header="Nome" style={{ fontSize: '13px', width: '25%' }} sortable />
+        <Column field="email" className="noWrap" style={{ fontSize: '13px', width: '25%' }} header="Email" />
+        <Column field="cf" header="Cod. Fisc" style={{ fontSize: '13px', width: '120px' }} />
+        <Column field="phone" header="Tel" style={{ fontSize: '13px', width: '120px' }} />
+        <Column field="tipologia" header="Tipologia" sortable style={{ fontSize: '13px', width: '140px' }} />
+        <Column body={actionBodyTemplate} style={{ textAlign: 'center', width: '110px' }} />
+        <Column body={actionBodyTemplate2} style={{ textAlign: 'center', width: '110px' }} />
+      </DataTable>
+    </div>
   );
   const renderAnagrafica = () => (
     <AnagraficaForm
       value={editValueForm}
+      personaleTipo={personaleTipo}
       onExit={() => {
         setEditValueForm(null);
         setIsList(false);
       }}
-      onSubmit={data => saveData(data)}
+      onSubmit={data => saveData(data, !!value)}
     />
   );
   return (
-    <>
-      {header()}
-      <div className="ag-theme-alpine" style={{ height: '92%', width: '100%' }}>
-        <div style={{ height: '100%' }}> {isList || !editValueForm ? renderDataTable() : renderAnagrafica()}</div>
-        <ConfirmDialog
-          open={confirmDelete}
-          setOpen={setConfirmDelete}
-          onConfirm={onConfirmDelete}
-          title={'sei sicuro di eliminare ' + !editValue ? '' : editValue._nome}
-        />
-        <br />
-      </div>
-    </>
+    <div className="ag-theme-alpine" style={{ height: '92%', width: '100%' }}>
+      <div style={{ height: '100%' }}> {isList || !editValueForm ? renderDataTable() : renderAnagrafica()}</div>
+      <ConfirmDialog
+        open={confirmDelete}
+        setOpen={setConfirmDelete}
+        onConfirm={onConfirmDelete}
+        title={
+          <p>
+            Sei sicuro di eliminare <br /> {!editValue ? '' : editValue._nome} ?
+          </p>
+        }
+      />
+      <br />
+    </div>
   );
 };
 
 export function DialogPersonList({ open, close, value, onSelect, onSubmit, ...rest }) {
+  useInjectReducer({ key: docentiSlice.name, reducer: docentiSlice.slice.reducer });
   const docentiSelector = useSelector(docentiSlice.selects.dataSelector);
+  const listsSelector = useSelector(listsSlice.selects.dataSelector);
   const [docenti, setDocenti] = useState(null);
+  const [personaleTipo, setPersonaleTipo] = useState(null);
   const classes = useStyle();
 
   useEffect(() => {
     docentiSlice.actions.query({}, true);
+    listsSlice.actions.query({ name: 'personaleTipo' }, true);
   }, []);
 
   useEffect(() => {
     !!docentiSelector && setDocenti(docentiSelector.results);
   }, [docentiSelector]);
+
+  useEffect(() => {
+    if (!!listsSelector && listsSelector.results && listsSelector.results[0] && listsSelector.results[0].list) {
+      setPersonaleTipo(listsSelector.results[0].list);
+      docentiSelector && docentiSelector.results && setDocenti([...docentiSelector.results]);
+    }
+  }, [listsSelector]);
 
   return (
     <Dialog open={open} fullWidth={true} maxWidth="lg" classes={{ paper: classes.dialogPaper }}>
@@ -229,7 +268,15 @@ export function DialogPersonList({ open, close, value, onSelect, onSubmit, ...re
         {!docenti ? (
           <h3>Loading...</h3>
         ) : (
-          <DataList onSubmit={onSubmit} onSelect={onSelect} closeModal={close} value={value} list={docenti} {...rest} />
+          <DataList
+            personaleTipo={personaleTipo}
+            onSubmit={onSubmit}
+            onSelect={onSelect}
+            closeModal={close}
+            value={value}
+            list={docenti}
+            {...rest}
+          />
         )}
       </DialogContent>
     </Dialog>
