@@ -20,8 +20,16 @@ const data = [
     hardLink: false,
   },
   {
-    name: 'Genera repost annuale',
+    name: 'Genera report annuale',
     link: '/app/user/repoAnno',
+  },
+  {
+    name: 'Corsi',
+    link: '/app/user/corsi',
+  },
+  {
+    name: 'Docenti e Professionisti',
+    link: '/app/user/personale',
   },
 ];
 
