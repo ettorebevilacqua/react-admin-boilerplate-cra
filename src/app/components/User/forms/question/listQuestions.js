@@ -12,7 +12,7 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
   const [values, setValues] = React.useState();
   const classes = elemStyle();
 
-  const loadData = () => data && setValues(data);
+  const loadData = () => data && setValues(data && data.results);
   React.useEffect(loadData, [data]);
 
   // if (data && !modulo) {
@@ -64,9 +64,9 @@ const MlistQuestions = ({ formProp: { data, saved } }) => {
     return (
       <Paper className={`${classes.paperRow} ${classes.width95}`} key={index}>
         <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[...sizes]}>
-          <div className={classes.paperRowElem}>{dataTo['title'] || ''}</div>
-          <div className={classes.paperRowElem}>{data['data'] || '10/03/2021'}</div>
-          <div className={classes.paperRowElem}>{data['rendeption'] || '10/03/2021'}</div>
+          <div className={classes.paperRowElem}>{dataTo['titolo'] || ''}</div>
+          <div className={classes.paperRowElem}>{dataTo['data'] || ''}</div>
+          <div className={classes.paperRowElem}>{dataTo['rendeption'] || ''}</div>
           <div>
             <ul style={{ fontSize: '18px' }}>
               <li>
