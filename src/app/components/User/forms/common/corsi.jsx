@@ -40,9 +40,6 @@ export const CorsiForm = ({ value, onSubmit, onExit, saved }) => {
 
   const onSelectAmbiti = propsFormik => ambiti => {
     propsFormik.setFieldValue('ambito', ambiti);
-    propsFormik.setFieldValue('durata', ' ');
-    propsFormik.setTouched(['durata']);
-    propsFormik.validateField('durata');
   };
 
   const closeAmbito = () => setIsDialogAmbiti(false);

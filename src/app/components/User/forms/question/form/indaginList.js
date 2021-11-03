@@ -76,11 +76,11 @@ function IndaginiListForm(props) {
   );
 
   return (
-    <>
+    <div className={`${classes.root}`}>
       <br />
       <h2>Crea Indagine</h2>
       {values && values.map(renderIndagine)}
-    </>
+    </div>
   );
 }
 

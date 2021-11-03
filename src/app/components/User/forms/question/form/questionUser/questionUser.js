@@ -33,9 +33,6 @@ import BarTwoColumn from 'app/components/Layout/barTwoColumn';
 
 const empityPartecipante = { cognome: '', nome: '', email: '', phone: '' };
 
-const MyInput = style => ({ field, form, ...props }) => {
-  return <TextField {...field} {...props} styel={style} />;
-};
 const renderField = (props = {}, name, component, label, type, width) => {
   return (
     <Field
@@ -75,7 +72,7 @@ const getPartecipantiByNum = (list, val) => {
 const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
   const { values, setFieldValue } = useFormikContext();
-  const [editValueDocente, setEditValueDocente] = React.useState(true);
+  const [editValueDocente, setEditValueDocente] = React.useState(null);
   const [isDialogAnag, setIsDialogAnag] = React.useState(false);
   const [isDialogDocenti, setIsDialogDocenti] = React.useState(false);
   const [isDialogCorsi, setIsDialogCorsi] = React.useState(false);
@@ -119,10 +116,16 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
   };
 
-  const closeDocenti = () => {
+  const closeDocenti = selected => {
     setIsDialogDocenti(false);
     setEditValueDocente(null);
     setTimeout(() => setIsDialogDocenti(false), 30);
+    if (!selected || !propsFormik.values?.docenti) return false;
+    const idx = propsFormik.values.docenti.findIndex(el => selected.id === el.id);
+    if (idx > -1) {
+      Object.keys(selected).map(field => propsFormik.setFieldValue(`docenti.${idx}.${field}`, selected[field]));
+      propsFormik.submitForm();
+    }
   };
 
   const closeCorsi = () => {
@@ -143,8 +146,14 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
       : propsFormik.values.docenti.map(el => ({ ...el, nome: (el.nome || '') + ' ' + (el.cognome || '') }));
 
     const onSelectDocente = docente => {
-      arrayHelper.push(docente);
+      const idx = _docenti.findIndex(el => docente.id === el.id);
+      if (idx < 0) {
+        arrayHelper.push(docente);
+      } else {
+        arrayHelper.replace(idx, docente);
+      }
       setTimeout(() => setIsDialogDocenti(false), 30);
+      propsFormik.submitForm();
     };
 
     const actionBodyTemplate = rowData => {
@@ -168,6 +177,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                 arrayHelper.remove(idxDocente);
                 setIsDialogDocenti(false);
                 setTimeout(() => setIsDialogDocenti(false), 30);
+                propsFormik.submitForm();
               }
             }}
             style={{ height: '2rem', width: '2rem' }}
@@ -214,7 +224,10 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         ) : (
           <Typography variant="body1" color="primary">
             <span
-              onClick={() => setIsDialogDocenti(true)}
+              onClick={() => {
+                setIsDialogDocenti(true);
+                setTimeout(() => setIsDialogDocenti(true), 30);
+              }}
               style={{ cursor: 'pointer', fontSize: 'large', textDecoration: 'underline' }}
             >
               Inserisci docente
@@ -283,7 +296,9 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                 style: { fontSize: '14px', width: '100%' },
               }}
             />
-            {meta.touched && meta.error && <div style={{ color: 'red', fontSize: '1' }}>{meta.error}</div>}
+            {(Object.getOwnPropertyNames(propsFormik.errors).length !== 0 || meta.error) && (
+              <div style={{ color: 'red', fontSize: '1' }}>{meta.error}</div>
+            )}
           </div>
         )}
       </Field>

@@ -10,17 +10,20 @@ import { Column } from 'primereact/column';
 // import GridChilds from 'app/components/User/forms/component/gridChilds';
 import { ConfirmDialog } from 'app/components/dialogs/dialogMenu';
 import BarTwoColumn from 'app/components/Layout/barTwoColumn';
-import { CorsiForm } from 'app/components/User/forms/common/corsi';
+import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import { empityCorso } from 'app/data/schema/corsiSchema';
 // import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import useStyle from './style';
 
 import { useSelector } from 'react-redux';
 import { useInjectReducer } from 'utils/redux-injectors';
-import { corsiSlice } from 'app/slice';
+import { docentiSlice, listsSlice } from 'app/slice';
 
-export const DataList = ({ list }) => {
-  const [listData, setListData] = useState(list);
+const getNomeFull = el => ({ ...el, _nome: el.cognome + ' ' + el.nome });
+const getListFullName = list => (!list ? [] : list.map(getNomeFull));
+
+export const DataList = ({ list, personaleTipo }) => {
+  const [listData, setListData] = useState(getListFullName([...list]));
   const [isList, setIsList] = useState(true);
   const [editValue, setEditValue] = useState(true);
   const [editValueForm, setEditValueForm] = useState(true);
@@ -32,9 +35,10 @@ export const DataList = ({ list }) => {
   const saveData = data => {
     setEditValueForm(null);
     setIsList(false);
-    corsiSlice.actions.save(data).then(res => {
+    delete data._nome;
+    docentiSlice.actions.save(data).then(res => {
       if (!res || !res.payload) return false;
-      const savedData = res.payload;
+      const savedData = { ...res.payload, _nome: res.payload.cognome + ' ' + res.payload.nome };
       const datatmp = [...listData];
       if (!data.id) {
         const newData = [...datatmp, savedData];
@@ -132,35 +136,37 @@ export const DataList = ({ list }) => {
     rowData && rowData.ambito && rowData.ambito.filter((ambito, idx) => idx < 3).map(el => <span>{el + ' '}</span>);
 
   const renderDataTable = () => (
-    <div style={{ height: '100%' }}>
+    <div>
       {header()}
+
       <DataTable
         ref={dataTable}
         value={listData}
         globalFilter={globalFilter}
-        emptyMessage="Lista corsi vuota"
+        emptyMessage="Lista docenti vuota"
         showGridlines
-        stripedRows
         autoLayout
         className="p-datatable-sm"
         bodyStyle={{ fontSize: '14px', height: '100%' }}
         scrollHeight="98%"
         scrollable
+        selectionMode="single"
         customTheme={myNewTheme}
       >
-        <Column field="codice" className="noWrap" header="ID corso" sortable style={{ width: '160px' }} />
-        <Column field="titolo" className="noWrap" header="Titolo" sortable style={{ width: '50%' }} />
-        <Column field="dataInizio" header="Data" sortable style={{ width: '160px' }} />
-        <Column field="tipologia" header="ambito" sortable />
-        {<Column field="ambito" header="ambito" body={ambitoTemplate} sortable />}
-        <Column body={actionBodyTemplate} style={{ textAlign: 'center', width: '110px' }} />
+        <Column field="_nome" header="Nome" sortable></Column>
+        <Column field="email" className="noWrap" header="Email"></Column>
+        <Column field="cf" header="Cod. Fisc"></Column>
+        <Column field="phone" header="Tel"></Column>
+        <Column field="ambito" header="Ambito" sortable></Column>
+        <Column body={actionBodyTemplate}></Column>
       </DataTable>
     </div>
   );
 
   const renderAnagrafica = () => (
-    <CorsiForm
-      value={editValueForm}
+    <AnagraficaForm
+      value={{ ...editValueForm }}
+      personaleTipo={personaleTipo}
       onExit={() => {
         setEditValueForm(null);
         setIsList(false);
@@ -189,24 +195,34 @@ export const DataList = ({ list }) => {
   );
 };
 
-export function CorsiList(props) {
-  useInjectReducer({ key: corsiSlice.name, reducer: corsiSlice.slice.reducer });
-  const corsiSelector = useSelector(corsiSlice.selects.dataSelector);
-  const [corsi, setCorsi] = useState(null);
+export function PersonaleList(props) {
+  useInjectReducer({ key: docentiSlice.name, reducer: docentiSlice.slice.reducer });
+  const personaleSelector = useSelector(docentiSlice.selects.dataSelector);
+  const listsSelector = useSelector(listsSlice.selects.dataSelector);
+  const [personale, setPersonale] = useState(null);
+  const [personaleTipo, setPersonaleTipo] = useState(null);
   const classes = useStyle();
 
   useEffect(() => {
-    corsiSlice.actions.query({}, true);
+    docentiSlice.actions.query({}, true);
+    listsSlice.actions.query({ name: 'personaleTipo' }, true);
   }, []);
 
   useEffect(() => {
-    !!corsiSelector && setCorsi(corsiSelector.results);
-  }, [corsiSelector]);
+    !!personaleSelector && personaleSelector.results && setPersonale([...personaleSelector.results]);
+  }, [personaleSelector]);
+
+  useEffect(() => {
+    if (!!listsSelector && listsSelector.results && listsSelector.results[0] && listsSelector.results[0].list) {
+      setPersonaleTipo(listsSelector.results[0].list);
+      personaleSelector && personaleSelector.results && setPersonale([...personaleSelector.results]);
+    }
+  }, [listsSelector]);
 
   return (
     <div className={classes.root}>
       <br />
-      {!corsi ? <h3>Loading...</h3> : <DataList list={corsi} />}
+      {!personale ? <h3>Loading...</h3> : <DataList list={personale} personaleTipo={personaleTipo} />}
     </div>
   );
 }
