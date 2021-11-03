@@ -35,10 +35,10 @@ import { AppHome } from './app';
 import Login from 'app/components/Layout/Login';
 // import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
+import { GuestPage } from './pages/guest/Loadable';
 import { useUserAuthSlice } from 'app/slice';
-import { GuestRoute } from './components/User';
 
-const isGuest = () => window.location.pathname === '/guest';
+const isGuest = () =>window.location.pathname.indexOf('/guest') === 0;
 function PrivateRoute({ children, isAuthenticated, ...rest }) {
   return !isAuthenticated && isGuest() ? (
     <Login />
@@ -85,7 +85,7 @@ function AppBody() {
         <Switch>
           <Layout>
             {isGuest ? (
-              <Route exact path="/guest" component={GuestRoute} />
+              <Route exact path="/guest/compile/:token" component={GuestPage} />
             ) : (
               <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
             )}
