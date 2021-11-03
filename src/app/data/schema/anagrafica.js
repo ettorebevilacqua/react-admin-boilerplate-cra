@@ -26,6 +26,11 @@ export const schema = Yup.object().shape({
   ambito: Yup.array(),
   tipologia: Yup.string().min(2, 'Richiesto'),
   cf: Yup.string().required('Richiesto'),
+  qualifica: Yup.object().shape({
+    data: Yup.string(),
+    responsabile: Yup.string(),
+    modalita: Yup.string(),
+  }),
 });
 
 export const empityAnagrafica = {

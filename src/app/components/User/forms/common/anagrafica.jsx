@@ -6,6 +6,10 @@ import MuiTextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Typography from '@material-ui/core/Typography';
+
+import Select from '@material-ui/core/Select';
+import { FormControl, InputLabel, MenuItem } from '@material-ui/core';
+
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import GridChilds from '../component/gridChilds';
@@ -13,6 +17,15 @@ import { elemStyle } from '../stylesElement';
 
 import { schema } from 'app/data/schema/anagrafica';
 import AmbitiDialg from './ambitiModal';
+
+const modalitaQualifica = [
+  'Analisi del curriculum vitae',
+  'Colloquio',
+  'Storica collaborazione',
+  'Segnalato da collaboratore',
+  'Scelto dal cliente',
+  'Altro (specificare)',
+];
 
 const getIsAmbito = val =>
   ['docente', 'esperto di competenze'].indexOf(val && val.toLowerCase ? val.toLowerCase() : '') > -1;
@@ -178,6 +191,27 @@ export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }
                 <GridChilds justify="space-between" view={[8, 4]} spacing={3} style={{ width: '100%' }}>
                   {fieldCustom(propsFormik, {}, `email`, 'Email')}
                   {fieldCustom(propsFormik, {}, `phone`, 'Phone')}
+                </GridChilds>
+                <h3>Qualifica : </h3>
+                <GridChilds justify="space-between" view={[2, 7, 3]} spacing={3} style={{ width: '100%' }}>
+                  {fieldCustom(propsFormik, {}, `qualifica.data`, 'Data')}
+                  {fieldCustom(propsFormik, {}, `qualifica.responsabile`, 'Responsabile')}
+
+                  <FormControl style={{ width: '100%' }}>
+                    <InputLabel>Tipo Domanda</InputLabel>
+                    <Select
+                      value={propsFormik.values.modalita}
+                      onChange={e => {
+                        propsFormik.setFieldValue('qualifica.modalita', e.target.value);
+                      }}
+                    >
+                      {modalitaQualifica.map(el => (
+                        <MenuItem key={el} value={el}>
+                          {el}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </GridChilds>
                 <br />
                 <Button
