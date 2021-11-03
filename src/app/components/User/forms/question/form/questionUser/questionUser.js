@@ -73,6 +73,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
   const { values, setFieldValue } = useFormikContext();
   const [editValueDocente, setEditValueDocente] = React.useState(null);
+  const [corso, setCorso] = React.useState(null);
   const [isDialogAnag, setIsDialogAnag] = React.useState(false);
   const [isDialogDocenti, setIsDialogDocenti] = React.useState(false);
   const [isDialogCorsi, setIsDialogCorsi] = React.useState(false);
@@ -124,7 +125,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     const idx = propsFormik.values.docenti.findIndex(el => selected.id === el.id);
     if (idx > -1) {
       Object.keys(selected).map(field => propsFormik.setFieldValue(`docenti.${idx}.${field}`, selected[field]));
-      propsFormik.submitForm();
+      // propsFormik.submitForm();
     }
   };
 
@@ -133,11 +134,12 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     setTimeout(() => setIsDialogCorsi(false), 30);
   };
 
-  const onSelectCorsi = corso => {
+  const onSelectCorsi = _corso => {
     setIsDialogCorsi(false);
-    propsFormik.setFieldValue(`titolo`, corso.titolo);
-    propsFormik.setFieldValue(`idcorso`, corso.id);
-    propsFormik.setFieldValue(`codiceCorso`, corso.codice);
+    propsFormik.setFieldValue(`titolo`, _corso.titolo);
+    propsFormik.setFieldValue(`idcorso`, _corso.id);
+    propsFormik.setFieldValue(`codiceCorso`, _corso.codice);
+    setTimeout(() => setCorso(_corso), 30);
   };
 
   const DocentiForm = arrayHelper => {
@@ -169,6 +171,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
             }}
             style={{ height: '2rem', width: '2rem' }}
           />
+          <span>&nbsp;</span>
           <ButtonPrime
             icon="pi pi-trash"
             className="p-button-rounded p-button-warning"
@@ -206,8 +209,8 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
         <Column field="email" className={classes.column} header="Email"></Column>
         <Column field="cf" className={classes.column} header="Cod. Fisc"></Column>
         <Column field="phone" className={classes.column} header="Tel"></Column>
-        <Column field="ambito" className={classes.column} header="Ambito"></Column>
-        <Column body={actionBodyTemplate} style={{ width: '60px' }}></Column>
+        <Column field="tipologia" className={classes.column} header="Tipologia"></Column>
+        <Column body={actionBodyTemplate} style={{ width: '120px' }}></Column>
       </DataTable>
     );
 
@@ -354,7 +357,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                 <span style={{ fontSize: '16px' }}>
                   Corso:{' '}
                   <b>
-                    {propsFormik.errors?.idcorso ? (
+                    {!propsFormik.values?.idcorso ? (
                       <span style={{ color: 'red' }}>Selezionare un corso</span>
                     ) : (
                       propValue?.titolo

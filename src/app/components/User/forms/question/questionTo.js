@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useInjectReducer } from 'utils/redux-injectors';
 
 import { Formik, Form } from 'formik';
@@ -22,32 +22,28 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
 
   const history = useHistory();
   const location = useLocation();
-  const { id, idquestion } = useParams();
+  // const { id, idquestion } = useParams();
   const [error, setError] = React.useState(null);
   const idParam = data && data.id;
   const questionModulo = location.state && location.state.data;
-
   const questions = data;
 
-  const loadData = React.useCallback(
-    idquestion => {
-      const dataToValue = idParam
-        ? questions
-        : {
-            ...empityQuestion,
-            idquestion,
-            titoloQuestion: questionModulo && questionModulo.title ? questionModulo.title : '',
-          };
+  const loadData = () => {
+    const dataToValue = idParam
+      ? questions
+      : {
+          ...empityQuestion,
+          idquestion: questionModulo && questionModulo.id,
+          titoloQuestion: questionModulo && questionModulo.title ? questionModulo.title : '',
+        };
 
-      /* if ((!dataToValue && !dataToValue.docenti) || !dataToValue.docenti[0]) {
+    /* if ((!dataToValue && !dataToValue.docenti) || !dataToValue.docenti[0]) {
         dataToValue.docenti = [empityParteipante];
       } */
-      const _docenti = dataToValue?.docenti?.filter && dataToValue.docenti.filter(el => !!el.id);
-      const _dataToValue = { ...dataToValue, docenti: _docenti };
-      return _dataToValue;
-    },
-    [idParam, questions],
-  );
+    const _docenti = dataToValue?.docenti?.filter && dataToValue.docenti.filter(el => !!el.id);
+    const _dataToValue = { ...dataToValue, docenti: _docenti };
+    return _dataToValue;
+  };
 
   const [value, setValue] = React.useState();
   const [numPartecipanti, setNumPartecipanti] = React.useState(null);
@@ -55,7 +51,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
 
   const dataUpdate = () => {
     if (data) {
-      const quest = loadData(idquestion);
+      const quest = loadData();
       /*  if (!data.id && !questionModulo) {
         return props.history.push('/app/user/indagini');
       } */
@@ -147,6 +143,10 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
     console.log('ffff', formikProp, hamdle);
   }; */
 
+  if (history.location.pathname.indexOf('indagini_invio') > -1 && !questionModulo) {
+    history.push('/app/user/indagini');
+  }
+
   return (
     <div className={classes.root}>
       {!!value && (
@@ -180,6 +180,9 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
           )}
         />
       )}
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

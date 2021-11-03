@@ -24,15 +24,14 @@ export const schema = Yup.object().shape({
   idcorso: Yup.string().required('Richiesto'),
   codiceCorso: Yup.number(),
   idquestion: Yup.string().required('Richiesto'),
-  docenti: Yup.array()
-    .of(
-      Yup.object().shape({
-        nome: Yup.string().required('Required'),
-        email: Yup.string().email('Email non valida.').required('Richiesto'),
-        phone: Yup.string(),
-      }),
-    )
-    .unique('email ripetuta', 'email'),
+  docenti: Yup.array().of(
+    Yup.object().shape({
+      nome: Yup.string().required('Required'),
+      email: Yup.string().email('Email non valida.').required('Richiesto'),
+      phone: Yup.string(),
+    }),
+  ),
+  // .unique('email ripetuta', 'email'),
   partecipanti: Yup.array()
     .of(
       Yup.object().shape({
