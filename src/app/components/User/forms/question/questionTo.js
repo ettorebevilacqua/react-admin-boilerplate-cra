@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useInjectReducer } from 'utils/redux-injectors';
 
-import { Formik, Form } from 'formik';
+import { Formik } from 'formik';
 import FormikOnChange from '../lib/FormikOnChange';
 
 import Button from '@material-ui/core/Button';
@@ -155,7 +155,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
           onSubmit={onSubmitBefore}
           validationSchema={schema}
           children={propsFormik => (
-            <Form onReset={propsFormik.handleReset} onSubmit={propsFormik.handleSubmit}>
+            <>
               {renderTitle(propsFormik)}
               <FormikOnChange delay={500} onChange={onChangeForm(propsFormik)} />
 
@@ -176,7 +176,7 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
                 <div>{propsFormik.errors.submit} </div>
                 {renderButtonActionRecord(propsFormik)}
               </GridChilds>
-            </Form>
+            </>
           )}
         />
       )}

@@ -73,9 +73,8 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
   const classes = elemStyle();
   const { values, setFieldValue } = useFormikContext();
   const [editValueDocente, setEditValueDocente] = React.useState(null);
-  const [corso, setCorso] = React.useState(null);
-  const [isDialogAnag, setIsDialogAnag] = React.useState(false);
   const [isDialogDocenti, setIsDialogDocenti] = React.useState(false);
+  const [isDialogAnag, setIsDialogAnag] = React.useState(false);
   const [isDialogCorsi, setIsDialogCorsi] = React.useState(false);
   const [idxPartecipante, setIdxPartecipante] = React.useState(-1);
   const propValue = propsFormik?.values || {};
@@ -110,13 +109,6 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
   };
 
-  const docentiSubmit = index => docenteVal => {
-    setIsDialogDocenti(false);
-    setTimeout(() => setIsDialogDocenti(false), 30);
-    Object.keys(docenteVal).map(field => propsFormik.setFieldValue(`docenti.${index}.${field}`, docenteVal[field]));
-    // propsFormik.setFieldValue(`partecipanti.${index}`, anagVal);
-  };
-
   const closeDocenti = selected => {
     setIsDialogDocenti(false);
     setEditValueDocente(null);
@@ -125,7 +117,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     const idx = propsFormik.values.docenti.findIndex(el => selected.id === el.id);
     if (idx > -1) {
       Object.keys(selected).map(field => propsFormik.setFieldValue(`docenti.${idx}.${field}`, selected[field]));
-      // propsFormik.submitForm();
+      propsFormik.submitForm();
     }
   };
 
@@ -139,7 +131,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
     propsFormik.setFieldValue(`titolo`, _corso.titolo);
     propsFormik.setFieldValue(`idcorso`, _corso.id);
     propsFormik.setFieldValue(`codiceCorso`, _corso.codice);
-    setTimeout(() => setCorso(_corso), 30);
+    // setTimeout(() => setCorso(_corso), 30);
   };
 
   const DocentiForm = arrayHelper => {
