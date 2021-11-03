@@ -13,18 +13,19 @@ export const empityModulo = {
 };
 
 export const schema = Yup.object().shape({
-  nome: Yup.string().required('Required'),
-  cognome: Yup.string().required('Required'),
+  nome: Yup.string().required('Richiesto'),
+  cognome: Yup.string().required('Richiesto'),
   indirizzo: Yup.string(),
   cap: Yup.string(),
   city: Yup.string(),
   prov: Yup.string(),
   country: Yup.string(),
   phone: Yup.string(),
-  email: Yup.string().email('Email non valida.').required('Required'),
+  email: Yup.string().email('Email non valida.').required('Richiesto'),
   dateBorn: Yup.string(),
-  ambito: Yup.string(),
-  cf: Yup.string(),
+  ambito: Yup.array(),
+  tipologia: Yup.string().min(2, 'Richiesto'),
+  cf: Yup.string().required('Richiesto'),
 });
 
 export const empityAnagrafica = {
@@ -38,6 +39,7 @@ export const empityAnagrafica = {
   phone: '',
   email: '',
   dateBorn: '',
-  ambito: '',
+  ambito: [],
+  tipologia: '',
   cf: '',
 };

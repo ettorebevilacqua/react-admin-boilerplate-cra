@@ -37,6 +37,7 @@ export const schema = Yup.object().shape({
     .of(
       Yup.object().shape({
         nome: Yup.string().required('Richiesto'),
+        cognome: Yup.string().required('Richiesto'),
         email: Yup.string().email('Email non valida.').required('Richiesto'),
         phone: Yup.string(),
       }),
@@ -49,7 +50,7 @@ export const schema = Yup.object().shape({
     .when('partecipanti', (partecipanti, schema) =>
       schema.test({
         test: numPartecipanti => partecipanti && partecipanti.length === numPartecipanti,
-        message: 'inserire i dati per ogni partecipante per raggiungere il umero indicato',
+        message: 'compilare i dati per il numero di partecipanti',
       }),
     ),
 });
