@@ -28,7 +28,10 @@ export const corsiProvider = defaultProvider('corsi', '/corsi', schemas.corsi, [
 export const docentiProvider = defaultProvider('docenti', '/docenti', schemas.docenti, ['axios', 'docenti']);
 export const ambitiProvider = defaultProvider('ambiti', '/ambiti', schemas.docenti, ['axios', 'ambiti']);
 export const listsProvider = defaultProvider('lists', '/lists', schemas.docenti, ['axios', 'ambiti']);
-
+export const docentiActivityProvider = defaultProvider('docentiActivity', '/docenti/activity', schemas.docenti, [
+  'axios',
+  'docentiActivity',
+]);
 export const guestProvider = defaultProvider('guest', '/guest', schemas.docenti, ['axios', 'guest']);
 
 const dataApi = {
@@ -45,6 +48,7 @@ const dataApi = {
   docentiProvider,
   ambitiProvider,
   listsProvider,
+  docentiActivityProvider,
   guestProvider,
 };
 
