@@ -15,6 +15,7 @@ import Chip from '@material-ui/core/Chip';
 import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
 
+import { setMenuList } from 'app/slice/layoutSlice';
 import { schema } from 'app/data/schema/anagrafica';
 import AmbitiDialg from './ambitiModal';
 
@@ -71,6 +72,8 @@ export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }
   const [editValue, setEditValue] = useState(value);
   const [isAmbito, setIsAmbito] = useState(false);
   const [isDialogAmbiti, setIsDialogAmbiti] = React.useState(false);
+
+  setMenuList([{ link: '/app/user/moduli', label: 'Valutazione Annuale' }]);
 
   React.useEffect(() => {
     value && value.tipologia && setIsAmbito(getIsAmbito(value?.tipologia));
