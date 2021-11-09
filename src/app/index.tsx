@@ -66,6 +66,7 @@ const AppRoute = ({ isAuthenticated }) => (
     )}
   </>
 );
+
 initUser(store); // check if user is logged with present token
 function AppBody() {
   const xxx = useSelector((state: RootState) => {
@@ -85,7 +86,7 @@ function AppBody() {
         <Switch>
           <Layout>
             {isGuest ? (
-              <Route exact path="/guest/compile/:token" component={GuestPage} />
+              <Route exact path="/guest/:token" component={GuestPage} />
             ) : (
               <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
             )}
