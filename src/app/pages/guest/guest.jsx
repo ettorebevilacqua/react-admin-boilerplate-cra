@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 // import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { ShowQuestion } from 'app/components/User/forms/question/form/show';
 import useStyles from './style';
 
-import { guestSlice } from 'app/slice';
-
-export default function GuestDataLoader({ data }) {
+export default function GuestForm({ initialValue, saveData }) {
   const classes = useStyles();
-  const personaleSelector = useSelector(guestSlice.selects.dataSelector);
+  const [data, setData] = useState(initialValue);
   const [tmp, setTmp] = useState();
+
+  const question = initialValue?.idquestion && typeof initialValue?.idquestion === 'object' && initialValue.idquestion;
 
   return (
     <div className={classes.root}>
-      <h3>Data Loader</h3>
+      <ShowQuestion values={question} partecipante={data && data.partecipanti} guestValue={data} onChange={saveData} />
     </div>
   );
 }

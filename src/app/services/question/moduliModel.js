@@ -19,9 +19,15 @@ export const empityModulo = {
   domande: [newDomanda],
 };
 
-export const makeRisposte = domande =>
+const getValueRisposta = guestRisposte => (el, idx) => {
+  return null;
+};
+
+export const makeRisposte = (domande, guestRisposte) =>
   !domande || !domande.map
     ? []
     : domande.map(domanda =>
-        (!domanda.risposte || domanda.risposte.length === 0 ? [null] : domanda.risposte).map(() => null),
+        (!domanda.risposte || domanda.risposte.length === 0 ? [null] : domanda.risposte).map(
+          getValueRisposta(guestRisposte),
+        ),
       );
