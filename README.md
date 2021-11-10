@@ -1,6 +1,9 @@
 importantissimo linreria per creare quiz / question :
 https://surveyjs.io/Examples/Library/?id=trigger-runexpression&platform=Reactjs&theme=modern
 
+dataProvider use
+https://www.npmjs.com/package/@data-provider/react
+
 COME GESTIRE BENE I COMPONENTI e MVC :
 https://blog.testdouble.com/posts/2019-11-04-react-mvc/
 
