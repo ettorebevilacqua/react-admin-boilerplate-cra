@@ -28,6 +28,7 @@ import {
   CorsiDataForm,
   PersonaleList,
   DocentiActivity,
+  ListPartecipanti,
 } from './forms/';
 
 import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
@@ -82,6 +83,7 @@ export default function UserComp() {
         <Route exact path="/app/user/personale" component={PersonaleList} />
         <Route exact path="/app/user/corsi/:id" component={() => <CorsiDataForm />} />
         <Route exact path="/app/user/verify" component={() => <MenuCard items={buttonData} />} />
+        <Route exact path="/app/user/partecipanti/rowverify" component={() => <ListPartecipanti />} />
         <Route exact path="/app/user/plane" component={() => <Plane />} />
         <Redirect from="/app/user" to="/app/user" exact />
       </Switch>
