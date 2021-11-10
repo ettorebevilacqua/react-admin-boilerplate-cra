@@ -143,11 +143,11 @@ export function ShowQuestion(props) {
   const isCorrelata = (idxModulo, idxDomanda, idxRisposta, val) => {
     const correlata = getCorrelata(idxModulo, idxDomanda, idxRisposta);
     if (!correlata) return false;
+    const tipo = getTipoDomanda(idxModulo, idxDomanda);
     const rispostaUser = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
     const valCur = rispostaUser && rispostaUser.val;
-    if (!valCur) return false;
+    if (!valCur && tipo !== 4) return false;
     const valValues = getRispostaOfValues(idxModulo, idxDomanda, idxRisposta);
-    const tipo = getTipoDomanda(idxModulo, idxDomanda);
     // const ratingVal = toNumberOr(domanda.rating, 0);
     return tipo === 1 ? valValues !== 0 && valCur <= valValues : valCur === valValues;
   };
@@ -393,6 +393,6 @@ export function ShowQuestion(props) {
 
 export function ShowQuestionUrl(props) {
   const location = useLocation();
-  const values = location.state && location.state.data;
+  const values = props.data || (location.state && location.state.data);
   return <ShowQuestion values={values} />;
 }
