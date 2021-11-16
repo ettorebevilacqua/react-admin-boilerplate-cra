@@ -306,7 +306,7 @@ export const Domande = () => {
 
   const rendereError = () => (
     <>
-      <h2>Errrore nel Caricamento</h2>
+      <h2>Errore nel Caricamento</h2>
       <p> {error}</p>
       <div>
         <Button color="primary" variant="contained" fullWidth onClick={() => history.push('/app/user')}>

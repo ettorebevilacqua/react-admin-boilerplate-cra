@@ -225,7 +225,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
               }}
               style={{ cursor: 'pointer', fontSize: 'large', textDecoration: 'underline' }}
             >
-              Inserisci docente
+              Nuovo docente
             </span>
           </Typography>
         )}
@@ -411,7 +411,7 @@ const QuestionUsersFields = ({ propsFormik, numPartecipanti, ...rest }) => {
                   setTimeout(() => setIsDialogDocenti(true), 30);
                 }}
               >
-                Inserisci Docente
+                <span style={{ fontSize: '14px' }}> Nuovo Docente </span>
               </Button>
             </GridChilds>
           </>
