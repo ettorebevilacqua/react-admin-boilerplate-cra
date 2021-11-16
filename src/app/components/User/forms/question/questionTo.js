@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useInjectReducer } from 'utils/redux-injectors';
 
 import { Formik } from 'formik';
@@ -22,9 +22,9 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
 
   const history = useHistory();
   const location = useLocation();
-  // const { id, idquestion } = useParams();
+  const { id, idquestion } = useParams();
   const [error, setError] = React.useState(null);
-  const idParam = data && data.id;
+  const idParam = id;
   const questionModulo = location.state && location.state.data;
   const questions = data;
 
@@ -70,18 +70,26 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
         if (res.error) {
           return setError(res.error.message ? res.error.message : res.error);
         }
-        const idnew = res && res.payload && res.payload.id;
+        const idnew = res && res.payload && res.payload?.id;
         res &&
           res.payload &&
           res.payload.id &&
           window.history.replaceState(null, null, `/app/user/indagini_edit/${idnew}`);
+        if (!value.id && idnew) {
+          history.replace(`/reload`);
+          setTimeout(() => {
+            history.replace(`/app/user/indagini_edit/${idnew}`);
+          });
+        }
         setValue(res.payload);
+        setTimeout(() => setValue(res.payload), 50);
         console.log('error ', error);
       })
       .catch(err => {
         console.log(err);
       });
   };
+
   const onSubmitBefore = (values, actions) => {
     actions.setSubmitting(false);
     setTimeout(() => {
@@ -111,10 +119,22 @@ const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props })
         <span className={classes.buttonAction}>Salva</span>
       </Button>
       <Button
-        disabled={!propsFormik.isValid}
+        disabled={!propsFormik.isValid || !value.id || propsFormik.dirty}
         variant="contained"
         color="primary"
-        onClick={() => value && value.id && actions.sendEmail(value.id) && actions.reload()}
+        onClick={() =>
+          value &&
+          value.id &&
+          actions.sendEmail(value.id).then(res => {
+            // setTimeout(() => dataUpdate(), 50);
+            history.replace(`/reload`);
+            setTimeout(() => {
+              history.replace(`/app/user/indagini_edit/${value.id}`);
+            });
+            // history.go(0);
+            // window.location.reload(false); // `/app/user/indagini_edit/${value.id}`);
+          })
+        }
       >
         <span className={classes.buttonAction}>Invia mail</span>
       </Button>
