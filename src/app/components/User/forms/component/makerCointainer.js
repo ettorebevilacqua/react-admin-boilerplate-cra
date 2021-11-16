@@ -63,29 +63,30 @@ export function makeContainer(Component, sliceProvider, loadCallBack) {
     };
 
     const rendereError = () => (
-      <>
-        <h2>Errrore nel Caricamento</h2>
+      <div style={{ margin: 'auto', width: '85%' }}>
+        <h2>Errore nel Caricamento</h2>
         <p> {stateLoad.errorMessage}</p>
         <div>
           <Button color="primary" variant="contained" fullWidth onClick={() => history.push('/app/user')}>
             Torna Indietro
           </Button>
         </div>
-      </>
+      </div>
     );
     const renderComp = () => (
       <Component data={data} queryValue={params} onSubmit={onSubmit} saveData={saveData} {...toProps} />
     );
 
-    return stateLoad.isError ? (
-      rendereError()
-    ) : (
-      <div>
-        <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
-          {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : (data || parent) && renderComp()}
-        </LoadingOverlay>
-      </div>
-    );
+    if (stateLoad.isError) {
+      return rendereError();
+    } else
+      return (
+        <div>
+          <LoadingOverlay active={stateLoad.isFetching} spinner text="Loading...">
+            {!stateLoad.isFetching && !data ? stateLoad.isError && rendereError() : (data || parent) && renderComp()}
+          </LoadingOverlay>
+        </div>
+      );
   };
 
   const withConnect = connect(mapStateToProps, mapDispatchToProps);
