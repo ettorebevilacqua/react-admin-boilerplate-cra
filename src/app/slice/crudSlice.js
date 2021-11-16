@@ -48,7 +48,8 @@ const init = store =>
     const getProvider = createAsyncThunk(name + '/get', async (payload, thunkAPI) => {
       const id = payload;
       const [data, error] = await handlePromise(provider.get(id));
-      return error ? thunkAPI.rejectWithValue(error.data) : data;
+      error && thunkAPI.rejectWithValue(error ? error || error : null);
+      return error ? Promise.reject(error) : Promise.resolve({ ...data });
     });
 
     const gueryProvider = createAsyncThunk(name + '/query', async (payload, thunkAPI) => {
