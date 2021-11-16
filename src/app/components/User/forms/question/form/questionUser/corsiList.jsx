@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useInjectReducer } from 'utils/redux-injectors';
 
 import Button from '@material-ui/core/Button';
 import { Button as ButtonPrime } from 'primereact/button';
@@ -15,8 +17,6 @@ import { empityCorso } from 'app/data/schema/corsiSchema';
 // import { AnagraficaForm } from 'app/components/User/forms/common/anagrafica';
 import useStyle from './style';
 
-import { useSelector } from 'react-redux';
-import { useInjectReducer } from 'utils/redux-injectors';
 import { corsiSlice } from 'app/slice';
 
 export const DataList = ({ list }) => {
