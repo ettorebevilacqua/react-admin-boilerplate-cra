@@ -1,6 +1,15 @@
 importantissimo linreria per creare quiz / question :
 https://surveyjs.io/Examples/Library/?id=trigger-runexpression&platform=Reactjs&theme=modern
 
+
+jotai state manager !!
+https://github.com/pmndrs/jotai
+https://www.youtube.com/watch?v=YfXsnXucVBg
+
+BEST EXPLAIN OF REACT
+https://www.benmvp.com/blog/picking-right-react-component-pattern/
+https://www.benmvp.com/blog/react-usecallback-usememo-use-cases/
+
 dataProvider use
 https://www.npmjs.com/package/@data-provider/react
 
