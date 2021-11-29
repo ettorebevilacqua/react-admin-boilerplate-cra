@@ -14,6 +14,13 @@ export const questionProvider = defaultProvider('questions', '/questions', schem
   'questions',
 ]);
 
+export const questionFullProvider = defaultProvider(
+  'questionsWithModulo',
+  '/questions/withModulo',
+  schemas.questionSchemas,
+  ['axios', 'questions'],
+);
+
 export const emailProvider = defaultProvider('emailProvider', '/questions/sendEmail', schemas.question, [
   'axios',
   'emailProvider',
@@ -50,6 +57,7 @@ const dataApi = {
   listsProvider,
   docentiActivityProvider,
   guestProvider,
+  questionFullProvider,
 };
 
 export const userProvider = userProviderFrom;
