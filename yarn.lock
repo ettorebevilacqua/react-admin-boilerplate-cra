@@ -1246,10 +1246,10 @@
     is-promise "4.0.0"
     lodash.isplainobject "4.0.6"
 
-"@data-provider/react@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@data-provider/react/-/react-1.5.1.tgz#33bf652b01aa25cd066f5d49439d00d2bbd05eab"
-  integrity sha512-gcYl6vr/sUGuj/QFwSEsI2OmXVMjx05CLXxktrW71S4ktuDA4KuNNk2dB/+9ISLn9TXUGpkVxQ2ZyDBB0SCXWg==
+"@data-provider/react@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@data-provider/react/-/react-1.5.2.tgz#de69137c6022c1989b1e639b4c026bbfa7146a8a"
+  integrity sha512-W50NX3vdcg+xjMPwcSrwhJWVhCgMZxmGGTGjCsUi4dKn2R7/DRTevbhh/4/I0GEStfCjLfspjSRj8HttS6yNpQ==
   dependencies:
     hoist-non-react-statics "3.3.2"
 
