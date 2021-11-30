@@ -1,7 +1,7 @@
 import { ListPartecipanti } from './partecipantiRender';
 import { Soddisfazione } from './soddisfazione';
 import { GraphQuestion } from './graph';
-import { QuestionResponce } from 'questionResponce';
+import { QuestionResponce } from './questionResponce';
 
 const exported = {
   ListPartecipanti,
