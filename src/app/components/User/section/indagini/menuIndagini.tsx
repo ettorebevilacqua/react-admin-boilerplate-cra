@@ -11,6 +11,22 @@ import { Helmet } from 'react-helmet-async';
 
 const data = [
   {
+    name: 'Custumer Satisfation',
+    link: '/app/user/indagini',
+  },
+  {
+    name: 'Docenti e Professionisti',
+    link: '/app/user/personale',
+    hardLink: false,
+  },
+  {
+    name: 'Verifica Apprendimenti',
+    link: '/app/user/repoAnno',
+  },
+];
+
+const data2 = [
+  {
     name: 'Apri una nuova indagine',
     link: '/app/user/indagini',
   },

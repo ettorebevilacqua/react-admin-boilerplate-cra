@@ -1,10 +1,10 @@
-import { questionModuliSlice, questionSlice } from 'app/slice';
+import { questionModuliSlice } from 'app/slice';
 
 import { makeContainerRefreshed } from '../component/makerCointainer';
-
 import QuestionModuli from './questionModuli';
 import IndaginiListForm from './form/indaginList';
 import { ListQuestions } from './listQuestions';
+// import { pick } from 'utils/pick';
 
 export const QuestionModuliForm = makeContainerRefreshed(QuestionModuli, questionModuliSlice, () => {
   // console.log('xxxxx queryParam', queryParam);
@@ -24,12 +24,9 @@ export const IndaginiList = makeContainerRefreshed(IndaginiListForm, questionMod
   questionModuliSlice.actions.query(queryParam, true);
 });
 
-export const QuestionList = makeContainerRefreshed(ListQuestions, questionSlice, () => {
+export const QuestionList = ListQuestions; /* makeContainerRefreshed(ListQuestions, questionSlice, params => {
   questionSlice.actions.reset();
-  /* pick({ closeAt: 'false', full: 'true', ...matchParam }, [
-      'closeAt',
-      'full',
-      'id',
-    ]), */
-   questionSlice.actions.query({}, true);
+  const state = pick(params, ['state']);
+   questionSlice.actions.query(state, true);
 });
+*/

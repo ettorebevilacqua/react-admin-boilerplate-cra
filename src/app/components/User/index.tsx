@@ -77,7 +77,7 @@ export default function UserComp() {
         <Route exact path="/app/user/indagini_question/:id" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/indagini_invio/:idquestion/" component={QuestionToForm} />
         <Route exact path="/app/user/indagini_edit/:id" component={QuestionToForm} />
-        <Route exact path="/app/user/indagini/list" component={QuestionList} />
+        <Route exact path="/app/user/indagini/list/:state" component={QuestionList} />
         <Route exact path="/app/user/indagine" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/show" component={() => <ShowQuestionUrl />} />
         <Route exact path="/app/user/corsi" component={CorsiList} />
@@ -87,7 +87,7 @@ export default function UserComp() {
         <Route exact path="/app/user/verify" component={() => <MenuCard items={buttonData} />} />
         {/*<Route exact path="/app/user/partecipanti/rowverify" component={() => <ListPartecipanti />} /> */}
         <Route exact path="/app/user/plane" component={() => <Plane />} />
-        <Route exact path="/app/user/soddisfazione" component={() => <Soddisfazione />} />
+        <Route exact path="/app/user/indagini/report/:id" component={() => <Soddisfazione />} />
         <Redirect from="/app/user" to="/app/user" exact />
       </Switch>
       {/* data.content && <ContentEx /> */}

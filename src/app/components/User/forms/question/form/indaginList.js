@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import { elemStyle } from '../../stylesElement';
 import { setMenuList } from 'app/slice/layoutSlice';
-
+import { menuSatisfaction } from 'app/components/User/forms/question/menuListSatisfaction';
 // const routeToBase = id => `/app/user/indagini_invio/${id}/0`;
 // const routeToBase = id => `/app/user/indagini_question/${id}`;
 
@@ -26,7 +26,7 @@ function IndaginiListForm(props) {
   // React.useEffect(() => props.actions.load(), []);
   React.useEffect(() => setValues(getDataPublic()), [data, getDataPublic]);
 
-  React.useEffect(() => setMenuList([{ link: '/app/user/indagini', label: 'Indagini' }]), []);
+  React.useEffect(() => setMenuList(menuSatisfaction), []);
   /* const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];

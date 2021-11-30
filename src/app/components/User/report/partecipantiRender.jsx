@@ -3,7 +3,9 @@ import { useSelector } from 'react-redux';
 import { useInjectReducer } from 'utils/redux-injectors';
 
 import useStyle from './style';
-import { corsiSlice } from 'app/slice';
+// import { corsiSlice } from 'app/slice';
+import { guestSlice } from 'app/slice';
+const corsiSlice = guestSlice;
 
 function ListPartecipantiComp({ list }) {
   return (
