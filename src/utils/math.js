@@ -9,6 +9,7 @@ const modaOfoccurrences = freq => {
       moda = parseInt(key);
     }
   });
+  return moda;
 };
 
 function median(values) {
