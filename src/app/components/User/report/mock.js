@@ -48,7 +48,6 @@ const summer = list => list.reduce((acc, item) => acc + item);
 
 // risposteNum[0].risposte = [5, 6, 3, 5, 3, 7, 6, 1]; // new Array(8).fill(7);
 const risposte = [...risposteNum, ...bolRisposte];
-debugger;
 const getTot = domanda => {
   const _risp = domanda.risposte;
   const max = domanda.max || 2;
@@ -71,6 +70,6 @@ const getTot = domanda => {
   return { tot, media, perc, moda, mediana, varianza, pvarianza, conta };
 };
 
-export const report = risposte.map(domanda => ({ ...domanda, report: getTot(domanda) }));
+export const reportStart = () => risposte.map(domanda => ({ ...domanda, report: getTot(domanda) }));
 // const reportBool = risposte.map(domanda => ({ ...domanda, report: domanda.risposte }));
 // console.log(JSON.stringify(report, null, 2));

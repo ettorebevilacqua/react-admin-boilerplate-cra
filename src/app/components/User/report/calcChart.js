@@ -1,4 +1,6 @@
-import { report } from './mock';
+import { reportStart } from './mock';
+
+const report = reportStart();
 
 function calculatePoint(i, intervalSize, colorRangeInfo) {
   var { colorStart, colorEnd, useEndAsStart } = colorRangeInfo;
@@ -32,7 +34,7 @@ const randColor = () => (Math.random() * 256) >> 0;
 
 const labels = report.map(item => item.domanda && item.domanda.substring(0, 44) + '..');
 const values = report.map(item => item.report.perc);
-console.log(report);
+// console.log(report);
 export const datasets = {
   labels,
   datasets: [
