@@ -201,6 +201,7 @@ const init = store =>
         selectError,
         selectData,
         dataGetSelector,
+        selectState,
         selectItem,
       },
       slice: providerSlice,
