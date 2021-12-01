@@ -1,0 +1,7 @@
+.domande thead {
+    background-color: #333;
+    color: white;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 2%;
+}

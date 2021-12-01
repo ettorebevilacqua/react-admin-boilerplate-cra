@@ -47,7 +47,7 @@ const bolRisposte = listaBolRisposte.map(domanda => ({ ...domanda, risposte: fil
 const summer = list => list.reduce((acc, item) => acc + item);
 
 // risposteNum[0].risposte = [5, 6, 3, 5, 3, 7, 6, 1]; // new Array(8).fill(7);
-const risposte = [...risposteNum, ...bolRisposte];
+export const risposte = [...risposteNum, ...bolRisposte];
 const getTot = domanda => {
   const _risp = domanda.risposte;
   const max = domanda.max || 2;

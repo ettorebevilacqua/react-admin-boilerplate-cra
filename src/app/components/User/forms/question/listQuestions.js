@@ -79,7 +79,9 @@ const MlistQuestions = ({ state, formProp: { data, saved } }) => {
           <Link to={`/app/user/indagini_edit/${dataTo.id}`}>Visualizza i risultati grezzi</Link>
         </li>
         <li>Genera remind per chi non ha risposto</li>
-        <li>Chiudi indagine e genera relazione</li>
+        <li>
+          <Link to={`/app/user/indagini/relazione/${dataTo.id}`}>Chiudi indagine e genera relazione</Link>
+        </li>
       </ul>
     </div>
   );
@@ -87,7 +89,7 @@ const MlistQuestions = ({ state, formProp: { data, saved } }) => {
     <div>
       <ul style={{ fontSize: '18px' }}>
         <li>
-          <Link to={`/app/user/indagini/report/${dataTo.id}`}>Visualizza report</Link>
+          <Link to={`/app/user/indagini/graph/${dataTo.id}`}>Visualizza report</Link>
         </li>
       </ul>
     </div>
