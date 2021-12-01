@@ -57,7 +57,7 @@ export default function QuestionModuli({ formProp: { data, saved }, saveData }) 
     moduliSliceCrud.actions.query({}, true);
   }, []);
   // React.useEffect(dataUpdate, [data]);
-  console.log('ModuliFormContainer', data);
+  // console.log('ModuliFormContainer', data);
 
   const findModulo = (id, key) => {
     const mod = moduli && moduli.find(mod => mod.id === id);
