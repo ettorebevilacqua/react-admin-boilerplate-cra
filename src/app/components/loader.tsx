@@ -9,9 +9,10 @@ export type PropsLoader = {
   Component: any;
   slice: any;
   actionPayload?: string | object | null;
+  values?: any;
 };
 
-export default function LoadSliceData({ slice, actionPayload, Component, ...rest }:PropsLoader) {
+export default function LoadSliceData({ slice, actionPayload, Component,  values, ...rest }:PropsLoader) {
   const selector = useLoader(slice, actionPayload);
   const { data, isFetching, saved, isError, errorMessage } =selector || {}
   const history = useHistory();

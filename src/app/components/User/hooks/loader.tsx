@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 export type PropsHookLoader = {
   slice: any;
   actionPayload?: string | object | null;
+  values?: any;
 };
 
 /**
@@ -14,7 +15,7 @@ export type PropsHookLoader = {
  * @param actionPayload - id risorsa or query, on missing check url param id, if missing get emity query: {}
  * @returns
  */
-export default function useLoader(slice, actionPayload?) {
+export default function useLoader(slice, actionPayload?, values?) {
   useInjectReducer({ key: slice.name, reducer: slice.slice.reducer });
   const selector: any = useSelector(slice.selects.selectState);
   const params: any = useParams();
@@ -24,8 +25,18 @@ export default function useLoader(slice, actionPayload?) {
   const [payload] = useState(payloadRead);
 
   useEffect(() => {
-    action(payload);
-  }, [action, payload]);
+    values || action(payload);
+  }, [action, payload, values]);
+
+  const stateSelector = !values
+    ? selector
+    : {
+        data: values,
+        isFetching: false,
+        saved: null,
+        isError: false,
+        errorMessage: '',
+      };
   // const { data, isFetching, saved, isError, errorMessage } = selector;
-  return selector;
+  return stateSelector;
 }
