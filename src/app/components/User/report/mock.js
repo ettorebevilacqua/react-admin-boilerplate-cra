@@ -57,7 +57,7 @@ const getTot = domanda => {
   const freqs = occurrences(_risp);
   const moda = modaOfoccurrences(freqs);
   const tot = _risp.reduce((acc, val) => acc + getVal(val), 0);
-  const media = tot / len;
+  const media = (tot / len).toFixed(2);
   const perc = Math.round((media / max) * 100);
   const mediana = median(_risp);
   const varianza = getStandardDeviation(_risp);
@@ -65,11 +65,11 @@ const getTot = domanda => {
   const conta = new Array(max + 1).fill(0); // Array.from({ length: max }, (_, i) => 0);
   const sumFreq = summer(Object.keys(freqs).map(key => freqs[key]));
   for (let i = 1; i <= max; i++) {
-    conta[i] = freqs[i] ? (freqs[i] / sumFreq) * 100 : 0;
+    conta[i] = freqs[i] ? Math.round((freqs[i] / sumFreq) * 100) : 0;
   }
-  return { tot, media, perc, moda, mediana, varianza, pvarianza, conta };
+  return { tot, media, perc, freqs, moda, mediana, varianza, pvarianza, conta };
 };
-
-export const reportStart = () => risposte.map(domanda => ({ ...domanda, report: getTot(domanda) }));
+const maxVote = risposte.reduce((acc, domanda) => (domanda.max > acc ? domanda.max : acc), 0);
+export const reportStart = () => risposte.map(domanda => ({ ...domanda, maxVote, report: getTot(domanda) }));
 // const reportBool = risposte.map(domanda => ({ ...domanda, report: domanda.risposte }));
 // console.log(JSON.stringify(report, null, 2));

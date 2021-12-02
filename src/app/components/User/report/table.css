@@ -5,3 +5,11 @@
     text-transform: uppercase;
     letter-spacing: 2%;
 }
+.domande td th {
+    width: 50px;
+    padding: 6px;
+
+}
+.domande tr {
+    border: 1px solid black;
+}

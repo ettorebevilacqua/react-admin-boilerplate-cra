@@ -46,7 +46,7 @@ export const datasets = {
   ],
 };
 
-const colorsVote = ['#ff0000', '#ff0000', '#ff8000', '#ffbf00', '#ffffff', '#c5e0b4', '#92d050', '#00b050'];
+export const colorsVote = ['#ff0000', '#ff0000', '#ff8000', '#ffbf00', '#ffffff', '#c5e0b4', '#92d050', '#00b050'];
 
 const getDataSet = (idx, label, data) => ({
   type: 'bar',
