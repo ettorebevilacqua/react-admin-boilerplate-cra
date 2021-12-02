@@ -46,10 +46,12 @@ export const datasets = {
   ],
 };
 
-const getDataSet = (label, data) => ({
+const colorsVote = ['#ff0000', '#ff0000', '#ff8000', '#ffbf00', '#ffffff', '#c5e0b4', '#92d050', '#00b050'];
+
+const getDataSet = (idx, label, data) => ({
   type: 'bar',
   label,
-  backgroundColor: `rgb(${randColor()}, ${randColor()}, ${randColor()})`,
+  backgroundColor: colorsVote[idx > 7 ? 7 : idx], // `rgb(${randColor()}, ${randColor()}, ${randColor()})`,
   data,
 });
 
@@ -62,7 +64,7 @@ const baseDataset = new Array(maxValue).fill(0); // [1,2,3,4,5,6,7]
 const listStacked = [];
 for (let i = 1; i <= baseDataset.length; i++) {
   const data = reportWithMax.map(item => (!item.report.conta[i] ? 0 : item.report.conta[i]));
-  listStacked.push(getDataSet(i, data));
+  listStacked.push(getDataSet(i, i, data));
 }
 
 /* const listStacked = report.map(item => {
