@@ -76,7 +76,10 @@ const MlistQuestions = ({ state, formProp: { data, saved } }) => {
     <div>
       <ul style={{ fontSize: '18px' }}>
         <li>
-          <Link to={`/app/user/indagini_edit/${dataTo.id}`}>Visualizza i risultati grezzi</Link>
+          <Link to={`/app/user/indagini_edit/${dataTo.id}`}>Modifica</Link>
+        </li>
+        <li>
+          <Link to={`/app/user/indagini/stato/${dataTo.id}`}>Visualizza i risultati grezzi</Link>
         </li>
         <li>Genera remind per chi non ha risposto</li>
         <li>

@@ -39,6 +39,8 @@ import { IndaginiList, QuestionList, QuestionModuliForm } from './forms/question
 const Soddisfazione = report.Soddisfazione;
 const GraphQuestion = report.GraphQuestion;
 const QuestionResponce = report.QuestionResponce;
+const StatoIndagine = report.StatoIndagine;
+
 
 const ModuliVerifiche = verifiche.ModuliVerifiche;
 
@@ -85,8 +87,9 @@ export default function UserComp() {
         <Route exact path="/app/user/indagini_edit/:id" component={QuestionToForm} />
         <Route exact path="/app/user/indagini/list/:state" component={QuestionList} />
         <Route exact path="/app/user/indagini/graph/:id" component={GraphQuestion} />
-        <Route exact path="/app/user/indagine" component={() => <IndaginiMenu />} />
+        <Route exact path="/app/user/indagini/stato/:id" component={()=>StatoIndagine} />
         <Route exact path="/app/user/indagini/responce/:id" component={QuestionResponce} />
+        <Route exact path="/app/user/indagine" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/show" component={() => <ShowQuestionUrl />} />
         <Route exact path="/app/user/corsi" component={CorsiList} />
         <Route exact path="/app/user/docentiActivity" component={DocentiActivity} />
