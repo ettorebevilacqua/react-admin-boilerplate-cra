@@ -12,9 +12,9 @@ export type PropsLoader = {
   values?: any;
 };
 
-export default function LoadSliceData({ slice, actionPayload, Component,  values, ...rest }:PropsLoader) {
-  const selector = useLoader(slice, actionPayload);
-  const { data, isFetching, saved, isError, errorMessage } =selector || {}
+export default function LoadSliceData({ slice, actionPayload, Component, values, ...rest }: PropsLoader) {
+  const selector = useLoader(slice, actionPayload, values);
+  const { data, isFetching, saved, isError, errorMessage } = selector || {};
   const history = useHistory();
 
   const rendereError = () => (
@@ -32,13 +32,13 @@ export default function LoadSliceData({ slice, actionPayload, Component,  values
   if (isError) {
     return rendereError;
   }
-  const renderComp = () =>{
+  const renderComp = () => {
     return <Component data={data} {...rest} />;
-  }
+  };
 
   return (
     <LoadingOverlay active={isFetching || !selector} spinner text="Loading...">
       {!isFetching && !data ? isError && rendereError() : (data || Component) && renderComp()}
     </LoadingOverlay>
   );
-};
+}
