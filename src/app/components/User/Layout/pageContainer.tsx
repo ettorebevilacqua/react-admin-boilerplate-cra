@@ -11,9 +11,11 @@ export function PageContainer({ title, titleComp, RenderTitle, Content, Footer, 
     <div className={classes.paperTitle}>
       <GridChilds justify="space-between" style={{ alignItems: 'center' }} view={[9, 3]}>
         <div>
-          <Typography variant="h3" color="textSecondary">
-            Risposte partecipanti :
-          </Typography>
+          {titleComp || (
+            <Typography variant="h3" color="textSecondary">
+              {title || ''}
+            </Typography>
+          )}
         </div>
       </GridChilds>
     </div>
