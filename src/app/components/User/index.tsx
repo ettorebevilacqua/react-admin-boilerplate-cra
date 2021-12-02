@@ -31,6 +31,7 @@ import {
 } from './forms/';
 
 import report from './report';
+import verifiche from './verifiche';
 
 import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
 import { IndaginiList, QuestionList, QuestionModuliForm } from './forms/question';
@@ -38,6 +39,8 @@ import { IndaginiList, QuestionList, QuestionModuliForm } from './forms/question
 const Soddisfazione = report.Soddisfazione;
 const GraphQuestion = report.GraphQuestion;
 const QuestionResponce = report.QuestionResponce;
+
+const ModuliVerifiche = verifiche.ModuliVerifiche;
 
 const buttonData = [
   { name: 'Verifica degli apprendiimenti', link: '/app/user/indagini' },
@@ -93,6 +96,9 @@ export default function UserComp() {
         {/*<Route exact path="/app/user/partecipanti/rowverify" component={() => <ListPartecipanti />} /> */}
         <Route exact path="/app/user/plane" component={() => <Plane />} />
         <Route exact path="/app/user/indagini/report/:id" component={() => <Soddisfazione />} />
+        <Route exact path="/app/user/verifiche/moduli" component={ModuliForm} />
+        <Route exact path="/app/user/verifiche/questionModuli" component={QuestionModuliForm} />
+        <Route exact path="/app/user/verifiche/indagini_invio" component={QuestionToForm} />
         <Redirect from="/app/user" to="/app/user" exact />
       </Switch>
       {/* data.content && <ContentEx /> */}

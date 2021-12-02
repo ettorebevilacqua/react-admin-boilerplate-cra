@@ -21,7 +21,7 @@ const data = [
   },
   {
     name: 'Verifica Apprendimenti',
-    link: '/app/user/repoAnno',
+    link: '/app/user/verifiche/moduli',
   },
 ];
 

@@ -15,13 +15,16 @@ import GridChilds from '../component/gridChilds';
 import { elemStyle } from '../stylesElement';
 import { corsiSlice, docentiSlice, ambitiSlice } from 'app/slice';
 
+const _VERIFICHE = 'verifiche';
+
 const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
   useInjectReducer({ key: corsiSlice.name, reducer: corsiSlice.slice.reducer });
   useInjectReducer({ key: docentiSlice.name, reducer: docentiSlice.slice.reducer });
-  useInjectReducer({ key: ambitiSlice.name, reducer: ambitiSlice.slice.reducer });
+  useInjectReducer({ key: ambitiSlice.name, reAAducer: ambitiSlice.slice.reducer });
 
   const history = useHistory();
   const location = useLocation();
+  const _TIPO_MODULO = location.pathname.indexOf('/app/user/verifiche/indagini_invio') > -1 ? _VERIFICHE : null;
   const { id, idquestion } = useParams();
   const [error, setError] = React.useState(null);
   const idParam = id;
