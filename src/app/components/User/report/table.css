@@ -1,15 +1,27 @@
 .domande thead {
-    background-color: #333;
-    color: white;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 2%;
+  background-color: #333;
+  color: white;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 2%;
 }
 .domande td th {
-    width: 50px;
-    padding: 6px;
-
+  width: 50px;
+  padding: 6px;
 }
 .domande tr {
-    border: 1px solid black;
+  border: 1px solid black;
 }
+
+.relazione td {
+  background-color: white;
+  color: black;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 2%;
+  padding: 4px;
+}
+
+.subRelazione td {
+    border: 1px solid black;
+  }

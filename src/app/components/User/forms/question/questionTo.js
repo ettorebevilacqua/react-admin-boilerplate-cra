@@ -20,7 +20,7 @@ const _VERIFICHE = 'verifiche';
 const MquestionTo = ({ formProp: { data, saved }, saveData, actions, ...props }) => {
   useInjectReducer({ key: corsiSlice.name, reducer: corsiSlice.slice.reducer });
   useInjectReducer({ key: docentiSlice.name, reducer: docentiSlice.slice.reducer });
-  useInjectReducer({ key: ambitiSlice.name, reAAducer: ambitiSlice.slice.reducer });
+  useInjectReducer({ key: ambitiSlice.name, reducer: ambitiSlice.slice.reducer });
 
   const history = useHistory();
   const location = useLocation();
