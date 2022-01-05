@@ -73,7 +73,9 @@ export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }
   const [isAmbito, setIsAmbito] = useState(false);
   const [isDialogAmbiti, setIsDialogAmbiti] = React.useState(false);
 
-  setMenuList([{ link: '/app/user/moduli', label: 'Valutazione Annuale' }]);
+  React.useEffect(() => {
+    setMenuList([{ link: '/app/user/moduli', label: 'Valutazione Annuale' }]);
+  }, []);
 
   React.useEffect(() => {
     value && value.tipologia && setIsAmbito(getIsAmbito(value?.tipologia));
