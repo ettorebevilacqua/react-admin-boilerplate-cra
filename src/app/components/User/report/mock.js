@@ -56,18 +56,44 @@ const getTot = domanda => {
   const getVal = val => (typeof val === 'number' ? val : boolToInt(val));
   const freqs = occurrences(_risp);
   const moda = modaOfoccurrences(freqs);
+  const pmoda = Math.round((moda / max) * 100);
   const tot = _risp.reduce((acc, val) => acc + getVal(val), 0);
   const media = (tot / len).toFixed(2);
   const perc = Math.round((media / max) * 100);
   const mediana = median(_risp);
-  const varianza = getStandardDeviation(_risp);
+  const pmediana = Math.round((mediana / max) * 100);
+  const varianza = Math.round(getStandardDeviation(_risp));
   const pvarianza = Math.round((varianza / max) * 100);
   const conta = new Array(max + 1).fill(0); // Array.from({ length: max }, (_, i) => 0);
+  const contaFreq = new Array(max + 1).fill(0);
   const sumFreq = summer(Object.keys(freqs).map(key => freqs[key]));
+  const devStandard = Math.round(getStandardDeviation(Object.keys(freqs).map(key => freqs[key])));
+
+  /* const devStandard = getStandardDeviation(
+    Object.keys(freqs)
+      .filter((val, idx) => !isNaN(parseInt(val)))
+      .map(valS => parseInt(valS)),
+  ); */
+
   for (let i = 1; i <= max; i++) {
     conta[i] = freqs[i] ? Math.round((freqs[i] / sumFreq) * 100) : 0;
+    contaFreq[i] = freqs[i] || 0;
   }
-  return { tot, media, perc, freqs, moda, mediana, varianza, pvarianza, conta };
+  return {
+    tot,
+    media,
+    perc,
+    freqs,
+    moda,
+    pmoda,
+    mediana,
+    pmediana,
+    varianza,
+    pvarianza,
+    conta,
+    contaFreq,
+    devStandard,
+  };
 };
 const maxVote = risposte.reduce((acc, domanda) => (domanda.max > acc ? domanda.max : acc), 0);
 export const reportStart = () => risposte.map(domanda => ({ ...domanda, maxVote, report: getTot(domanda) }));
