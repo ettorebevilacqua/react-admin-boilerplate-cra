@@ -3,6 +3,7 @@ import { Soddisfazione } from './soddisfazione';
 import { GraphQuestion } from './graph';
 import { QuestionResponce } from './questionResponce';
 import { StatoIndagine } from './questionStato';
+import { GrezziIndagine } from './questionGrezzi';
 import { RelazioneIndagine } from './questionRelazione';
 
 const exported = {
@@ -12,6 +13,7 @@ const exported = {
   QuestionResponce,
   StatoIndagine,
   RelazioneIndagine,
+  GrezziIndagine,
 };
 
 export default exported;

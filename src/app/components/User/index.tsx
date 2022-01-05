@@ -35,13 +35,14 @@ import verifiche from './verifiche';
 
 import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
 import { IndaginiList, QuestionList, QuestionModuliForm } from './forms/question';
+import { EnteForm } from 'app/components/User/section/plane/ente';
 
 const Soddisfazione = report.Soddisfazione;
 const GraphQuestion = report.GraphQuestion;
 const QuestionResponce = report.QuestionResponce;
 const StatoIndagine = report.StatoIndagine;
 const RelazioneIndagine = report.RelazioneIndagine;
-// const AnalisiIndagine = report.AnalisiIndagine;
+const GrezziIndagine = report.GrezziIndagine;
 
 const ModuliVerifiche = verifiche.ModuliVerifiche;
 
@@ -78,6 +79,7 @@ export default function UserComp() {
       {helmetRender()} {/* place ConnectedRouter under Provider */}
       <Switch>
         <Route exact path="/app/user/" component={() => <IndaginiMenu />} />
+        <Route exact path="/app/user/ente" component={() => <EnteForm />} />
         <Route exact path="/app/user/indagini" component={() => <IndaginiList />} />
         <Route exact path="/app/user/questionModuli" component={() => <QuestionModuliForm />} />
         <Route exact path="/app/user/indaginiMenu" component={() => <IndaginiMenu />} />
@@ -88,8 +90,9 @@ export default function UserComp() {
         <Route exact path="/app/user/indagini_edit/:id" component={QuestionToForm} />
         <Route exact path="/app/user/indagini/list/:state" component={QuestionList} />
         <Route exact path="/app/user/indagini/graph/:id" component={GraphQuestion} />
-        <Route exact path="/app/user/indagini/stato/:id" component={()=>StatoIndagine} />
-        <Route exact path="/app/user/indagini/relazione/:id" component={()=>RelazioneIndagine} />
+        <Route exact path="/app/user/indagini/stato/:id" component={() => StatoIndagine} />
+        <Route exact path="/app/user/indagini/grezzi/:id" component={() => GrezziIndagine} />
+        <Route exact path="/app/user/indagini/relazione/:id" component={() => RelazioneIndagine} />
         <Route exact path="/app/user/indagini/responce/:id" component={QuestionResponce} />
         <Route exact path="/app/user/indagine" component={() => <IndaginiMenu />} />
         <Route exact path="/app/user/show" component={() => <ShowQuestionUrl />} />
