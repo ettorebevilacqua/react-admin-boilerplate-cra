@@ -37,8 +37,10 @@ import Login from 'app/components/Layout/Login';
 import { HomePage } from './pages/HomePage/Loadable';
 import { GuestPage } from './pages/guest/Loadable';
 import { useUserAuthSlice } from 'app/slice';
+import { EnteForm } from 'app/components/User/section/plane/ente';
 
-const isGuest = () =>window.location.pathname.indexOf('/guest') === 0;
+const isGuest = () => window.location.pathname.indexOf('/guest') === 0;
+const isRegister = () => window.location.pathname.indexOf('/register/ente') === 0;
 function PrivateRoute({ children, isAuthenticated, ...rest }) {
   return !isAuthenticated && isGuest() ? (
     <Login />
@@ -80,13 +82,15 @@ function AppBody() {
     // console.log('check auth isError ', isError);
   }, [xxx]);
 
-  const renderRouting = isGuest => (
+  const renderRouting = () => (
     <LoadingOverlay active={isFetching} spinner text="Loading...">
       <BrowserRouter>
         <Switch>
           <Layout>
-            {isGuest ? (
+            {isGuest() ? (
               <Route exact path="/guest/:token" component={GuestPage} />
+            ) : isRegister() ? (
+              <Route exact path="/register/ente" component={EnteForm} />
             ) : (
               <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
             )}
@@ -116,13 +120,15 @@ function AppBody() {
     </LoadingOverlay>
   );
 
-  return isGuest()
-    ? renderRouting(true)
+  const isPubblic = isGuest() || isRegister();
+
+  return isPubblic
+    ? renderRouting()
     : !isAuth || isError
     ? renderLogin()
     : !isFetching && !id && !mustAuth
     ? renderBlankPage()
-    : renderRouting(false);
+    : renderRouting();
 }
 
 const helmetContext = {};

@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import GridChilds from 'app/components/User/forms/component/gridChilds';
 import { elemStyle } from '../stylesElement';
 
-import { setMenuList } from 'app/slice/layoutSlice';
+// import { setMenuList } from 'app/slice/layoutSlice';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 // import AmbitiDialg from './ambitiModal';
@@ -21,8 +21,6 @@ export const UtentiForm = props => {
   const classes = elemStyle();
   const [editValue, setEditValue] = useState({});
   const dataTable = useRef(null);
-
-  setMenuList([{ link: '/app/user/moduli', label: 'Valutazione Annuale' }]);
 
   React.useEffect(() => {
     // value && value.tipologia && setIsAmbito(getIsAmbito(value?.tipologia));

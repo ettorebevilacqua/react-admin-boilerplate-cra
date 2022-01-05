@@ -82,6 +82,7 @@ const initialState = {
   username: '',
   email: '',
   user: null,
+  idEnte: null,
   id: '',
   isFetching: false,
   isSuccess: false,
@@ -97,6 +98,7 @@ const setUserState = (state, payload) => {
   state.username = user.username;
   state.id = user.id;
   state.user = user;
+  state.idEnte = user.idEnte;
   // state.tokens = payload.tokens || null;
   state.isFetching = false;
   state.isSuccess = true;

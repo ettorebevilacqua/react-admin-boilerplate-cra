@@ -21,6 +21,7 @@ const {
   corsiProvider,
   docentiProvider,
   ambitiProvider,
+  entiProvider,
   listsProvider,
   guestProvider,
   docentiActivityProvider,
@@ -86,6 +87,12 @@ export const ambitiSlice = createCrudSlice({
   name: 'ambitiSlice',
   provider: ambitiProvider,
   queryProvider: ambitiProvider.provider,
+});
+
+export const entiSlice = createCrudSlice({
+  name: 'entiSlice',
+  provider: entiProvider,
+  queryProvider: entiProvider.provider,
 });
 
 export const listsSlice = createCrudSlice({

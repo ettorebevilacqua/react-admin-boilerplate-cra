@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Field, withTypes } from 'react-final-form';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { Avatar, Button, Card, CardActions, CircularProgress, TextField } from '@material-ui/core';
 import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
@@ -173,7 +172,9 @@ const LoginComp = () => {
                 {isFetching && <p>loading</p>}
               </div>
               <div style={{ displat: 'block', textAlign: 'center', color: 'red' }}>
-                <Link to={`Non sei registrato ? registrati`}>Modifica</Link>
+                <p>
+                  <a href={`/register/ente`}>Non sei registrato ? registrati qui</a>
+                </p>
               </div>
               <CardActions className={classes.actions}>
                 <div style={{ displat: 'block' }}>
