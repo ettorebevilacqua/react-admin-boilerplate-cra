@@ -83,7 +83,7 @@ const MlistQuestions = ({ state, formProp: { data, saved } }) => {
         </li>
         <li>Genera remind per chi non ha risposto</li>
         <li>
-          <Link to={`/app/user/indagini/relazione/${dataTo.id}`}>Chiudi indagine e genera relazione</Link>
+          <Link to={`/app/user/indagini/grezzi/${dataTo.id}`}>Chiudi indagine e genera relazione</Link>
         </li>
       </ul>
     </div>
