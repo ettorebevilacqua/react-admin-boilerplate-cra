@@ -41,8 +41,10 @@ export const saveModulo = createAsyncThunk('moduloSlice/save', async (payload, t
 
 export const getModulo = createAsyncThunk('moduloSlice/get', async (payload, thunkAPI) => {
   const id = payload;
+
   const [data, error] = await handlePromise(moduliProvider.get(id));
-  return error ? thunkAPI.rejectWithValue(error.data) : data;
+  error && thunkAPI.rejectWithValue(error ? error || error : null);
+  return error ? Promise.reject(error) : Promise.resolve({ ...data });
 });
 
 const loadingSState = {
@@ -218,14 +220,6 @@ export const moduloSlice = createSlice({
       state.saved.isError = true;
       state.saved.data = null;
       state.saved.error = payload;
-    });
-
-    builder.addCase(saveModulo.pending, (state, { payload }) => {
-      state.saved.isFetching = true;
-      state.saved.isSuccess = false;
-      state.saved.isError = false;
-      state.saved.error = null;
-      state.saved.data = null;
     });
   },
 });

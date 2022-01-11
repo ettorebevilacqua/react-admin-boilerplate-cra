@@ -3,6 +3,9 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
 import GridChilds from '../../component/gridChilds';
 // import TagsInput from '../comp/tagInput';
 // import { ToFieldArray } from '../../lib/formikWithField';
@@ -17,7 +20,7 @@ import { AdjustingInterval } from 'app/services/helper';
 import { elemStyle } from '../../stylesElement';
 
 import { useInjectReducer } from 'utils/redux-injectors';
-import { moduloSlice, actions, getModulo, saveModulo, selector } from 'app/slice/modulo.slice';
+import { moduloSlice, actions, getModulo, saveModulo, selector } from 'app/slice/modulo.slice'; // getModulo
 import LoadingOverlay from 'app/components/Layout/LoadingOverlay';
 
 const ticker = new AdjustingInterval(null, 100);
@@ -117,7 +120,7 @@ function DomandeList({ isDomandeHide, onSave, saveModulo }) {
   return <>{renderDomande()}</>;
 }
 
-export const DomandeC = ({ onSave, isDomandeHide, isSaving, initialValue }) => {
+export const DomandeC = ({ onSave, idModulo, isDomandeHide, isSaving, initialValue }) => {
   const classes = elemStyle();
   const history = useHistory();
 
@@ -129,6 +132,7 @@ export const DomandeC = ({ onSave, isDomandeHide, isSaving, initialValue }) => {
 
   const [domande, setDomande] = React.useState(modulo && modulo.domande);
   const [title, setTitle] = React.useState(null);
+  const [isDocente, setIsDocente] = React.useState(null);
 
   const onSaveDomanda = (id, index, domanda) => {
     // dispatch(actions.upDateDomanda({ domanda, id, index }));
@@ -139,9 +143,10 @@ export const DomandeC = ({ onSave, isDomandeHide, isSaving, initialValue }) => {
     if (initialValue) {
       setModulo(initialValue);
       setTitle(initialValue.title);
+      setIsDocente(initialValue.isDocente);
     }
     // console.log('xxxx', initialValue);
-  }, [initialValue]);
+  }, []);
 
   const changeTitle = _title => {
     if (modulo.title !== _title) {
@@ -151,6 +156,13 @@ export const DomandeC = ({ onSave, isDomandeHide, isSaving, initialValue }) => {
   };
 
   const handleTitle = React.useCallback(val => setTitle(val), [setTitle]);
+  const handleDocenteSwitch = e => {
+    const val = !isDocente;
+    setModulo({ ...modulo, isDocente: val });
+    console.log('isdocente', isDocente);
+    setIsDocente(val);
+    dispatch(actions.setModulo({ isDocente: val }));
+  };
 
   const renderBtDomanda = formikProps => (
     <Button
@@ -184,16 +196,16 @@ export const DomandeC = ({ onSave, isDomandeHide, isSaving, initialValue }) => {
           onChange={e => handleTitle(e.target.value)}
           onBlur={e => changeTitle(title)}
         />
-        {!modulo.id && (
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ height: '42px', width: '180px' }}
-            onClick={() => onSave()}
-          >
-            Salva
-          </Button>
-        )}
+        <FormControlLabel
+          control={<Switch checked={isDocente} onClick={handleDocenteSwitch} />}
+          label="Docente"
+          labelPlacement="start"
+        />
+
+        <Button variant="contained" color="primary" style={{ height: '42px', width: '180px' }} onClick={() => onSave()}>
+          Salva
+        </Button>
+
         {/*
             <TagsInput
               selectedTags={handleSelecetedTags}
@@ -205,10 +217,9 @@ export const DomandeC = ({ onSave, isDomandeHide, isSaving, initialValue }) => {
               label="tags"
             />
           */}
-
         {modulo.title && renderBtDomanda()}
       </GridChilds>
-      {modulo.id ? (
+      {modulo && modulo.id ? (
         <DomandeList onSave={onSaveDomanda} isSaving={isSaving} modulo={{ ...modulo }} isDomandeHide={isDomandeHide} />
       ) : (
         modulo.title && <span>Salvare il documento prima di proseguire</span>
@@ -238,6 +249,8 @@ export const Domande = () => {
     key: moduloSlice.name,
     reducer: moduloSlice.reducer,
   });
+  console.log('xxxxxx', selector, moduloSlice);
+  //const moduloSelector = useSelector(selector);
   const dispatch = useDispatch();
   const history = useHistory();
   const params = useParams();
@@ -250,18 +263,49 @@ export const Domande = () => {
 
   const stateData = toNumberOr(params.id, -1) === 0 ? empityModulo : stateDataSelector;
 
-  const [modulo, setModulo] = React.useState(null);
+  const [modulo, setModulo] = React.useState(stateDataSelector || empityModulo);
   const [isSaving, setIsSaving] = React.useState(false);
   const [isDomandeHide, setIsDomandeHide] = React.useState(false);
+  const [idModulo, setIdmodulo] = React.useState(null);
+  const [hideChild, setHideChild] = React.useState(null);
 
   React.useEffect(() => {
+    setHideChild(true);
+    if (!!stateDataSelector && stateDataSelector.id) {
+      setModulo(stateDataSelector);
+      setIdmodulo(stateDataSelector.id);
+      setTimeout(() => setHideChild(false), 30);
+    } else {
+      setModulo(stateDataSelector);
+      setTimeout(() => setHideChild(false), 30);
+    }
+    console.log('moduloSlice xxxx idselector ', stateDataSelector);
+  }, [stateDataSelector]);
+
+  React.useEffect(() => {
+    console.log('moduloSlice xxxx ', params.id);
+    dispatch(moduloSlice.actions.clearState());
+    dispatch(actions.setModulo(empityModulo));
+    debugger;
+    setMenuList([
+      { link: '/app/user/moduli', label: 'Moduli' },
+      // { link: '/app/user/questionModuli', label: 'Questionari', data },
+      // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
+    ]);
+
     if (toNumberOr(params.id, -1) === 0) {
-      setModulo(empityModulo);
-      dispatch(actions.clearState());
+      setModulo(stateDataSelector || empityModulo);
+    } else if (params && params.id) {
+      dispatch(moduloSlice.actions.clearState());
+      dispatch(getModulo(params.id || '0', true));
+    } else {
+      setModulo(stateDataSelector || empityModulo);
     }
   }, []);
 
   const upDateModulo = newModulo => {
+    setModulo(newModulo);
+    newModulo && setIdmodulo(newModulo.id);
     setModulo(newModulo);
     newModulo ? dispatch(actions.setModulo(newModulo)) : !newModulo && dispatch(actions.clearState());
   };
@@ -270,39 +314,30 @@ export const Domande = () => {
     if (isSaving) return false;
     setIsSaving(true);
     setTimeout(() => setIsSaving(false), 3000);
+    setTimeout(() => setHideChild(false), 3000);
+    !idModulo && setHideChild(true);
     dispatch(saveModulo()).then(res => {
       console.log('gas saved', res);
+      setHideChild(false);
       setIsSaving(false);
       if (res && res.payload) {
         const idnew = res.payload.id;
         setModulo(res.payload);
+        console.log('moduloSlice res.payload.id ', res.payload.id);
+
         // res.payload.domande && setDomande(res.payload.domande);
-        dispatch(actions.setModulo(res.payload));
+        dispatch(actions.setModulo({ ...res.payload }));
         window.history.replaceState(null, null, `/app/user/moduli/${idnew}`);
         setIsDomandeHide({ id, index });
-        setTimeout(() => setIsDomandeHide(false), 30);
+        setHideChild(false);
+        setTimeout(() => {
+          setIsDomandeHide(false);
+          setModulo(res.payload);
+          idnew && idModulo !== idnew && setIdmodulo(id);
+        }, 30);
       }
     });
   };
-
-  React.useEffect(() => {
-    toNumberOr(params.id, -1) === 0 ? upDateModulo() : dispatch(getModulo(params.id));
-  }, [dispatch, params.id]);
-
-  React.useEffect(() => {
-    if (!isLoading && stateData && !modulo) {
-      setModulo(stateData);
-      dispatch(actions.setModulo(stateData));
-    }
-  }, [stateData, isLoading]);
-
-  React.useEffect(() => {
-    setMenuList([
-      { link: '/app/user/moduli', label: 'Moduli' },
-      // { link: '/app/user/questionModuli', label: 'Questionari', data },
-      // { link: '/app/user/show/' + id, label: 'Anteprima', data: { moduli: [data], title: data.title } },
-    ]);
-  }, []);
 
   const rendereError = () => (
     <>
@@ -320,8 +355,10 @@ export const Domande = () => {
     <LoadingOverlay active={isLoading || !modulo} spinner text="Loading...">
       {!isLoading && !modulo
         ? error && rendereError()
-        : modulo && (
+        : !hideChild &&
+          modulo && (
             <DomandeC
+              idModulo={idModulo}
               onSave={onSave}
               isDomandeHide={isDomandeHide}
               isSaving={isSaving}
