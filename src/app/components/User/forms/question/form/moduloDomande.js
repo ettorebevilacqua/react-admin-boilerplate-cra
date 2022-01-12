@@ -95,6 +95,10 @@ function DomandeList({ isDomandeHide, onSave, saveModulo }) {
       : () => 1;
   };
 
+  const onchange = (iddomanda, idx) => {
+    console.log('domanda on change');
+  };
+
   const renderDomande = () => {
     return modulo.domande.map(
       (domanda, index) =>
@@ -103,7 +107,7 @@ function DomandeList({ isDomandeHide, onSave, saveModulo }) {
             key={domanda._id || index}
             idDomanda={domanda._id}
             indexDomanda={index}
-            // onChange={onChange(domanda._id, index)}
+            onChange={onChange(domanda._id, index)}
             onChangeRisposta={onChangeRisposta(domanda._id, index)}
             domandaCommand={domandaCommand(domanda._id, index)}
             kkinitialValues={domanda}
@@ -133,6 +137,7 @@ export const DomandeC = ({ onSave, idModulo, isDomandeHide, isSaving, initialVal
   const [domande, setDomande] = React.useState(modulo && modulo.domande);
   const [title, setTitle] = React.useState(null);
   const [isDocente, setIsDocente] = React.useState(null);
+  const [showBtSalva, setShowBtSalva] = React.useState(initialValue.isDocente !== modulo.isDocente);
 
   const onSaveDomanda = (id, index, domanda) => {
     // dispatch(actions.upDateDomanda({ domanda, id, index }));
@@ -149,19 +154,29 @@ export const DomandeC = ({ onSave, idModulo, isDomandeHide, isSaving, initialVal
   }, []);
 
   const changeTitle = _title => {
+    setShowBtSalva(modulo.title !== _title);
     if (modulo.title !== _title) {
       setModulo({ ...modulo, title: _title });
       dispatch(actions.setModulo({ title }));
     }
   };
 
-  const handleTitle = React.useCallback(val => setTitle(val), [setTitle]);
+  const handleTitle = React.useCallback(
+    val => {
+      setTitle(val);
+      setShowBtSalva(modulo.title !== val);
+    },
+    [setTitle],
+  );
+
   const handleDocenteSwitch = e => {
     const val = !isDocente;
     setModulo({ ...modulo, isDocente: val });
     console.log('isdocente', isDocente);
     setIsDocente(val);
     dispatch(actions.setModulo({ isDocente: val }));
+    setShowBtSalva(false);
+    onSave().then(res => setShowBtSalva(false));
   };
 
   const renderBtDomanda = formikProps => (
@@ -202,9 +217,19 @@ export const DomandeC = ({ onSave, idModulo, isDomandeHide, isSaving, initialVal
           labelPlacement="start"
         />
 
-        <Button variant="contained" color="primary" style={{ height: '42px', width: '180px' }} onClick={() => onSave()}>
-          Salva
-        </Button>
+        {showBtSalva && (
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ height: '42px', width: '180px' }}
+            onClick={() => {
+              console.log('modulo on savebt ', modulo);
+              onSave().then(res => setShowBtSalva(false));
+            }}
+          >
+            Salva
+          </Button>
+        )}
 
         {/*
             <TagsInput
@@ -222,7 +247,7 @@ export const DomandeC = ({ onSave, idModulo, isDomandeHide, isSaving, initialVal
       {modulo && modulo.id ? (
         <DomandeList onSave={onSaveDomanda} isSaving={isSaving} modulo={{ ...modulo }} isDomandeHide={isDomandeHide} />
       ) : (
-        modulo.title && <span>Salvare il documento prima di proseguire</span>
+        <span>Salvare il documento prima di proseguire</span>
       )}
       <div
         style={{
@@ -316,7 +341,7 @@ export const Domande = () => {
     setTimeout(() => setIsSaving(false), 3000);
     setTimeout(() => setHideChild(false), 3000);
     !idModulo && setHideChild(true);
-    dispatch(saveModulo()).then(res => {
+    return dispatch(saveModulo()).then(res => {
       console.log('gas saved', res);
       setHideChild(false);
       setIsSaving(false);
