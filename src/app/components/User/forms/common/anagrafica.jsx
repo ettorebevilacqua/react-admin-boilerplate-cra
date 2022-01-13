@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 // import { TextField } from 'formik-material-ui';
 import MuiTextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+// import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import Typography from '@material-ui/core/Typography';
-
 import Select from '@material-ui/core/Select';
-import { FormControl, InputLabel, MenuItem } from '@material-ui/core';
+import { Box, Input, FormControl, InputLabel, MenuItem } from '@material-ui/core';
 
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
@@ -28,8 +27,8 @@ const modalitaQualifica = [
   { id: 0, label: 'Altro (specificare)' },
 ];
 
-const getIsAmbito = val =>
-  ['docente', 'esperto di competenze'].indexOf(val && val.toLowerCase ? val.toLowerCase() : '') > -1;
+const getIsAmbito = vals =>
+  ['docente', 'esperto di competenze'].some(el => vals.indexOf(el && el.toLowerCase ? el.toLowerCase() : '') > -1);
 
 const renderField = (props = {}, name, component, label, type) => {
   return (
@@ -67,6 +66,18 @@ const fieldCustom = (propsFormik, props = {}, name, label, type) => (
   </Field>
 );
 
+// for select tipologia chip
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }) => {
   const classes = elemStyle();
   const [editValue, setEditValue] = useState(value);
@@ -78,8 +89,10 @@ export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }
   }, []);
 
   React.useEffect(() => {
-    value && value.tipologia && setIsAmbito(getIsAmbito(value?.tipologia));
+    value && value.tipologia && setIsAmbito(getIsAmbito(value?.tipologia.join()));
   }, [value]);
+
+  const isTipologiaSelected = (selected, current) => selected && current && selected.split(',').indexOf(current) > -1;
 
   const onSubmitBefore = (valFormik, actions) => {
     actions.setSubmitting(false);
@@ -90,10 +103,9 @@ export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }
     propsFormik.setFieldValue('ambito', ambiti);
   };
 
-  const tipologiaOnChange = formikProps => (e, value) => {
-    if (!value && value !== '') return false;
-    setIsAmbito(getIsAmbito(value));
-    formikProps.setFieldValue('tipologia', value);
+  const tipologiaOnChange = formikProps => e => {
+    setIsAmbito(getIsAmbito(e.target.value));
+    formikProps.setFieldValue('tipologia', e.target.value.join());
   };
 
   const closeAmbito = () => setIsDialogAmbiti(false);
@@ -132,32 +144,47 @@ export const AnagraficaForm = ({ value, personaleTipo, onSubmit, onExit, saved }
                   {fieldCustom(propsFormik, {}, `cognome`, 'Cognome')}
                   {fieldCustom(propsFormik, {}, `nome`, 'Nome')}
                 </GridChilds>
-                <GridChilds justify="space-between" view={[4, 8]} spacing={3} style={{ width: '100%' }}>
-                  <Field name={'Tipologia'}>
-                    {({ field, form, meta }) => (
-                      <div>
-                        <Autocomplete
-                          onInputChange={tipologiaOnChange(propsFormik)}
-                          disablePortal
-                          getOptionLabel={option => option || ''}
-                          options={personaleTipo ? personaleTipo.map(el => el.label) : []}
-                          sx={{ width: 300 }}
-                          defaultValue={propsFormik?.values?.tipologia || ''}
-                          renderInput={params => (
-                            <MuiTextField
-                              {...params}
-                              label="Tipologia"
-                              defaultValue={propsFormik?.values?.tipologia || ''}
-                            />
-                          )}
-                        />
-                        {/* onChange={tipologiaOnChange(propsFormik)} */}
-                        {(!propsFormik.values?.tipologia || meta.error) && (
-                          <div style={{ color: 'red', fontSize: '1' }}>{meta.error || 'Richiesto'}</div>
+                <GridChilds justify="space-between" view={[12]} spacing={3} style={{ width: '100%' }}>
+                  <div style={{ alignItems: 'center', display: 'flex' }}>
+                    <span>Tipologia &nbsp;</span>
+                    <FormControl style={{ minWidth: 300 }}>
+                      <Select
+                        labelId="demo-multiple-chip-label"
+                        id="demo-multiple-chip"
+                        multiple
+                        value={!propsFormik?.values?.tipologia ? [] : propsFormik.values.tipologia.split(',')}
+                        onChange={tipologiaOnChange(propsFormik)}
+                        input={<Input id="select-multiple-chip" label="Tipologia" />}
+                        renderValue={selected => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map(value => (
+                              <Chip key={value} label={value} />
+                            ))}
+                          </Box>
                         )}
-                      </div>
-                    )}
-                  </Field>
+                        MenuProps={MenuProps}
+                      >
+                        {!personaleTipo ? (
+                          <span></span>
+                        ) : (
+                          personaleTipo.map(el => (
+                            <MenuItem
+                              key={el.label}
+                              value={el.label}
+                              style={{
+                                fontWeight: isTipologiaSelected(propsFormik?.values?.tipologia, el.label)
+                                  ? 'bold'
+                                  : 'normal',
+                              }}
+                            >
+                              {el.label}
+                            </MenuItem>
+                          ))
+                        )}
+                      </Select>
+                    </FormControl>
+                  </div>
+
                   {isAmbito && (
                     <div>
                       <Button
