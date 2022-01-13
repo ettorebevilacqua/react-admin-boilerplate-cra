@@ -158,6 +158,7 @@ export const DomandeC = ({ onSave, idModulo, isDomandeHide, isSaving, initialVal
     if (modulo.title !== _title) {
       setModulo({ ...modulo, title: _title });
       dispatch(actions.setModulo({ title }));
+      onSave().then(res => setShowBtSalva(false));
     }
   };
 
@@ -224,7 +225,7 @@ export const DomandeC = ({ onSave, idModulo, isDomandeHide, isSaving, initialVal
             style={{ height: '42px', width: '180px' }}
             onClick={() => {
               console.log('modulo on savebt ', modulo);
-              onSave().then(res => setShowBtSalva(false));
+              setTimeout(() => onSave().then(res => setShowBtSalva(false)), 30);
             }}
           >
             Salva
