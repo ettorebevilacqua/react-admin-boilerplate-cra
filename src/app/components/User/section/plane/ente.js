@@ -19,7 +19,7 @@ import { entiSlice, listsSlice } from 'app/slice';
 import { useParams } from 'react-router-dom';
 import { userSelector } from 'app/slice/userSlice';
 
-// import AmbitiDialg from './ambitiModal';
+// import AmbitiDialg from './ambitiModal'; //
 
 const tipologiaEnte = [
   { id: 1, label: 'formazione' },

@@ -87,13 +87,11 @@ function AppBody() {
       <BrowserRouter>
         <Switch>
           <Layout>
-            {isGuest() ? (
-              <Route exact path="/guest/:token" component={GuestPage} />
-            ) : isRegister() ? (
-              <Route exact path="/register/ente" component={EnteForm} />
-            ) : (
-              <AppRoute isAuthenticated={!!id && !mustAuth && !isError} />
-            )}
+            {isGuest()
+              ? (console.log('kkkk'), (<Route exact path="/guest/:token" component={GuestPage} />))
+              : isRegister()
+              ? (console.log('kkkk'), (<Route exact path="/register/ente" component={EnteForm} />))
+              : (console.log('kkkk2'), (<AppRoute isAuthenticated={!!id && !mustAuth && !isError} />))}
           </Layout>
         </Switch>
       </BrowserRouter>

@@ -25,6 +25,7 @@ const {
   listsProvider,
   guestProvider,
   docentiActivityProvider,
+  questionFullProvider,
 } = providers;
 
 export const questionViewSlice = createViewSlice('getQuestion', providersView.getQuestion);
@@ -32,6 +33,13 @@ export const questionViewSlice = createViewSlice('getQuestion', providersView.ge
 export const questionActionlSlice = createActionsSlice('questionEmail', [
   { name: 'sendEmail', action: emailProvider.save },
 ]);
+
+export const questionFullSlice = createCrudSlice({
+  name: 'question',
+  provider: questionFullProvider,
+  queryProvider: questionFullProvider.provider,
+  actionsSlice: [questionActionlSlice],
+});
 
 export const questionSlice = createCrudSlice({
   name: 'question',

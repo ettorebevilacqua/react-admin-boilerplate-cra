@@ -76,6 +76,9 @@ const MlistQuestions = ({ state, formProp: { data, saved } }) => {
     <div>
       <ul style={{ fontSize: '18px' }}>
         <li>
+          <Link to={`/app/user/show/${dataTo.id}`}>Anteprima domande</Link>
+        </li>
+        <li>
           <Link to={`/app/user/indagini_edit/${dataTo.id}`}>Modifica</Link>
         </li>
         <li>

@@ -33,7 +33,7 @@ import {
 import report from './report';
 import verifiche from './verifiche';
 
-import { ShowQuestionUrl } from 'app/components/User/forms/question/form/show';
+import { ShowQuestionUrl, ShowQuestionById } from 'app/components/User/forms/question/form/show';
 import { IndaginiList, QuestionList, QuestionModuliForm } from './forms/question';
 import { EnteForm } from 'app/components/User/section/plane/ente';
 
@@ -95,6 +95,7 @@ export default function UserComp() {
         <Route exact path="/app/user/indagini/relazione/:id" component={() => RelazioneIndagine} />
         <Route exact path="/app/user/indagini/responce/:id" component={QuestionResponce} />
         <Route exact path="/app/user/indagine" component={() => <IndaginiMenu />} />
+        <Route exact path="/app/user/show/:idQuestion" component={() => <ShowQuestionById />} />
         <Route exact path="/app/user/show" component={() => <ShowQuestionUrl />} />
         <Route exact path="/app/user/corsi" component={CorsiList} />
         <Route exact path="/app/user/docentiActivity" component={DocentiActivity} />
