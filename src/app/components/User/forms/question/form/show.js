@@ -3,19 +3,22 @@ import React from 'react';
 import { Paper, Box, Typography, Checkbox } from '@material-ui/core';
 
 import Rating from '@material-ui/lab/Rating';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Button from '@material-ui/core/Button';
 
 import RadioButtonChecked from '@material-ui/icons/RadioButtonChecked';
 import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 
-import { makeStyles } from '@material-ui/core/styles';
+import useStyles from './showStyle';
 
 import GridChilds from '../../component/gridChilds';
 
 import TextField from '@material-ui/core/TextField';
 import { makeRisposte } from 'app/services/question/moduliModel';
+import { questionFullSlice } from 'app/slice';
+import LoadSliceData from 'app/components/loader';
+import ModelQuestion from 'app/services/question/questionModel';
 
 function resize(arr, newSize, defaultValue) {
   return [...arr, ...Array(Math.max(newSize - arr.length, 0)).fill(defaultValue)];
@@ -36,51 +39,6 @@ const CompTrueFalse = ({ value, title, compProps, color, onClickOptions, ...prop
     </Box>
   );
 };
-
-const useStyles = makeStyles(theme => ({
-  cardFlex: {
-    minHeight: 52,
-    display: 'flex',
-    flexDirection: 'column',
-    flex: '1',
-    '& a': {
-      textDecoration: 'none',
-      color: 'inherit',
-    },
-  },
-  cardDomanda: {
-    padding: '1px',
-    paddingLeft: '8px',
-    alignItems: 'center',
-    display: 'flex',
-    marginBottom: '0px',
-  },
-  boxDomanda: {
-    background: 'white',
-    padding: '8px',
-    backGround: 'white',
-    borderRadius: '6px',
-    boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)',
-  },
-  main: () => ({
-    overflow: 'inherit',
-    padding: 16,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    '& .icon': {
-      color: theme.palette.type === 'dark' ? 'inherit' : '#dc2440',
-    },
-  }),
-  domandaTxt: {
-    fontSize: '16px',
-    fontWeight: '500',
-  },
-  titleModulo: {
-    fontSize: '18px',
-    fontWeight: '600',
-  },
-}));
 
 function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -103,28 +61,78 @@ function TextFieldBlur({ onChangeBlur, ...rest }) {
 }
 
 export function ShowQuestion(props) {
-  const { values, guestValue, partecipante, onChange } = props;
+  const { values: valIn, partecipante, onChange, data } = props;
+  const values = valIn || data ? data.idquestion : null;
+
   const classes = useStyles();
 
   const moduliValue = !values || !values.moduli || !values.moduli.map ? [] : values.moduli;
   const moduliRisposte = !!partecipante?.risposte
     ? partecipante?.risposte
     : moduliValue.map(modulo => makeRisposte(modulo.domande));
-
   /*   const moduliRisposte =  moduliRisposteGenerate.map(modulo => {
     const
   }); */
-  const [risposte, setRisposte] = React.useState(moduliRisposte);
+  const [risposte, setRisposte] = React.useState([]);
 
   const setterRisposte = val => {
     onChange && onChange(val);
     setRisposte(val);
   };
 
-  const getValueRiposta = (idxModulo, idxDomanda, idxRisposta) => {
-    return (
-      risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda] && risposte[idxModulo][idxDomanda][idxRisposta]
-    );
+  const upDateAr = (ar, idx, val) => {
+    const newIdx = idx < 0 ? ar.push(val) - 1 : idx;
+    ar[newIdx] = val;
+    return ar;
+  };
+
+  const pushOrUpdate = (ar, finder, val) => {
+    const idxFound = ar.findIndex(finder);
+    return upDateAr(ar, idxFound, val);
+  };
+
+  const finderRisposta = (idmodulo, iddomanda, iddocente, idxRisposta) => risp =>
+    risp.idmodulo === idmodulo &&
+    iddomanda === risp.iddomanda &&
+    idxRisposta === risp.idxRisposta &&
+    (iddocente ? risp.iddocente === iddocente : true);
+
+  const finderDomanda = (idmodulo, iddomanda, iddocente) => risp =>
+    risp.idmodulo === idmodulo && iddomanda === risp.iddomanda && (iddocente ? risp.iddocente === iddocente : true);
+
+  const findRisposta = (idmodulo, iddomanda, iddocente, idxRisposta) => {
+    const idx = risposte.findIndex(finderRisposta(idmodulo, iddomanda, iddocente, idxRisposta));
+    return idx < 0 ? [-1, null] : [idx, risposte[idx]];
+  };
+
+  const findDomanda = (idmodulo, iddomanda, iddocente) => risposte.find(finderDomanda(idmodulo, iddomanda, iddocente));
+
+  const removeRisposteDomanda = (idmodulo, iddomanda, iddocente) =>
+    risposte.filter(risp => !finderDomanda(idmodulo, iddomanda, iddocente)(risp));
+
+  const addRisposta = (idmodulo, iddomanda, idxRisposta, iddocente, risposta, reset) => {
+    const tmpRisposte = reset ? removeRisposteDomanda(idmodulo, iddomanda, iddocente) : [...risposte];
+    const rispostaObj = { idmodulo, iddomanda, iddocente, idxRisposta, risposta };
+    const newIdxRisposta = tmpRisposte.findIndex(finderRisposta(idmodulo, iddomanda, iddocente, idxRisposta));
+    const risposteNew = upDateAr(tmpRisposte, newIdxRisposta, rispostaObj);
+
+    console.log('risposte xxx', risposteNew);
+    onChange && onChange(risposteNew);
+    setRisposte(risposteNew);
+  };
+
+  const getIdsDomanda = (idxModulo, idxDomanda) => {
+    const modulo = values.moduli && values.moduli[idxModulo];
+    if (!modulo) return null;
+    return modulo.domande && modulo.domande[idxDomanda] ? [modulo.id, modulo.domande[idxDomanda]._id] : [modulo.id, -1];
+  };
+
+  const getValueRiposta = (idxmodulo, idxdomanda, iddocente, idxRisposta) => {
+    const [idmodulo, iddomanda] = getIdsDomanda(idxmodulo, idxdomanda) || [];
+    if (!idmodulo || !iddomanda) return null;
+    const risp = findRisposta(idmodulo, iddomanda, iddocente, idxRisposta);
+    return risp[1];
+    // risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda] && risposte[idxModulo][idxDomanda][idxRisposta]
   };
 
   const getDomanda = (idxModulo, idx) =>
@@ -146,6 +154,7 @@ export function ShowQuestion(props) {
   const getRispostaOfValues = (idxModulo, idxDomanda, idxRisposta) => {
     const domanda = getDomanda(idxModulo, idxDomanda);
     if (!domanda || !domanda.risposte) return null;
+    debugger;
     if (domanda.tipo === 1) return domanda.rating;
     return !domanda.risposte[idxRisposta] || !domanda.risposte[idxRisposta]
       ? null
@@ -163,8 +172,8 @@ export function ShowQuestion(props) {
     return risposta && risposta.correlata ? risposta.correlata : null;
   };
 
-  const getUserVal = (idxModulo, idxDomanda, idxRisposta, correlata) => {
-    const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta);
+  const getUserVal = (idxModulo, idxDomanda, idxRisposta, correlata, docente) => {
+    const valRisposta = getValueRiposta(idxModulo, idxDomanda, idxRisposta, docente);
     return !valRisposta ? null : correlata ? valRisposta.correlata || null : valRisposta.val || null;
   };
 
@@ -180,7 +189,13 @@ export function ShowQuestion(props) {
     return tipo === 1 ? valValues !== 0 && valCur <= valValues : valCur === valValues;
   };
 
-  const changeRisposta = async (idxModulo, idxDomanda, idxRisposta, newValue, correlata) => {
+  const changeRisposta = async (idxModulo, idxDomanda, idxRisposta, newValue, correlata, docente) => {
+    const [idmodulo, iddomanda] = getIdsDomanda(idxModulo, idxDomanda) || [];
+    if (!idmodulo || !iddomanda) return false;
+    addRisposta(idmodulo, iddomanda, idxRisposta);
+    await timeout(50);
+    return false;
+    /*
     const _domandaRisposte = [...risposte[idxModulo][idxDomanda]];
     const _risposte = risposte.map(el => ({ ...el }));
     const _risposteResize =
@@ -193,14 +208,14 @@ export function ShowQuestion(props) {
       ? { ...oldValue, correlata: newValue }
       : { ...oldValue, val: newValue };
     setterRisposte(_risposte);
-    await timeout(50);
+    */
   };
 
   const onApertaBlur = (idxModulo, idxDomanda, val, correlata) => {
     changeRisposta(idxModulo, idxDomanda, 0, val, correlata);
   };
 
-  const renderScala = (idxModulo, idxDomanda, scalaVal) => (
+  const renderScala = (idxModulo, idxDomanda, scalaVal, risposta, docente) => (
     <Box style={{ textAlign: 'center', marginLeft: '16px', marginRight: '16px' }}>
       <span className={classes.domandaTxt}>{scalaVal && scalaVal.ratingStart}</span>
 
@@ -209,13 +224,13 @@ export function ShowQuestion(props) {
         name="ratingRisposta"
         max={toNumberOr(scalaVal && scalaVal.ratingMax, 2)}
         value={toNumberOr(getUserVal(idxModulo, idxDomanda, 0), 0)}
-        onChange={(event, newValue) => changeRisposta(idxModulo, idxDomanda, 0, newValue)}
+        onChange={(event, newValue) => changeRisposta(idxModulo, idxDomanda, 0, newValue, false, docente)}
       />
       <span className={classes.domandaTxt}>{scalaVal && scalaVal.ratingEnd}</span>
     </Box>
   );
 
-  const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta = 0) => () => {
+  const onClickOptions = (tipo, idxModulo, idxDomanda, idxRisposta = 0, docente) => () => {
     console.log('click risposta', idxDomanda, idxRisposta);
     const valBefore = getUserVal(idxModulo, idxDomanda, idxRisposta);
     const isBool = [2, 3, 4].indexOf(tipo) > -1;
@@ -225,7 +240,7 @@ export function ShowQuestion(props) {
 
     const _risposte = risposte.map(el => ({ ...el }));
     const _domandaRisposte = risposte && risposte[idxModulo] && risposte[idxModulo][idxDomanda];
-    let _rispostaOptionTmp;
+    /* let _rispostaOptionTmp;
     if (tipo !== 2) {
       _rispostaOptionTmp =
         _domandaRisposte.length - 1 < idxRisposta
@@ -237,11 +252,14 @@ export function ShowQuestion(props) {
         : [...risposte[idxModulo][idxDomanda]];
       _rispostaOptionTmp = _rispostaOptionTmp.map(el => null);
     }
-
+   */
     // changeRisposta(idxModulo, idxDomanda, idxRisposta, valBool);
-    _rispostaOptionTmp[idxRisposta] = { val: valBool };
-    _risposte[idxModulo][idxDomanda] = _rispostaOptionTmp;
-    setterRisposte(_risposte);
+    // _rispostaOptionTmp[idxRisposta] = { val: valBool };
+    // _risposte[idxModulo][idxDomanda] = _rispostaOptionTmp;
+    const [idmodulo, iddomanda] = getIdsDomanda(idxModulo, idxDomanda) || [];
+
+    addRisposta(idmodulo, iddomanda, idxRisposta, docente && docente.id, { val: valBool }, tipo === 2);
+    //setterRisposte(_risposte);
     // return tipo === 2 ? setRisposte(_risposte) : isBool && changeRisposte(idxModulo, idxDomanda, idxRisposta, valBool);
   };
 
@@ -259,11 +277,10 @@ export function ShowQuestion(props) {
     </>
   );
 
-  const renderTipoInner = (risposta, idxModulo, idxDomanda, idxRisposta, tipo, correlata) => {
+  const renderTipoInner = (risposta, idxModulo, idxDomanda, idxRisposta, tipo, correlata, docente) => {
     if (!risposta) return <span></span>;
     const val = getUserVal(idxModulo, idxDomanda, idxRisposta);
-    const onClickInner = onClickOptions(tipo, idxModulo, idxDomanda, idxRisposta);
-    console.log('vals', val);
+    const onClickInner = onClickOptions(tipo, idxModulo, idxDomanda, idxRisposta, docente);
     return (
       <div key={idxRisposta}>
         {tipo === 2 ? (
@@ -308,7 +325,7 @@ export function ShowQuestion(props) {
     return domandaHtml;
   };
 
-  const renderRisposte = (idxModulo, domanda, tipo, idxDomanda, correlata) => (risposta, idxRisposta) =>
+  const renderRisposte = (idxModulo, domanda, tipo, idxDomanda, correlata, docente) => (risposta, idxRisposta) =>
     risposta &&
     (tipo !== 1 ? risposta.risposta : idxRisposta === 0) && (
       <Box key={idxModulo + idxRisposta} className={classes.cardDomanda}>
@@ -323,14 +340,15 @@ export function ShowQuestion(props) {
                 idxDomanda,
                 idxRisposta,
                 tipo,
-                getValueRiposta(idxModulo, idxDomanda, idxRisposta, correlata),
+                getValueRiposta(idxModulo, idxDomanda, idxRisposta, correlata, docente),
+                docente,
               )}
-              {checkRenderDomandaCorrelata(risposta, idxModulo, idxDomanda, idxRisposta)}
+              {checkRenderDomandaCorrelata(risposta, idxModulo, idxDomanda, idxRisposta, docente)}
             </GridChilds>
           ) : tipo === 1 ? (
             <>
-              {renderScala(idxModulo, idxDomanda, domanda, risposta)}
-              {checkRenderDomandaCorrelata(risposta, idxModulo, idxDomanda, idxRisposta)}
+              {renderScala(idxModulo, idxDomanda, domanda, risposta, docente)}
+              {checkRenderDomandaCorrelata(risposta, idxModulo, idxDomanda, idxRisposta, docente)}
             </>
           ) : (
             <span></span>
@@ -339,7 +357,8 @@ export function ShowQuestion(props) {
       </Box>
     );
 
-  const renderDomandaAperta = (domanda, idxModulo, idxDomanda, correlata) => {
+  const renderDomandaAperta = (domanda, idxModulo, idxDomanda, correlata, docente) => {
+    const valRisposta = getValueRiposta(idxModulo, idxDomanda, docente && docente.id, 0);
     return (
       <>
         <GridChilds key={idxModulo + idxDomanda} view={[1, 10]}>
@@ -347,17 +366,11 @@ export function ShowQuestion(props) {
           <TextFieldBlur
             style={{ width: '100%' }}
             label="Risposta"
-            defaultValue={
-              !risposte[idxModulo][idxDomanda][0]
-                ? ''
-                : correlata
-                ? risposte[idxModulo][idxDomanda][0].correlata || ''
-                : risposte[idxModulo][idxDomanda][0].val || ''
-            }
-            onChangeBlur={e => onApertaBlur(idxModulo, idxDomanda, e.target.value, correlata)}
+            defaultValue={!valRisposta ? '' : correlata ? valRisposta.correlata || '' : valRisposta.val || ''}
+            onChangeBlur={e => onApertaBlur(idxModulo, idxDomanda, e.target.value, correlata, docente)}
             InputProps={{
               onBlur: e => {
-                return onApertaBlur(idxModulo, idxDomanda, e.target.value, correlata);
+                return onApertaBlur(idxModulo, idxDomanda, e.target.value, correlata, docente);
               },
             }}
           />
@@ -368,13 +381,26 @@ export function ShowQuestion(props) {
 
   const renderDomanda = (modulo, idxModulo, correlata) => (domanda, idx, margin) => {
     console.log('domanda', domanda);
-    if (!domanda || !domanda.tipo) return <span></span>;
+    if (!domanda || !getDomanda(idxModulo, idx) || !domanda.tipo) return <span></span>;
+
     const tipo = toNumberOr(domanda.tipo, 0);
-    return (
-      <div key={idxModulo + idx}>
-        {!getDomanda(idxModulo, idx) || !domanda || !domanda.tipo ? (
-          <div key={idxModulo + idx}></div>
-        ) : tipo === 6 ? (
+    const domandeDocenti = modulo.isDocente
+      ? data.docenti.map(doc => ({
+          id: doc.id,
+          nome: (doc.cognome || '') + ' ' + (doc.nome || ''),
+        }))
+      : [{}];
+
+    return domandeDocenti.map((docente, idxDomanda) => (
+      <div key={idxModulo + idx + (docente.id || 0)}>
+        {docente ? (
+          <div>
+            <h3>{docente.nome}</h3>
+          </div>
+        ) : (
+          <span></span>
+        )}
+        {tipo === 6 ? (
           <div
             key={idxModulo + idx}
             className={classes.cardDomanda}
@@ -396,14 +422,16 @@ export function ShowQuestion(props) {
               </GridChilds>
             </Paper>
             {domanda.tipo !== 6 && domanda.tipo === 5
-              ? renderDomandaAperta(domanda, idxModulo, idx, correlata)
+              ? renderDomandaAperta(domanda, idxModulo, idx, correlata, docente)
               : domanda.risposte &&
                 domanda.risposte.map &&
-                domanda.risposte.map(renderRisposte(idxModulo, domanda, toNumberOr(domanda.tipo, -1), idx, correlata))}
+                domanda.risposte.map(
+                  renderRisposte(idxModulo, domanda, toNumberOr(domanda.tipo, -1), idx, correlata, docente),
+                )}
           </div>
         )}
       </div>
-    );
+    ));
   };
 
   const renderModulo = () => {
@@ -447,8 +475,58 @@ export function ShowQuestion(props) {
   );
 }
 
+export function saveData(value) {
+  const idEnte = value.id;
+  questionFullSlice.actions.save(value).then(res => {
+    if (!res || !res.payload) return false;
+    const savedData = { ...res.payload };
+    // if (!data.id) { }
+    // !idEnte && setIsMailSent(true);
+    // setEditValue(savedData);
+  });
+}
+
 export function ShowQuestionUrl(props) {
   const location = useLocation();
   const values = location.state && location.state.data;
-  return <ShowQuestion values={values} onChange={props.onChange} />;
+  return <ShowQuestion values={values} onChange={saveData} />;
 }
+
+export function ShowQuestionById(props) {
+  const params = useParams();
+  const paramId = params?.idQuestion || '0';
+  return (
+    <LoadSliceData slice={questionFullSlice} onChange={saveData} actionPayload={paramId} Component={ShowQuestion} />
+  );
+}
+
+/*   constexport function ShowQuestionById(props) {
+  const params = useParams();
+  const questionSelector = useSelector(questionFullSlice.selects.dataSelector);
+  const [question, setQuestion] = useState();
+
+
+  useEffect(() => {
+    if (!paramId) return false;
+    questionFullSlice.actions.get(paramId, true);
+  }, []);
+
+  useEffect(() => {
+    !!questionSelector && questionSelector.id && setQuestion(questionSelector);
+  }, [questionSelector]);
+
+  const rendereError = () => (
+    <div style={{ margin: 'auto', width: '85%' }}>
+      <h2>Errore nel Caricamento</h2>
+      <p> {errorMessage}</p>
+      <div>
+        <Button color="primary" variant="contained" fullWidth onClick={() => history.push('/app/user')}>
+          Torna Indietro
+        </Button>
+      </div>
+    </div>
+  );
+
+  return <ShowQuestion values={question} onChange={props.onChange} />;
+}
+*/
