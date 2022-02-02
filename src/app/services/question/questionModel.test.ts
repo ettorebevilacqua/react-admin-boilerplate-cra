@@ -237,7 +237,7 @@ const questionsTest = {
   },
 };
 
-const model = Model(data.idquestion, []);
+const model = Model(data.idquestion, [], null);
 debugger;
 describe('Model Start', () => {
   test('check id dModlo', () => {
