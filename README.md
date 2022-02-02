@@ -1,3 +1,5 @@
+npm test --  questionModel.test.ts 
+
 importantissimo linreria per creare quiz / question :
 https://surveyjs.io/Examples/Library/?id=trigger-runexpression&platform=Reactjs&theme=modern
 
